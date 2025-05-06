@@ -3,9 +3,12 @@ id: autotracking
 title: 摄像头自动追踪
 ---
 
+import ReactPlayer from 'react-player';
+
 支持ONVIF协议且具备PTZ(云台变焦)功能的摄像头，如果支持视野(FOV)内相对移动，可以配置为自动追踪移动对象并将其保持在画面中央。
 
-![自动追踪示例(含变焦)](/img/frigate-autotracking-example.gif)
+<ReactPlayer playing controls url='/img/frigate-autotracking-example.mp4' />
+自动追踪示例(含变焦)
 
 ## 自动追踪行为
 
