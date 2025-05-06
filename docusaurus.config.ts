@@ -79,17 +79,17 @@ const config: Config = {
         {
           to: '/',
           activeBasePath: 'docs',
-          label: 'Docs',
+          label: '文档',
           position: 'left',
         },
         {
           href: 'https://frigate.video',
-          label: 'Website',
+          label: '官网',
           position: 'right',
         },
         {
           href: 'http://demo.frigate.video',
-          label: 'Demo',
+          label: '演示Demo',
           position: 'right',
         },
         {
@@ -114,15 +114,19 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Community',
+          title: '社区',
           items: [
             {
               label: 'GitHub',
               href: 'https://github.com/blakeblackshear/frigate',
             },
             {
-              label: 'Discussions',
+              label: '论坛（英文）',
               href: 'https://github.com/blakeblackshear/frigate/discussions',
+            },
+            {
+              label: 'bilibili',
+              href: 'https://space.bilibili.com/3546894915602564',
             },
           ],
         },
@@ -161,7 +165,7 @@ const config: Config = {
           routeBasePath: '/',
           sidebarPath: './sidebars.ts',
           // Please change this to your repo.
-          editUrl: 'https://github.com/blakeblackshear/frigate/edit/master/docs/',
+          editUrl: 'https://github.com/frigate-cn/docs/edit/main/',
           sidebarCollapsible: false,
           docItemComponent: '@theme/ApiItem', // Derived from docusaurus-theme-openapi
         },

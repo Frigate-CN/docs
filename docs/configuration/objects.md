@@ -3,7 +3,7 @@ id: objects
 title: 支持检测的对象类型
 ---
 
-import labels from "https://github.com/blakeblackshear/frigate/blob/dev/labelmap.txt";
+import labels from "../../labelmap.txt";
 
 Frigate 默认支持检测以下来自 Google Coral 测试数据的对象类型：
 
