@@ -145,7 +145,7 @@ TensorRT检测器能够在配备支持CUDA 12.x系列库的NVIDIA GPU的x86主�
 
 ### Nvidia Jetson
 
-Frigate支持所有的Jetson开发板，从经济实惠的Jetson Nano到性能强劲的Jetson Orin AGX都有覆盖。能够通过专门的[编解码预设参数](/configuration/ffmpeg_presets#硬件加速预设)来[调用Jetson视频硬解码功能](/configuration/hardware_acceleration#nvidia-jetson系列)进行加速。如果还配置了[TensorRT检测器](/configuration/object_detectors#nvidia-tensorrt检测器)则会利用Jetson的GPU和DLA（深度学习加速器）执行目标检测任务。
+Frigate支持所有的Jetson开发板，从经济实惠的Jetson Nano到性能强劲的Jetson Orin AGX都有覆盖。能够通过专门的[编解码预设参数](/configuration/ffmpeg_presets#硬件加速预设)来[调用Jetson视频硬解码功能](/configuration/hardware_acceleration_video#nvidia-jetson系列)进行加速。如果还配置了[TensorRT检测器](/configuration/object_detectors#nvidia-tensorrt检测器)则会利用Jetson的GPU和DLA（深度学习加速器）执行目标检测任务。
 
 推理速度会因YOLO模型、Jetson平台型号及NVPMode（GPU/DLA/EMC时钟频率）配置而异。大多数模型的典型推理时间为20-40毫秒。
 DLA（深度学习加速器）相比GPU能效更高但速度略慢，因此启用DLA会降低功耗，但会轻微增加推理耗时。
