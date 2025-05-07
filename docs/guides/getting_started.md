@@ -162,7 +162,7 @@ cameras:
 
 ### 步骤3：配置硬件加速（推荐）
 
-现在你已经有了一个工作正常的摄像头配置，你需要设置硬件加速以最小化解码视频流所需的CPU。查看[硬件加速](../configuration/hardware_acceleration.md)配置参考，了解适用于你的硬件的示例。
+现在你已经有了一个工作正常的摄像头配置，你需要设置硬件加速以最小化解码视频流所需的CPU。查看[硬件加速](../configuration/hardware_acceleration_video.md)配置参考，了解适用于你的硬件的示例。
 
 这里是一个使用[预设](../configuration/ffmpeg_presets.md)配置硬件加速的示例，适用于大多数带集成GPU的Intel处理器：
 

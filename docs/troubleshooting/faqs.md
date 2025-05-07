@@ -33,7 +33,7 @@ Frigate通常[推荐使用可配置子码流的摄像头](/frigate/hardware.md)�
 
 高效缩放需要满足以下条件：
 1. 需配备GPU或集成显卡进行缩放处理
-2. 需使用[硬件加速的ffmpeg预设](/configuration/hardware_acceleration.md)
+2. 需使用[硬件加速的ffmpeg预设](/configuration/hardware_acceleration_video.md)
 3. 在配置中设置`detect -> width`和`detect -> height`为期望的检测分辨率
 
 正确配置后，GPU将负责解码和缩放，CPU占用仅小幅增加但效果更佳。

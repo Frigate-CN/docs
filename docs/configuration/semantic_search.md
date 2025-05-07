@@ -90,19 +90,7 @@ semantic_search:
 
 如果使用了适合您GPU的正确构建版本并配置了`large`模型，GPU将被自动检测并使用。
 
-**注意:** 对象检测和语义搜索是独立的功能。如果想在语义搜索中使用GPU，必须选择适合您GPU的Frigate Docker镜像。
-
-- **AMD**
-
-  - 在`-rocm` Frigate镜像中，ROCm将被自动检测并用于语义搜索。
-
-- **Intel**
-
-  - 在默认Frigate镜像中，OpenVINO将被自动检测并用于语义搜索。
-
-- **Nvidia**
-  - 在`-tensorrt` Frigate镜像中，Nvidia GPU将被自动检测并用于语义搜索。
-  - 在`-tensorrt-jp(4/5)` Frigate镜像中，Jetson设备将被自动检测并用于语义搜索。
+更多信息请参考[功能增强](/configuration/hardware_acceleration_enrichments.md)文档.
 
 :::
 

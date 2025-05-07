@@ -9,7 +9,7 @@ Frigate默认提供了一些FFmpeg参数预设，以简化配置流程。所有�
 
 强烈建议在配置中使用硬件加速预设。这些预设不仅能替代冗长的参数，还能让Frigate了解可用硬件信息，从而进行其他GPU优化（如鸟瞰图重流编码或非原生分辨率缩放）。
 
-详见[硬件加速文档](/configuration/hardware_acceleration.md)获取GPU/iGPU设置指南。
+详见[硬件加速文档](/configuration/hardware_acceleration_video.md)获取GPU/iGPU设置指南。
 
 | 预设名称            | 适用场景                   | 注意事项                  |
 |---------------------|---------------------------|--------------------------|

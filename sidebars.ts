@@ -59,6 +59,10 @@ const sidebars: SidebarsConfig = {
         "configuration/objects",
         "configuration/stationary_objects",
       ],
+      "硬件加速": [
+        "configuration/hardware_acceleration_video",
+        "configuration/hardware_acceleration_enrichments",
+      ],
       "扩展配置": [
         "configuration/authentication",
         "configuration/notifications",

@@ -76,11 +76,12 @@ tls:
 # 可选：代理配置
 proxy:
   # 可选：上游代理的请求头映射。仅在Frigate的身份验证被禁用时使用。
-  # 注意：许多身份验证代理会在下游传递一个包含已验证用户名的请求头。
+  # 注意：许多身份验证代理会在下游传递一个包含已验证用户名和角色的请求头。
   #      并非所有值都受支持。必须是白名单中的请求头。
   #      更多信息请参见文档。
   header_map:
     user: x-forwarded-user
+    role: x-forwarded-role
   # 可选：用户登出的URL。这设置了UI中登出URL的位置。
   logout_url: /api/logout
   # 可选：用于检查代理发送的X-Proxy-Secret请求头的认证密钥。
@@ -539,7 +540,7 @@ semantic_search:
 # 可选：人脸识别功能配置
 # 注意：enabled和min_area可以在摄像头级别重写
 face_recognition:
-  # 可选：启用语义搜索（默认值：如下所示）
+  # 可选：启用人脸识别（默认值：如下所示）
   enabled: False
   # 可选：标记为潜在匹配所需的最小人脸距离分数（默认值：如下所示）
   unknown_score: 0.8
@@ -554,6 +555,8 @@ face_recognition:
   save_attempts: 100
   # 可选：应用模糊质量过滤器，根据图像的模糊程度调整置信度（默认值：如下所示）
   blur_confidence_filter: True
+  # 可选：设置人脸识别的模型大小（默认值：如下所示）
+  model_size: small
 
 # 可选：车牌识别功能配置
 # 注意：enabled、min_area和enhancement可以在摄像头级别重写

@@ -156,7 +156,7 @@ Hailo-8检测器支持Hailo-8和Hailo-8L AI加速模块。该集成会自动通�
 
 ```yaml
 detectors:
-  hailo8l:
+  hailo:
     type: hailo8l
     device: PCIe
 
@@ -189,7 +189,7 @@ model:
 
 ```yaml
 detectors:
-  hailo8l:
+  hailo:
     type: hailo8l
     device: PCIe
 
@@ -213,7 +213,7 @@ Hailo检测器支持所有为Hailo硬件编译并包含后处理的YOLO模型。
 
 ```yaml
 detectors:
-  hailo8l:
+  hailo:
     type: hailo8l
     device: PCIe
 
@@ -488,7 +488,7 @@ frigate:
 
 ### 配置参数
 
-可以通过指定`tensorrt`作为模型类型来选择TensorRT检测器。需要使用[硬件加速](hardware_acceleration.md#nvidia-gpus)部分描述的相同方法将GPU传递给docker容器。如果您传递多个GPU，可以使用`device`配置参数选择用于检测器的GPU。`device`参数是GPU索引的整数值，如容器内的`nvidia-smi`所示。
+可以通过指定`tensorrt`作为模型类型来选择TensorRT检测器。需要使用[硬件加速](hardware_acceleration_enrichments.md#nvidia-gpus)部分描述的相同方法将GPU传递给docker容器。如果您传递多个GPU，可以使用`device`配置参数选择用于检测器的GPU。`device`参数是GPU索引的整数值，如容器内的`nvidia-smi`所示。
 
 TensorRT检测器默认使用位于`/config/model_cache/tensorrt`中的`.trt`模型文件。使用的模型路径和尺寸将取决于您生成的模型。
 
@@ -1052,5 +1052,5 @@ wget -O yolov9-t.pt "https://github.com/WongKinYiu/yolov9/releases/download/v0.1
 
 # 准备并运行导出脚本
 sed -i "s/ckpt = torch.load(attempt_download(w), map_location='cpu')/ckpt = torch.load(attempt_download(w), map_location='cpu', weights_only=False)/g" ./models/experimental.py
-python3 export.py --weights ./yolov9-t.pt --imgsz 320 --simplify --include onnx
+bin/python3 export.py --weights ./yolov9-t.pt --imgsz 320 --simplify --include onnx
 ```
