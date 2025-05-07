@@ -66,7 +66,6 @@ const sidebars: SidebarsConfig = {
       "扩展配置": [
         "configuration/authentication",
         "configuration/notifications",
-        "configuration/hardware_acceleration",
         "configuration/ffmpeg_presets",
         "configuration/pwa",
         "configuration/tls",
