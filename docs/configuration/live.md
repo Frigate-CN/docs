@@ -197,6 +197,10 @@ Frigate在摄像头组编辑面板中提供了一个对话框，其中包含几�
 
 可以通过Frigate页面和[MQTT](/integrations/mqtt#frigatecamera_nameenabledset)临时禁用摄像头以节省系统资源。禁用时，Frigate的ffmpeg进程终止 - 停止录制，暂停对象检测，实时仪表板显示禁用消息的空白图像。仍可通过UI访问禁用摄像头的回放条目、追踪对象和历史录像。
 
+:::note
+通过Frigate页面或MQTT禁用摄像头是临时操作，重启Frigate后该设置不会保留
+:::
+
 对于重流摄像头，go2rtc保持活动状态，但除非有外部客户端使用(如Home Assistant中的高级摄像头卡片使用go2rtc源)，否则不会使用系统资源进行解码或处理。
 
 注意通过配置文件禁用摄像头(`enabled: False`)会移除所有相关UI元素，包括历史录像访问。要保留访问权限同时禁用摄像头，请在配置中保持启用状态，并使用UI或MQTT临时禁用它。

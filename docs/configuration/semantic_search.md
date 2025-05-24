@@ -19,7 +19,7 @@ Frigate使用来自[Jina AI](https://huggingface.co/jinaai)的模型创建嵌入
 
 ## 配置
 
-语义搜索默认禁用，必须在配置文件或UI设置页面中启用后才能使用。语义搜索是全局配置设置。
+语义搜索默认禁用，必须在配置文件或分类设置页面中启用后才能使用。语义搜索是全局配置设置。
 
 ```yaml
 semantic_search:

@@ -328,24 +328,36 @@ LPR 与其他 Frigate 功能增强一样，在摄像头级别而不是区域级�
 使用 `match_distance` 允许小的字符不匹配。或者在 `known_plates` 中定义多个变体。
 
 ### 如何调试 LPR 问题？
-- 查看 `frigate/events` 的 MQTT 消息以验证检测到的车牌。
 
-- 如果您使用的是 Frigate+ 模型或可以检测车牌的模型，请观察调试视图（设置 --> 调试）以确保 `license_plate` 与 `car` 一起被检测到。
+- 首先查阅 [为什么我的车牌没有被检测和识别](#为什么我的车牌没有被检测和识别)。如果问题仍然存在，请按照以下步骤排查：
+1.启用调试日志以查看Frigate的具体运行情况
+  - 通过向logger配置添加`frigate.data_processing.common.license_plate: debug`来启用LPR调试日志。这些日志**非常详细**，因此**仅在必要时**保持启用状态。
+    ```yaml
+    logger:
+      default: info
+      logs:
+        frigate.data_processing.common.license_plate: debug
+    ```
+     
+2.确保车牌被**检测到**
 
-- 观察调试视图以实时查看识别的车牌。对于非专用 LPR 摄像头，当启用并工作时，`car` 标签将更改为识别的车牌。
+  如果您使用的是Frigate+或`license_plate`检测模型：
+  - 查看调试视图(设置-->调试)以确保检测到`license_plate`。
+  - 查看`frigate/events`的MQTT消息以验证检测到的车牌。
+  - 如果车牌未被检测到，您可能需要调整license_plate对象的`min_score`和/或`threshold`参数。
+  
+  如果您**没有**使用Frigate+或`license_plate`检测模型：
+  
+  - 查看调试日志中YOLOv9车牌检测器的消息。
+  - 如果车牌未被检测到，您可能需要调整`detection_threshold`参数。
 
-- 根据上面的建议调整 `detection_threshold` 和 `recognition_threshold` 设置。
+3. 确保检测到的车牌上的字符被**识别**
 
-- 启用 `debug_save_plates` 将检测到的车牌文本的图像保存到剪辑目录（`/media/frigate/clips/lpr`）。确保这些图像可读且文本清晰。
+  - 启用`debug_save_plates`将检测到的车牌文本图像保存到剪辑目录(`/media/frigate/clips/lpr`)。确保这些图像可读且文本清晰。
+  - 查看调试视图以实时查看车牌识别情况。对于非专用LPR摄像头，当LPR启用并正常工作时，car或motorcycle标签将变为识别出的车牌。
+  - 根据[上文](#高级配置)的建议调整`recognition_threshold`设置。
 
-- 通过在您的 `logger` 配置中添加 `frigate.data_processing.common.license_plate: debug` 为 LPR 启用调试日志。这些日志非常详细，因此仅在必要时启用。
 
-```yaml
-logger:
-  default: info
-  logs:
-    frigate.data_processing.common.license_plate: debug
-```
 ### LPR 会减慢我的系统吗？
 LPR 的性能影响取决于您的硬件。确保您至少有 4GB RAM 和能够胜任的 CPU 或 GPU 以获得最佳结果。如果您运行的是专用 LPR 摄像头模式，与运行原生检测车牌的模型的用户相比，资源使用量会更高。为您的专用 LPR 摄像头调整运动检测设置，以便车牌检测模型仅在必要时运行。
 

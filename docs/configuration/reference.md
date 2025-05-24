@@ -87,6 +87,10 @@ proxy:
   # 可选：用于检查代理发送的X-Proxy-Secret请求头的认证密钥。
   # 如果未设置，则不考虑来源信任所有请求。
   auth_secret: None
+  # 可选：设置代理的默认权限组。必须为 "admin" 或者 "viewer"
+  default_role: viewer
+  # 可选：用于分隔代理头信息中多个值的字符（默认值：如下所示）
+  separator: ","
 
 # 可选：身份验证配置
 auth:
@@ -551,6 +555,8 @@ face_recognition:
   recognition_threshold: 0.9
   # 可选：运行人脸识别所需的检测到的人脸框最小面积（默认值：如下所示）
   min_area: 500
+  # Optional: 子标签应用于人员对象所需的最小人脸识别次数（默认值：如下所示）
+  min_faces: 1
   # 可选：保存用于训练的已识别人脸图像数量（默认值：如下所示）
   save_attempts: 100
   # 可选：应用模糊质量过滤器，根据图像的模糊程度调整置信度（默认值：如下所示）
