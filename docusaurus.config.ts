@@ -131,7 +131,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Frigate中文社区`,
+      copyright: `Copyright © ${new Date().getFullYear()} Frigate中文社区<br>渝ICP备2025058994号-1`,
     },
   },
   plugins: [
