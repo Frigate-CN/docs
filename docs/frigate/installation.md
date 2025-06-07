@@ -146,7 +146,7 @@ $ sudo cat /sys/kernel/debug/rknpu/version
 RKNPU driver: v0.9.2 # 或更高版本
 ```
 
-如果您的开发板受支持，我推荐使用[Joshua Riek的Rockchip版Ubuntu](https://github.com/Joshua-Riek/ubuntu-rockchip)。
+如果您的开发板受支持，我推荐使用[Armbian](https://www.armbian.com/download/?arch=aarch64)。
 
 #### 设置
 

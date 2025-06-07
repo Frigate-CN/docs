@@ -101,7 +101,7 @@ cameras:
 | Amcrest IP4M-S2112EW-AI      |      ✅      |      ❌      | 不支持FOV相对移动。                                                                                                            |
 | Amcrest IP5M-1190EW          |      ✅      |      ❌      | ONVIF端口: 80。不支持FOV相对移动。                                                                                            |
 | Ctronics PTZ                 |      ✅      |      ❌      |                                                                                                                                                 |
-| Dahua                        |      ✅      |      ✅      |                                                                                                                                                 |
+| Dahua                        |      ✅      |      ✅      | 据用户反馈，部分低端大华摄像头（尤其是Lite系列等入门机型）存在​​不支持自动跟踪功能​​的情况。                                                     |
 | Dahua DH-SD2A500HB           |      ✅      |      ❌      |                                                                                                                                                 |
 | Foscam R5                    |      ✅      |      ❌      |                                                                                                                                                 |
 | Hanwha XNP-6550RH            |      ✅      |      ❌      |                                                                                                                                                 |

@@ -1007,7 +1007,7 @@ x.export()
 
 ### 下载YOLO-NAS模型
 
-您可以使用[此笔记本](https://github.com/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb) [![在Colab中打开](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb)构建并下载带有预训练权重的兼容模型。
+您可以使用[Jupyter笔记本](https://github.com/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb) [![在Colab中打开](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb)来构建并下载带有预训练权重的兼容模型。该模型可以直接在[Google Colab](https://colab.research.google.com/github/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb)上运行。
 
 :::warning
 
@@ -1015,7 +1015,7 @@ DeciAI提供的预训练YOLO-NAS权重受其许可证约束，不可用于商业
 
 :::
 
-此笔记本中的输入图像大小设置为320x320。由于Frigate在运行检测前会将视频帧裁剪到感兴趣区域，因此在大多数情况下这可以降低CPU使用率并加快推理速度，而不会影响性能。如果需要，可以将笔记本和配置更新为640x640。
+Jupyter笔记本的输入图像大小设置为320x320。由于Frigate在运行检测前会将视频帧裁剪到感兴趣区域，因此在大多数情况下这可以降低CPU使用率并加快推理速度，而不会影响性能。如果需要，可以将this notebook和配置更新为640x640。
 
 ### 下载YOLO模型
 
@@ -1036,13 +1036,14 @@ python3 yolo_to_onnx.py -m yolov7-320
 
 #### YOLOv9
 
-YOLOv9模型可以使用以下代码导出，或者[可以从hugging face下载](https://huggingface.co/Xenova/yolov9-onnx/tree/main)
+YOLOv9模型可以使用以下代码导出
 
 ```sh
 git clone https://github.com/WongKinYiu/yolov9
 cd yolov9
 
 # 设置虚拟环境，避免影响主系统
+# 虚拟环境必须使用Python 3.11或更老的版本。
 python3 -m venv ./
 bin/pip install -r requirements.txt
 bin/pip install onnx onnxruntime onnx-simplifier>=0.4.1

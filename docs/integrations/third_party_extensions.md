@@ -26,3 +26,6 @@ title: 第三方扩展
 ## [Frigate telegram](https://github.com/OldTyT/frigate-telegram)
 
 [Frigate telegram](https://github.com/OldTyT/frigate-telegram)使得可以将Frigate的事件发送到Telegram。事件以文本描述、视频和缩略图的形式作为消息发送。
+
+## [Periscope](https://github.com/maksz42/periscope)
+[Periscope](https://github.com/maksz42/periscope)是一款轻量级Android应用，可将旧设备改造为Frigate NVR的实时监控查看器。该应用支持Android 2.2及以上系统（包括Android TV），提供身份验证和HTTPS安全连接功能。

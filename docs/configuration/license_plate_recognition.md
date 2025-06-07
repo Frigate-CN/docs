@@ -168,6 +168,10 @@ cameras:
 
 要将摄像头标记为专用LPR摄像头，在摄像头配置中添加`type: "lpr"`。
 
+:::note
+Frigate的车牌识别（LPR）专用模式专为窄视角摄像头优化设计，该模式要求摄像头必须采用特定角度安装，然后精确调焦至仅能捕获车牌画面。若您的摄像头**用于拍摄场景全景而非聚焦车牌特写**，则**不建议使用**此模式。
+:::
+
 用户可根据是否使用Frigate+(或原生`license_plate`检测)模型以两种不同方式配置Frigate的专用LPR模式：
 
 ### 使用Frigate+(或原生`license_plate`检测)模型
@@ -216,7 +220,7 @@ cameras:
 
 此设置下：
 - 车牌被视为Frigate中的正常对象
-- 分数、警报、检测、快照、区域和对象遮罩按预期工作
+- 分数、警报、检测、和快照按预期工作
 - 快照上会有车牌边界框
 - MQTT主题`frigate/events`会发布跟踪对象更新
 - 调试视图会显示`license_plate`边界框
@@ -281,7 +285,6 @@ cameras:
 | 车牌检测             | 使用`license_plate`作为跟踪对象        | 运行专用LPR管道                          |
 | FPS设置              | 5(快速移动车辆可增加)                  | 5(快速移动车辆可增加，但可能使用更多CPU) |
 | 对象检测             | 应用标准Frigate+检测                  | 绕过标准对象检测                         |
-| 区域和对象遮罩       | 支持                                   | 不支持                                   |
 | 调试视图             | 可能显示`license_plate`边界框         | 可能不显示`license_plate`边界框          |
 | MQTT `frigate/events` | 发布跟踪对象更新                       | 发布有限更新                             |
 | Explore              | 识别的车牌在More Filters中可用        | 识别的车牌在More Filters中可用           |

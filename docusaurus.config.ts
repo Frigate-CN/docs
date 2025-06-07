@@ -131,7 +131,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Frigate中文社区<br>渝ICP备2025058994号-1`,
+      copyright: `Copyright © ${new Date().getFullYear()} Frigate中文社区<br><a href="https://beian.miit.gov.cn/" target="_blank">渝ICP备2025058994号-1</a>`,
     },
   },
   plugins: [
