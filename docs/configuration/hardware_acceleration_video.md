@@ -69,7 +69,8 @@ done
 
 | CPU 代数 | Intel 驱动 | 推荐预设 | 说明 |
 |---------|------------|----------|------|
-| 1-7代   | i965       | preset-vaapi | 不支持 qsv |
+| 1-5代   | i965       | preset-vaapi | 不支持 qsv |
+| 6-7代   | iHD        | preset-vaapi | 不支持 qsv |
 | 8-12代  | iHD        | preset-vaapi | 也可使用 preset-intel-qsv-* |
 | 13代+   | iHD/Xe     | preset-intel-qsv-* | |
 | Intel Arc GPU | iHD/Xe | preset-intel-qsv-* | |

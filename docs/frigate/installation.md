@@ -349,7 +349,7 @@ Home Assistant OS用户可以通过插件仓库进行安装。
 
 如果您希望容器在因错误而异常关闭时自动重启，可以启用`启用自动重启`选项。
 
-![image](https://user-images.githubusercontent.com/4516296/232586790-0b659a82-561d-4bc5-899b-0f5b39c6b11d.png)
+![image](/img/synology-setting.png)
 
 **高级设置:**
 

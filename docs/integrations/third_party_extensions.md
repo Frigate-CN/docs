@@ -21,7 +21,11 @@ title: 第三方扩展
 
 ## [Frigate Notify](https://github.com/0x2142/frigate-notify)
 
-[Frigate Notify](https://github.com/0x2142/frigate-notify)是一个简单的应用程序，设计用于将Frigate的通知发送到您喜欢的平台。适用于独立安装的Frigate - 不需要Home Assistant，MQTT是可选的但推荐使用。
+[Frigate Notify](https://github.com/0x2142/frigate-notify)是一个简单的应用程序，设计用于将Frigate的通知发送到您喜欢的平台。适用于独立安装的Frigate - 不需要Home Assistant，MQTT虽不是必须但推荐使用。
+
+## [Frigate Snap-Sync](https://github.com/thequantumphysicist/frigate-snap-sync/)
+
+[Frigate Snap-Sync](https://github.com/thequantumphysicist/frigate-snap-sync/) 是一个与Frigate协同工作的程序。当Frigate生成快照或核查记录时（未来还可扩展更多触发事件），该程序会自动将文件上传至您指定的一个或多个远程服务器。
 
 ## [Frigate telegram](https://github.com/OldTyT/frigate-telegram)
 

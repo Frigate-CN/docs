@@ -100,6 +100,7 @@ const sidebars: SidebarsConfig = {
     常见问题: [
       "troubleshooting/faqs",
       "troubleshooting/recordings",
+      "troubleshooting/gpu",
       "troubleshooting/edgetpu",
     ],
     开发: [

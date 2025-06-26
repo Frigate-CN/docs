@@ -58,7 +58,7 @@ USB Coral可能会卡住需要重启，这可能由多种硬件和软件设置�
 PCIe Coral未被检测到最常见的原因是驱动程序未安装。这个过程因操作系统和内核版本而异。
 
 - 在大多数情况下，[Coral文档](https://coral.ai/docs/m2/get-started/#2-install-the-pcie-driver-and-edge-tpu-runtime)展示了如何为基于PCIe的Coral安装驱动程序。
-- 对于Ubuntu 22.04+，可以使用https://github.com/jnicolson/gasket-builder 来构建和安装最新版本的驱动程序。
+- 对于一些较新的Linux发行版（例如Ubuntu 22.04+），可以使用https://github.com/jnicolson/gasket-builder 来构建和安装最新版本的驱动程序。
 
 ## 尝试加载TPU为pci时出现"Fatal Python error: Illegal instruction"
 

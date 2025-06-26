@@ -803,7 +803,7 @@ detectors:
 
 要验证集成是否正常工作，请启动Frigate并观察日志中是否有与CodeProject.AI相关的错误消息。此外，您可以检查Frigate网络界面，查看CodeProject.AI检测到的对象是否正确显示和跟踪。
 
-# Community Supported Detectors
+# 由社区支持的检测器
 
 ## Rockchip平台检测器
 
