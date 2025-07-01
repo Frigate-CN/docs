@@ -131,7 +131,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Frigate中文社区<br><a href="https://beian.miit.gov.cn/" target="_blank">渝ICP备2025058994号-1</a>`,
+      copyright: `Copyright © ${new Date().getFullYear()} Frigate中文社区<br><a href="https://beian.miit.gov.cn/" target="_blank">渝ICP备2025058994号-1</a><br>CDN 加速及安全防护由 <a href="https://edgeone.ai/zh?from=github"><img src="https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png" height="16" style="margin-top: 5px;" /></a> 提供`,
     },
   },
   plugins: [
