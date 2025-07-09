@@ -32,9 +32,41 @@ tls:
 
 有许多可用的解决方案来实现反向代理，我们欢迎社区通过对本页面的贡献来帮助记录其他方案。
 
-* [Apache2](#apache2-reverse-proxy)
-* [Nginx](#nginx-reverse-proxy)
-* [Traefik](#traefik-reverse-proxy)
+* [Apache2](#apache2-反向代理)
+* [Nginx](#nginx-反向代理)
+* [Traefik](#traefik-反向代理)
+* [Caddy](#caddy-reverse-proxy)
+
+## Caddy 反向代理
+
+本示例展示了Frigate在子域名环境下运行的配置方案，其中日志记录和TLS证书（本案例使用独立于Caddy获取的泛域名证书）均通过导入方式实现管理。
+
+```caddy
+(logging) {
+        log {
+                output file /var/log/caddy/{args[0]}.log {
+                        roll_size 10MiB
+                        roll_keep 5
+                        roll_keep_for 10d
+                }
+                format json
+                level INFO
+        }
+}
+
+
+(tls) {
+        tls /var/lib/caddy/wildcard.YOUR_DOMAIN.TLD.fullchain.pem /var/lib/caddy/wildcard.YOUR_DOMAIN.TLD.privkey.pem
+}
+
+frigate.YOUR_DOMAIN.TLD {
+        reverse_proxy http://localhost:8971 
+        import tls
+        import logging frigate.YOUR_DOMAIN.TLD
+}
+
+```
+
 
 ## Apache2 反向代理
 
@@ -113,11 +145,12 @@ RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
 
 server {
   set $forward_scheme http;
-  set $server         "192.168.100.2"; # FRIGATE 服务器位置
+  set $server         "192.168.100.2"; # Frigate 服务器IP地址
   set $port           8971;
 
   listen 80;
-  listen 443 ssl http2;
+  listen 443 ssl;
+  http2 on;
 
   server_name frigate.domain.com;
 }

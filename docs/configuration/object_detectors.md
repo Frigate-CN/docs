@@ -29,9 +29,11 @@ Frigate支持多种不同类型的检测器，可在不同硬件上运行：
 - [ONNX](#onnx)：当配置了支持的ONNX模型时，OpenVINO会在标准Frigate镜像中自动被检测并使用。
 
 **NVIDIA**
+- [ONNX](#onnx)：当配置了受支持的 ONNX 模型时，在-tensorrt Frigate 镜像中，TensorRT 将被自动检测并用作检测器。
 
-- [TensortRT](#nvidia-tensorrt检测器)：TensorRT可在NVIDIA GPU和Jetson设备上运行，使用多种预设模型。
-- [ONNX](#onnx)：当配置了支持的ONNX模型时，TensorRT会在`-tensorrt`或`-tensorrt-jp6`版Frigate镜像中自动被检测并使用。
+**Nvidia Jetson**
+- [TensortRT](#nvidia-tensorrt检测器)：TensorRT可在Jetson设备上运行，使用多种预设模型。
+- [ONNX](#onnx)：当配置了支持的ONNX模型时，TensorRT会在`-tensorrt-jp6`版Frigate镜像中自动被检测并使用。
 
 **Rockchip**
 
@@ -403,110 +405,6 @@ model:
 
 注意：标签映射使用的是完整COCO标签集的子集，仅包含80个对象。
 
-## NVIDIA TensorRT检测器
-
-NVIDIA GPU可以使用TensorRT库进行对象检测。由于额外的库文件较大，该检测器仅在带有`-tensorrt`标签后缀的镜像中提供，例如`ghcr.io/blakeblackshear/frigate:stable-tensorrt`。该检测器设计用于与Yolo模型配合进行对象检测。
-
-### 最低硬件要求
-
-TensorRT检测器使用12.x系列的CUDA库，这些库具有次要版本兼容性。主机系统的最低驱动程序版本必须为`>=545`。此外，GPU必须支持5.0或更高的计算能力。这通常对应于Maxwell架构或更新的GPU，请查看下面链接的NVIDIA GPU计算能力表。
-
-要使用TensorRT检测器，请确保主机系统已安装[nvidia-container-runtime](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu)以将GPU传递给容器，并且主机系统已安装与您的GPU兼容的驱动程序。
-
-较新的GPU架构提供了TensorRT可以利用的改进功能，如INT8操作和张量核心。当模型转换为trt文件时，将优化与您的硬件兼容的功能。当前提供的模型生成脚本包含启用/禁用FP16操作的开关。如果您希望使用INT8优化等新功能，则需要更多工作。
-
-#### 兼容性参考：
-
-[NVIDIA TensorRT支持矩阵](https://docs.nvidia.com/deeplearning/tensorrt/archives/tensorrt-841/support-matrix/index.html)
-
-[NVIDIA CUDA兼容性](https://docs.nvidia.com/deploy/cuda-compatibility/index.html)
-
-[NVIDIA GPU计算能力](https://developer.nvidia.com/cuda-gpus)
-
-### 生成模型
-
-用于TensorRT的模型必须在将运行的相同硬件平台上进行预处理。这意味着每个用户必须运行额外的设置来为TensorRT库生成模型文件。包含一个脚本可以构建几种常见模型。
-
-如果未找到指定的模型，Frigate镜像将在启动时生成模型文件。处理后的模型存储在`/config/model_cache`文件夹中。通常`/config`路径已经映射到主机上的目录，除非用户希望将其存储在主机上的不同位置，否则不需要单独映射`model_cache`。
-
-默认情况下不会生成任何模型，但可以通过在Docker中指定`YOLO_MODELS`环境变量来覆盖此设置。可以以逗号分隔的格式列出一个或多个模型，每个模型都将被生成。只有当`model_cache`文件夹中不存在相应的`{model}.trt`文件时才会生成模型，因此您可以通过从Frigate数据文件夹中删除模型来强制重新生成模型。
-
-如果您有带DLA(Xavier或Orin)的Jetson设备，可以通过在模型名称后附加`-dla`来生成将在DLA上运行的模型，例如指定`YOLO_MODELS=yolov7-320-dla`。模型将在DLA0上运行(Frigate目前不支持DLA1)。与DLA不兼容的层将回退到在GPU上运行。
-
-如果您的GPU不支持FP16操作，可以传递环境变量`USE_FP16=False`来禁用它。
-
-可以通过向`docker run`命令传递环境变量或在`docker-compose.yml`文件中指定特定模型。使用`-e YOLO_MODELS=yolov4-416,yolov4-tiny-416`的形式选择一个或多个模型名称。可用的模型如下所示。
-
-<details>
-<summary>可用模型</summary>
-```
-yolov3-288
-yolov3-416
-yolov3-608
-yolov3-spp-288
-yolov3-spp-416
-yolov3-spp-608
-yolov3-tiny-288
-yolov3-tiny-416
-yolov4-288
-yolov4-416
-yolov4-608
-yolov4-csp-256
-yolov4-csp-512
-yolov4-p5-448
-yolov4-p5-896
-yolov4-tiny-288
-yolov4-tiny-416
-yolov4x-mish-320
-yolov4x-mish-640
-yolov7-tiny-288
-yolov7-tiny-416
-yolov7-640
-yolov7-416
-yolov7-320
-yolov7x-640
-yolov7x-320
-```
-</details>
-
-为Pascal显卡转换`yolov4-608`和`yolov7x-640`模型的`docker-compose.yml`片段示例如下：
-
-```yml
-frigate:
-  environment:
-    - YOLO_MODELS=yolov7-320,yolov7x-640
-    - USE_FP16=false
-```
-
-如果您将多个GPU传递给Frigate，可以指定用于模型转换的GPU。转换脚本将使用第一个可见的GPU，但在具有混合GPU模型的系统中，您可能不希望使用默认索引进行对象检测。添加`TRT_MODEL_PREP_DEVICE`环境变量以选择特定的GPU。
-
-```yml
-frigate:
-  environment:
-    - TRT_MODEL_PREP_DEVICE=0 # 可选，选择用于模型优化的GPU
-```
-
-### 配置参数
-
-可以通过指定`tensorrt`作为模型类型来选择TensorRT检测器。需要使用[硬件加速](hardware_acceleration_enrichments.md#nvidia-gpus)部分描述的相同方法将GPU传递给docker容器。如果您传递多个GPU，可以使用`device`配置参数选择用于检测器的GPU。`device`参数是GPU索引的整数值，如容器内的`nvidia-smi`所示。
-
-TensorRT检测器默认使用位于`/config/model_cache/tensorrt`中的`.trt`模型文件。使用的模型路径和尺寸将取决于您生成的模型。
-
-使用以下配置来处理生成的TRT模型：
-
-```yaml
-detectors:
-  tensorrt:
-    type: tensorrt
-    device: 0 #这是默认值，选择第一个GPU
-
-model:
-  path: /config/model_cache/tensorrt/yolov7-320.trt
-  input_tensor: nchw
-  input_pixel_format: rgb
-  width: 320
-  height: 320
-```
 
 ## AMD/ROCm GPU检测器
 
@@ -804,6 +702,88 @@ detectors:
 要验证集成是否正常工作，请启动Frigate并观察日志中是否有与CodeProject.AI相关的错误消息。此外，您可以检查Frigate网络界面，查看CodeProject.AI检测到的对象是否正确显示和跟踪。
 
 # 由社区支持的检测器
+
+## NVIDIA TensorRT检测器
+
+英伟达 Jetson 设备可使用 TensorRT 库进行目标检测。由于附加库的大小问题，此检测器仅在带有`-tensorrt-jp6`标签后缀的镜像中提供，例如`ghcr.io/blakeblackshear/frigate:stable-tensorrt-jp6`。此检测器旨在与用于目标检测的 Yolo 模型配合使用。
+
+### 生成模型
+
+用于TensorRT的模型必须在其运行的同一硬件平台上进行预处理。这意味着每个用户都必须执行额外的设置，为TensorRT库生成模型文件。其中包含一个脚本，可构建几种常见的模型。
+
+如果在启动时未找到指定的模型，Frigate镜像将生成模型文件。已处理的模型存储在`/config/model_cache`文件夹中。通常，`/config`路径已映射到主机上的一个目录，除非用户希望将其存储在主机上的其他位置，否则无需单独映射`model_cache`。
+
+默认情况下，不会生成任何模型，但可以通过在Docker中指定`YOLO_MODELS`环境变量来覆盖此设置。可以以逗号分隔的格式列出一个或多个模型，每个模型都将被生成。仅当`model_cache`文件夹中不存在相应的`{model}.trt`文件时，才会生成模型，因此，你可以通过从Frigate数据文件夹中删除模型文件，来强制重新生成模型。
+
+如果你拥有带有DLA（Xavier或Orin）的Jetson设备，可以通过在模型名称后附加`-dla`来生成将在DLA上运行的模型，例如指定`YOLO_MODELS=yolov7 - 320 - dla`。该模型将在DLA0上运行（Frigate目前不支持DLA1）。与DLA不兼容的层将回退到在GPU上运行。
+
+如果你的GPU不支持FP16操作，可以传递环境变量`USE_FP16=False`来禁用它。
+
+可以通过向`docker run`命令或在`docker - compose.yml`文件中传递环境变量来选择特定的模型。使用`-e YOLO_MODELS=yolov4 - 416,yolov4 - tiny - 416`的形式来选择一个或多个模型名称。可用的模型如下所示。 
+
+<details>
+<summary>可用模型</summary>
+```
+yolov3-288
+yolov3-416
+yolov3-608
+yolov3-spp-288
+yolov3-spp-416
+yolov3-spp-608
+yolov3-tiny-288
+yolov3-tiny-416
+yolov4-288
+yolov4-416
+yolov4-608
+yolov4-csp-256
+yolov4-csp-512
+yolov4-p5-448
+yolov4-p5-896
+yolov4-tiny-288
+yolov4-tiny-416
+yolov4x-mish-320
+yolov4x-mish-640
+yolov7-tiny-288
+yolov7-tiny-416
+yolov7-640
+yolov7-416
+yolov7-320
+yolov7x-640
+yolov7x-320
+```
+</details>
+
+为Pascal显卡转换`yolov4-608`和`yolov7x-640`模型的`docker-compose.yml`片段示例如下：
+
+```yml
+frigate:
+  environment:
+    - YOLO_MODELS=yolov7-320,yolov7x-640
+    - USE_FP16=false
+```
+
+### 配置参数
+
+通过将`tensorrt`指定为模型类型，可以选择TensorRT检测器。需要使用[硬件加速](hardware_acceleration_video.md#nvidia-gpu)部分所述的相同方法，将GPU透传到Docker容器。如果透传多个GPU，可以使用`device`配置参数选择检测器使用哪个GPU。`device`参数是GPU索引的整数值，可在容器内通过`nvidia - smi`查看。
+
+TensorRT检测器默认使用位于`/config/model_cache/tensorrt`中的`.trt`模型文件。所使用的模型路径和维度将取决于你生成的模型。 
+
+使用以下配置来处理生成的TRT模型：
+
+```yaml
+detectors:
+  tensorrt:
+    type: tensorrt
+    device: 0 #这是默认值，选择第一个GPU
+
+model:
+  path: /config/model_cache/tensorrt/yolov7-320.trt
+  labelmap_path: /labelmap/coco-80.txt
+  input_tensor: nchw
+  input_pixel_format: rgb
+  width: 320
+  height: 320
+```
 
 ## Rockchip平台检测器
 

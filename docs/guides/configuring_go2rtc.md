@@ -4,12 +4,12 @@ title: 配置 go2rtc
 ---
 
 # 配置 go2rtc
+Frigate内置了 go2rtc 功能。
+虽然你可以让Frigate直接使用你的摄像头的FFmpeg视频流而不是通过go2rtc，但如果你需要以下功能，则必须配置 go2rtc。使用 go2rtc 有以下优点：
 
-使用内置的 go2rtc 是可选的。你仍然可以配置 FFmpeg 直接连接到你的摄像头。但是，如果需要以下功能，则需要在配置中添加 go2rtc：
-
-- WebRTC 或 MSE 实时查看，支持音频、更高的分辨率和帧率，比仅限于检测流且不支持音频的 jsmpeg 流更好
+- WebRTC 或 MSE 实时预览，能够支持音频、更高的分辨率和帧率，比仅限于检测流且不支持音频的 jsmpeg 流效果更好
 - Home Assistant 集成中摄像头的实时流支持
-- RTSP 中继，用于其他消费者，以减少与摄像头流的连接数
+- RTSP 中继，用于其他用户，以减少与摄像头流的连接数
 
 # 设置 go2rtc 流
 
@@ -26,8 +26,8 @@ title: 配置 go2rtc
 ```yaml
 go2rtc:
   streams:
-    back:
-      - rtsp://user:password@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
+    back: ## <- 这里的back为摄像头名称，根据你的实际情况进行调整
+      - rtsp://user:password@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2 ## <- 这里的rtsp为摄像头流地址
 ```
 
 将此配置添加后，重启 Frigate 并尝试从仪表板点击单个摄像头来观看实时流。它应该比原始的 jsmpeg 流看起来更清晰流畅。
@@ -36,8 +36,8 @@ go2rtc:
 
 - 检查日志：
 
-  - 在 Frigate UI 侧边栏的日志部分访问 go2rtc 日志。
-  - 如果 go2rtc 连接摄像头有困难，你应该能在日志中看到一些错误消息。
+  - 在 Frigate 界面 侧边栏的日志部分访问 go2rtc 日志。
+  - 如果 go2rtc 连接摄像头有问题，你应该能在日志中看到一些错误消息。
 
 - 检查 go2rtc Web 界面：如果你在日志中没有看到任何错误，尝试通过 go2rtc 的 web 界面查看摄像头。
 

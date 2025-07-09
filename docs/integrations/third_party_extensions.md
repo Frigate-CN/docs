@@ -12,6 +12,11 @@ title: 第三方扩展
 在系统上安装任何内容之前，请使用您自己的知识来评估和审查它们。
 
 :::
+高级摄像头卡片
+高级摄像头卡片
+## [高级摄像头卡片（原名Frigate卡片）](https://card.camera/#/README)
+
+[高级摄像头卡片](https://card.camera/#/README) 是一款与Frigate深度集成的Home Assistant仪表盘组件。
 
 ## [Double Take](https://github.com/skrashevich/double-take)
 

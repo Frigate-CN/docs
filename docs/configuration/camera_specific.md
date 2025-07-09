@@ -241,3 +241,35 @@ ffmpeg:
 ### TP-Link VIGI摄像头
 
 TP-Link VIGI摄像头需要调整主码流设置以避免问题。需要将流配置为`H264`，并将`智能编码`设置为`关闭`。没有这些设置，在尝试观看录制片段时可能会出现问题。例如Firefox会在播放几秒后停止并显示以下错误信息：`媒体播放因损坏问题或媒体使用了浏览器不支持的功能而中止。`。
+
+
+## USB摄像头（也叫网络摄像头）
+若要在Frigate中使用USB摄像头（网络摄像头），建议通过go2rtc的[FFmpeg设备功能](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#source-ffmpeg-device)来实现支持：
+
+- Frigate以外的准备工作：
+  - 获取USB摄像头设备路径。在宿主机上运行 `v4l2-ctl --list-devices` 命令查看本地连接的摄像头列表（可能需要根据你的Linux发行版安装`v4l-utils`工具包）。下文示例配置中，我们使用`video=0`来对应检测到的设备路径 `/dev/video0`
+  - 查询USB摄像头支持的格式与分辨率。运行 `ffmpeg -f v4l2 -list_formats all -i /dev/video0` 命令获取摄像头支持的编码格式及分辨率列表。下文示例配置基于查询结果，在视频流和检测设置中采用1024×576的分辨率。
+  - 若在容器环境（如TrueNAS上的Docker）中使用Frigate，需确保已启用USB透传功能，并在配置中明确指定主机设备（`/dev/video0`）与容器设备（`/dev/video0`）的映射关系
+- 在Frigate配置文件中，按需添加go2rtc流媒体配置及功能：
+
+```
+go2rtc:
+  streams:
+    usb_camera:
+      - "ffmpeg:device?video=0&video_size=1024x576#video=h264" 
+
+cameras:
+  usb_camera:
+    enabled: true
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/usb_camera
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: false # <---- 在正常获得摄像头视频流之前，先暂时禁用检测功能，正常后再改为true
+      width: 1024
+      height: 576
+```

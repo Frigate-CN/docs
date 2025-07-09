@@ -100,10 +100,12 @@ cameras:
 | Amcrest ASH21                |      ✅      |      ❌      | ONVIF服务端口: 80                                                                                                                          |
 | Amcrest IP4M-S2112EW-AI      |      ✅      |      ❌      | 不支持FOV相对移动。                                                                                                            |
 | Amcrest IP5M-1190EW          |      ✅      |      ❌      | ONVIF端口: 80。不支持FOV相对移动。                                                                                            |
-| Annke CZ504                  |      ✅      |      ✅      | 安克（Annke）官方支持提供了专用固件版本（V5.7.1 build 250227）以修复ONVIF协议中"TranslationSpaceFov"参数的兼容性问题。 |
+| Annke CZ504                  |      ✅      |      ✅      | 安克（Annke）官方支持提供了专用固件版本（[V5.7.1 build 250227](https://github.com/pierrepinon/annke_cz504/raw/refs/heads/main/digicap_V5-7-1_build_250227.dav)）以修复ONVIF协议中"TranslationSpaceFov"参数的兼容性问题。 |
 | Ctronics PTZ                 |      ✅      |      ❌      |                                                                                                                                                 |
 | Dahua                        |      ✅      |      ✅      | 据用户反馈，部分低端大华摄像头（尤其是Lite系列等入门机型）存在​​不支持自动跟踪功能​​的情况。                                                     |
 | Dahua DH-SD2A500HB           |      ✅      |      ❌      |                                                                                                                                                 |
+| Dahua DH-SD49825GB-HNR       |      ✅      |      ✅      |                                                                                                                                                 |
+| Dahua DH-P5AE-PV             |      ❌      |      ❌      |                                                                                                                                                 |
 | Foscam R5                    |      ✅      |      ❌      |                                                                                                                                                 |
 | Hanwha XNP-6550RH            |      ✅      |      ❌      |                                                                                                                                                 |
 | Hikvision                    |      ✅      |      ❌      | ONVIF支持不完整(即使是最新固件MoveStatus也不会更新) - 在HWP-N4215IH-DE和DS-2DE3304W-DE型号上报告，但可能还有其他型号 |

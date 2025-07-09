@@ -103,6 +103,14 @@ services:
 
 使用`http://<frigate_device_ip>:8971`作为集成的URL，以便需要认证。
 
+:::tip
+
+上述URL的前提是你已经[禁用了TLS](../configuration/tls)。禁用了TLS后将使用`HTTP`协议进行访问，而不是`HTTPS`。
+默认情况下，TLS是启用的，Frigate会使用自签名证书。由于Home Assistant无法验证自签名证书，它将无法通过HTTPS连接到8971端口。
+有两种解决方案：要么禁用TLS并从Home Assistant使用HTTP连接，要么为Frigate配置一个有效的证书以实现安全连接。
+
+:::
+
 ```yaml
 services:
   frigate:
