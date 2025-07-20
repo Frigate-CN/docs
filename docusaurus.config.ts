@@ -29,9 +29,9 @@ const config: Config = {
   },
   themeConfig: {
     algolia: {
-      appId: 'WIURGBNBPY',
-      apiKey: 'd02cc0a6a61178b25da550212925226b',
-      indexName: 'frigate',
+      appId: '71C73Q4R6H',
+      apiKey: '8433b09f8566a28a87c8ecf6ee930764',
+      indexName: 'docs_frigate_cn_video_71c73q4r6h_pages'
     },
     docs: {
       sidebar: {
