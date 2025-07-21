@@ -12,7 +12,7 @@ const config: Config = {
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'frigate-cn',
-  projectName: 'frigate',
+  projectName: 'frigate_cn',
   themes: ['@docusaurus/theme-mermaid', 'docusaurus-theme-openapi-docs'],
   markdown: {
     mermaid: true,
@@ -31,7 +31,8 @@ const config: Config = {
     algolia: {
       appId: '71C73Q4R6H',
       apiKey: '8433b09f8566a28a87c8ecf6ee930764',
-      indexName: 'docs_frigate_cn_video_71c73q4r6h_pages'
+      indexName: 'frigate_cn',
+      contextualSearch: false
     },
     docs: {
       sidebar: {
