@@ -30,6 +30,7 @@ const teekConfig = defineTeekConfig({
     },
   ],
   footerInfo: {
+    topMessage: ['本网站使用的 © Frigate 及相关商标（包括但不限于Logo）均为 <strong>Frigate, LLC</strong> 所有，并已获得其授权非商用使用许可。', '本站为非官方中文社区，非 Frigate 官方网站，不代表 Frigate 官方立场。'],
     bottomMessage: [`CDN 加速及安全防护由 <a href="https://edgeone.ai/zh?from=github" style="display: inline-block;"><img src="https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png" style="margin-top: 5px;height: 16px;"></a> 提供`],
     icpRecord: {
       name: "渝ICP备2025058994号-1",
@@ -61,6 +62,7 @@ export default defineConfig({
     },
     // https://vitepress.dev/reference/default-theme-config
     nav: [
+      { text: '文档', link: '/frigate' },
       { text: '官网', link: 'https://frigate.video/'},
       { text: '演示Demo', link: 'http://demo.frigate.video/'},
       {

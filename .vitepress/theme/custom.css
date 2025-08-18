@@ -1,0 +1,14 @@
+@media (min-width: 960px) {
+    .image-src {
+        max-width: 320px;
+        max-height: 320px;
+    }
+}
+
+:root {
+    --tk-home-max-width: 1300px;
+}
+
+.VPHero {
+    background-color: aliceblue;
+}
