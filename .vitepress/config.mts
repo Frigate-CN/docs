@@ -54,7 +54,7 @@ export default defineConfig({
   srcDir: "docs",
   lang: "zh-Hans",
   title: "Frigate中文文档",
-  description: "A VitePress Site",
+  description: "Frigate NVR（网络视频监控录制）系统中文站",
   locales: {
     root: {
       label: '简体中文',
