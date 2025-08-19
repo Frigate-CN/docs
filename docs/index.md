@@ -22,3 +22,31 @@ hero:
   <p>专为注重隐私的家庭自动化用户打造，Frigate究竟有何魅力？</p>
 </div>
 <ResponsiveGrid/>
+
+<div style="text-align: center; margin-bottom: 3em; margin-top: 3em">
+  <h1>他们怎么说</h1>
+</div>
+
+::: shareCard 3
+
+```yaml
+- name: 司波图
+  desc: 一个真正属于我们自己的免订阅的无广告的想看多久就看多久的本地监控系统
+  avatar: /assets/sbt.jpg
+  link: https://www.bilibili.com/video/BV1F18QzzERD
+  bgColor: "#FFB6C1"
+  textColor: "#621529"
+
+- name: 宅魂Kill
+  desc: 强大，稳定，开源，安全
+  avatar: /assets/zhaisoul.jpg
+  link: https://github.com/ZhaiSoul
+  bgColor: "#CBEAFA"
+  textColor: "#6854A1"
+
+- name: 瞳灵、
+  desc: 难得一见的、新手可玩的开源NVR系统
+  avatar: /assets/tl.jpg
+```
+
+:::

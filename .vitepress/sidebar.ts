@@ -100,9 +100,7 @@ export const sidebar = [
       { text: 'Home Assistant', link: '/integrations/home-assistant' },
       {
         text: 'HTTP API',
-        link: '/integrations/api/frigate-http-api',
-        // 注意：VitePress不直接支持frigateHttpApiSidebar这样的动态引用
-        // 你可能需要手动展开这个部分或者在config.ts中动态生成
+        link: 'https://docs.frigate.video/integrations/api/frigate-http-api',
       },
       { text: 'MQTT', link: '/integrations/mqtt' },
       { text: '指标', link: '/configuration/metrics' },

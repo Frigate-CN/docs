@@ -1,7 +1,11 @@
 @media (min-width: 960px) {
     .image-src {
-        max-width: 320px;
-        max-height: 320px;
+        max-width: 600px !important;
+        max-height: 600px !important;
+    }
+
+    .image-container {
+        transform: translate(40px,20px) !important;
     }
 }
 
@@ -11,4 +15,12 @@
 
 .VPHero {
     background-color: aliceblue;
+}
+
+.dark .VPHero {
+    background-color: #1e1e1e;
+}
+
+.dark .VPNavBarMenuGroup .text svg {
+    fill: var(--vp-c-text-1);
 }
