@@ -54,8 +54,8 @@ services:
   frigate:
     ...
     volumes:
-      - /path/to/your/config:/config
-      - /path/to/your/storage:/media/frigate
+      - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
+      - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
       - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
         target: /tmp/cache
         tmpfs:
@@ -197,7 +197,7 @@ services:
     privileged: true # 部分设置可能不需要此选项
     restart: unless-stopped
     stop_grace_period: 30s # 为各服务提供足够的关闭时间
-    image: ghcr.io/blakeblackshear/frigate:stable
+    image: ghcr.io/blakeblackshear/frigate:stable # 可以考虑使用国内镜像加速源，例如ghcr.nju.edu.cn/blakeblackshear/frigate:stable
     shm_size: "512mb" # 根据上述计算结果为您的摄像头更新此值
     devices:
       - /dev/bus/usb:/dev/bus/usb # 用于USB Coral，其他版本需要修改
@@ -206,8 +206,8 @@ services:
       - /dev/dri/renderD128:/dev/dri/renderD128 # 用于Intel硬件加速，需要根据您的硬件更新
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /path/to/your/config:/config
-      - /path/to/your/storage:/media/frigate
+      - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
+      - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
       - type: tmpfs # 可选：1GB内存，减少SSD/SD卡损耗
         target: /tmp/cache
         tmpfs:
@@ -219,7 +219,8 @@ services:
       - "8555:8555/tcp" # 基于TCP的WebRTC
       - "8555:8555/udp" # 基于UDP的WebRTC
     environment:
-      FRIGATE_RTSP_PASSWORD: "password"
+      FRIGATE_RTSP_PASSWORD: "password" # rtsp的密码，请修改"password"为你期望的密码
+      TZ: "Asia/Shanghai" # 设置为中国+8时区
 ```
 
 如果您无法使用Docker Compose，可以使用类似以下命令运行容器：
@@ -237,6 +238,7 @@ docker run -d \
   -v /path/to/your/config:/config \
   -v /etc/localtime:/etc/localtime:ro \
   -e FRIGATE_RTSP_PASSWORD='password' \
+  -e TZ='Asia/Shanghai' \
   -p 8971:8971 \
   -p 8554:8554 \
   -p 8555:8555/tcp \
@@ -419,7 +421,7 @@ docker run \
   --name=frigate \
   --shm-size=256m \
   --restart=unless-stopped \
-  --env=TZ=America/New_York \
+  --env=TZ=Asia/Shanghai \
   --volume=/share/Container/frigate/config:/config:rw \
   --volume=/share/share_vol2/frigate/media:/media/frigate:rw \
   --network=bridge \

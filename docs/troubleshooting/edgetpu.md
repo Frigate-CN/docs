@@ -46,6 +46,18 @@ USB coral在未初始化和初始化状态下有不同的ID。
 6. 打开控制面板-信息界面。coral TPU现在会被识别为USB设备 - google inc
 7. 启动frigate容器。现在一切应该正常工作了！
 
+### QNAP NAS 设备注意事项
+
+若您的 QNAP NAS 设备（如 TS-253A）安装了 https://www.qnap.com/en/software/qumagie 及其 QNAP AI Core 扩展组件，系统可能会自动调用连接的 Coral TPU 加速设备。但请注意：当启用 **人脸识别**、**物体识别** 或 **相似照片识别** 任一功能时，Container Station 中运行的 **Frigate** 或 **CodeProject.AI Server** 等应用程序将无法初始化当前使用的 TPU 设备。
+
+如需允许 Coral TPU 设备被正常调用，您必须选择以下任一方案：
+
+1. https://docs.qnap.com/application/qumagie/2.x/en-us/configuring-qnap-ai-core-settings-FB13CE03.html  
+2. 卸载 QNAP AI Core 扩展组件  
+3. 在 Frigate 完全启动后手动启动 QNAP AI Core 扩展（不推荐）
+
+**重要提示**：完成设置变更后，建议重启您的 NAS 设备以确保配置生效。
+
 ## USB Coral检测似乎卡住
 
 USB Coral可能会卡住需要重启，这可能由多种硬件和软件设置原因导致。一些常见原因是：

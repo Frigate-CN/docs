@@ -4,7 +4,9 @@ export const sidebar = [
     items: [
       { text: '介绍', link: '/frigate/' },
       { text: '硬件', link: '/frigate/hardware' },
+      { text: '安装规划', link: 'frigate/planning_setup' },
       { text: '安装', link: '/frigate/installation' },
+      { text: '更新', link: '/frigate/updating' },
       { text: '摄像头设置', link: '/frigate/camera_setup' },
       { text: '视频管道', link: '/frigate/video_pipeline' },
       { text: '术语表', link: '/frigate/glossary' },

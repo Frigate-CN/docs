@@ -111,7 +111,7 @@ python3 -c 'import secrets; print(secrets.token_hex(64))'
 
 ### Header映射
 
-如果您已禁用 Frigate 的认证，并且您的代理支持传递带有已认证用户名和/或角色的头部，您可以使用 `header_map` 配置来指定头部名称，以便将其传递给 Frigate。例如，以下配置将映射 `X-Forwarded-User` 和 `X-Forwarded-Role` 值。头部名称不区分大小写。Header头中可以包含多个值，但必须使用英文逗号分隔。
+如果您已禁用 Frigate 的认证，并且您的代理支持传递带有已认证用户名和/或角色的头部，您可以使用 `header_map` 配置来指定头部名称，以便将其传递给 Frigate。例如，以下配置将映射 `X-Forwarded-User` 和 `X-Forwarded-Groups` 值。头部名称不区分大小写。Header头中可以包含多个值，但必须使用英文逗号分隔。
 
 ```yaml
 proxy:
@@ -119,7 +119,7 @@ proxy:
   separator: "|" # 此默认值为逗号，但Authentik使用管道符作为分隔符
   header_map:
     user: x-forwarded-user
-    role: x-forwarded-role
+    role: x-forwarded-groups
 ```
 
 Frigate 支持 `admin` 和 `viewer` 两种角色（见下文）。当使用端口 `8971` 时，Frigate 验证这些头部，后续请求使用 `remote-user` 和 `remote-role` 头部进行授权。

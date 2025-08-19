@@ -69,11 +69,11 @@ cameras:
 
 输出参数预设可优化录制文件的生成逻辑，确保录制内容的一致性。
 
-| 预设名称                     | 适用场景                  | 注意事项                                                                 |
-|-----------------------------|-------------------------|------------------------------------------------------------------------|
-| preset-record-generic       | 无音频录制               | 未指定时的默认预设                                                     |
-| preset-record-generic-audio-copy | 保留原始音频录制       | 启用音频录制时使用                                                     |
-| preset-record-generic-audio-aac | 转码为AAC音频录制      | 源已是AAC编码时应改用preset-record-generic-audio-copy避免重复编码      |
-| preset-record-mjpeg        | MJPEG流录制             | 建议改用重流方式处理                                                   |
-| preset-record-jpeg         | 实时JPEG录制            | 建议改用重流方式处理                                                   |
-| preset-record-ubiquiti     | Ubiquiti非标音频流录制  | 适用于Ubiquiti设备的特殊音频格式                                       |
+| 预设方案                        | 用途说明                          | 其他说明                                                                                                                                                                                              |
+| ------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| preset-record-generic           | 无音频录制                        | 如果您的摄像头没有音频功能，或者您不想录制音频，请选择此选项                                                                                                                 |
+| preset-record-generic-audio-copy | 带原始音频录制                    | 使用此选项可在录像中保留音频                                                                                                                                                                   |
+| preset-record-generic-audio-aac  | 带转码AAC音频录制                 | 这是不指定任何选项时的默认设置。使用此选项可将音频转码为AAC格式。如果源音频已经是AAC格式，请改用preset-record-generic-audio-copy以避免不必要的重新编码                                               |
+| preset-record-mjpeg             | 录制MJPEG视频流                   | 建议改用MJPEG视频流转发方式                                                                                                                                                               |
+| preset-record-jpeg              | 录制实时JPEG图像                  | 建议改用实时JPEG图像转发方式                                                                                                                                                                  |
+| preset-record-ubiquiti          | 录制带音频的Ubiquiti视频流        | 录制包含Ubiquiti非标准音频的视频                                                                                                                                                              |

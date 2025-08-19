@@ -168,21 +168,32 @@ docker run -d \
 
 #### perf_event_paranoid
 
-_注意：此设置必须针对整个系统修改。_
+**注意：此设置必须针对整个系统修改。**
 
 关于不同发行版的值的更多信息，请参见 https://askubuntu.com/questions/1400874/what-does-perf-paranoia-level-four-do。
 
 根据您的操作系统和内核配置，您可能需要更改 `/proc/sys/kernel/perf_event_paranoid` 内核可调参数。您可以通过运行 `sudo sh -c 'echo 2 >/proc/sys/kernel/perf_event_paranoid'` 来测试更改，这将持续到重启。通过运行 `sudo sh -c 'echo kernel.perf_event_paranoid=2 >> /etc/sysctl.d/local.conf'` 使其永久生效。
 
-#### SR-IOV 设备统计
+#### SR-IOV或其他设备的统计信息配置
 
-当通过 SR-IOV 使用虚拟化 GPU 时，需要额外参数才能使 GPU 统计功能正常工作。可以通过以下配置启用：
+当通过SR-IOV使用虚拟化GPU时，需要额外参数才能获取GPU统计信息。您可以通过指定以下配置来启用此功能：即设置用于从`intel_gpu_top`收集统计信息的设备路径。以下示例可能适用于某些使用SR-IOV的系统：
 
 ```yaml
 telemetry:
   stats:
-    sriov: True
+    sriov: true
+    intel_gpu_device: "sriov"
 ```
+
+对于其他虚拟化GPU，可以尝试直接指定设备路径：
+
+```yaml
+telemetry:
+  stats:
+    intel_gpu_device: "drm:/dev/dri/card0"
+```
+
+如果您指定了设备路径，请确保已将设备透传到容器中。
 
 ## AMD/ATI GPU（Radeon HD 2000 及更新的 GPU）通过 libva-mesa-driver
 
@@ -371,17 +382,45 @@ ffmpeg:
 在您的 `config.yml` 中添加以下 FFmpeg 预设之一以启用硬件视频处理：
 
 ```yaml
-# 如果要解码 h264 编码的流
 ffmpeg:
-  hwaccel_args: preset-rk-h264
-
-# 如果要解码 h265 (hevc) 编码的流
-ffmpeg:
-  hwaccel_args: preset-rk-h265
+  hwaccel_args: preset-rkmpp
 ```
 
 :::note
 
 确保您的 SoC 支持您的输入流的硬件加速。例如，如果您的摄像头以 h265 编码和 4k 分辨率进行流式传输，您的 SoC 必须能够以 4k 或更高分辨率进行 h265 编解码。如果您不确定您的 SoC 是否满足要求，请查看数据手册。
+
+:::
+
+:::warning
+
+如果您的部分摄像头出现处理异常，且日志中显示如下错误信息：
+
+```
+[segment @ 0xaaaaff694790] Timestamps are unset in a packet for stream 0. This is deprecated and will stop working in the future. Fix your code to set the timestamps properly
+[Parsed_scale_rkrga_0 @ 0xaaaaff819070] No hw context provided on input
+[Parsed_scale_rkrga_0 @ 0xaaaaff819070] Failed to configure output pad on Parsed_scale_rkrga_0
+Error initializing filters!
+Error marking filters as finished
+[out#1/rawvideo @ 0xaaaaff3d8730] Nothing was written into output file, because at least one of its streams received no packets.
+Restarting ffmpeg...
+```
+
+建议您尝试升级至 FFmpeg 7 版本。可通过以下配置选项实现升级：
+
+```
+ffmpeg:
+  path: "7.0"
+```
+
+该选项可全局设置（为所有摄像头启用 FFmpeg 7），也可针对单个摄像头单独配置。请注意不要与以下摄像头配置项混淆：
+
+```
+cameras:
+  name:
+    ffmpeg:
+      inputs:
+        - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
+```
 
 :::

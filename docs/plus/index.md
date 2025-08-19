@@ -59,9 +59,9 @@ Frigate+模型与`onnx`检测器的配合使用仅限Frigate 0.15及以上版本
 Frigate+模型支持更适合安防摄像头的对象集。当前支持以下对象：
 
 - **人物**：`person`、`face`
-- **车辆**：`car`、`motorcycle`、`bicycle`、`boat`、`license_plate`
-- **快递标识**：`amazon`、`usps`、`ups`、`fedex`、`dhl`、`an_post`、`purolator`、`postnl`、`nzpost`、`postnord`、`gls`、`dpd`
-- **动物**：`dog`、`cat`、`deer`、`horse`、`bird`、`raccoon`、`fox`、`bear`、`cow`、`squirrel`、`goat`、`rabbit`
+- **车辆**：`car`、`motorcycle`、`bicycle`、`boat`、`school_bus`、`license_plate`
+- **快递标识**：`amazon`、`usps`、`ups`、`fedex`、`dhl`、`an_post`、`purolator`、`postnl`、`nzpost`、`postnord`、`gls`、`dpd`、 `canada_post`、 `royal_mail`
+- **动物**：`dog`、`cat`、`deer`、`horse`、`bird`、`raccoon`、`fox`、`bear`、`cow`、`squirrel`、`goat`、`rabbit`、 `skunk`、 `kangaroo`
 - **其他**：`package`、`waste_bin`、`bbq_grill`、`robot_lawnmower`、`umbrella`
 
 Frigate默认模型中的其他对象类型暂不支持。未来版本将增加更多对象类型。
@@ -71,7 +71,7 @@ Frigate默认模型中的其他对象类型暂不支持。未来版本将增加�
 候选标签也可用于标注。这些标签目前没有足够的数据纳入模型，但使用它们将有助于更快地提供支持。你可以通过编辑相机设置来启用这些标签。
 在可能的情况下，这些标签在训练期间会映射到现有标签。例如，在添加对新标签的支持之前，任何 “婴儿”（`baby`） 标签都会映射到 “人”（`person`）。
 
-候选标签有：`baby`, `royal mail`, `canada post`, `bpost`, `skunk`, `badger`, `possum`, `rodent`, `kangaroo`, `chicken`, `groundhog`, `boar`, `hedgehog`, `school bus`, `tractor`, `golf cart`, `garbage truck`, `bus`, `sports ball`
+候选标签有：`baby`, `bpost`, `badger`, `possum`, `rodent`, `chicken`, `groundhog`, `boar`, `hedgehog`, `tractor`, `golf cart`, `garbage truck`, `bus`, `sports ball`
 
 候选标签无法使用自动建议。
 

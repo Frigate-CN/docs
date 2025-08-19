@@ -368,8 +368,8 @@ detectors:
 
 model:
   model_type: rfdetr
-  width: 560
-  height: 560
+  width: 320
+  height: 320
   input_tensor: nchw
   input_dtype: float
   path: /config/model_cache/rfdetr.onnx
@@ -620,8 +620,8 @@ detectors:
 
 model:
   model_type: rfdetr
-  width: 560
-  height: 560
+  width: 320
+  height: 320
   input_tensor: nchw
   input_dtype: float
   path: /config/model_cache/rfdetr.onnx
@@ -781,8 +781,8 @@ model:
   labelmap_path: /labelmap/coco-80.txt
   input_tensor: nchw
   input_pixel_format: rgb
-  width: 320
-  height: 320
+  width: 320 # 必须与所选模型匹配，例如 yolov7-320 对应 320，yolov4-416 对应 416
+  height: 320 # 必须与所选模型匹配，例如 yolov7-320 对应 320，yolov4-416 对应 416
 ```
 
 ## Rockchip平台检测器
@@ -795,7 +795,23 @@ Rockchip平台支持以下SoC的硬件加速对象检测：
 - RK3576
 - RK3588
 
-该实现使用[Rockchip的RKNN-Toolkit2](https://github.com/airockchip/rknn-toolkit2/) v2.3.0版本。目前仅支持[Yolo-NAS](https://github.com/Deci-AI/super-gradients/blob/master/YOLONAS.md)作为对象检测模型。
+该实现使用[Rockchip的RKNN-Toolkit2](https://github.com/airockchip/rknn-toolkit2/) v2.3.2版本。
+
+:::tip
+
+多摄像头场景下，单个检测器可能处理不过来。若NPU资源允许，可配置多个检测器，例如：
+
+```yaml
+detectors:
+  rknn_0:
+    type: rknn
+    num_cores: 0
+  rknn_1:
+    type: rknn
+    num_cores: 0
+```
+
+:::
 
 ### 前提条件
 
@@ -807,7 +823,7 @@ Rockchip平台支持以下SoC的硬件加速对象检测：
 
 ```bash
 $ cat /sys/kernel/debug/rknpu/load
->> NPU负载：核心0：0%，核心1：0%，核心2：0%，
+>> NPU load:  Core0:  0%, Core1:  0%, Core2:  0%,
 ```
 
 :::
@@ -817,9 +833,9 @@ $ cat /sys/kernel/debug/rknpu/load
 以下`config.yml`展示了配置检测器的所有相关选项并加以说明。除两处外，所有显示的值均为默认值。标记为"required"的行是使用检测器至少需要的配置，其他行均为可选。
 
 ```yaml
-detectors: # required
-  rknn: # required
-    type: rknn # required
+detectors: # 必填
+  rknn: # 必填
+    type: rknn # 必填
     # 使用的NPU核心数量
     # 0表示自动选择
     # 如果有多核NPU（如在rk3588上），可增加此值以提高性能，例如设置为3
@@ -830,12 +846,12 @@ detectors: # required
 
 | 模型               | 大小(MB) | 推理时间(ms) |
 | ------------------- | -------- | ------------ |
-| deci-fp16-yolonas_s | 24       | 25           |
-| deci-fp16-yolonas_m | 62       | 35           |
-| deci-fp16-yolonas_l | 81       | 45           |
-| yolov9_tiny         | 8        | 35           |
-| yolox_nano          | 3        | 16           |
-| yolox_tiny          | 6        | 20           |
+| deci-fp16-yolonas_s   | 24         | 25                   |
+| deci-fp16-yolonas_m   | 62         | 35                   |
+| deci-fp16-yolonas_l   | 81         | 45                   |
+| frigate-fp16-yolov9-t | 6          | 35                   |
+| rock-i8-yolox_nano    | 3          | 14                   |
+| rock-i8_yolox_tiny    | 6          | 18                   |
 
 - 所有模型都会自动下载并存储在`config/model_cache/rknn_cache`文件夹中。升级Frigate后，应删除旧模型以释放空间。
 - 您也可以提供自己的`.rknn`模型。请不要将自己的模型保存在`rknn_cache`文件夹中，应直接存储在`model_cache`文件夹或其他子文件夹中。要将模型转换为`.rknn`格式，请参阅`rknn-toolkit2`（需要x86机器）。注意，仅支持对特定模型进行后处理。
@@ -849,7 +865,7 @@ model: # required
   # - deci-fp16-yolonas_s
   # - deci-fp16-yolonas_m
   # - deci-fp16-yolonas_l
-  # 或您的yolonas_model.rknn
+  # 或您的yolonas_model.rknn容器内完整路径
   path: deci-fp16-yolonas_s
   model_type: yolonas
   width: 320
@@ -871,15 +887,17 @@ DeciAI提供的预训练YOLO-NAS权重受其许可证约束，不可用于商业
 model: # required
   # 模型名称（将自动下载）或自定义.rknn模型文件路径
   # 可选值：
-  # - yolov9-t
-  # - yolov9-s
-  # 或您的yolo_model.rknn
-  path: /config/model_cache/rknn_cache/yolov9-t.rknn
+  # - frigate-fp16-yolov9-t
+  # - frigate-fp16-yolov9-s
+  # - frigate-fp16-yolov9-m
+  # - frigate-fp16-yolov9-c
+  # - frigate-fp16-yolov9-e
+  # 或您的yolo_model.rknn容器内完整路径
+  path: frigate-fp16-yolov9-t
   model_type: yolo-generic
   width: 320
   height: 320
   input_tensor: nhwc
-  input_dtype: float
   labelmap_path: /labelmap/coco-80.txt
 ```
 
@@ -889,10 +907,12 @@ model: # required
 model: # required
   # 模型名称（将自动下载）或自定义.rknn模型文件路径
   # 可选值：
-  # - yolox_nano
-  # - yolox_tiny
-  # 或您的yolox_model.rknn
-  path: yolox_tiny
+  # - rock-i8-yolox_nano
+  # - rock-i8-yolox_tiny
+  # - rock-fp16-yolox_nano
+  # - rock-fp16-yolox_tiny
+  # 或您的yolox_model.rknn容器内完整路径
+  path: rock-i8-yolox_nano
   model_type: yolox
   width: 416
   height: 416
@@ -932,7 +952,7 @@ config:
   - `soc`: 模型构建的目标SoC（如"rk3588"）
   - `tk_version`: `rknn-toolkit2`的版本（如"2.3.0"）
   - **示例**: 指定`output_name = "frigate-{quant}-{input_basename}-{soc}-v{tk_version}"`可能会生成名为`frigate-i8-my_model-rk3588-v2.3.0.rknn`的模型
-- `config`: 传递给`rknn-toolkit2`进行模型转换的配置。所有可用参数的说明请参阅[本手册](https://github.com/MarcA711/rknn-toolkit2/releases/download/v2.3.0/03_Rockchip_RKNPU_API_Reference_RKNN_Toolkit2_V2.3.0_EN.pdf)的"2.2. 模型配置"部分
+- `config`: 传递给`rknn-toolkit2`进行模型转换的配置。所有可用参数的说明请参阅[本手册](https://github.com/MarcA711/rknn-toolkit2/releases/download/v2.3.2/03_Rockchip_RKNPU_API_Reference_RKNN_Toolkit2_V2.3.2_EN.pdf)的"2.2. 模型配置"部分
 
 # 模型
 
@@ -967,35 +987,37 @@ python3 tools/deployment/export_onnx.py -c configs/dfine/objects365/dfine_hgnetv
 
 ### 下载RF-DETR模型
 
-导出为ONNX格式：
+您可以通过运行以下命令将RF-DETR导出为ONNX格式。请将整段命令复制粘贴到终端执行，并根据需要将第一行中的`MODEL_SIZE=Nano`修改为`Nano`、`Small`或`Medium`规格。
 
-1. `pip3 install rfdetr`
-2. `python3`
-3. `from rfdetr import RFDETRBase`
-4. `x = RFDETRBase()`
-5. `x.export()`
-
-#### 额外配置
-
-可以自定义输入张量分辨率：
-
-```python
-from rfdetr import RFDETRBase
-x = RFDETRBase(resolution=560)  # 分辨率必须是56的倍数
-x.export()
+```sh
+docker build . --build-arg MODEL_SIZE=Nano --output . -f- <<'EOF'
+FROM python:3.11 AS build
+RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
+WORKDIR /rfdetr
+RUN uv pip install --system rfdetr onnx onnxruntime onnxsim onnx-graphsurgeon
+ARG MODEL_SIZE
+RUN python3 -c "from rfdetr import RFDETR${MODEL_SIZE}; x = RFDETR${MODEL_SIZE}(resolution=320); x.export()"
+FROM scratch
+ARG MODEL_SIZE
+COPY --from=build /rfdetr/output/inference_model.onnx /rfdetr-${MODEL_SIZE}.onnx
+EOF
 ```
 
 ### 下载YOLO-NAS模型
 
-您可以使用[Jupyter笔记本](https://github.com/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb) [![在Colab中打开](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb)来构建并下载带有预训练权重的兼容模型。该模型可以直接在[Google Colab](https://colab.research.google.com/github/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb)上运行。
+点击下方的`Open in colab`按钮即可在 Google Colab中使用此[构建脚本](https://github.com/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb)可直接构建并下载预训练兼容模型。
+[![在Colab中打开](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb)
 
 :::warning
+
+注意，该在线构建服务由Google提供，中国大陆地区可能无法正常访问，请使用科学上网。
 
 DeciAI提供的预训练YOLO-NAS权重受其许可证约束，不可用于商业用途。更多信息请参阅：https://docs.deci.ai/super-gradients/latest/LICENSE.YOLONAS.html
 
 :::
 
-Jupyter笔记本的输入图像大小设置为320x320。由于Frigate在运行检测前会将视频帧裁剪到感兴趣区域，因此在大多数情况下这可以降低CPU使用率并加快推理速度，而不会影响性能。如果需要，可以将this notebook和配置更新为640x640。
+本笔记本中的输入图像尺寸默认设置为320x320。由于Frigate在执行检测前会将视频帧裁剪至关注区域，这种设置通常不会影响检测性能，同时还能降低CPU使用率并加快推理速度。如果需要，您可以将笔记本和配置更新为640x640的输入尺寸。
 
 ### 下载YOLO模型
 
@@ -1016,22 +1038,23 @@ python3 yolo_to_onnx.py -m yolov7-320
 
 #### YOLOv9
 
-YOLOv9模型可以使用以下代码导出
+您可以使用以下命令将YOLOv9模型导出为ONNX格式。请将整段命令复制粘贴到终端执行，并根据需要修改第一行中的`MODEL_SIZE=t`参数（可替换为`t`, `s`, `m`, `c`, 以及 `e`等 [模型尺寸](https://github.com/WongKinYiu/yolov9#performance)）。
 
 ```sh
-git clone https://github.com/WongKinYiu/yolov9
-cd yolov9
-
-# 设置虚拟环境，避免影响主系统
-# 虚拟环境必须使用Python 3.11或更老的版本。
-python3 -m venv ./
-bin/pip install -r requirements.txt
-bin/pip install onnx onnxruntime onnx-simplifier>=0.4.1
-
-# 下载权重
-wget -O yolov9-t.pt "https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-t-converted.pt" # 下载权重
-
-# 准备并运行导出脚本
-sed -i "s/ckpt = torch.load(attempt_download(w), map_location='cpu')/ckpt = torch.load(attempt_download(w), map_location='cpu', weights_only=False)/g" ./models/experimental.py
-bin/python3 export.py --weights ./yolov9-t.pt --imgsz 320 --simplify --include onnx
+docker build . --build-arg MODEL_SIZE=t --output . -f- <<'EOF'
+FROM python:3.11 AS build
+RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
+WORKDIR /yolov9
+ADD https://github.com/WongKinYiu/yolov9.git .
+RUN uv pip install --system -r requirements.txt
+RUN uv pip install --system onnx onnxruntime onnx-simplifier>=0.4.1
+ARG MODEL_SIZE
+ADD https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-${MODEL_SIZE}-converted.pt yolov9-${MODEL_SIZE}.pt
+RUN sed -i "s/ckpt = torch.load(attempt_download(w), map_location='cpu')/ckpt = torch.load(attempt_download(w), map_location='cpu', weights_only=False)/g" models/experimental.py
+RUN python3 export.py --weights ./yolov9-${MODEL_SIZE}.pt --imgsz 320 --simplify --include onnx
+FROM scratch
+ARG MODEL_SIZE
+COPY --from=build /yolov9/yolov9-${MODEL_SIZE}.onnx /
+EOF
 ```

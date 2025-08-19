@@ -45,13 +45,13 @@ Frigate支持多种硬件平台的检测器方案：
 
 **AMD**
 
-- [ROCm](#amd-gpus): ROCm 能够在AMD显卡上运行，提供高效的检测功能
+- [ROCm](#rocm---amd-gpu): ROCm 能够在AMD显卡上运行，提供高效的检测功能
   - [支持一部分模型](/configuration/object_detectors#支持的模型-1)
   - 最好运行在AMD独显上
 
 **Intel**
 
-- [OpenVino](#openvino): OpenVino 可以运行在 Intel Arc独立显卡、Intel 核显以及Intel的CPU
+- [OpenVino](#openvino---intel): OpenVino 可以运行在 Intel Arc独立显卡、Intel 核显以及Intel的CPU
   - [支持大部分主流模型](/configuration/object_detectors#支持的模型)
   - 推荐使用tiny/small/medium尺寸的模型
 
@@ -94,13 +94,20 @@ Frigate 同时支持 USB 和 M.2 两种版本的 Google Coral 加速模块：
 
 当推理速度为 10ms 时，你的 Coral 最高可处理 1000/10=100，即每秒 100 帧。如果你的检测帧率经常接近这个值，你可以调整动态检测遮罩降低检测区域，或考虑增加第二个Coral设备。
 
-### OpenVINO
+### OpenVINO - Intel
 
-OpenVINO 检测器可在以下硬件平台上运行：
+OpenVINO检测器类型支持在以下硬件平台上运行：
 
-- 带集成显卡的第六代及以上 Intel 平台
-- 配备 VPU 硬件的 x86 & arm64 主机（如 Intel NCS2）
-- 多数现代 AMD CPU（虽然 Intel 官方未提供支持）
+- 第六代Intel平台及更新版本（配备核显iGPU）
+- 搭载Intel Arc显卡的x86架构主机
+- 大多数现代AMD处理器（虽然Intel官方支持此平台）
+- 通过CPU运行的x86和Arm64架构主机（通常不建议此方式）
+
+:::note
+Intel NPU 部署的实际效果根据社区反馈称[较为有限（英文社区讨论）]((https://github.com/blakeblackshear/frigate/discussions/13248#discussioncomment-12347357))，尽管官方目前尚未提供支持。
+
+测试数据显示，NPU的处理性能仅与核显相当，甚至在某些场景下甚至表现更差。
+:::
 
 更多详细信息请参阅 [检测器文档](/configuration/object_detectors#openvino检测器)
 
@@ -122,13 +129,13 @@ OpenVINO 检测器可在以下硬件平台上运行：
 
 Frigate能够使用支持12.x系列CUDA库的英伟达GPU。
 
-### 最低硬件支持
+#### 最低硬件支持
 
-使用的是12.x系列CUDA库，它们具有次版本兼容性。主机系统上的最低驱动程序版本必须为`>=545`。此外，GPU必须支持`5.0`或更高的计算能力。这通常对应于Maxwell-era或更新的GPU，请查看下面链接的NVIDIA GPU计算能力表。
+本系统使用的是具有**次版本兼容性**的CUDA 12.x系列库。主机系统必须安装**最低版本号为 >=545 的驱动程序**，同时您的GPU需支持**计算能力（Compute Capability）5.0或更高版本**，这通常对应的是**Maxwell架构或更新的GPU**，具体可参考下方链接中的**NVIDIA GPU计算能力**。
 
-确保主机系统安装了[nvidia-container-runtime](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu)，以便将GPU传递给容器，并且主机系统为您的GPU安装了兼容的驱动程序。
+请确保您的主机系统已安装 [nvidia-container-runtime](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu)，这样才能将GPU设备透传给容器；同时主机上还需为当前GPU安装**兼容的驱动程序**。
 
-较新的GPU架构具有一些改进的功能，TensorRT可以从中受益，例如INT8操作和张量核心。当模型转换为trt文件时，与您的硬件兼容的功能将得到优化。目前，用于生成模型的脚本提供了一个开关来启用/禁用FP16操作。如果您希望使用诸如INT8优化等较新的功能，则需要做更多操作。 
+较新的GPU架构（如支持INT8运算和Tensor Core的架构）具备更强大的特性，TensorRT可以充分利用这些优化能力。当模型转换为trt文件时，系统会针对您的硬件自动优化兼容的功能特性。当前提供的模型生成脚本中包含一个开关，可用于**启用或禁用FP16运算**。但如果您希望使用INT8优化等更新的特性，则需要进行额外的适配工作。
 
 #### 兼容性参考资料
 
@@ -141,18 +148,14 @@ Frigate能够使用支持12.x系列CUDA库的英伟达GPU。
 推理速度会因GPU和所用模型的不同而有显著差异。
 `tiny`的变体比对应的非tiny模型更快，以下是一些已知示例：
 
-| Name            | YOLOv7 推理时间        | YOLO-NAS 推理时间          | RF-DETR 推理时间          |
+| Name            | YOLOv9 推理时间        | YOLO-NAS 推理时间          | RF-DETR 推理时间          |
 | --------------- | --------------------- | ------------------------- | ------------------------- |
-| GTX 1060 6GB    | ~ 7 ms                |                           |                           |
-| GTX 1070        | ~ 6 ms                |                           |                           |
-| GTX 1660 SUPER  | ~ 4 ms                |                           |                           |
-| RTX 3050        | 5 - 7 ms              | 320: ~ 10 ms 640: ~ 16 ms | 336: ~ 16 ms 560: ~ 40 ms |
-| RTX 3070 Mobile | ~ 5 ms                |                           |                           |
-| RTX 3070        | 4 - 6 ms              | 320: ~ 6 ms 640: ~ 12 ms  | 336: ~ 14 ms 560: ~ 36 ms |
-| Quadro P400 2GB | 20 - 25 ms            |                           |                           |
-| Quadro P2000    | ~ 12 ms               |                           |                           |
+| RTX 3050        | t-320: 15 ms          | 320: ~ 10 ms 640: ~ 16 ms | Nano-320: ~ 12 ms      |
+| RTX 3070        | t-320: 11 ms          | 320: ~ 8 ms 640: ~ 14 ms  | Nano-320: ~ 9 ms       |
+| RTX A4000       |                       | 320: ~ 15 ms              |                        |
+| Tesla P40       |                       | 320: ~ 105 ms             |                        |
 
-### AMD GPU
+### ROCm - AMD GPU
 
 通过使用 [rocm](../configuration/object_detectors.md#amdrocm-gpu检测器) 检测器，Frigate可以工作在大部分AMD的显卡上。
 

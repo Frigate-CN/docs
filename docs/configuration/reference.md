@@ -430,9 +430,9 @@ record:
   # 警告：如果在配置中禁用了录制，稍后通过UI或MQTT开启将不会生效。
   enabled: False
   # 可选：清理运行之间的等待分钟数（默认值：如下所示）
-  # 如果你想最小化I/O操作，可以使用此设置来减少从磁盘删除录制片段的频率
+  # 如果你想最小化I/O操作，可以使用此设置来减少从硬盘删除录制片段的频率
   expire_interval: 60
-  # 可选：在启动时和每天一次同步录制文件（默认值：如下所示）。
+  # 可选：在启动时及每日一次（默认设置如下）与硬盘进行录像数据库的双向同步。
   sync_recordings: False
   # 可选：录制保留设置
   retain:
@@ -555,7 +555,7 @@ face_recognition:
   recognition_threshold: 0.9
   # 可选：运行人脸识别所需的检测到的人脸框最小面积（默认值：如下所示）
   min_area: 500
-  # Optional: 子标签应用于人员对象所需的最小人脸识别次数（默认值：如下所示）
+  # 可选：需满足最低人脸检测次数，子标签才会应用于人员对象。（默认值：如下所示）
   min_faces: 1
   # 可选：保存用于训练的已识别人脸图像数量（默认值：如下所示）
   save_attempts: 100
@@ -602,7 +602,7 @@ genai:
   enabled: False
   # 启用时必需：提供者必须是ollama、gemini或openai之一
   provider: ollama
-  # 当提供者是ollama时必需。也可以用于openai提供者的OpenAI API兼容后端。如果要使用openai类接口的第三方服务商，请使用系统变量
+  # 当提供者是ollama时必需。也可以用于openai提供者的OpenAI API兼容后端。如果要使用openai类接口的第三方服务商，请使用系统变量，请参考文档https://docs.frigate-cn.video/configuration/genai
   base_url: http://localhost:11434
   # 当使用gemini或openai时必需
   api_key: "{FRIGATE_GENAI_API_KEY}"
@@ -896,7 +896,7 @@ telemetry:
     # 可选：启用Intel GPU统计（默认值：如下所示）
     intel_gpu_stats: True
     # 可选：将GPU视为SR-IOV以修复GPU统计（默认值：如下所示）
-    sriov: False
+    intel_gpu_device: None
     # 可选：启用摄像头ffmpeg进程、go2rtc和对象检测器的网络带宽统计监控（默认值：如下所示）
     # 注意：容器必须具有特权或启用cap_net_admin、cap_net_raw能力
     network_bandwidth: False
