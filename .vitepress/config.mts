@@ -52,7 +52,7 @@ const teekConfig = defineTeekConfig({
 export default defineConfig({
   extends: teekConfig,
   srcDir: "docs",
-  lang: "zh-Hans",
+  lang: "zh-CN",
   title: "Frigate中文文档",
   description: "Frigate NVR（网络视频监控录制）系统中文站",
   locales: {
@@ -61,9 +61,73 @@ export default defineConfig({
       lang: 'zhCN'
     }
   },
+  markdown: {
+    // 开启行号
+    lineNumbers: true,
+    image: {
+      // 默认禁用；设置为 true 可为所有图片启用懒加载。
+      lazyLoading: true,
+    },
+    // 更改容器默认值标题
+    container: {
+      tipLabel: "提示",
+      warningLabel: "警告",
+      dangerLabel: "危险",
+      infoLabel: "信息",
+      detailsLabel: "详细信息",
+    },
+  },
   themeConfig: {
+    darkModeSwitchLabel: "主题",
+    sidebarMenuLabel: "菜单",
+    returnToTopLabel: "返回顶部",
+    lastUpdatedText: "上次更新时间",
+    outline: {
+      level: [2, 4],
+      label: "本页导航",
+    },
+    docFooter: {
+      prev: "上一页",
+      next: "下一页",
+    },
     search: {
-      provider: 'local'
+      provider: 'local',
+      options: {
+        detailedView: true, // 启用详细视图
+        disableQueryPersistence: false, // 允许查询持久化
+        miniSearch: {
+          options: {
+            extractField: (document, fieldName) => {
+              // 自定义字段提取逻辑
+              if (fieldName === 'content') {
+                return document.content;
+              }
+              return document[fieldName];
+            },
+          },
+          searchOptions: {
+            prefix: true, // 启用前缀搜索
+            fuzzy: 0.2, // 模糊匹配阈值
+          },
+        },
+        translations: {
+          button: {
+            buttonText: '搜索',
+            buttonAriaLabel: '搜索',
+          },
+          modal: {
+            resetButtonTitle: '重置',
+            displayDetails: '显示详情',
+            noResultsText: '没有找到结果',
+            footer: {
+              closeText: '关闭',
+              closeKeyAriaLabel: '关闭搜索',
+              navigateText: '导航',
+              selectText: '选择',
+            }
+          },
+        },
+      },
     },
     // https://vitepress.dev/reference/default-theme-config
     nav: [

@@ -1,7 +1,24 @@
+.image-src {
+    max-width: 300px !important;
+    max-height: 300px !important;
+}
+
 @media (min-width: 960px) {
     .image-src {
         max-width: 600px !important;
         max-height: 600px !important;
+    }
+
+    .image-container {
+        transform: translate(40px,20px) !important;
+    }
+}
+
+@media (min-width: 640px) {
+    
+    .image-src {
+        max-width: 300px !important;
+        max-height: 300px !important;
     }
 
     .image-container {
