@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { sidebar } from './sidebar.ts'
 import { defineTeekConfig } from "vitepress-theme-teek/config"
+import { withMermaid } from "vitepress-plugin-mermaid";
 
 const teekConfig = defineTeekConfig({
   teekHome: false,
@@ -49,7 +50,7 @@ const teekConfig = defineTeekConfig({
 });
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default withMermaid({
   extends: teekConfig,
   srcDir: "docs",
   lang: "zh-CN",

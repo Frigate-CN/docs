@@ -19,10 +19,10 @@ Frigate采用先进的视频处理流程，从摄像头获取视频流开始，�
 %%{init: {"themeVariables": {"edgeLabelBackground": "transparent"}}}%%
 
 flowchart LR
-    Feed(视频流\n获取) --> Decode(视频\n解码)
-    Decode --> Motion(移动\n侦测)
-    Motion --> Object(物体\n检测)
-    Feed --> Recording(录像\n与\n可视化)
+    Feed(视频流<br>获取) --> Decode(视频<br>解码)
+    Decode --> Motion(移动<br>侦测)
+    Motion --> Object(物体<br>检测)
+    Feed --> Recording(录像<br>与<br>可视化)
     Motion --> Recording
     Object --> Recording
 ```
@@ -38,18 +38,18 @@ flowchart LR
 %%{init: {"themeVariables": {"edgeLabelBackground": "transparent"}}}%%
 
 flowchart TD
-    RecStore[(录像\n存储)]
-    SnapStore[(快照\n存储)]
+    RecStore[(录像<br>存储)]
+    SnapStore[(快照<br>存储)]
 
     subgraph 视频获取
         Cam["摄像头"] -->|FFmpeg支持| Stream
-        Cam -->|"其他流媒体\n协议"| go2rtc
+        Cam -->|"其他流媒体<br>协议"| go2rtc
         go2rtc("go2rtc") --> Stream
-        Stream[获取主/子\n码流] --> |检测码流|Decode(解码与\n降采样)
+        Stream[获取主/子<br>码流] --> |检测码流|Decode(解码与<br>降采样)
     end
     subgraph 移动侦测
-        Decode --> MotionM(应用\n遮罩)
-        MotionM --> MotionD(移动\n检测)
+        Decode --> MotionM(应用<br>遮罩)
+        MotionM --> MotionD(移动<br>检测)
     end
     subgraph 物体识别
         MotionD --> |动态区域| ObjectD(物体检测)
@@ -61,9 +61,9 @@ flowchart TD
     MotionD --> |移动事件|Birdseye
     ObjectZ --> |物体事件|Birdseye
 
-    MotionD --> |"视频片段\n(保留移动)"|RecStore
+    MotionD --> |"视频片段<br>(保留移动)"|RecStore
     ObjectZ --> |检测片段|RecStore
-    Stream -->|"视频片段\n(保留全部)"| RecStore
+    Stream -->|"视频片段<br>(保留全部)"| RecStore
     ObjectZ --> |检测快照|SnapStore
 ```
 
