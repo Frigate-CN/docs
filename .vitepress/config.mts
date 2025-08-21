@@ -1,10 +1,15 @@
 import { defineConfig } from 'vitepress'
 import { sidebar } from './sidebar.ts'
 import { defineTeekConfig } from "vitepress-theme-teek/config"
-import { withMermaid } from "vitepress-plugin-mermaid";
+import { vitepressPluginLegend } from 'vitepress-plugin-legend';
 
 const teekConfig = defineTeekConfig({
   teekHome: false,
+  markdown: {
+    config: md => {
+      md.use(vitepressPluginLegend);
+    },
+  },
   themeEnhance: {
     layoutSwitch: {
       defaultMode: "sidebarWidthAdjustableOnly",
@@ -50,7 +55,7 @@ const teekConfig = defineTeekConfig({
 });
 
 // https://vitepress.dev/reference/site-config
-export default withMermaid({
+export default defineConfig({
   extends: teekConfig,
   srcDir: "docs",
   lang: "zh-CN",
