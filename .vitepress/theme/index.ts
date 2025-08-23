@@ -9,6 +9,13 @@ import 'vitepress-plugin-legend/dist/index.css';
 export default {
   ...Teek,
   enhanceApp({ app }) {
+    if (typeof window !== 'undefined') {
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "szgj4w86ky");
+    }
     // 注册全局组件
     initComponent(app);
     app.component('ResponsiveGrid', ResponsiveGrid)
