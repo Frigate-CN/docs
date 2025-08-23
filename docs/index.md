@@ -50,3 +50,52 @@ hero:
 ```
 
 :::
+
+<div style="text-align: center; margin-bottom: 1.5em; margin-top: 5em">
+  <h1>准备好安装了吗？</h1>
+  <p>我们支持多种系统，看看有没有适合你的！</p>
+</div>
+
+::: navCard
+```yaml
+- name: unRAID
+  desc: unRAID是一个可玩性超高的NAS系统，基于Slackware Linux开发。
+  link: /frigate/installation#unraid
+  img: https://cdn.craft.cloud/481d40bf-939a-4dc1-918d-b4d4b48b7c04/builds/9f9c5d25-f717-4e21-a124-9a76217b3dd0/artifacts/static/favicon/favicon.ico
+  badge: 应用商店安装
+  badgeType: tip
+
+- name: 飞牛 fnOS
+  desc: 飞牛fnOS是基于Debian开发的NAS系统，支持Docker。
+  img: https://www.fnnas.com/favicon.ico
+  badge: 应用商店安装
+  badgeType: tip
+  
+- name: 群辉DSM
+  desc: 群辉是全球知名的NAS方案提供商，其DSM系统是使用最广泛的NAS系统。
+  link: /frigate/installation.html#dsm-7%E4%B8%8A%E7%9A%84%E7%BE%A4%E6%99%96nas
+  img: https://fileres.synology.com/images/common/favicon/syno/favicon.ico
+  badge: 通过容器安装
+  badgeType: tip
+
+- name: QNAP NAS
+  desc: QNAP 专注于储存、网络及智能影音产品创新
+  link: /frigate/installation.html#dsm-7%E4%B8%8A%E7%9A%84%E7%BE%A4%E6%99%96nas
+  img: https://www.qnap.com.cn/i/images/favicon/favicon.png
+  badge: 通过容器安装
+  badgeType: tip
+```
+:::
+
+::: center
+上面没有列出你的系统？但只要你的系统支持<img src="/assets/docker-icon.ico" width="20" style="display: inline; margin: 0px 5px -5px 5px"/>[Docker](/frigate/installation#docker)，都可以安装！
+:::
+
+<div style="text-align: center; margin-bottom: 1.5em; margin-top: 5em">
+  <h1>还有一些疑问？</h1>
+  <p>点击下面的问题，看看我们的常见问题解答。</p>
+</div>
+
+::: center
+<Question />
+:::

@@ -3,7 +3,7 @@ export const sidebar = [
     text: 'Frigate',
     items: [
       { text: '介绍', link: '/frigate/' },
-      { text: '硬件', link: '/frigate/hardware' },
+      { text: '推荐硬件', link: '/frigate/hardware' },
       { text: '安装规划', link: 'frigate/planning_setup' },
       { text: '安装', link: '/frigate/installation' },
       { text: '更新', link: '/frigate/updating' },

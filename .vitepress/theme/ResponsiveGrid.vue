@@ -3,7 +3,7 @@
   <div class="home-section-content">
     <div class="block-item">
       <div class="block-preview">
-        <img src="https://frigate.video/images/detection.jpg" alt="Preview">
+        <img src="/assets/detection.png" alt="Preview">
       </div>
       <div class="block-content">
         <h1 class="underline">本地智能识别，大幅降低误报</h1>
@@ -12,7 +12,7 @@
     </div>
     <div class="block-item">
       <div class="block-preview">
-        <img src="https://frigate.video/images/review.webp" alt="Preview">
+        <img src="/assets/review.png" alt="Preview">
       </div>
       <div class="block-content">
         <h1 class="underline">别让影子和风干扰识别</h1>
@@ -21,7 +21,7 @@
     </div>
     <div class="block-item">
       <div class="block-preview">
-        <img src="https://frigate.video/images/driveway_zones-min.png" alt="Preview">
+        <img src="/assets/driveway_zones-min.png" alt="Preview">
       </div>
       <div class="block-content">
         <h1 class="underline">利用区域功能精准微调事件与警报</h1>
@@ -30,7 +30,7 @@
     </div>
     <div class="block-item">
       <div class="block-preview">
-        <img src="https://frigate.video/images/hass-opt.png" alt="Preview">
+        <img src="/assets/hass-opt.png" alt="Preview">
       </div>
       <div class="block-content">
         <h1 class="underline">与Home Assistant及其他自动化平台集成</h1>

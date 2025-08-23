@@ -45,25 +45,25 @@ Frigate支持多种硬件平台的检测器方案：
 
 **AMD**
 
-- [ROCm](#rocm---amd-gpu): ROCm 能够在AMD显卡上运行，提供高效的检测功能
+- [ROCm](#rocm-amd-gpu): ROCm 能够在AMD显卡上运行，提供高效的检测功能
   - [支持一部分模型](/configuration/object_detectors#支持的模型-1)
   - 最好运行在AMD独显上
 
 **Intel**
 
-- [OpenVino](#openvino---intel): OpenVino 可以运行在 Intel Arc独立显卡、Intel 核显以及Intel的CPU
+- [OpenVino](#openvino-intel): OpenVino 可以运行在 Intel Arc独立显卡、Intel 核显以及Intel的CPU
   - [支持大部分主流模型](/configuration/object_detectors#支持的模型)
   - 推荐使用tiny/small/medium尺寸的模型
 
 **Nvidia**
 
-- [TensortRT](#tensorrt---nvidia-gpu): TensorRT可以运行在Nvidia显卡和Jetson开发板上
+- [TensortRT](#tensorrt-nvidia-gpu): TensorRT可以运行在Nvidia显卡和Jetson开发板上
   - [通过ONNX支持主流模型](/configuration/object_detectors#支持的模型-2)
   - 可流畅运行包括large在内各尺寸模型
 
 **Rockchip**
 
-- [RKNN](#rockchip-platform): 需搭载NPU的瑞芯微芯片
+- [RKNN](#rockchip-平台): 需搭载NPU的瑞芯微芯片
   - [支持少量模型](/configuration/object_detectors#支持的模型-5)
   - 专为低功耗设备优化，适合tiny/small模型
 
@@ -127,7 +127,7 @@ Intel NPU 部署的实际效果根据社区反馈称[较为有限（英文社区
 
 ### TensorRT - Nvidia GPU
 
-Frigate能够使用支持12.x系列CUDA库的英伟达GPU。
+Frigate能够使用支持12.x系列CUDA库的NVIDIA GPU。
 
 #### 最低硬件支持
 
@@ -173,7 +173,7 @@ Frigate支持所有的Jetson开发板，从经济实惠的Jetson Nano到性能�
 推理速度会因YOLO模型、Jetson平台型号及NVPMode（GPU/DLA/EMC时钟频率）配置而异。大多数模型的典型推理时间为20-40毫秒。
 DLA（深度学习加速器）相比GPU能效更高但速度略慢，因此启用DLA会降低功耗，但会轻微增加推理耗时。
 
-### Rockchip platform
+### Rockchip 平台
 
 Frigate 支持所有 Rockchip 开发板的硬件视频加速功能，但硬件目标检测仅限以下型号支持：
 
