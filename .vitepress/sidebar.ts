@@ -130,8 +130,8 @@ export const sidebar = [
   {
     text: '开发',
     items: [
-      { text: '贡献', link: '/development/contributing' },
-      { text: '贡献板', link: '/development/contributing-boards' },
+      { text: '开发环境指南', link: '/development/contributing' },
+      { text: '贡献开发板支持', link: '/development/contributing-boards' },
     ]
   },
 ];

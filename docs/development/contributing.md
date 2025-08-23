@@ -47,7 +47,36 @@ title: 向主代码库贡献代码
 
 #### 1. 使用Visual Studio Code打开仓库
 
-打开后，你应该会收到在远程容器中打开项目的提示。这将在基础Frigate容器之上构建一个安装了所有开发依赖项的容器。这确保了每个人都使用一致的开发环境，而无需在主机上安装任何依赖项。
+打开后，你应该在VSCode右下收到在远程容器中打开项目的提示。
+![VSCode提醒](/img/dev-container.png)
+
+点击`在容器中重新打开`后，会在Frigate容器基础上构建一个安装了所有开发依赖项的容器。这确保了每个人都使用一致的开发环境，而无需在主机上安装任何依赖项。
+
+:::tip
+由于在国内构建开发容器的时间较长，你可以`在容器中重新打开`**之前**修改`docker-compose.yml`中的`build`行，将其修改为使用国内已经构建好的镜像`docker.cnb.cool/frigate-cn/frigate/workspace-devcontainer:latest`。
+
+代码如下：
+
+```yaml
+services:
+  devcontainer:
+    container_name: frigate-devcontainer
+    # Check host system's actual render/video/plugdev group IDs with 'getent group render', 'getent group video', and 'getent group plugdev'
+    # Must add these exact IDs in container's group_add section or OpenVINO GPU acceleration will fail
+    group_add:
+      - "109" # render
+      - "110" # render
+      - "44"  # video
+      - "46"  # plugdev
+    shm_size: "256mb"
+    image: docker.cnb.cool/frigate-cn/frigate/workspace-devcontainer:latest  # 添加这行代码 [!code ++] [!code focus]
+    build: # 移除红色的这几行 [!code --] [!code focus]
+      context: . # [!code --] [!code focus]
+      dockerfile: docker/main/Dockerfile # [!code --] [!code focus]
+       # Use target devcontainer-trt for TensorRT dev 
+      target: devcontainer # [!code --] [!code focus]
+```
+:::
 
 #### 2. 修改本地配置文件以进行测试
 
@@ -172,7 +201,7 @@ Web UI使用[Vite](https://vitejs.dev/)、[Preact](https://preactjs.com)和[Tail
 npm run lint
 ```
 
-- 添加单元测试并确保它们通过。尽可能地，你应该在进行更改时努力_增加_测试覆盖率。这将有助于确保功能在未来不会意外损坏。
+- 添加单元测试并确保它们通过。你需要尽可能的增加测试覆盖率。这将有助于确保功能在未来不会意外损坏。
 - 如果在运行测试时遇到"TypeError: Cannot read properties of undefined (reading 'context')"之类的错误消息，这可能是由于vitest中的这些问题(https://github.com/vitest-dev/vitest/issues/1910, https://github.com/vitest-dev/vitest/issues/1652)，但我还没能解决它们。
 
 ```console
@@ -241,4 +270,4 @@ Frigate使用[Weblate](https://weblate.org)来管理Web UI的翻译。要贡献�
 
 https://hosted.weblate.org/projects/frigate-nvr/
 
-在翻译时，保持现有的键结构，只翻译值。确保你的翻译保持适当的格式，包括任何占位符变量(如`{{example}}`)。
+在翻译时，保持现有的键结构，只翻译值。确保你的翻译保持适当的格式，包括任何占位符变量(比如`{{example}}`)。
