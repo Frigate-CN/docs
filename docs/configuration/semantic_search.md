@@ -1,6 +1,6 @@
 ---
 id: semantic_search
-title: 语义搜索
+title: 语义搜索 <Badge type="tip" text="0.15.0 和 以上版本" />
 ---
 
 Frigate中的语义搜索功能允许您通过图像本身、用户定义的文本描述或自动生成的描述来查找回顾项目中的跟踪对象。该功能通过为跟踪对象的图像和文本描述创建_嵌入向量_(数值向量表示)来实现。通过比较这些嵌入向量，Frigate评估它们的相似度以提供相关的搜索结果。
@@ -53,7 +53,7 @@ semantic_search:
 - 配置`large`模型将使用完整的Jina模型，如果适用会自动在GPU上运行。
 - 配置`small`模型将使用量化版本的Jina模型，占用更少内存并在CPU上运行，嵌入质量差异可以忽略不计。
 
-### Jina AI CLIP (版本2)
+### Jina AI CLIP (版本2) <Badge type="tip" text="0.16.0 和 以上版本" />
 
 Frigate也支持[Jina的V2模型](https://huggingface.co/jinaai/jina-clip-v2)，该模型引入了多语言支持(89种语言)。相比之下，V1模型仅支持英语。
 

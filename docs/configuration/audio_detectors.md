@@ -3,15 +3,12 @@ id: audio_detectors
 title: 音频检测器
 ---
 
-:::tip
-本文使用DeepSeek AI进行翻译，仅做参考。
-:::
 
-Frigate内置了音频检测功能，该功能运行在CPU上。相比图像对象检测，音频检测的计算量要小得多，因此完全可以在CPU上高效运行。
+Frigate自带音频检测功能，该功能直接在CPU上运行。相比图像对象检测，音频检测的计算量要小得多，因此完全可以在CPU上高效运行。
 
 ## 配置
 
-音频事件通过检测特定类型的音频并创建事件来工作，当该类型音频在配置的时间内未被检测到时，事件将结束。音频事件会在事件开始时保存快照，并在整个事件过程中保存录音。录音使用配置的录制保留设置进行保留。
+音频事件通过检测特定类型的音频并创建事件来工作，当该类型音频在配置的时间内未被检测到时，则结束该事件。音频事件会在事件开始时保存快照，并在整个事件过程中保存录音。录音使用配置的录制保留设置进行保留。
 
 ### 启用音频事件
 
@@ -26,14 +23,14 @@ cameras:
     ffmpeg:
     ...
     audio:
-      enabled: True # <- 为front_camera启用音频事件
+      enabled: True # <- 可单独为front_camera启用音频事件
 ```
 
-如果使用多个流，则必须在用于音频检测的流上设置`audio`角色，这可以是任何流，但该流必须包含音频。
+如果使用多个流，则必须在用于音频检测的流上设置`audio`功能，这可以是任何流，但该流必须包含音频。
 
 :::note
 
-用于捕获音频的ffmpeg进程将与分配给摄像头的其他角色一起建立到摄像头的单独连接，因此建议使用go2rtc重新流式传输来实现此目的。更多信息请参阅[重新流式传输文档](/configuration/restream.md)。
+用于捕获音频的ffmpeg进程将与分配给摄像头的其他功能一起建立到摄像头的单独连接，因此建议使用go2rtc重新流式传输来实现此目的。更多信息请参阅[重新流式传输文档](/configuration/restream.md)。
 
 :::
 
@@ -57,13 +54,13 @@ cameras:
 
 :::tip
 
-音量被视为录制的运动，这意味着当`record -> retain -> mode`设置为`motion`时，任何音频音量> min_volume的时刻，该摄像头的录制片段都将被保留。
+音频被视为**画面变动**录制（`motion`），这意味着当`record -> retain -> mode`设置为`motion`时，任何声音音量小于最小音量（`min_volume`）的时候，该摄像头的录制片段都将被保留。
 
 :::
 
 ### 配置音频事件
 
-内置音频模型可以检测[500多种不同类型](https://github.com/blakeblackshear/frigate/blob/dev/audio-labelmap.txt)的音频，其中许多并不实用。默认情况下启用`bark`(狗叫)、`fire_alarm`(火警)、`scream`(尖叫)、`speech`(说话)和`yell`(喊叫)，但这些可以自定义。
+内置音频模型可以检测[500多种不同类型](https://github.com/blakeblackshear/frigate/blob/dev/audio-labelmap.txt)的音频，其中许多并不实用。默认情况下会开启`bark`(狗叫)、`fire_alarm`(火警)、`scream`(尖叫)、`speech`(说话)和`yell`(喊叫)这几种音频事件，当然你也可以根据自己的需求进行调整。
 
 ```yaml
 audio:

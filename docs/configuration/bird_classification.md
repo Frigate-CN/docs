@@ -1,6 +1,6 @@
 ---
 id: bird_classification
-title: 鸟类识别功能
+title: 鸟类识别功能 <Badge type="tip" text="0.16.0 和 以上版本" />
 ---
 
 鸟类识别功能使用量化Tensorflow模型识别已知鸟类品种。当识别到已知鸟类时，其通用名称将作为`sub_label`(子标签)添加。该信息会显示在用户界面、过滤器以及通知中。

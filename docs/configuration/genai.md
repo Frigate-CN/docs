@@ -1,6 +1,6 @@
 ---
 id: genai
-title: 生成式AI
+title: 生成式AI <Badge type="tip" text="0.16.0 和 以上版本" />
 ---
 
 生成式AI可用于根据跟踪对象的缩略图自动生成描述性文本。这有助于Frigate中的[语义搜索](/configuration/semantic_search)，为跟踪对象提供更多上下文信息。描述可通过Frigate界面中的**浏览**页面访问，点击跟踪对象的缩略图即可查看。

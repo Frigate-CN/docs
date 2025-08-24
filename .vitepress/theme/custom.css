@@ -37,3 +37,7 @@
 .dark .VPNavBarMenuGroup .text svg {
     fill: var(--vp-c-text-1);
 }
+
+.VPSidebarItem i {
+    margin-right: 5px;
+}

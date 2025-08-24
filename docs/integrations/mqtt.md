@@ -285,8 +285,8 @@ title: MQTT
 
 ### `frigate/<camera_name>/motion/set`
 
-控制摄像头运动检测的开关主题。期望值为`ON`和`OFF`。
-注意：如果检测未禁用，关闭运动检测将失败。
+控制摄像头画面变动检测的开关主题。期望值为`ON`和`OFF`。
+注意：如果检测未禁用，关闭画面变动检测将失败。
 
 ### `frigate/<camera_name>/motion`
 
@@ -295,7 +295,7 @@ title: MQTT
 
 ### `frigate/<camera_name>/motion/state`
 
-摄像头运动检测当前状态的主题。发布值为`ON`和`OFF`。
+摄像头画面变动检测当前状态的主题。发布值为`ON`和`OFF`。
 
 ### `frigate/<camera_name>/improve_contrast/set`
 

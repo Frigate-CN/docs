@@ -270,4 +270,4 @@ Frigate使用[Weblate](https://weblate.org)来管理Web UI的翻译。要贡献�
 
 https://hosted.weblate.org/projects/frigate-nvr/
 
-在翻译时，保持现有的键结构，只翻译值。确保你的翻译保持适当的格式，包括任何占位符变量(比如`{{example}}`)。
+在翻译时，保持现有的键结构，只翻译值。确保你的翻译保持适当的格式，包括任何占位符变量(比如<span v-pre>`{{example}}`</span>)。

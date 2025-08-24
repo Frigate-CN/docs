@@ -11,19 +11,19 @@ Frigate可运行在任何拥有Docker的主机上，甚至可以作为[Home Assi
 
 :::
 
-## 依赖项
+## 依赖项 {#dependencies}
 
 **MQTT Broker(可选)** - Frigate本身可以不依赖MQTT Broker运行，但如果你想使用Home Assistant集成功能就必须要安装并配置MQTT。Frigate 和 Home Assistant 必须连接至同一个 MQTT Broker服务器。
 
-## 硬件准备
+## 硬件准备 {#preparing-your-hardware}
 
-### 操作系统
+### 操作系统 {#operating-system}
 
 Frigate最好工作在安装了Docker的Debian系宿主机上获得最佳性能；同时，你需要让Frigate能够直通访问底层硬件（例如Coral这类AI加速器以及显卡）。不建议在Proxmox、ESXi、Virtualbox等虚拟化平台上运行Frigate（尽管有一部分[用户尝试在Proxmox上运行成功](#proxmox)）
 
 Windows系统未获官方支持，但有用户通过WSL或Virtualbox成功运行。需注意的是在Windows下，显卡或Coral等设备的直通可能比较麻烦。如需帮助，可查阅历史讨论或问题记录。
 
-### 存储
+### 存储 {#storage}
 
 Frigate 容器在运行时会对以下目录进行读写操作，您可以通过 Docker 卷映射将这些目录挂载到宿主机的任意位置：
 
@@ -34,7 +34,7 @@ Frigate 容器在运行时会对以下目录进行读写操作，您可以通过
 - `/tmp/cache`: 录像片段缓存目录，原始录像会先写入此处，经校验并转为 MP4 格式后移至recordings目录。通过`clip.mp4`接口生成的片段也在此拼接处理。建议使用 [`tmpfs`](https://docs.docker.com/storage/tmpfs/) 挂载此目录
 - `/dev/shm`: 解码帧原始数据的共享内存缓存（不可修改或手动映射）。最小容量受下文 `shm-size`计算规则影响。
 
-### 端口
+### 端口 {#ports}
 
 Frigate会使用以下端口，根据实际需要对以下端口进行映射。
 
@@ -45,9 +45,9 @@ Frigate会使用以下端口，根据实际需要对以下端口进行映射。
 | `8554` | 提供未加密的实时视频流转发服务（默认无需认证）。可通过配置文件中go2rtc模块启用认证功能。                                             |
 | `8555` | 提供低延迟实时视频流的WebRTC连接服务。                                                                                                                             |
 
-#### 常见 Docker Compose 存储配置
+#### 常见 Docker Compose 存储配置 {#common-docker-compose-storage-configurations}
 
-写入本地磁盘或外部USB驱动器：
+写入本地硬盘或外部USB驱动器：
 
 ```yaml
 services:
@@ -69,7 +69,7 @@ services:
 
 :::
 
-### 计算所需的共享内存大小(shm-size)
+### 计算所需的共享内存大小(shm-size) {#calculating-required-shm-size}
 
 Frigate使用共享内存(shm)处理视频帧。Docker默认提供的shm-size为64MB。
 
@@ -95,7 +95,7 @@ $ python -c 'print("{:.2f}MB".format(((1280 * 720 * 1.5 * 20 + 270480) / 1048576
 Home Assistant插件无法单独设置容器共享内存。但由于Home Assistant Supervisor默认分配总内存的50%给`/dev/shm`（例如8GB内存机器可分配约4GB），通常无需额外配置。
 
 
-### 树莓派3/4
+### 树莓派3/4 {#raspberry-pi-34}
 
 默认情况下，树莓派对GPU可用内存进行了限制。如需使用ffmpeg硬件加速功能，必须按照[官方文档](https://www.raspberrypi.org/documentation/computers/config_txt.html#memory-options)说明，在`config.txt`中将`gpu_mem`设置为最大推荐值以增加可用内存。
 
@@ -105,7 +105,7 @@ Home Assistant插件无法单独设置容器共享内存。但由于Home Assista
 
 Hailo-8和Hailo-8L AI加速器提供M.2和树莓派HAT两种规格。M.2版本通常通过PCIe载板连接，作为AI套件组成部分与树莓派5对接；HAT版本则可直接安装于兼容的树莓派机型。两种规格在x86平台亦通过兼容性测试，具备多平台适配能力。
 
-#### 安装
+#### 安装 {#installation}
 
 对于使用AI套件的树莓派5用户，安装过程很简单。只需按照这个[指南](https://www.raspberrypi.com/documentation/accessories/ai-kit.html#ai-kit-installation)安装驱动程序和软件即可。
 
@@ -116,7 +116,7 @@ Hailo-8和Hailo-8L AI加速器提供M.2和树莓派HAT两种规格。M.2版本�
 3. 使用`sudo chmod +x user_installation.sh`确保脚本具有执行权限。
 4. 使用`./user_installation.sh`运行脚本。
 
-#### 设置
+#### 设置 {#setup}
 
 按照默认安装说明设置Frigate，例如：`ghcr.io/blakeblackshear/frigate:stable`
 
@@ -129,11 +129,11 @@ devices:
 
 如果您使用`docker run`，请在命令中添加此选项：`--device /dev/hailo0`
 
-#### 配置
+#### 配置 {#configuration}
 
 最后，配置[硬件对象检测](/configuration/object_detectors#hailo-8l)以完成设置。
 
-### Rockchip平台
+### Rockchip平台 {#rockchip-platform}
 
 确保使用带有Rockchip BSP内核5.10或6.1以及必要驱动程序（特别是rkvdec2和rknpu）的Linux发行版。要检查是否满足要求，请输入以下命令：
 
@@ -148,7 +148,7 @@ RKNPU driver: v0.9.2 # 或更高版本
 
 如果您的开发板受支持，我推荐使用[Armbian](https://www.armbian.com/download/?arch=aarch64)。
 
-#### 设置
+#### 设置 {#setup-1}
 
 按照Frigate的默认安装说明进行操作，但使用带有`-rk`后缀的docker镜像，例如`ghcr.io/blakeblackshear/frigate:stable-rk`。
 
@@ -182,7 +182,7 @@ volumes:
 --volume /sys/:/sys/:ro
 ```
 
-#### 配置
+#### 配置 {#configuration-1}
 
 接下来，您应该配置[硬件对象检测](/configuration/object_detectors#rockchip平台)和[硬件视频处理](/configuration/hardware_acceleration_video#rockchip平台)。
 
@@ -262,7 +262,7 @@ docker run -d \
 - `stable-tensorrt-jp6` - 为运行Jetpack 6的NVIDIA Jetson设备优化的Frigate构建
 - `stable-rk` - 适用于搭载Rockchip SoC的单板计算机的Frigate构建
 
-## Home Assistant插件
+## Home Assistant插件 {#home-assistant-add-on}
 
 :::warning
 
@@ -313,7 +313,7 @@ Home Assistant OS用户可以通过插件仓库进行安装。
 许多人拥有足够强大的NAS设备或家庭服务器来运行docker。Unraid提供了一个社区应用。
 要安装，请确保您已安装[社区应用插件](https://forums.unraid.net/topic/38582-plug-in-community-applications/)。然后在Unraid的应用部分搜索"Frigate" - 您可以在[这里](https://unraid.net/community/apps?q=frigate#r)查看在线商店。
 
-## Proxmox虚拟化平台
+## Proxmox虚拟化平台 {#proxmox}
 
 根据[Proxmox官方文档](https://pve.proxmox.com/pve-docs/pve-admin-guide.html#chapter_pct)建议，像Frigate这样的应用容器最好运行在Proxmox QEMU虚拟机中。这种部署方式既能获得应用容器化的所有优势，又能享受虚拟机带来的诸多好处，例如：
 - 与宿主机实现强隔离
@@ -341,9 +341,9 @@ Home Assistant OS用户可以通过插件仓库进行安装。
 
 如果您在机架式服务器上运行Frigate并想要直通Google Coral，请[阅读此处](https://github.com/blakeblackshear/frigate/issues/305)。
 
-## DSM 7上的群晖NAS
+## 群晖NAS上的 DSM 7 {#synology-nas-on-dsm-7}
 
-这些设置已在DSM 7.1.1-42962 Update 4上测试通过
+这些设置已在 `DSM 7.1.1-42962 Update 4` 版本上通过测试
 
 **常规设置:**
 

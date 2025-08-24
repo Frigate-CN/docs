@@ -9,6 +9,9 @@ const teekConfig = defineTeekConfig({
     config: md => {
       md.use(vitepressPluginLegend);
     },
+    image: {
+      lazyLoading: true
+    }
   },
   themeEnhance: {
     layoutSwitch: {
@@ -84,6 +87,11 @@ export default defineConfig({
     },
   },
   themeConfig: {
+    editLink: {
+      pattern: 'https://cnb.cool/frigate-cn/docs/-/edit/main/docs/:path',
+      text: '在 CNB 上编辑此页'
+    },
+    
     darkModeSwitchLabel: "主题",
     sidebarMenuLabel: "菜单",
     returnToTopLabel: "返回顶部",

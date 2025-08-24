@@ -3,6 +3,12 @@ id: index
 title: 模型
 ---
 
+:::tip
+
+这是一个额外订阅功能。价格为$50/年，订阅后生效。
+
+:::
+
 <a href="https://frigate.video/plus" target="_blank" rel="nofollow">Frigate+</a> 提供基于Frigate+用户从安防摄像头提交的图像训练的模型，这些模型专门为Frigate分析视频的方式设计。这些模型能以更少资源提供更高准确性。您上传的图像用于微调一个基于所有Frigate+用户上传图像训练的基础模型，最终得到一个针对您特定环境优化的高精度模型。
 
 :::info
