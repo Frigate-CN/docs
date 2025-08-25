@@ -9,7 +9,7 @@ title: 视频解码
 
 根据您的系统，这些参数可能不兼容。更多关于 ffmpeg 硬件加速解码的信息请参考：https://trac.ffmpeg.org/wiki/HWAccelIntro
 
-# 对象检测
+# 物体/目标检测
 
 ## 树莓派 3/4
 
@@ -303,7 +303,7 @@ ffmpeg:
 
 ## NVIDIA Jetson（Orin AGX、Orin NX、Orin Nano*、Xavier AGX、Xavier NX、TX2、TX1、Nano）
 
-提供基于 Jetpack/L4T 的专用 Docker 镜像。它们包含使用 Jetson 专用媒体引擎的 `ffmpeg` 构建。如果您的 Jetson 主机运行 Jetpack 6.0+，请使用 `stable-tensorrt-jp6` 标签镜像。注意，Orin Nano 没有视频编码器，因此 frigate 将在此平台上使用软件编码，但该镜像仍然允许硬件解码和 tensorrt 对象检测。
+提供基于 Jetpack/L4T 的专用 Docker 镜像。它们包含使用 Jetson 专用媒体引擎的 `ffmpeg` 构建。如果您的 Jetson 主机运行 Jetpack 6.0+，请使用 `stable-tensorrt-jp6` 标签镜像。注意，Orin Nano 没有视频编码器，因此 frigate 将在此平台上使用软件编码，但该镜像仍然允许硬件解码和 tensorrt 物体/目标检测。
 
 您需要使用 nvidia 容器运行时：
 

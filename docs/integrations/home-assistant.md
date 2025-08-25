@@ -150,7 +150,7 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 | 平台            | 描述                                                                         |
 | --------------- | ------------------------------------------------------------------------------- |
 | `camera`        | 实时摄像头流（需要RTSP）                                                        |
-| `image`         | 每个摄像头最新检测对象的图像                                                    |
+| `image`         | 每个摄像头最新检测物品/目标的图像                                                    |
 | `sensor`        | 用于监控Frigate性能的状态，所有区域和摄像头的对象计数                          |
 | `switch`        | 用于切换检测、录制和快照的开关实体                                              |
 | `binary_sensor` | 每个摄像头/区域/对象的"运动"二进制传感器实体                                    |
@@ -159,7 +159,7 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 
 该集成提供：
 
-- 带缩略图的跟踪对象录像浏览
+- 带缩略图的跟踪目标录像浏览
 - 快照浏览
 - 按月、日、摄像头、时间浏览录像
 
@@ -182,31 +182,31 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 
 许多人不想将Frigate暴露给网络，因此该集成创建了一些可用于通知的公共API端点。
 
-加载跟踪对象的缩略图：
+加载跟踪目标的缩略图：
 
 ```
 https://HA_URL/api/frigate/notifications/<event-id>/thumbnail.jpg
 ```
 
-加载跟踪对象的快照：
+加载跟踪目标的快照：
 
 ```
 https://HA_URL/api/frigate/notifications/<event-id>/snapshot.jpg
 ```
 
-使用Android设备加载跟踪对象的视频剪辑：
+使用Android设备加载跟踪目标的视频剪辑：
 
 ```
 https://HA_URL/api/frigate/notifications/<event-id>/clip.mp4
 ```
 
-使用iOS设备加载跟踪对象的视频剪辑：
+使用iOS设备加载跟踪目标的视频剪辑：
 
 ```
 https://HA_URL/api/frigate/notifications/<event-id>/master.m3u8
 ```
 
-加载跟踪对象的预览gif：
+加载跟踪目标的预览gif：
 
 ```
 https://HA_URL/api/frigate/notifications/<event-id>/event_preview.gif

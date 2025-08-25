@@ -7,7 +7,7 @@ title: 配置 go2rtc
 Frigate内置了 go2rtc 功能。
 虽然你可以让Frigate直接使用你的摄像头的FFmpeg视频流而不是通过go2rtc，但如果你需要以下功能，则必须配置 go2rtc。使用 go2rtc 有以下优点：
 
-- WebRTC 或 MSE 实时预览，能够支持音频、更高的分辨率和帧率，比仅限于检测流且不支持音频的 jsmpeg 流效果更好
+- WebRTC 或 MSE 实时监控，能够支持音频、更高的分辨率和帧率，比仅限于检测流且不支持音频的 jsmpeg 流效果更好
 - Home Assistant 集成中摄像头的实时流支持
 - RTSP 中继，用于其他用户，以减少与摄像头流的连接数
 

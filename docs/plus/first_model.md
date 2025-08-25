@@ -34,9 +34,9 @@ model:
 
 :::
 
-## 步骤4：调整你的对象过滤器以获得更高的分数
+## 步骤4：调整你的物体/目标过滤器以获得更高的分数
 
-Frigate+模型通常比Frigate提供的默认模型有更高的分数。你可能需要增加你的`threshold`和`min_score`值。以下是如何优化这些值的示例，但你应该预期这些值会随着模型的改进而演变。有关`threshold`和`min_score`如何相关的更多信息，请参见[对象过滤器](../configuration/object_filters.md#object-scores)文档。
+Frigate+模型通常比Frigate提供的默认模型有更高的分数。你可能需要增加你的`threshold`和`min_score`值。以下是如何优化这些值的示例，但你应该预期这些值会随着模型的改进而演变。有关`threshold`和`min_score`如何相关的更多信息，请参见[物体/目标过滤器](../configuration/object_filters.md#object-scores)文档。
 
 ```yaml
 objects:

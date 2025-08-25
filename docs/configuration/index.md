@@ -9,18 +9,18 @@ title: Frigate 配置
 
 文件可以命名为`config.yml`或`config.yaml`，但如果两个文件都存在，将优先使用`config.yml`并忽略`config.yaml`。
 
-建议从最小配置开始，按照[本指南](../guides/getting_started.md)中的描述添加内容，并使用Frigate UI中内置的支持验证的配置编辑器。
+建议从最小配置开始，按照[本指南](../guides/getting_started.md)中的描述添加内容，并使用Frigate 页面中内置的支持验证的配置编辑器。
 
 ```yaml
 mqtt:
   enabled: False
 
 cameras:
-  dummy_camera: # <--- 这将稍后更改为你的实际摄像头
+  dummy_camera: # <--- 此处改为你摄像头的名称，仅支持英文数字下划线与连接符
     enabled: False
     ffmpeg:
       inputs:
-        - path: rtsp://127.0.0.1:554/rtsp
+        - path: rtsp://127.0.0.1:554/rtsp # <--- 此处改为你摄像头的rtsp地址
           roles:
             - detect
 ```
@@ -88,7 +88,7 @@ genai:
 - MQTT连接到Home Assistant Mosquitto插件
 - 用于解码视频的硬件加速
 - USB Coral检测器
-- 保存所有包含任何可检测运动的视频7天，无论是否检测到任何对象
+- 保存所有包含任何可检测运动的视频7天，无论是否检测到任何物体/目标
 - 如果视频符合警报或检测条件，继续保留30天
 - 保存快照30天
 - 摄像头时间戳的运动遮罩
@@ -146,7 +146,7 @@ cameras:
 - MQTT禁用（未与home assistant集成）
 - VAAPI硬件加速用于解码视频
 - USB Coral检测器
-- 保存所有包含任何可检测运动的视频7天，无论是否检测到任何对象
+- 保存所有包含任何可检测运动的视频7天，无论是否检测到任何物体/目标
 - 如果视频符合警报或检测条件，继续保留30天
 - 保存快照30天
 - 摄像头时间戳的运动遮罩
@@ -202,7 +202,7 @@ cameras:
 - MQTT连接到与home assistant相同的mqtt服务器
 - VAAPI硬件加速用于解码视频
 - OpenVino检测器
-- 保存所有包含任何可检测运动的视频7天，无论是否检测到任何对象
+- 保存所有包含任何可检测运动的视频7天，无论是否检测到任何物体/目标
 - 如果视频符合警报或检测条件，继续保留30天
 - 保存快照30天
 - 摄像头时间戳的运动遮罩

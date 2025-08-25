@@ -24,7 +24,7 @@ record:
   enabled: True  # 只有设置了enabled为True时录制功能才会生效
   retain:
     days: 3
-    mode: all # 将在3天期间保存所有的录制视频，包括没有画面变动或没有检测到的视频
+    mode: all # 将在3天期间保存所有的录制视频，包括没有画面变动或没有检测到物体/目标的视频
   alerts:
     retain:
       days: 30

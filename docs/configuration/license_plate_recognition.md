@@ -9,22 +9,22 @@ title: 车牌识别(LPR) <Badge type="tip" text="0.16.0 和 以上版本" />
 
 :::
 
-Frigate能够识别车辆上的车牌，并自动将检测到的字符添加到`recognized_license_plate`字段，或将已知名称作为`sub_label`添加到`car`类型的跟踪对象中。常见用例包括识别驶入车道的车辆或街道上经过车辆的车牌。
+Frigate能够识别车辆上的车牌，并自动将检测到的字符添加到`recognized_license_plate`字段，或将已知名称作为`sub_label`添加到`car`类型的跟踪目标中。常见用例包括识别驶入车道的车辆或街道上经过车辆的车牌。
 
 当车牌清晰可见时，LPR效果最佳。对于移动车辆，Frigate会持续优化识别过程，保留置信度最高的结果。但LPR不会对静止车辆运行。
 
 当识别到车牌时，识别结果会：
-- 作为`sub_label`(已知车牌)或`recognized_license_plate`字段(未知车牌)添加到跟踪对象
+- 作为`sub_label`(已知车牌)或`recognized_license_plate`字段(未知车牌)添加到跟踪目标
 - 在核查的 核查项细节 面板中可见(sub labels)
-- 在浏览的 探测对象细节 面板中可见(sub labels和recognized_license_plate)
+- 在浏览的 检测物体/目标细节 面板中可见(sub labels和recognized_license_plate)
 - 可通过浏览中的 更多筛选项 菜单进行过滤
-- 通过MQTT主题`frigate/events`发布，作为`car`跟踪对象的`sub_label`(已知)或`recognized_license_plate`(未知)
+- 通过MQTT主题`frigate/events`发布，作为`car`跟踪目标的`sub_label`(已知)或`recognized_license_plate`(未知)
 
 ## 模型要求
 
-使用Frigate+模型(或任何原生支持车牌检测的自定义模型)的用户应确保在[跟踪对象列表](https://docs.frigate.video/plus/#available-label-types)中添加`license_plate`标签，可以是全局设置或针对特定摄像头。这将提高LPR模型的准确性和性能。
+使用Frigate+模型(或任何原生支持车牌检测的自定义模型)的用户应确保在[跟踪目标列表](https://docs.frigate.video/plus/#available-label-types)中添加`license_plate`标签，可以是全局设置或针对特定摄像头。这将提高LPR模型的准确性和性能。
 
-没有车牌检测模型的用户仍可运行LPR。Frigate使用轻量级YOLOv9车牌检测模型，可配置在CPU或GPU上运行。这种情况下，您不应在跟踪对象列表中定义`license_plate`。
+没有车牌检测模型的用户仍可运行LPR。Frigate使用轻量级YOLOv9车牌检测模型，可配置在CPU或GPU上运行。这种情况下，您不应在跟踪目标列表中定义`license_plate`。
 
 :::note
 
@@ -55,7 +55,7 @@ cameras:
       enabled: False
 ```
 
-对于非专用LPR摄像头，请确保摄像头配置为检测`car`类型对象，且Frigate确实检测到了车辆。否则LPR不会运行。
+对于非专用LPR摄像头，请确保摄像头配置为检测`car`类型目标，且Frigate确实检测到了车辆。否则LPR不会运行。
 
 与其他实时处理器一样，车牌识别运行在配置中`detect`角色定义的摄像头流上。为确保最佳性能，请在摄像头固件中选择适合您场景和需求的分辨率。
 
@@ -67,7 +67,7 @@ cameras:
 
 - **`detection_threshold`**: 运行识别前所需的车牌检测置信度分数
   - 默认: `0.7`
-  - 注意: 此字段仅适用于独立车牌检测模型，对于内置车牌检测的模型(如Frigate+)应使用`threshold`和`min_score`对象过滤器
+  - 注意: 此字段仅适用于独立车牌检测模型，对于内置车牌检测的模型(如Frigate+)应使用`threshold`和`min_score`物体/目标过滤器
 - **`min_area`**: 定义运行识别前车牌的最小面积(像素单位)
   - 默认: `1000`像素。注意：这是面积测量(长×宽)，1000像素代表图像中约32×32像素的正方形
   - 根据摄像头`detect`流的分辨率，可增加此值以忽略过小或过远的车牌
@@ -80,9 +80,9 @@ cameras:
 
 ### 识别
 
-- **`recognition_threshold`**: 将车牌作为`recognized_license_plate`和/或`sub_label`添加到对象所需的识别置信度分数
+- **`recognition_threshold`**: 将车牌作为`recognized_license_plate`和/或`sub_label`添加目标所需的识别置信度分数
   - 默认: `0.9`
-- **`min_plate_length`**: 指定检测到的车牌必须具有的最小字符数才能作为`recognized_license_plate`和/或`sub_label`添加到对象
+- **`min_plate_length`**: 指定检测到的车牌必须具有的最小字符数才能作为`recognized_license_plate`和/或`sub_label`添加目标
   - 用于过滤短、不完整或不正确的检测
 - **`format`**: 定义预期车牌格式的正则表达式。不匹配此格式的车牌将被丢弃
   - `"^[A-Z]{1,3} [A-Z]{1,2} [0-9]{1,4}$"`匹配如"B AB 1234"或"M X 7"的车牌
@@ -91,7 +91,7 @@ cameras:
 
 ### 匹配
 
-- **`known_plates`**: 字符串或正则表达式列表，当识别到的车牌匹配已知值时，为`car`对象分配自定义`sub_label`
+- **`known_plates`**: 字符串或正则表达式列表，当识别到的车牌匹配已知值时，为该车辆（`car`）目标分配自定义`sub_label`
   - 这些标签会显示在UI、过滤器和通知中
   - 未知车牌仍会保存，但添加到`recognized_license_plate`字段而非`sub_label`
 - **`match_distance`**: 允许在匹配检测到的车牌与已知车牌时有微小变化(缺失/错误字符)
@@ -176,7 +176,7 @@ Frigate的车牌识别（LPR）专用模式专为窄视角摄像头优化设计�
 
 ### 使用Frigate+(或原生`license_plate`检测)模型
 
-使用Frigate+模型(或任何能原生检测`license_plate`的模型)的用户可利用`license_plate`检测功能。这使得车牌在专用LPR模式下被视为标准对象，意味着警报、检测、快照、区域和其他Frigate功能正常工作，车牌通过配置的对象检测器高效检测。
+使用Frigate+模型(或任何能原生检测`license_plate`的模型)的用户可利用`license_plate`检测功能。这使得车牌在专用LPR模式下被视为标准物体/目标，意味着警报、检测、快照、区域和其他Frigate功能正常工作，车牌通过配置的物体/目标检测器高效检测。
 
 使用`license_plate`检测模型的专用LPR摄像头配置示例：
 
@@ -219,16 +219,16 @@ cameras:
 ```
 
 此设置下：
-- 车牌被视为Frigate中的正常对象
+- 车牌被视为Frigate中的正常物体/目标
 - 分数、警报、检测、和快照按预期工作
 - 快照上会有车牌边界框
-- MQTT主题`frigate/events`会发布跟踪对象更新
+- MQTT主题`frigate/events`会发布跟踪目标更新
 - 调试视图会显示`license_plate`边界框
 - 如果使用Frigate+模型并想提交专用LPR摄像头图像用于模型训练和微调，在Frigate+网站上标注快照中的`car`和`license_plate`，即使车辆几乎不可见
 
 ### 使用次级LPR管道(无Frigate+)
 
-如果没有使用Frigate+模型，可使用Frigate内置的次级专用LPR管道。在此模式下，Frigate绕过标准对象检测管道，在检测到运动时对全帧运行本地车牌检测器模型。
+如果没有使用Frigate+模型，可使用Frigate内置的次级专用LPR管道。在此模式下，Frigate绕过标准物体/目标检测管道，在检测到运动时对全帧运行本地车牌检测器模型。
 
 使用次级管道的专用LPR摄像头配置示例：
 
@@ -248,7 +248,7 @@ cameras:
       enhancement: 3 # 可选，在尝试识别字符前增强图像
     ffmpeg: ... # 添加您的流
     detect:
-      enabled: False # 禁用Frigate标准对象检测管道
+      enabled: False # 禁用Frigate标准物体/目标检测管道
       fps: 5 # 必要时增加，但高值可能减慢Frigate增强管道并使用大量CPU
       width: 1920
       height: 1080
@@ -269,12 +269,12 @@ cameras:
 ```
 
 此设置下：
-- 绕过标准对象检测管道。专用LPR摄像头上检测到的任何车牌在Frigate中类似于手动事件处理。您必须不指定`license_plate`作为跟踪对象
+- 绕过标准物体/目标检测管道。专用LPR摄像头上检测到的任何车牌在Frigate中类似于手动事件处理。您必须不指定`license_plate`作为跟踪目标
 - 检测到运动时，车牌检测器在全帧上运行，并根据检测`fps`设置处理帧
 - Review项目始终分类为`detection`
 - 始终保存快照
 - 不使用区域和对象遮罩
-- MQTT主题`frigate/events`不会发布带车牌边界框和分数的跟踪对象更新，但如果启用录制，`frigate/reviews`会发布。如果识别为已知车牌，会发布带更新`sub_label`字段的消息；如果识别出字符，会发布带更新`recognized_license_plate`字段的消息
+- MQTT主题`frigate/events`不会发布带车牌边界框和分数的跟踪目标更新，但如果启用录制，`frigate/reviews`会发布。如果识别为已知车牌，会发布带更新`sub_label`字段的消息；如果识别出字符，会发布带更新`recognized_license_plate`字段的消息
 - 车牌快照在得分最高时刻保存并出现在Explore中
 - 调试视图不显示`license_plate`边界框
 
@@ -282,11 +282,11 @@ cameras:
 
 | 功能                 | 原生`license_plate`检测模型(如Frigate+) | 次级管道(无原生模型或Frigate+)           |
 |----------------------|----------------------------------------|------------------------------------------|
-| 车牌检测             | 使用`license_plate`作为跟踪对象        | 运行专用LPR管道                          |
+| 车牌检测             | 使用`license_plate`作为跟踪目标        | 运行专用LPR管道                          |
 | FPS设置              | 5(快速移动车辆可增加)                  | 5(快速移动车辆可增加，但可能使用更多CPU) |
-| 对象检测             | 应用标准Frigate+检测                  | 绕过标准对象检测                         |
+| 物体/目标检测             | 应用标准Frigate+检测                  | 绕过标准物体/目标检测                         |
 | 调试视图             | 可能显示`license_plate`边界框         | 可能不显示`license_plate`边界框          |
-| MQTT `frigate/events` | 发布跟踪对象更新                       | 发布有限更新                             |
+| MQTT `frigate/events` | 发布跟踪目标更新                       | 发布有限更新                             |
 | Explore              | 识别的车牌在More Filters中可用        | 识别的车牌在More Filters中可用           |
 
 通过选择适当的配置，用户可根据是否使用Frigate+模型或次级LPR管道优化专用LPR摄像头。
@@ -307,7 +307,7 @@ cameras:
 - 您的摄像头对车牌有清晰、人类可读、光线充足的视角。如果您无法读取车牌字符，即使模型识别出了 `license_plate`，Frigate 也肯定无法读取。这可能需要根据您的场景和车辆行驶速度更改摄像头的视频大小、质量或帧率设置。
 - 车牌在图像中足够大（尝试调整 `min_area`）或增加摄像头流的分辨率。
 - 您的增强级别（如果已从默认值 `0` 更改）不要太高。过多的增强会运行太多的降噪，导致车牌字符变得模糊且无法读取。
-- 如果您使用的是 Frigate+ 模型或可以检测车牌的自定义模型，请确保将 `license_plate` 添加到您的跟踪对象列表中。如果您使用的是随 Frigate 一起提供的免费模型，您不应该将 `license_plate` 添加到跟踪对象列表中。
+- 如果您使用的是 Frigate+ 模型或可以检测车牌的自定义模型，请确保将 `license_plate` 添加到您的跟踪目标列表中。如果您使用的是随 Frigate 一起提供的免费模型，您不应该将 `license_plate` 添加到跟踪目标列表中。
 
 已识别的车牌将在调试视图中显示为对象标签，并将出现在探索中更多过滤器弹出窗口的"已识别车牌"选择框中。
 

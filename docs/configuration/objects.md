@@ -1,17 +1,17 @@
 ---
 id: objects
-title: 支持检测的对象类型
+title: 支持检测的物体/目标类型
 ---
 
 <script setup>
 import labels from "../labelmap.txt?raw";
 </script>
 
-Frigate 默认支持检测以下来自 Google Coral 测试数据的对象类型：
+Frigate 默认支持检测以下来自 Google Coral 测试数据的物体/目标类型：
 
 请注意：
-- `car`（汽车）被列出两次，因为默认配置已将`truck`（卡车）重命名为`car`。这两类对象经常被混淆检测。
-- 默认情况下，只有`person`（人员）会被追踪。如需扩展追踪对象列表，请参考[完整配置参考](reference.md)中的示例。
+- `car`（汽车）被列出两次，因为默认配置已将`truck`（卡车）重命名为`car`。这两类物体/目标经常被混淆检测。
+- 默认情况下，只有`person`（人员）会被追踪。如需扩展追踪物体/目标列表，请参考[完整配置参考](reference.md)中的示例。
 
 <ul>
   <li v-for='text in labels.split("\n")' :key='text'>

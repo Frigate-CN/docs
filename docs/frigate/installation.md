@@ -131,7 +131,7 @@ devices:
 
 #### 配置 {#configuration}
 
-最后，配置[硬件对象检测](/configuration/object_detectors#hailo-8l)以完成设置。
+最后，配置[硬件物体/目标检测](/configuration/object_detectors#hailo-8l)以完成设置。
 
 ### Rockchip平台 {#rockchip-platform}
 
@@ -184,7 +184,7 @@ volumes:
 
 #### 配置 {#configuration-1}
 
-接下来，您应该配置[硬件对象检测](/configuration/object_detectors#rockchip平台)和[硬件视频处理](/configuration/hardware_acceleration_video#rockchip平台)。
+接下来，您应该配置[硬件物体/目标检测](/configuration/object_detectors#rockchip平台)和[硬件视频处理](/configuration/hardware_acceleration_video#rockchip平台)。
 
 ## Docker
 

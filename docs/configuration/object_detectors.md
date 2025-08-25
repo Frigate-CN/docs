@@ -1,11 +1,7 @@
 ---
 id: object_detectors
-title: 对象检测器
+title: 物体/目标检测器
 ---
-
-:::tip
-由于本文涉及过多专业领域内容，对普通用户帮助不算特别多，将不会进行精翻；本文使用DeepSeek AI进行翻译，仅做参考。
-:::
 
 # 支持的硬件
 
@@ -20,12 +16,12 @@ Frigate支持多种不同类型的检测器，可在不同硬件上运行：
 
 **AMD**
 
-- [ROCm](#amdrocm-gpu检测器)：ROCm可在AMD独立显卡上运行，提供高效对象检测。
+- [ROCm](#amdrocm-gpu检测器)：ROCm可在AMD独立显卡上运行，提供高效物体/目标检测。
 - [ONNX](#onnx)：当配置了支持的ONNX模型时，ROCm会在`-rocm`版Frigate镜像中自动被检测并使用。
 
 **Intel**
 
-- [OpenVino](#openvino检测器)：OpenVino可在Intel Arc 显卡、集成显卡和CPU上运行，提供高效对象检测。
+- [OpenVino](#openvino检测器)：OpenVino可在Intel Arc 显卡、核显和CPU上运行，提供高效物体/目标检测。
 - [ONNX](#onnx)：当配置了支持的ONNX模型时，OpenVINO会在标准Frigate镜像中自动被检测并使用。
 
 **NVIDIA**
@@ -47,9 +43,9 @@ Frigate支持多种不同类型的检测器，可在不同硬件上运行：
 
 :::note
 
-不能混合使用多种检测器进行对象检测（例如：不能同时使用OpenVINO和Coral EdgeTPU进行对象检测）。
+不能混合使用多种检测器进行物体/目标检测（例如：不能同时使用OpenVINO和Coral EdgeTPU进行物体/目标检测）。
 
-这不影响使用硬件加速其他任务，如[语义搜索](./semantic_search.md)。
+当然，不影响其他需要使用硬件加速任务，如[语义搜索](./semantic_search.md)。
 
 :::
 
@@ -410,7 +406,7 @@ model:
 
 ### 设置
 
-AMD GPU的支持通过[ONNX检测器](#ONNX)提供。要使用AMD GPU进行对象检测，请使用带有`-rocm`后缀的Frigate docker镜像，例如`ghcr.io/blakeblackshear/frigate:stable-rocm`。
+AMD GPU的支持通过[ONNX检测器](#ONNX)提供。要使用AMD GPU进行物体/目标检测，请使用带有`-rocm`后缀的Frigate docker镜像，例如`ghcr.io/blakeblackshear/frigate:stable-rocm`。
 
 ### Docker GPU访问设置
 
@@ -440,7 +436,7 @@ devices:
 
 您的GPU可能无需特殊配置即可正常工作，但在许多情况下需要手动设置。AMD/ROCm软件栈附带有限的GPU驱动程序集，对于较新或缺失的型号，您需要将芯片组版本覆盖为较旧/通用版本才能使其工作。
 
-此外，AMD/ROCm不"正式"支持集成显卡。它仍然可以与大多数集成显卡正常工作，但需要特殊设置。必须配置`HSA_OVERRIDE_GFX_VERSION`环境变量。有关背景和示例，请参阅[ROCm问题报告](https://github.com/ROCm/ROCm/issues/1743)。
+此外，AMD/ROCm不"正式"支持核显。它仍然可以与大多数核显正常工作，但需要特殊设置。必须配置`HSA_OVERRIDE_GFX_VERSION`环境变量。有关背景和示例，请参阅[ROCm问题报告](https://github.com/ROCm/ROCm/issues/1743)。
 
 对于rocm frigate构建，有一些自动检测：
 
@@ -492,7 +488,7 @@ $ docker exec -it frigate /bin/bash -c '(unset HSA_OVERRIDE_GFX_VERSION && /opt/
 有关支持的模型，请参阅[ONNX支持的模型](#支持的模型-3)，但有以下注意事项：
 
 - 不支持D-FINE模型
-- 已知YOLO-NAS模型在集成显卡上运行不佳
+- 已知YOLO-NAS模型在核显上运行不佳
 
 ## ONNX
 
@@ -681,7 +677,7 @@ model:
 
 ## Deepstack / CodeProject.AI 服务器检测器
 
-Frigate的Deepstack/CodeProject.AI服务器检测器允许您将Deepstack和CodeProject.AI的对象检测功能集成到Frigate中。CodeProject.AI和DeepStack是开源AI平台，可以在各种设备上运行，如树莓派、NVIDIA Jetson和其他兼容硬件。需要注意的是，集成是通过网络进行的，因此推理时间可能不如原生Frigate检测器快，但它仍然为对象检测和跟踪提供了高效可靠的解决方案。
+Frigate的Deepstack/CodeProject.AI服务器检测器允许您将Deepstack和CodeProject.AI的物体/目标检测功能集成到Frigate中。CodeProject.AI和DeepStack是开源AI平台，可以在各种设备上运行，如树莓派、NVIDIA Jetson和其他兼容硬件。需要注意的是，集成是通过网络进行的，因此推理时间可能不如原生Frigate检测器快，但它仍然为物体/目标检测和跟踪提供了高效可靠的解决方案。
 
 ### 设置
 
@@ -787,7 +783,7 @@ model:
 
 ## Rockchip平台检测器
 
-Rockchip平台支持以下SoC的硬件加速对象检测：
+Rockchip平台支持以下SoC的硬件加速物体/目标检测：
 
 - RK3562
 - RK3566

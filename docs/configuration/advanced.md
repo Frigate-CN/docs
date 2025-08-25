@@ -27,7 +27,7 @@ logger:
 - `frigate.object_detection`
 - `detector.<检测器名称>`
 - `watchdog.<摄像头名称>`
-- `ffmpeg.<摄像头名称>.<角色>` 注意：所有FFmpeg日志均以`error`级别记录
+- `ffmpeg.<摄像头名称>.<功能>` 注意：所有FFmpeg日志均以`error`级别记录
 
 #### Go2RTC日志设置
 
@@ -53,7 +53,7 @@ environment_vars:
 
 ### 数据库配置
 
-追踪对象和录像信息存储在`/config/frigate.db`的SQLite数据库中。若删除该数据库，录像文件将变为孤立文件需手动清理，且不会显示在Home Assistant的媒体浏览器中。
+追踪的物体/目标信息和录像信息存储在`/config/frigate.db`的SQLite数据库中。若删除该数据库，录像文件将变为孤立文件需手动清理，且不会显示在Home Assistant的媒体浏览器中。
 
 若使用网络存储（SMB/NFS等），启动时可能出现`database is locked`错误。可自定义数据库路径：
 

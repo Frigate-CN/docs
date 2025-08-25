@@ -36,7 +36,7 @@ export const sidebar = [
       {
         text: '检测',
         items: [
-          { text: '<i class="fa-solid fa-person"></i>对象检测器', link: '/configuration/object_detectors' },
+          { text: '<i class="fa-solid fa-person"></i>物体/目标检测器', link: '/configuration/object_detectors' },
           { text: '<i class="fa-solid fa-volume-high"></i>音频检测器', link: '/configuration/audio_detectors' },
         ]
       },
@@ -66,13 +66,13 @@ export const sidebar = [
         ]
       },
       {
-        text: '对象',
+        text: '物体/目标',
         items: [
-          { text: '<i class="fa-solid fa-filter"></i>对象过滤器', link: '/configuration/object_filters' },
+          { text: '<i class="fa-solid fa-filter"></i>物体/目标过滤器', link: '/configuration/object_filters' },
           { text: '<i class="fa-solid fa-crop"></i>遮罩', link: '/configuration/masks' },
           { text: '<i class="fa-solid fa-crop-simple"></i>区域', link: '/configuration/zones' },
-          { text: '<i class="fa-solid fa-person-circle-check"></i>对象', link: '/configuration/objects' },
-          { text: '<i class="fa-solid fa-wheelchair"></i>静止对象', link: '/configuration/stationary_objects' },
+          { text: '<i class="fa-solid fa-person-circle-check"></i>物体/目标', link: '/configuration/objects' },
+          { text: '<i class="fa-solid fa-wheelchair"></i>静止物体/目标', link: '/configuration/stationary_objects' },
         ]
       },
       {

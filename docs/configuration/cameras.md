@@ -61,7 +61,7 @@ cameras:
 
 如果你摄像头下只有一个视频流输入（`input`）且没有为其配置检测（`detect`）功能，Frigate 也会自动启动检测（`detect`）功能。即使你在配置中`detect`设置`enabled: False`禁用了物体/目标检测，Frigate **仍会解码视频流**以支持画面变动检测、鸟瞰图、API图像和其他功能。
 
-如果你打算 Frigate 只是拿来录像不进行物体/目标识别，仍建议设置一个低分辨率视频流并设置该流使用检测（`detect`）功能，以减少所需视频流解码的资源消耗。
+如果你打算 Frigate 只是拿来录像不进行物体/目标识别，仍建议设置一个低分辨率视频流并设置该视频流使用检测（`detect`）功能，以减少所需视频流解码的资源消耗。
 
 :::
 
@@ -72,7 +72,7 @@ cameras:
 
 :::warning
 
-并非所有PTZ摄像头都支持ONVIF，这是Frigate用来与你的摄像头通信的标准协议。请检查[官方ONVIF兼容产品列表](https://www.onvif.org/conformant-products/)、你的摄像头文档或制造商网站，以确保你的PTZ支持ONVIF。同时，请确保你的摄像头运行最新的固件。
+并非所有PTZ摄像头都支持ONVIF，这是Frigate用来与你的摄像头通信的标准协议。部分摄像头可能使用私有协议来进行控制，Frigate不支持该方式。请检查[官方ONVIF兼容产品列表](https://www.onvif.org/conformant-products/)、你的摄像头文档或制造商网站，以确保你的PTZ支持ONVIF。同时，请确保你的摄像头运行最新的固件。
 
 :::
 
