@@ -3,7 +3,9 @@ id: objects
 title: 支持检测的对象类型
 ---
 
-import labels from "../../labelmap.txt";
+<script setup>
+import labels from "../labelmap.txt?raw";
+</script>
 
 Frigate 默认支持检测以下来自 Google Coral 测试数据的对象类型：
 
@@ -12,9 +14,9 @@ Frigate 默认支持检测以下来自 Google Coral 测试数据的对象类型�
 - 默认情况下，只有`person`（人员）会被追踪。如需扩展追踪对象列表，请参考[完整配置参考](reference.md)中的示例。
 
 <ul>
-  {labels.split("\n").map((label) => (
-    <li>{label.replace(/^\d+\s+/, "")}</li>
-  ))}
+  <li v-for='text in labels.split("\n")' :key='text'>
+    {{text.replace(/^\d+\s+/, "")}}
+  </li>
 </ul>
 
 ## 自定义模型
