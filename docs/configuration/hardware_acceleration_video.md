@@ -9,8 +9,6 @@ title: 视频解码
 
 根据您的系统，这些参数可能不兼容。更多关于 ffmpeg 硬件加速解码的信息请参考：https://trac.ffmpeg.org/wiki/HWAccelIntro
 
-# 物体/目标检测
-
 ## 树莓派 3/4
 
 确保为 GPU 分配至少 128MB 内存（通过 `raspi-config` > 性能选项 > GPU 内存设置）。
@@ -228,8 +226,8 @@ Docker 容器需要额外配置才能访问 NVIDIA GPU。支持的方法是安�
 services:
   frigate:
     ...
-    image: ghcr.io/blakeblackshear/frigate:stable
-    deploy:    # <------------- 添加此部分
+    image: ghcr.io/blakeblackshear/frigate:stable-tensorrt
+    deploy:    # <------------- 添加此部分到底部的代码
       resources:
         reservations:
           devices:
@@ -246,7 +244,7 @@ docker run -d \
   --name frigate \
   ...
   --gpus=all \
-  ghcr.io/blakeblackshear/frigate:stable
+  ghcr.io/blakeblackshear/frigate:stable-tensorrt
 ```
 
 ### 设置解码器
