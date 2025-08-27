@@ -59,6 +59,10 @@ const teekConfig = defineTeekConfig({
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  head:[
+    //<meta name="baidu-site-verification" content="codeva-GVV3NnQtwh" />
+    ["meta", { name: "baidu-site-verification", content: "codeva-GVV3NnQtwh" }],
+  ],
   extends: teekConfig,
   srcDir: "docs",
   lang: "zh-CN",
