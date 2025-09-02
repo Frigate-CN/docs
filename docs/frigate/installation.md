@@ -118,7 +118,7 @@ Hailo-8和Hailo-8L AI加速器提供M.2和树莓派HAT两种规格。M.2版本�
 
 #### 设置 {#setup}
 
-按照默认安装说明设置Frigate，例如：`ghcr.io/blakeblackshear/frigate:stable`
+按照默认安装说明设置Frigate，例如：`docker.cnb.cool/frigate-cn/frigate:stable`
 
 接下来，通过在`docker-compose.yml`文件中添加以下行来授予Docker访问硬件的权限：
 
@@ -150,7 +150,7 @@ RKNPU driver: v0.9.2 # 或更高版本
 
 #### 设置 {#setup-1}
 
-按照Frigate的默认安装说明进行操作，但使用带有`-rk`后缀的docker镜像，例如`ghcr.io/blakeblackshear/frigate:stable-rk`。
+按照Frigate的默认安装说明进行操作，但使用带有`-rk`后缀的docker镜像，例如`docker.cnb.cool/frigate-cn/frigate:stable-rk`。
 
 接下来，您需要授予docker访问硬件的权限：
 
@@ -197,7 +197,7 @@ services:
     privileged: true # 部分设置可能不需要此选项
     restart: unless-stopped
     stop_grace_period: 30s # 为各服务提供足够的关闭时间
-    image: ghcr.io/blakeblackshear/frigate:stable # 可以考虑使用国内镜像加速源，例如ghcr.nju.edu.cn/blakeblackshear/frigate:stable
+    image: docker.cnb.cool/frigate-cn/frigate:stable # 此处为国内镜像源地址，原地址为 ghcr.io/blakeblackshear/frigate:stable
     shm_size: "512mb" # 根据上述计算结果为您的摄像头更新此值
     devices:
       - /dev/bus/usb:/dev/bus/usb # 用于USB Coral，其他版本需要修改
@@ -243,11 +243,14 @@ docker run -d \
   -p 8554:8554 \
   -p 8555:8555/tcp \
   -p 8555:8555/udp \
-  ghcr.io/blakeblackshear/frigate:stable
+  docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
 :::info
-中国大陆用户可以使用南京大学ghcr镜像源，即将镜像地址中的 ghcr.io 替换为 ghcr.nju.edu.cn 即可。例如：ghcr.nju.edu.cn/blakeblackshear/frigate:stable
+上面的镜像地址已换为我们托管在cnb上的地址，如不需要使用镜像，可以将地址换为官方镜像地址：
+
+ghcr.io/blakeblackshear/frigate:stable
+
 :::
 
 当前稳定版本的官方Docker镜像标签有：
@@ -402,7 +405,7 @@ QNAP有一个名为Container Station的图形工具用于安装和管理docker�
 
 ```shell
 # 下载Frigate镜像
-docker pull ghcr.io/blakeblackshear/frigate:stable
+docker pull docker.cnb.cool/frigate-cn/frigate:stable
 # 在QNAP文件系统上创建目录以存放Frigate配置文件
 # 例如，您可以选择在/share/Container下创建
 mkdir -p /share/Container/frigate/config
@@ -437,7 +440,7 @@ docker run \
   --cpus="2" \
   --detach=true \
   -t \
-  ghcr.io/blakeblackshear/frigate:stable
+  docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
 登录QNAP，打开Container Station。Frigate docker容器应该在"概览"下列出并正在运行。点击Frigate docker，然后点击详情页顶部显示的URL访问Frigate Web界面。

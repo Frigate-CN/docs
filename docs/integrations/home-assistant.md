@@ -58,7 +58,7 @@ services:
     ...
 
   frigate:
-    image: ghcr.io/blakeblackshear/frigate:stable
+    image: docker.cnb.cool/frigate-cn/frigate:stable
     ...
     ports:
       - "172.17.0.1:5000:5000"
@@ -77,7 +77,7 @@ services:
     ...
 
   frigate:
-    image: ghcr.io/blakeblackshear/frigate:stable
+    image: docker.cnb.cool/frigate-cn/frigate:stable
     ...
     ports:
       # - "172.17.0.1:5000:5000"
@@ -114,7 +114,7 @@ services:
 ```yaml
 services:
   frigate:
-    image: ghcr.io/blakeblackshear/frigate:stable
+    image: docker.cnb.cool/frigate-cn/frigate:stable
     ...
     ports:
       - "8971:8971"
@@ -128,7 +128,7 @@ services:
 ```yaml
 services:
   frigate:
-    image: ghcr.io/blakeblackshear/frigate:stable
+    image: docker.cnb.cool/frigate-cn/frigate:stable
     ...
     ports:
       - "<tailscale_ip>:5000:5000"

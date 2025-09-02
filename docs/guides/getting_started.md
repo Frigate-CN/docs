@@ -115,7 +115,7 @@ services:
     container_name: frigate
     restart: unless-stopped
     stop_grace_period: 30s
-    image: ghcr.io/blakeblackshear/frigate:stable
+    image: docker.cnb.cool/frigate-cn/frigate:stable
     volumes:
       - ./config:/config
       - ./storage:/media/frigate

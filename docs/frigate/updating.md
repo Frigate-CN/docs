@@ -37,17 +37,17 @@ Frigate 的当前稳定版本是 **0.16.0**。此版本的发布说明和任何�
        ```yaml
        services:
          frigate:
-           image: ghcr.io/blakeblackshear/frigate:0.16.0
+           image: docker.cnb.cool/frigate-cn/frigate:0.16.0
        ```
      - 然后拉取镜像：
        ```bash
-       docker pull ghcr.io/blakeblackshear/frigate:0.16.0
+       docker pull docker.cnb.cool/frigate-cn/frigate:0.16.0
        ```
-     - **`stable` 标签用户注意**：如果您的 `docker-compose.yml` 使用 `stable` 标签（例如，`ghcr.io/blakeblackshear/frigate:stable`），您不需要手动更新标签。拉取后，`stable` 标签始终指向最新的稳定版本。
+     - **`stable` 标签用户注意**：如果您的 `docker-compose.yml` 使用 `stable` 标签（例如，`docker.cnb.cool/frigate-cn/frigate:stable`），您不需要手动更新标签。拉取后，`stable` 标签始终指向最新的稳定版本。
    - 如果使用 `docker run`：
      - 使用适当的标签拉取镜像（例如，`0.16.0`、`0.16.0-tensorrt` 或 `stable`）：
        ```bash
-       docker pull ghcr.io/blakeblackshear/frigate:0.16.0
+       docker pull docker.cnb.cool/frigate-cn/frigate:0.16.0
        ```
 
 3. **启动容器**：

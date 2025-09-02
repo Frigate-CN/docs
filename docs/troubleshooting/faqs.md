@@ -100,7 +100,7 @@ docker run -d \
   -p 8554:8554 \
   -p 8555:8555/tcp \
   -p 8555:8555/udp \
-  ghcr.io/blakeblackshear/frigate:stable
+  docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
 ### RTSP流在VLC中正常播放，但在Frigate配置中使用相同URL却失败，这是bug吗？

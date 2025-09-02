@@ -406,7 +406,7 @@ model:
 
 ### 设置
 
-AMD GPU的支持通过[ONNX检测器](#ONNX)提供。要使用AMD GPU进行物体/目标检测，请使用带有`-rocm`后缀的Frigate docker镜像，例如`ghcr.io/blakeblackshear/frigate:stable-rocm`。
+AMD GPU的支持通过[ONNX检测器](#ONNX)提供。要使用AMD GPU进行物体/目标检测，请使用带有`-rocm`后缀的Frigate docker镜像，例如`docker.cnb.cool/frigate-cn/frigate:stable-rocm`。
 
 ### Docker GPU访问设置
 
@@ -701,7 +701,7 @@ detectors:
 
 ## NVIDIA TensorRT检测器
 
-英伟达 Jetson 设备可使用 TensorRT 库进行目标检测。由于附加库的大小问题，此检测器仅在带有`-tensorrt-jp6`标签后缀的镜像中提供，例如`ghcr.io/blakeblackshear/frigate:stable-tensorrt-jp6`。此检测器旨在与用于目标检测的 Yolo 模型配合使用。
+英伟达 Jetson 设备可使用 TensorRT 库进行目标检测。由于附加库的大小问题，此检测器仅在带有`-tensorrt-jp6`标签后缀的镜像中提供，例如`docker.cnb.cool/frigate-cn/frigate:stable-tensorrt-jp6`。此检测器旨在与用于目标检测的 Yolo 模型配合使用。
 
 ### 生成模型
 

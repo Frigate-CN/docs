@@ -197,7 +197,7 @@ server {
 services:
   frigate:
     container_name: frigate
-    image: ghcr.io/blakeblackshear/frigate:stable
+    image: docker.cnb.cool/frigate-cn/frigate:stable
     ...
     ...
     labels:

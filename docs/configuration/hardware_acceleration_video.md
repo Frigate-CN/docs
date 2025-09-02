@@ -43,7 +43,7 @@ docker run -d \
   --name frigate \
   ...
   --device /dev/video11 \
-  ghcr.io/blakeblackshear/frigate:stable
+  docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
 `/dev/video11` 是正确的设备（在树莓派 4B 上）。您可以通过运行以下命令并查找 `H264` 来检查：
@@ -125,7 +125,7 @@ ffmpeg:
 services:
   frigate:
     ...
-    image: ghcr.io/blakeblackshear/frigate:stable
+    image: docker.cnb.cool/frigate-cn/frigate:stable
     privileged: true
 ```
 
@@ -136,7 +136,7 @@ docker run -d \
   --name frigate \
   ...
   --privileged \
-  ghcr.io/blakeblackshear/frigate:stable
+  docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
 #### CAP_PERFMON
@@ -149,7 +149,7 @@ docker run -d \
 services:
   frigate:
     ...
-    image: ghcr.io/blakeblackshear/frigate:stable
+    image: docker.cnb.cool/frigate-cn/frigate:stable
     cap_add:
       - CAP_PERFMON
 ```
@@ -161,7 +161,7 @@ docker run -d \
   --name frigate \
   ...
   --cap-add=CAP_PERFMON \
-  ghcr.io/blakeblackshear/frigate:stable
+  docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
 #### perf_event_paranoid
@@ -226,7 +226,7 @@ Docker 容器需要额外配置才能访问 NVIDIA GPU。支持的方法是安�
 services:
   frigate:
     ...
-    image: ghcr.io/blakeblackshear/frigate:stable-tensorrt
+    image: docker.cnb.cool/frigate-cn/frigate:stable-tensorrt
     deploy:    # <------------- 添加此部分到底部的代码
       resources:
         reservations:
@@ -244,7 +244,7 @@ docker run -d \
   --name frigate \
   ...
   --gpus=all \
-  ghcr.io/blakeblackshear/frigate:stable-tensorrt
+  docker.cnb.cool/frigate-cn/frigate:stable-tensorrt
 ```
 
 ### 设置解码器
@@ -311,7 +311,7 @@ ffmpeg:
 docker run -d \
   ...
   --runtime nvidia
-  ghcr.io/blakeblackshear/frigate:stable-tensorrt-jp6
+  docker.cnb.cool/frigate-cn/frigate:stable-tensorrt-jp6
 ```
 
 ### Docker Compose - Jetson
@@ -320,7 +320,7 @@ docker run -d \
 services:
   frigate:
     ...
-    image: ghcr.io/blakeblackshear/frigate:stable-tensorrt-jp6
+    image: docker.cnb.cool/frigate-cn/frigate:stable-tensorrt-jp6
     runtime: nvidia   # 添加此行
 ```
 
