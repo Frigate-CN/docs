@@ -90,7 +90,7 @@ detectors:
 
 ### 原生Coral(开发板)
 
-_警告：`v0.9.x`版本后可能有[兼容性问题](https://github.com/blakeblackshear/frigate/issues/1706)_
+**警告：`v0.9.x`版本后可能有[兼容性问题](https://github.com/blakeblackshear/frigate/issues/1706)**
 
 ```yaml
 detectors:
@@ -440,14 +440,13 @@ devices:
 
 对于rocm frigate构建，有一些自动检测：
 
-- gfx90c -> 9.0.0
 - gfx1031 -> 10.3.0
 - gfx1103 -> 11.0.0
 
-如果您有其他芯片组，可能需要在Docker启动时覆盖`HSA_OVERRIDE_GFX_VERSION`。假设您需要的版本是`9.0.0`，则应从命令行配置为：
+如果您有其他芯片组，可能需要在Docker启动时覆盖`HSA_OVERRIDE_GFX_VERSION`。假设您需要的版本是`10.0.0`，则应从命令行配置为：
 
 ```bash
-$ docker run -e HSA_OVERRIDE_GFX_VERSION=9.0.0 \
+$ docker run -e HSA_OVERRIDE_GFX_VERSION=10.0.0 \
     ...
 ```
 
@@ -458,7 +457,7 @@ services:
   frigate:
 
 environment:
-  HSA_OVERRIDE_GFX_VERSION: "9.0.0"
+  HSA_OVERRIDE_GFX_VERSION: "10.0.0"
 ```
 
 确定您需要的版本可能很复杂，因为您无法从AMD品牌名称中判断芯片组名称和驱动程序。

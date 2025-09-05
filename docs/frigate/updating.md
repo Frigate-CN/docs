@@ -5,7 +5,7 @@ title: 更新
 
 # 更新 Frigate
 
-Frigate 的当前稳定版本是 **0.16.0**。此版本的发布说明和任何重大变更可以在 [Frigate GitHub 发布页面](https://github.com/blakeblackshear/frigate/releases/tag/v0.16.0) 上找到。
+Frigate 的当前稳定版本是 **0.16.1**。此版本的发布说明和任何重大变更可以在 [Frigate GitHub 发布页面](https://github.com/blakeblackshear/frigate/releases/tag/v0.16.1) 上找到。
 
 保持 Frigate 的更新可确保您能够获得最新功能、性能改进和错误修复。更新过程根据您的安装方法（Docker、Home Assistant 插件等）略有不同。以下是最常见设置的说明。
 
@@ -33,21 +33,21 @@ Frigate 的当前稳定版本是 **0.16.0**。此版本的发布说明和任何�
 2. **更新并拉取最新镜像**：
 
    - 如果使用 Docker Compose：
-     - 编辑您的 `docker-compose.yml` 文件以指定所需的版本标签（例如，使用 `0.16.0` 而不是 `0.15.2`）。例如：
+     - 编辑您的 `docker-compose.yml` 文件以指定所需的版本标签（例如，使用 `0.16.1` 而不是 `0.15.2`）。例如：
        ```yaml
        services:
          frigate:
-           image: docker.cnb.cool/frigate-cn/frigate:0.16.0
+           image: docker.cnb.cool/frigate-cn/frigate:0.16.1
        ```
      - 然后拉取镜像：
        ```bash
-       docker pull docker.cnb.cool/frigate-cn/frigate:0.16.0
+       docker pull docker.cnb.cool/frigate-cn/frigate:0.16.1
        ```
      - **`stable` 标签用户注意**：如果您的 `docker-compose.yml` 使用 `stable` 标签（例如，`docker.cnb.cool/frigate-cn/frigate:stable`），您不需要手动更新标签。拉取后，`stable` 标签始终指向最新的稳定版本。
    - 如果使用 `docker run`：
-     - 使用适当的标签拉取镜像（例如，`0.16.0`、`0.16.0-tensorrt` 或 `stable`）：
+     - 使用适当的标签拉取镜像（例如，`0.16.1`、`0.16.1-tensorrt` 或 `stable`）：
        ```bash
-       docker pull docker.cnb.cool/frigate-cn/frigate:0.16.0
+       docker pull docker.cnb.cool/frigate-cn/frigate:0.16.1
        ```
 
 3. **启动容器**：

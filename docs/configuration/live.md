@@ -35,7 +35,7 @@ jsmpeg实时监控会消耗更多浏览器和客户端GPU资源。强烈推荐�
 
 ### 音频支持
 
-MSE需要PCMA/PCMU或AAC音频，WebRTC需要PCMA/PCMU或opus音频。如果想同时支持MSE和WebRTC，则需要在重流配置中确保两者都启用。
+MSE需要PCMA/PCMU或AAC音频，WebRTC需要PCMA/PCMU或opus音频。如果想同时支持MSE和WebRTC，则需要在转流配置中确保两者都启用。
 
 ```yaml
 go2rtc:
@@ -100,11 +100,11 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://127.0.0.1:8554/test_cam # <--- 这里的名称必须与重流中的摄像头名称匹配
+        - path: rtsp://127.0.0.1:8554/test_cam # <--- 这里的名称必须与转流中的摄像头名称匹配
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://127.0.0.1:8554/test_cam_sub # <--- 这里的名称必须与重流中的camera_sub名称匹配
+        - path: rtsp://127.0.0.1:8554/test_cam_sub # <--- 这里的名称必须与转流中的camera_sub名称匹配
           input_args: preset-rtsp-restream
           roles:
             - detect
@@ -115,7 +115,7 @@ cameras:
         特殊流: test_cam_another_sub
 ```
 
-### WebRTC额外配置
+### WebRTC额外配置 {#webrtc-extra-configuration}
 
 WebRTC通过在端口`8555`上创建TCP或UDP连接工作。但是，它需要额外配置：
 
@@ -164,8 +164,8 @@ services:
   frigate:
     ...
     ports:
-      - "8555:8555/tcp" # WebRTC over tcp
-      - "8555:8555/udp" # WebRTC over udp
+      - "8555:8555/tcp" # WebRTC tcp 模式
+      - "8555:8555/udp" # WebRTC udp 模式
 ```
 
 :::
@@ -201,13 +201,13 @@ Frigate在摄像头组编辑面板中提供了一个对话框，其中包含几�
 
 ### 禁用摄像头
 
-可以通过Frigate页面和[MQTT](/integrations/mqtt#frigatecamera_nameenabledset)临时禁用摄像头以节省系统资源。禁用时，Frigate的ffmpeg进程终止 - 停止录制，暂停物体/目标检测，实时仪表板显示禁用消息的空白图像。仍可通过UI访问禁用摄像头的回放条目、追踪物体/目标和历史录像。
+可以通过Frigate页面和[MQTT](../integrations/mqtt#frigatecamera_nameenabledset)临时禁用摄像头以节省系统资源。禁用时，Frigate的ffmpeg进程终止 - 停止录制，暂停物体/目标检测，实时仪表板显示禁用消息的空白图像。仍可通过UI访问禁用摄像头的回放条目、追踪物体/目标和历史录像。
 
 :::note
 通过Frigate页面或MQTT禁用摄像头是临时操作，重启Frigate后就会恢复。
 :::
 
-对于重流摄像头，go2rtc保持活动状态，但除非有外部客户端使用(如Home Assistant中的高级摄像头卡片使用go2rtc源)，否则不会使用系统资源进行解码或处理。
+对于转流摄像头，go2rtc保持活动状态，但除非有外部客户端使用(如Home Assistant中的高级摄像头卡片使用go2rtc源)，否则不会使用系统资源进行解码或处理。
 
 注意通过配置文件禁用摄像头(`enabled: False`)会移除所有相关UI元素，包括历史录像访问。要保留访问权限同时禁用摄像头，请在配置中保持启用状态，并使用UI或MQTT临时禁用它。
 
@@ -245,8 +245,12 @@ Frigate在摄像头组编辑面板中提供了一个对话框，其中包含几�
 
    智能视频流依赖于正确调整摄像头的画面变动`threshold`和`contour_area`配置值。使用UI设置中的画面变动调谐器实时调整这些值。
 
-   这是Frigate的默认和推荐设置，因为它能显著节省带宽，特别是对于高分辨率摄像头。
+   Frigate默认并推荐使用此设置，因为它能显著节省网络带宽，特别是使用高分辨率摄像头的情况下。
 
 6. **我已取消静音某些面板上的摄像头，但还是听不到声音。为什么？**
 
    如果你的摄像头正在视频流(如右上角的红点所示，或设置为连续视频流模式)，你的浏览器可能会在你与页面交互前阻止音频播放。这是**浏览器有意设计**的限制。详见[这篇文章](https://developer.mozilla.org/zh-CN/docs/Web/Media/Guides/Autoplay#%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E5%8A%9F%E8%83%BD%E7%AD%96%E7%95%A5)。许多浏览器都有白名单功能可以更改此行为。
+
+7. **我的摄像头画面出现大量花屏以及失真​​**
+
+部分摄像头硬件不支持高分辨率视频流的多路连接，可能导致这种画面问题。这种情况建议使用`go2rtc`对高分辨率视频流做[转流](restream.md)处理，专门用于实时监控画面和录像存储。

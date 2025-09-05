@@ -43,7 +43,7 @@ cameras:
 
 :::tip
 
-如果你希望实时监控能够有声音并且画面更流畅，可以考虑配置[go2rtc](/guides/configuring_go2rtc)，并让摄像头的`path`使用go2rtc的[视频重流](configuration/restream.html#减少摄像头连接数)地址。
+如果你希望实时监控能够有声音并且画面更流畅，可以考虑配置[go2rtc](/guides/configuring_go2rtc)，并让摄像头的`path`使用go2rtc的[视频转流](configuration/restream.html#减少摄像头连接数)地址。
 
 :::
 
@@ -119,10 +119,7 @@ cameras:
 | Hanwha XNP-6550RH            |      ✅      |      ❌      |                                                                                                                                                 |
 | Hikvision                    |      ✅      |      ❌      | ONVIF支持不完整(即使是最新固件MoveStatus也不会更新) - 在HWP-N4215IH-DE和DS-2DE3304W-DE型号上报告，但可能还有其他型号 |
 | Hikvision DS-2DE3A404IWG-E/W |      ✅      |      ✅      |                                                                                                                                                 |
-| Reolink 511WA                |      ✅      |      ❌      | 仅支持缩放                                                                                                                                       |
-| Reolink E1 Pro               |      ✅      |      ❌      |                                                                                                                                                 |
-| Reolink E1 Zoom              |      ✅      |      ❌      |                                                                                                                                                 |
-| Reolink RLC-823A 16x         |      ✅      |      ❌      |                                                                                                                                                 |
+| Reolink                      |      ✅      |      ❌      |                                                                                                                                                 |                                                                                                                                            |
 | Speco O8P32X                 |      ✅      |      ❌      |                                                                                                                                                 |
 | Sunba 405-D20X               |      ✅      |      ❌      | 原始型号和4k型号报告ONVIF支持不完整。怀疑所有型号都不兼容。                                            |
 | Tapo                         |      ✅      |      ❌      | 支持多种型号，ONVIF服务端口: 2020                                                                                                 |

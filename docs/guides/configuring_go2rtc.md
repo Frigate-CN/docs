@@ -110,8 +110,8 @@ go2rtc:
 
 ## 后续步骤
 
-1. 如果你添加到 go2rtc 的流也被 Frigate 用于 `record` 或 `detect` 角色，你可以将配置迁移到从 RTSP 重流中获取，以减少与摄像头的连接数，如[这里](/configuration/restream#减少摄像头连接数)所示。
-2. 你可能还想[设置 WebRTC](/configuration/live#webrtc额外配置)以获得比 MSE 略低的延迟。注意，WebRTC 仅支持 h264 和特定的音频格式，可能需要在路由器上开放端口。
+1. 如果你添加到 go2rtc 的流也被 Frigate 用于 `record` 或 `detect` 角色，你可以将配置迁移到从 RTSP 转流中获取，以减少与摄像头的连接数，如[这里](../configuration/restream#with-single-stream)所示。
+2. 如果你的摄像头支持双向通话，还可以[设置 WebRTC](../configuration/live#webrtc-extra-configuration)，使Frigate可以使用双向通话。注意，WebRTC **仅支持** 特定的音频格式，以及可能需要在路由器上开放相关端口。
 
 ## 重要注意事项
 

@@ -7,7 +7,7 @@ Frigate默认提供了一些FFmpeg参数预设，以简化配置流程。所有�
 
 ### 硬件加速预设
 
-强烈建议在配置中使用硬件加速预设。这些预设不仅能替代冗长的参数，还能让Frigate了解可用硬件信息，从而进行其他GPU优化（如鸟瞰图重流编码或非原生分辨率缩放）。
+强烈建议在配置中使用硬件加速预设。这些预设不仅能替代冗长的参数，还能让Frigate了解可用硬件信息，从而进行其他GPU优化（如鸟瞰图转流编码或非原生分辨率缩放）。
 
 详见[硬件加速文档](/configuration/hardware_acceleration_video.md)获取GPU/iGPU设置指南。
 
@@ -21,7 +21,7 @@ Frigate默认提供了一些FFmpeg参数预设，以简化配置流程。所有�
 | preset-nvidia      | NVIDIA显卡               |                         |
 | preset-jetson-h264 | NVIDIA Jetson+h264流    |                         |
 | preset-jetson-h265 | NVIDIA Jetson+h265流    |                         |
-| preset-rkmpp     | 瑞芯微MPP视频流        | 需使用*-rk后缀镜像和开启特权模式 |
+| preset-rkmpp     | 瑞芯微MPP视频流        | 需使用*-rk后缀镜像以及开启特权模式 |
 
 ### 输入参数预设
 
@@ -31,18 +31,18 @@ Frigate默认提供了一些FFmpeg参数预设，以简化配置流程。所有�
 
 | 预设名称                  | 适用场景                | 注意事项                                                                 |
 |--------------------------|-----------------------|------------------------------------------------------------------------|
-| preset-http-jpeg-generic | HTTP实时JPEG流        | 建议改用重流方式处理                                                   |
-| preset-http-mjpeg-generic | HTTP MJPEG流         | 建议改用重流方式处理                                                   |
-| preset-http-reolink     | Reolink HTTP-FLV流   | 仅适用于原生HTTP流，不适用于RTSP重流                                   |
+| preset-http-jpeg-generic | HTTP实时JPEG流        | 建议改用转流方式处理                                                   |
+| preset-http-mjpeg-generic | HTTP MJPEG流         | 建议改用转流方式处理                                                   |
+| preset-http-reolink     | Reolink HTTP-FLV流   | 仅适用于原生HTTP流，不适用于RTSP转流                                   |
 | preset-rtmp-generic     | RTMP流               |                                                                        |
 | preset-rtsp-generic     | RTSP流               | 未指定时的默认预设                                                     |
-| preset-rtsp-restream    | RTSP重流源           | 适用于作为Frigate输入源的RTSP重流                                      |
-| preset-rtsp-restream-low-latency | RTSP低延迟重流源 | 可降低延迟，但部分摄像头可能不兼容                                     |
+| preset-rtsp-restream    | RTSP转流源           | 适用于作为Frigate输入源的RTSP转流                                      |
+| preset-rtsp-restream-low-latency | RTSP低延迟转流源 | 可降低延迟，但部分摄像头可能不兼容                                     |
 | preset-rtsp-udp         | UDP协议RTSP流        | 适用于仅支持UDP的摄像头                                                |
 | preset-rtsp-blue-iris   | Blue Iris RTSP流     | 适用于Blue Iris视频源                                                  |
 
 :::warning
-使用重流时需特别注意输入参数，不同协议不可混用。`http`和`rtmp`预设不能用于`rtsp`流。例如当使用Reolink摄像头的RTSP重流作为录制源时，若误用preset-http-reolink会导致崩溃。此时需要在流级别单独设置预设，参考以下示例：
+使用转流时需特别注意输入参数，不同协议不可混用。`http`和`rtmp`预设不能用于`rtsp`流。例如当使用Reolink摄像头的RTSP转流作为录制源时，若误用preset-http-reolink会导致崩溃。此时需要在流级别单独设置预设，参考以下示例：
 :::
 
 ```yaml

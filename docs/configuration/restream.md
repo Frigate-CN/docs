@@ -1,13 +1,13 @@
 ---
 id: restream
-title: 重流功能
+title: 转流功能
 ---
 
-## RTSP重流
+## RTSP转流 {#rtsp}
 
-Frigate可以将您的视频流重新以RTSP协议流式传输，供其他应用程序（如Home Assistant）使用，地址为`rtsp://<frigate_host>:8554/<camera_name>`。必须开放8554端口。[这样您就可以同时使用一个视频流进行Frigate检测和Home Assistant实时查看，而无需与摄像头建立两个独立连接](#减少摄像头连接数)。视频流直接从原始视频流复制，避免重新编码。此流不包含Frigate的任何标注。
+Frigate可以将您的视频流重新以RTSP协议流式转发传输，供其他应用程序（如Home Assistant）使用，地址为`rtsp://<frigate_host>:8554/<camera_name>`。必须开放转发容器内`8554`端口。[这样您就可以同时使用一个视频流进行Frigate检测和Home Assistant实时查看，而无需与摄像头建立两个独立连接](#reduce-connections-to-camera)。视频流将直接从原始视频流复制，避免重新编码。此流不包含Frigate的任何标注。
 
-Frigate使用[go2rtc](https://github.com/AlexxIT/go2rtc/tree/v1.9.9)提供重流和MSE/WebRTC功能。go2rtc配置位于配置文件的`go2rtc`部分，更多高级配置和功能请参阅[go2rtc文档](https://github.com/AlexxIT/go2rtc/tree/v1.9.9#configuration)。
+Frigate使用[go2rtc](https://github.com/AlexxIT/go2rtc/tree/v1.9.9)提供转流和MSE/WebRTC功能。go2rtc配置位于配置文件的`go2rtc`部分，更多高级配置和功能请参阅[go2rtc文档](https://github.com/AlexxIT/go2rtc/tree/v1.9.9#configuration)。
 
 :::note
 
@@ -15,18 +15,18 @@ Frigate使用[go2rtc](https://github.com/AlexxIT/go2rtc/tree/v1.9.9)提供重流
 
 :::
 
-### 鸟瞰图重流
+### 鸟瞰图转流 {#birdseye-restream}
 
-鸟瞰图RTSP重流可通过`rtsp://<frigate_host>:8554/birdseye`访问。启用鸟瞰图重流将使鸟瞰图24/7运行，这可能会略微增加CPU使用率。
+鸟瞰图RTSP转流可通过`rtsp://<frigate_host>:8554/birdseye`访问。启用鸟瞰图转流将使鸟瞰图24/7运行，这可能会略微增加CPU使用率。
 
 ```yaml
 birdseye:
   restream: True
 ```
 
-### 使用认证保护重流
+### 使用认证保护转流 {#securing-restream-with-authentication}
 
-go2rtc重流可以通过基于RTSP的用户名/密码认证进行保护。例如：
+go2rtc转流可以通过设置RTSP的用户名/密码认证进行保护。例如：
 
 ```yaml
 go2rtc:
@@ -36,33 +36,37 @@ go2rtc:
   streams: ...
 ```
 
-**注意：**这不适用于本地主机请求，当使用重流作为Frigate摄像头源时无需提供凭据。
+:::warning
 
-## 减少摄像头连接数
+即使设置了go2rtc的RTSP流权限，使用通过Frigate访问自己的go2rtc转流的时候，也无需提供账号密码进行鉴权。
 
-某些摄像头仅支持一个活动连接，或者您可能只想与摄像头保持单一连接。RTSP重流使这成为可能。
+:::
 
-### 单流配置
+## 减少摄像头连接数 {#reduce-connections-to-camera}
 
-与摄像头建立一个连接。一个用于重流，`detect`和`record`连接到重流。
+某些摄像头仅支持一个视频流（即只能有一个设备可以访问摄像头）连接，亦或者你希望减少与摄像头不必要的连接数，RTSP转流功能能很好的解决你的问题。
+
+### 单流配置 {#with-single-stream}
+
+与摄像头建立一个连接。一个用于转流，`detect`和`record`连接到转流。
 
 ```yaml
 go2rtc:
   streams:
-    name_your_rtsp_cam: # <- RTSP流
+    name_your_rtsp_cam: # <- 你的RTSP流名称，修改为你自己希望的摄像头名称，只支持英文数字下划线和连接符
       - rtsp://192.168.1.5:554/live0 # <- 支持视频和AAC音频的流
-      - "ffmpeg:name_your_rtsp_cam#audio=opus" # <- 将音频转码为缺失编解码器(通常是opus)的流副本
-    name_your_http_cam: # <- 其他流
+      - "ffmpeg:name_your_rtsp_cam#audio=opus" # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
+    name_your_http_cam: # <- 其他类型的视频流，例如http
       - http://192.168.50.155/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=user&password=password # <- 支持视频和AAC音频的流
-      - "ffmpeg:name_your_http_cam#audio=opus" # <- 将音频转码为缺失编解码器(通常是opus)的流副本
+      - "ffmpeg:name_your_http_cam#audio=opus" # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
 
 cameras:
-  name_your_rtsp_cam:
+  name_your_rtsp_cam: # <- 摄像头名称和go2rtc上的视频流名称尽可能一致
     ffmpeg:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://127.0.0.1:8554/name_your_rtsp_cam # <--- 这里的名称必须与重流中的摄像头名称匹配
+        - path: rtsp://127.0.0.1:8554/name_your_rtsp_cam # <--- 注意！这里的名称（name_your_rtsp_cam）必须与上面转流中设置的视频流名称一致！记得修改
           input_args: preset-rtsp-restream
           roles:
             - record
@@ -73,7 +77,7 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://127.0.0.1:8554/name_your_http_cam # <--- 这里的名称必须与重流中的摄像头名称匹配
+        - path: rtsp://127.0.0.1:8554/name_your_http_cam # <--- 注意！这里的名称（name_your_http_cam）必须与上面转流中设置的摄像头名称一致！记得修改
           input_args: preset-rtsp-restream
           roles:
             - record
@@ -81,9 +85,9 @@ cameras:
             - audio # <- 仅在启用音频检测时需要
 ```
 
-### 子流配置
+### 有子流情况下的配置 {#with-sub-stream}
 
-与摄像头建立两个连接。一个用于子流，一个用于重流，`record`连接到重流。
+与摄像头建立两个连接。一个用于子流，一个用于转流，`record`连接到转流。
 
 ```yaml
 go2rtc:
@@ -107,11 +111,11 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://127.0.0.1:8554/name_your_rtsp_cam # <--- 这里的名称必须与重流中的摄像头名称匹配
+        - path: rtsp://127.0.0.1:8554/name_your_rtsp_cam # <--- 这里的名称必须与转流中的摄像头名称匹配
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://127.0.0.1:8554/name_your_rtsp_cam_sub # <--- 这里的名称必须与重流中的camera_sub名称匹配
+        - path: rtsp://127.0.0.1:8554/name_your_rtsp_cam_sub # <--- 这里的名称必须与转流中的camera_sub名称匹配
           input_args: preset-rtsp-restream
           roles:
             - audio # <- 仅在启用音频检测时需要
@@ -121,27 +125,31 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://127.0.0.1:8554/name_your_http_cam # <--- 这里的名称必须与重流中的摄像头名称匹配
+        - path: rtsp://127.0.0.1:8554/name_your_http_cam # <--- 这里的名称必须与转流中的摄像头名称匹配
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://127.0.0.1:8554/name_your_http_cam_sub # <--- 这里的名称必须与重流中的camera_sub名称匹配
+        - path: rtsp://127.0.0.1:8554/name_your_http_cam_sub # <--- 这里的名称必须与转流中的camera_sub名称匹配
           input_args: preset-rtsp-restream
           roles:
             - audio # <- 仅在启用音频检测时需要
             - detect
 ```
 
-## 处理复杂密码
+## 处理复杂密码（例如带特殊符号） {#handling-complex-passwords}
 
-go2rtc期望配置中使用URL编码的密码，可以使用[urlencoder.org](https://urlencoder.org)进行编码。
+如果你的摄像头密码里有特殊符号，需要对**密码**进行URL编码才能正常识别。可以使用[urlencoder.org](https://urlencoder.org)进行编码。
+
+:::warning
+注意，只需要对用户名或者密码进行编码！不要把地址直接复制过去进行编码！
+:::
 
 例如：
 
 ```yaml
 go2rtc:
   streams:
-    my_camera: rtsp://username:$@foo%@192.168.1.100
+    my_camera: rtsp://username:$@foo%@192.168.1.100 # <- 假设你的密码是$@foo%，由于URL里@符号有其他用途，会导致这个地址无效
 ```
 
 编码后变为：
@@ -149,16 +157,16 @@ go2rtc:
 ```yaml
 go2rtc:
   streams:
-    my_camera: rtsp://username:$%40foo%25@192.168.1.100
+    my_camera: rtsp://username:$%40foo%25@192.168.1.100  # <- 经过url编码后，会将@符号转换为%40，%符号转为%25
 ```
 
 更多信息请参阅[此评论](https://github.com/AlexxIT/go2rtc/issues/1217#issuecomment-2242296489)。
 
-## 高级重流配置
+## 高级转流配置 {#advanced-restream-configurations}
 
 go2rtc中的[exec](https://github.com/AlexxIT/go2rtc/tree/v1.9.9#source-exec)源可用于自定义ffmpeg命令。示例如下：
 
-注意：输出需要使用两个大括号`{{output}}`传递
+注意：output需要使用两个花括号传递，如<code v-pre>{{output}}</code>
 
 ```yaml
 go2rtc:

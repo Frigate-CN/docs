@@ -30,7 +30,7 @@ cameras:
 
 :::note
 
-用于捕获音频的ffmpeg进程将与分配给摄像头的其他功能一起建立到摄像头的单独连接，因此建议使用go2rtc重新流式传输来实现此目的。更多信息请参阅[重新流式传输文档](/configuration/restream.md)。
+用于捕获音频的ffmpeg进程将与分配给摄像头的其他功能一起建立到摄像头的单独连接，因此建议使用go2rtc转流传输来实现此目的。更多信息请参阅[转流传输文档](/configuration/restream.md)。
 
 :::
 
