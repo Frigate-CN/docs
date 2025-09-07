@@ -62,7 +62,37 @@ export default defineConfig({
   head:[
     //<meta name="baidu-site-verification" content="codeva-GVV3NnQtwh" />
     ["meta", { name: "baidu-site-verification", content: "codeva-GVV3NnQtwh" }],
+    ["meta", { name: "keywords", content: "Frigate,Frigate NVR,Frigate 中文文档,Frigate 中文,Frigate 中文社区,Frigate 中文网,Frigate 中文教程,Frigate 教程,Frigate 入门,Frigate 使用,Frigate 配置,Frigate 安装,Frigate Docker,Frigate Home Assistant,Frigate HA,Frigate AI 视频监控,NVR 视频监控,网络视频监控,视频监控系统" }],
+    ["meta", { name: "description", content: "Frigate 是一款基于实时 AI 目标检测技术的开源网络录像机（NVR）。所有视频分析都在您本地设备上完成，摄像头画面全程不会上传到云端，数据安全有保障。" }],
+    ["meta", { property: "og:title", content: "Frigate 中文文档" }],
+    ["meta", { property: "og:description", content: "Frigate 是一款基于实时 AI 目标检测技术的开源网络录像机（NVR）。所有视频分析都在您本地设备上完成，摄像头画面全程不会上传到云端，数据安全有保障。" }],
+    ["meta", { property: "og:image", content: "https://docs.frigate-cn.video/img/logo.svg" }],
+    ["link", { rel: "shortcut icon", href: "/img/favicon.ico", type: "image/x-icon" }],
+    ["link", { rel: "icon", href: "/img/favicon.ico", type: "image/x-icon" }],
   ],
+  sitemap: {
+    hostname: 'https://docs.frigate-cn.video',
+    xmlns: {
+      xhtml: true,
+      image: true,
+      news: false,
+      video: false
+    },
+    transformItems: (items) => {
+      return items.map(item => {
+        if (item.url.includes('/404') || item.url.includes('/zh/404')) {
+          return null;
+        }
+        if (item.url === '') {
+          item.img = {
+            url: 'https://docs.frigate-cn.video/img/logo.svg',
+            title: 'Frigate 中文文档',
+          }
+        }
+        return item; // 保留其他项
+      }).filter(item => item !== null);
+    }
+  },
   extends: teekConfig,
   srcDir: "docs",
   lang: "zh-CN",
