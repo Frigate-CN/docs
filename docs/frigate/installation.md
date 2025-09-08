@@ -221,6 +221,7 @@ services:
     environment:
       FRIGATE_RTSP_PASSWORD: "password" # rtsp的密码，请修改"password"为你期望的密码
       TZ: "Asia/Shanghai" # 设置为中国+8时区
+      HF_ENDPOINT: "https://huggingface.mirror.frigate-cn.video" # 由我们提供的Huggingface国内镜像源，提供Frigate需要用到的部分模型加速下载
 ```
 
 如果您无法使用Docker Compose，可以使用类似以下命令运行容器：
@@ -239,6 +240,7 @@ docker run -d \
   -v /etc/localtime:/etc/localtime:ro \
   -e FRIGATE_RTSP_PASSWORD='password' \
   -e TZ='Asia/Shanghai' \
+  -e HF_ENDPOINT='https://huggingface.mirror.frigate-cn.video' \
   -p 8971:8971 \
   -p 8554:8554 \
   -p 8555:8555/tcp \
@@ -247,23 +249,30 @@ docker run -d \
 ```
 
 :::info
-上面的镜像地址已换为我们托管在cnb上的地址，如不需要使用镜像，可以将地址换为官方镜像地址：
+上面的镜像地址已换为我们托管在国内cnb上的地址，能够在国内获得更快的速度。如不需要使用镜像加速，可以将地址换为官方镜像地址：
 
 ghcr.io/blakeblackshear/frigate:stable
 
 :::
 
+
+:::warning
+默认镜像是不支持N卡或A卡加速的！需要参考下方，使用特定后缀的镜像地址。
+
+amd64**并不是**特指的AMD平台，而是历史遗留原因导致的名称。Intel、AMD的CPU都属于amd64架构。
+:::
+
 当前稳定版本的官方Docker镜像标签有：
 
-- `stable` - 适用于amd64的标准Frigate构建和适用于arm64的树莓派优化Frigate构建。此构建还包括对Hailo设备的支持。
-- `stable-standard-arm64` - 适用于arm64的标准Frigate构建
-- `stable-tensorrt` - 专门用于运行NVIDIA GPU的amd64设备的Frigate构建
+- `stable` - 适用于**amd64**的标准Frigate构建和适用于**arm64**的树莓派优化Frigate构建。此构建还包括对Hailo设备的支持。推荐Intel核显或使用Coral、Hailo的用户使用
+- `stable-standard-arm64` - 适用于**arm64**的标准Frigate构建
+- `stable-tensorrt` - 专门用于运行**NVIDIA GPU**的amd64设备的Frigate构建
 - `stable-rocm` - 适用于[AMD GPU](../configuration/object_detectors.md#amdrocm-gpu-detector)的Frigate构建
 
 当前稳定版本的社区支持Docker镜像标签有：
 
-- `stable-tensorrt-jp6` - 为运行Jetpack 6的NVIDIA Jetson设备优化的Frigate构建
-- `stable-rk` - 适用于搭载Rockchip SoC的单板计算机的Frigate构建
+- `stable-tensorrt-jp6` - 为运行Jetpack 6的**NVIDIA Jetson**开发板设备优化的Frigate构建
+- `stable-rk` - 适用于搭载 **瑞芯微Rockchip SoC** 开发板设备的Frigate构建
 
 ## Home Assistant插件 {#home-assistant-add-on}
 

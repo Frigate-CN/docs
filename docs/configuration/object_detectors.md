@@ -31,9 +31,9 @@ Frigate支持多种不同类型的检测器，可在不同硬件上运行：
 - [TensortRT](#nvidia-tensorrt检测器)：TensorRT可在Jetson设备上运行，使用多种预设模型。
 - [ONNX](#onnx)：当配置了支持的ONNX模型时，TensorRT会在`-tensorrt-jp6`版Frigate镜像中自动被检测并使用。
 
-**Rockchip**
+**瑞芯微Rockchip**
 
-- [RKNN](#rockchip-platform)：RKNN模型可在内置NPU的Rockchip设备上运行。
+- [RKNN](#rockchip-platform)：RKNN模型可在内置NPU的瑞芯微Rockchip设备上运行。
 
 **测试用途**
 
@@ -780,9 +780,9 @@ model:
   height: 320 # 必须与所选模型匹配，例如 yolov7-320 对应 320，yolov4-416 对应 416
 ```
 
-## Rockchip平台检测器
+## 瑞芯微Rockchip平台检测器 {#rockchip-platform}
 
-Rockchip平台支持以下SoC的硬件加速物体/目标检测：
+瑞芯微Rockchip平台支持以下SoC的硬件加速物体/目标检测：
 
 - RK3562
 - RK3566
@@ -810,7 +810,7 @@ detectors:
 
 ### 前提条件
 
-请确保按照[Rockchip特定安装说明](/frigate/installation#rockchip平台)进行操作。
+请确保按照[Rockchip特定安装说明](../frigate/installation#rockchip-platform)进行操作。
 
 :::tip
 
