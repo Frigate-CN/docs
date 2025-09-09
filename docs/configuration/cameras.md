@@ -43,7 +43,7 @@ cameras:
 
 :::tip
 
-如果你希望实时监控能够有声音并且画面更流畅，可以考虑配置[go2rtc](/guides/configuring_go2rtc)，并让摄像头的`path`使用go2rtc的[视频转流](configuration/restream.html#减少摄像头连接数)地址。
+如果你希望实时监控能够有声音并且画面更流畅，可以考虑配置[go2rtc](../guides/configuring_go2rtc)，并让摄像头的`path`使用go2rtc的[视频转流](../configuration/restream#reduce-connections-to-camera)地址。
 
 :::
 

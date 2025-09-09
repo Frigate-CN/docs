@@ -17,9 +17,9 @@ ffmpeg:
     record: preset-record-generic-audio-aac
 ```
 
-### 如何在实时监控中获取音频？
+### 为什么实时监控中没有声音？
 
-仅当配置了go2rtc时才支持实时监控音频，详见[实时监控文档](../configuration/live.md)。
+仅当配置了go2rtc时实时监控才能有声音，详见[实时监控文档](../configuration/live.md)。
 
 ### 无法在Web界面查看录像
 
