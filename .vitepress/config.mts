@@ -190,7 +190,10 @@ export default defineConfig({
         ]
       }
     ],
-    logo: '/img/logo.svg',
+    logo: {
+      light: '/img/logo.svg',
+      dark: '/img/logo-dark.svg',
+    },
 
     sidebar,
     socialLinks: [
