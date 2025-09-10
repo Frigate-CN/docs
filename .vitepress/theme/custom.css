@@ -26,14 +26,14 @@
     --tk-home-max-width: 1300px;
 }
 
-.logo {
+.VPHomeHero .logo {
     background-image: url(/img/logo.svg);
     background-size: contain;
     height: 2em;
     width: 2em;
 }
 
-.dark .logo {
+.dark .VPHomeHero .logo {
     background-image: url(/img/logo-dark.svg);
     background-size: contain;
     height: 2em;
