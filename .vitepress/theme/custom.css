@@ -1,7 +1,8 @@
-@media (min-width: 960px) {
+@media (min-width: 640px) {
+    
     .image-src {
-        max-width: 600px !important;
-        max-height: 600px !important;
+        max-width: 300px !important;
+        max-height: 300px !important;
     }
 
     .image-container {
@@ -9,11 +10,10 @@
     }
 }
 
-@media (min-width: 640px) {
-    
+@media (min-width: 960px) {
     .image-src {
-        max-width: 300px !important;
-        max-height: 300px !important;
+        max-width: 600px !important;
+        max-height: 600px !important;
     }
 
     .image-container {
@@ -38,6 +38,22 @@
     background-size: contain;
     height: 2em;
     width: 2em;
+}
+
+.tk-footer-info .eo-logo {
+    background-image: url(/assets/eo.png);
+    background-size: contain;
+    margin-top: 5px;
+    height: 16px;
+    width: 108px;
+}
+
+.dark .tk-footer-info .eo-logo {
+    background-image: url(/assets/eo-dark.png);
+    background-size: contain;
+    margin-top: 5px;
+    height: 16px;
+    width: 108px;
 }
 
 .VPHero {
