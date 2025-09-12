@@ -59,6 +59,19 @@ const teekConfig = defineTeekConfig({
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  transformPageData(pageData) {
+    const canonicalUrl = `https://docs.frigate-cn.video/${pageData.relativePath}`
+      .replace(/index\.md$/, '')
+      .replace(/\.md$/, '')
+      .replace(/\.html$/, '')
+
+    pageData.frontmatter.head ??= []
+    pageData.frontmatter.head.push([
+      'link',
+      { rel: 'canonical', href: canonicalUrl }
+    ])
+  },
+  cleanUrls: true,
   head:[
     //<meta name="baidu-site-verification" content="codeva-GVV3NnQtwh" />
     ["meta", { name: "baidu-site-verification", content: "codeva-GVV3NnQtwh" }],
@@ -89,7 +102,7 @@ export default defineConfig({
             title: 'Frigate 中文文档',
           }
         }
-        return item; // 保留其他项
+        return item.url.replace(/\.html$/, '/'); // 移除网址最后的.html
       }).filter(item => item !== null);
     }
   },
@@ -97,7 +110,7 @@ export default defineConfig({
   srcDir: "docs",
   lang: "zh-CN",
   title: "Frigate中文文档",
-  description: "Frigate NVR（网络视频监控录制）系统中文站",
+  description: "Frigate 是一款基于实时 AI 目标检测技术的开源网络录像机（NVR）。所有视频分析都在您本地设备上完成，摄像头画面全程不会上传到云端，数据安全有保障。",
   locales: {
     root: {
       label: '简体中文',

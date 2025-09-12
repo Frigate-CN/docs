@@ -26,13 +26,13 @@ cameras:
     ffmpeg:
       inputs:
         # 摄像头rtsp流地址可查阅摄像头文档或互联网其他人分享的教程，下面的地址仅为范例
-        # 可以考虑使用go2rtc，请参考下面的提示
+        # 可以考虑使用go2rtc，请参考文档后面的说明
         - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
           roles:
             - detect  # <- 用于物体检测
         # 可以设置不同的流用于不同功能，例如上面的流为子码流，节省带宽，适合检测，能够降低检测器负担
         # 主码流画面清晰，适合录制
-        # 可以考虑使用go2rtc，请参考下面的提示
+        # 可以考虑使用go2rtc，请参考文档后面的说明
         - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/live
           roles:
             - record  # <- 用于录像
@@ -47,7 +47,7 @@ cameras:
 
 :::
 
-接下来你只需在配置文件的`cameras`条目下按照上面的例子添加更多摄像头即可。
+接下来你只需在配置文件的`cameras`条目下按照上面的例子**添加更多摄像头**即可。
 
 ```yaml
 mqtt: ...
@@ -55,6 +55,8 @@ cameras:
   back: ...
   front: ...
   side: ...
+
+# 上面的back、front、side均为不同的摄像头名字
 ```
 
 :::note
