@@ -4,4 +4,4 @@ main:
         - name: build knowledge base
           image: cnbcool/knowledge-base
           settings:
-            include: "docs/**.md"
+            include: "docs/**/**.md"
