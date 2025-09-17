@@ -131,7 +131,7 @@ devices:
 
 #### 配置 {#configuration}
 
-最后，配置[硬件物体/目标检测](/configuration/object_detectors#hailo-8l)以完成设置。
+最后，配置[硬件物体/目标检测](/configuration/object_detectors#hailo-8)以完成设置。
 
 ### Rockchip平台 {#rockchip-platform}
 
@@ -388,14 +388,14 @@ Home Assistant OS用户可以通过插件仓库进行安装。
 
 ![image](https://user-images.githubusercontent.com/4516296/232585872-44431d15-55e0-4004-b78b-1e512702b911.png)
 
-## QNAP NAS
+## 威联通QNAP NAS {#qnap-nas}
 
 这些说明已在配备Intel J3455 CPU和16G RAM、运行QTS 4.5.4.2117的QNAP上测试通过。
 
 QNAP有一个名为Container Station的图形工具用于安装和管理docker容器。但是，Container Station有两个限制使其不适合安装Frigate：
 
-1. Container Station不支持GitHub容器注册表（ghcr），而该注册表托管了Frigate 0.12.0及以上版本的docker镜像。
-2. Container Station使用默认64 Mb共享内存大小（shm-size），且没有调整机制。Frigate需要更大的shm-size才能正常处理两个以上的高分辨率摄像头。
+1. Container Station不支持GitHub镜像站（ghcr），而镜像站托管了Frigate 0.12.0及以上版本的docker镜像。
+2. Container Station使用默认64 Mb共享内存大小（`shm-size`），且没有调整机制。Frigate需要更大的shm-size才能正常处理两个以上的高分辨率摄像头。
 
 由于上述限制，安装必须通过命令行完成。以下是具体步骤：
 
@@ -404,7 +404,7 @@ QNAP有一个名为Container Station的图形工具用于安装和管理docker�
 1. 如果尚未安装，从QNAP应用中心安装Container Station。
 2. 在QNAP上启用ssh（请通过网络搜索了解具体操作方法）。
 3. 准备Frigate配置文件，命名为`config.yml`。
-4. 根据[文档](https://docs.frigate.video/frigate/installation)计算共享内存大小。
+4. 根据[文档](https://docs.frigate-cn.video/frigate/installation)计算共享内存大小。
 5. 从https://en.wikipedia.org/wiki/List_of_tz_database_time_zones 查找您的时区值。
 6. 通过ssh连接到QNAP。
 
@@ -428,12 +428,13 @@ mkdir -p /share/share_vol2/frigate/media
 # 同时在示例命令中替换'TZ'的时区值。
 # 示例命令将创建一个最多使用2个CPU和4G RAM的docker容器。
 # 如果您使用特定CPU（如J4125），可能需要在以下docker run命令中添加"--env=LIBVA_DRIVER_NAME=i965 \"。
-# 参见 https://docs.frigate.video/configuration/hardware_acceleration。
+# 参见 https://docs.frigate-cn.video/configuration/hardware_acceleration。
 docker run \
   --name=frigate \
   --shm-size=256m \
   --restart=unless-stopped \
   --env=TZ=Asia/Shanghai \
+  -env=HF_ENDPOINT='https://huggingface.mirror.frigate-cn.video' \
   --volume=/share/Container/frigate/config:/config:rw \
   --volume=/share/share_vol2/frigate/media:/media/frigate:rw \
   --network=bridge \

@@ -79,7 +79,7 @@ title: 入门指南
    1. 具体来说，按照[使用apt仓库安装](https://docs.docker.com/engine/install/debian/#install-using-the-repository)部分的步骤操作
 2. 按照[Linux安装后步骤](https://docs.docker.com/engine/install/linux-postinstall/)中的说明将你的用户添加到docker组
 
-## 安装Frigate
+## 安装Frigate {#installing-frigate}
 
 本节展示如何在Debian上为Docker安装创建最小目录结构。如果你已经通过Home Assistant插件或其他方式安装了Frigate，可以继续[配置Frigate](#configuring-frigate)部分。
 
@@ -130,9 +130,9 @@ services:
 
 现在你应该可以在包含`docker-compose.yml`的文件夹中运行`docker compose up -d`来启动Frigate。在启动时，系统会创建一个管理员用户和密码，并在日志中输出。你可以通过运行`docker logs frigate`来查看。现在应该可以通过`https://server_ip:8971`访问Frigate，你可以使用`admin`用户登录并使用内置的配置编辑器完成配置。
 
-## 配置Frigate
+## 配置Frigate {#configuring-frigate}
 
-本节假设你已经按照[安装](../frigate/installation.md)中的说明设置了环境。你还应该根据[摄像头设置指南](/frigate/camera_setup)配置你的摄像头。特别注意选择检测分辨率的部分。
+本节假设你已经按照[安装](/frigate/installation)中的说明设置了环境。你还应该根据[摄像头设置指南](/frigate/camera_setup)配置你的摄像头。特别注意选择检测分辨率的部分。
 
 ### 步骤1：添加检测流
 

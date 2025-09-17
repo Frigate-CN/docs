@@ -11,17 +11,17 @@ Frigate支持多种不同类型的检测器，可在不同硬件上运行：
 
 **通用硬件**
 
-- [Coral EdgeTPU](#edge-tpu检测器)：Google Coral EdgeTPU提供USB和m.2两种接口，兼容多种设备。
-- [Hailo](#hailo-8检测器)：Hailo8和Hailo8L AI加速模块提供m.2接口和树莓派HAT，兼容多种设备。
+- [Coral EdgeTPU](#edge-tpu-detector)：Google Coral EdgeTPU提供USB和m.2两种接口，兼容多种设备。
+- [Hailo](#hailo-8)：Hailo8和Hailo8L AI加速模块提供m.2接口和树莓派HAT，兼容多种设备。
 
 **AMD**
 
-- [ROCm](#amdrocm-gpu检测器)：ROCm可在AMD独立显卡上运行，提供高效物体/目标检测。
+- [ROCm](#amdrocm-gpu-detector)：ROCm可在AMD独立显卡上运行，提供高效物体/目标检测。
 - [ONNX](#onnx)：当配置了支持的ONNX模型时，ROCm会在`-rocm`版Frigate镜像中自动被检测并使用。
 
 **Intel**
 
-- [OpenVino](#openvino检测器)：OpenVino可在Intel Arc 显卡、核显和CPU上运行，提供高效物体/目标检测。
+- [OpenVino](#openvino-detector)：OpenVino可在Intel Arc 显卡、核显和CPU上运行，提供高效物体/目标检测。
 - [ONNX](#onnx)：当配置了支持的ONNX模型时，OpenVINO会在标准Frigate镜像中自动被检测并使用。
 
 **NVIDIA**
@@ -53,7 +53,7 @@ Frigate支持多种不同类型的检测器，可在不同硬件上运行：
 
 Frigate提供以下内置检测器类型：`cpu`、`edgetpu`、`hailo8l`、`onnx`、`openvino`、`rknn`和`tensorrt`。默认情况下，Frigate会使用单个CPU检测器。其他检测器可能需要额外配置，如下所述。使用多个检测器时，它们会在专用进程中运行，但会从所有摄像头的公共检测请求队列中获取任务。
 
-## Edge TPU检测器
+## Edge TPU检测器 {#edge-tpu-detector}
 
 Edge TPU检测器类型运行TensorFlow Lite模型，利用Google Coral代理进行硬件加速。要配置Edge TPU检测器，将`"type"`属性设置为`"edgetpu"`。
 
@@ -134,11 +134,11 @@ detectors:
 
 ---
 
-## Hailo-8检测器
+## Hailo-8检测器 {#hailo-8}
 
 Hailo-8检测器支持Hailo-8和Hailo-8L AI加速模块。该集成会自动通过Hailo CLI检测您的硬件架构，如果未指定自定义模型，则会选择适当的默认模型。
 
-有关配置Hailo硬件的详细信息，请参阅[安装文档](../frigate/installation.md#hailo-8l)。
+有关配置Hailo硬件的详细信息，请参阅[安装文档](../frigate/installation.md#hailo-8)。
 
 ### 配置
 
@@ -239,7 +239,7 @@ Hailo8支持Hailo模型库中所有包含HailoRT后处理的模型。您可以�
 
 ---
 
-## OpenVINO检测器
+## OpenVINO检测器 {#openvino-detector}
 
 OpenVINO检测器类型可在AMD和Intel CPU、Intel GPU以及Intel VPU硬件上运行OpenVINO IR模型。要配置OpenVINO检测器，请将`"type"`属性设置为`"openvino"`。
 
@@ -263,7 +263,7 @@ detectors:
 
 :::
 
-### 支持的模型
+### 支持的模型 {#supported-models}
 
 #### SSDLite MobileNet v2
 
@@ -402,13 +402,13 @@ model:
 注意：标签映射使用的是完整COCO标签集的子集，仅包含80个对象。
 
 
-## AMD/ROCm GPU检测器
+## AMD/ROCm GPU检测器 {#amdrocm-gpu-detector}
 
-### 设置
+### 设置 {#setup}
 
 AMD GPU的支持通过[ONNX检测器](#ONNX)提供。要使用AMD GPU进行物体/目标检测，请使用带有`-rocm`后缀的Frigate docker镜像，例如`docker.cnb.cool/frigate-cn/frigate:stable-rocm`。
 
-### Docker GPU访问设置
+### Docker GPU访问设置 {#docker-settings-for-gpu-access}
 
 ROCm需要访问`/dev/kfd`和`/dev/dri`设备。当docker或frigate不以root身份运行时，还应添加`video`（可能还有`render`和`ssl/_ssl`）组。
 
@@ -432,7 +432,7 @@ devices:
 
 有关推荐设置的参考，请参阅[在Docker中运行ROCm/pytorch](https://rocm.docs.amd.com/projects/install-on-linux/en/develop/how-to/3rd-party/pytorch-install.html#using-docker-with-pytorch-pre-installed)。
 
-### 覆盖GPU芯片组的Docker设置
+### 覆盖GPU芯片组的Docker设置 {#docker-settings-for-overriding-the-gpu-chipset}
 
 您的GPU可能无需特殊配置即可正常工作，但在许多情况下需要手动设置。AMD/ROCm软件栈附带有限的GPU驱动程序集，对于较新或缺失的型号，您需要将芯片组版本覆盖为较旧/通用版本才能使其工作。
 
@@ -468,13 +468,13 @@ environment:
 4. 用相关值覆盖`HSA_OVERRIDE_GFX_VERSION`
 5. 如果仍然无法工作，请检查frigate docker日志
 
-#### 检查AMD/ROCm是否正常工作并找到您的GPU
+#### 检查AMD/ROCm是否正常工作并找到您的GPU {#figuring-out-if-amdrocm-is-working-and-found-your-gpu}
 
 ```bash
 $ docker exec -it frigate /opt/rocm/bin/rocminfo
 ```
 
-#### 确定您的AMD GPU芯片组版本：
+#### 确定您的AMD GPU芯片组版本：{#figuring-out-your-amd-gpu-chipset-version}
 
 我们取消设置`HSA_OVERRIDE_GFX_VERSION`以防止现有覆盖干扰结果：
 
@@ -482,9 +482,9 @@ $ docker exec -it frigate /opt/rocm/bin/rocminfo
 $ docker exec -it frigate /bin/bash -c '(unset HSA_OVERRIDE_GFX_VERSION && /opt/rocm/bin/rocminfo |grep gfx)'
 ```
 
-### 支持的模型
+### 支持的模型 {#supported-models-1}
 
-有关支持的模型，请参阅[ONNX支持的模型](#支持的模型-3)，但有以下注意事项：
+有关支持的模型，请参阅[ONNX支持的模型](#supported-models-2)，但有以下注意事项：
 
 - 不支持D-FINE模型
 - 已知YOLO-NAS模型在核显上运行不佳
@@ -525,7 +525,7 @@ detectors:
 
 :::
 
-### 支持的模型
+### 支持的模型 {#supported-models-2}
 
 没有提供默认模型，支持以下格式：
 
@@ -698,11 +698,11 @@ detectors:
 
 # 由社区支持的检测器
 
-## NVIDIA TensorRT检测器
+## NVIDIA TensorRT检测器 {#nvidia-tensorrt-detector}
 
 英伟达 Jetson 设备可使用 TensorRT 库进行目标检测。由于附加库的大小问题，此检测器仅在带有`-tensorrt-jp6`标签后缀的镜像中提供，例如`docker.cnb.cool/frigate-cn/frigate:stable-tensorrt-jp6`。此检测器旨在与用于目标检测的 Yolo 模型配合使用。
 
-### 生成模型
+### 生成模型 {#generate-models}
 
 用于TensorRT的模型必须在其运行的同一硬件平台上进行预处理。这意味着每个用户都必须执行额外的设置，为TensorRT库生成模型文件。其中包含一个脚本，可构建几种常见的模型。
 
@@ -823,7 +823,7 @@ $ cat /sys/kernel/debug/rknpu/load
 
 :::
 
-### 支持的模型
+### 支持的模型 {#supported-models-3}
 
 以下`config.yml`展示了配置检测器的所有相关选项并加以说明。除两处外，所有显示的值均为默认值。标记为"required"的行是使用检测器至少需要的配置，其他行均为可选。
 

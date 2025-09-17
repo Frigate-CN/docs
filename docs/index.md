@@ -73,14 +73,14 @@ hero:
   
 - name: 群辉DSM
   desc: 群辉是全球知名的NAS方案提供商，其DSM系统是使用最广泛的NAS系统。
-  link: /frigate/installation.html#dsm-7%E4%B8%8A%E7%9A%84%E7%BE%A4%E6%99%96nas
+  link: /frigate/installation.html#synology-nas-on-dsm-7
   img: https://fileres.synology.com/images/common/favicon/syno/favicon.ico
   badge: 通过容器安装
   badgeType: tip
 
-- name: QNAP NAS
+- name: 威联通QNAP NAS
   desc: QNAP 专注于储存、网络及智能影音产品创新
-  link: /frigate/installation.html#dsm-7%E4%B8%8A%E7%9A%84%E7%BE%A4%E6%99%96nas
+  link: /frigate/installation.html#qnap-nas
   img: https://www.qnap.com.cn/i/images/favicon/favicon.png
   badge: 通过容器安装
   badgeType: tip
