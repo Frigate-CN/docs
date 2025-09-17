@@ -44,7 +44,7 @@ const teekConfig = defineTeekConfig({
     },
   ],
   footerInfo: {
-    topMessage: ['本网站使用的 © Frigate 及相关商标（包括但不限于Logo）均为 <strong>Frigate, LLC</strong> 所有，并已获得其授权非商用使用许可。', '本站为非官方中文社区，非 Frigate 官方网站，不代表 Frigate 官方立场。'],
+    topMessage: ['本网站使用的 © Frigate 及相关商标（包括但不限于Logo）均为 <strong>Frigate, LLC</strong> 所有，并已获得其授权非商用使用许可。', '本站为非官方的中文社区，非 Frigate 官方网站，不代表 Frigate 官方立场。'],
     bottomMessage: [`CDN 加速及安全防护由 <a href="https://edgeone.ai/zh?from=github" class="eo-logo"></a> 提供`],
     icpRecord: {
       name: "渝ICP备2025058994号-1",
