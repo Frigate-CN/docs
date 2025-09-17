@@ -56,7 +56,7 @@ hero:
   <p>我们支持多种系统，看看有没有适合你的！</p>
 </div>
 
-::: navCard
+::: navCard 3
 ```yaml
 - name: unRAID
   desc: unRAID是一个可玩性超高的NAS系统，基于Slackware Linux开发。
@@ -65,11 +65,11 @@ hero:
   badge: 应用商店安装
   badgeType: tip
 
-- name: 飞牛 fnOS
-  desc: 飞牛fnOS是基于Debian开发的NAS系统，支持Docker。
-  img: https://www.fnnas.com/favicon.ico
-  badge: 应用商店安装
-  badgeType: tip
+#- name: 飞牛 fnOS
+#  desc: 飞牛fnOS是基于Debian开发的NAS系统，支持Docker。
+#  img: https://www.fnnas.com/favicon.ico
+#  badge: 应用商店安装
+#  badgeType: tip
   
 - name: 群辉DSM
   desc: 群辉是全球知名的NAS方案提供商，其DSM系统是使用最广泛的NAS系统。
