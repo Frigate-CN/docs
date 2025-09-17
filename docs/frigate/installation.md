@@ -434,7 +434,7 @@ docker run \
   --shm-size=256m \
   --restart=unless-stopped \
   --env=TZ=Asia/Shanghai \
-  -env=HF_ENDPOINT='https://huggingface.mirror.frigate-cn.video' \
+  --env=HF_ENDPOINT='https://huggingface.mirror.frigate-cn.video' \
   --volume=/share/Container/frigate/config:/config:rw \
   --volume=/share/share_vol2/frigate/media:/media/frigate:rw \
   --network=bridge \
