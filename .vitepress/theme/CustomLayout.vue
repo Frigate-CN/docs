@@ -5,11 +5,32 @@ import { ref } from 'vue'
 const { Layout } = Teek;
 
 const showFeedback = ref(false)
+const showAiChat = ref(false)
 </script>
 
 <template>
   <Teek.Layout>
     <template #teek-right-bottom-after>
+      <div>
+        <button
+          class="tk-right-bottom-button__button feedback-button"
+          @click="showAiChat = true"
+        >
+          问AI
+        </button>
+        <Transition name="popup">
+          <div
+            v-show="showAiChat"
+            class="feedback-overlay"
+            @click.self="showFeedback = false"
+          >
+            <div class="aichat-popup">
+              <button class="close-button" @click="showAiChat = false">×</button>
+              <StreamAI />
+            </div>
+          </div>
+        </Transition>
+      </div>
       <div>
         <button
           class="tk-right-bottom-button__button feedback-button"
@@ -122,5 +143,15 @@ iframe {
   opacity: 1;
   transform: translateY(0);
   /* transform: scale(1) translateY(0); */
+}
+
+.aichat-popup {
+  background: var(--tk-bg-color-elm);
+  width: 480px;
+  height: 600px;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 </style>

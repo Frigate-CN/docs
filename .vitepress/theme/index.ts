@@ -3,6 +3,7 @@ import "vitepress-theme-teek/index.css";
 import './custom.css'
 import CustomLayout from "./CustomLayout.vue";
 import ResponsiveGrid from "./ResponsiveGrid.vue";
+import StreamAI from "./StreamAI.vue";
 import Question from "./Question.vue";
 import { initComponent } from 'vitepress-plugin-legend/component';
 import 'vitepress-plugin-legend/dist/index.css';
@@ -21,6 +22,7 @@ export default {
     // 注册全局组件
     initComponent(app);
     app.component('ResponsiveGrid', ResponsiveGrid)
+    app.component('StreamAI', StreamAI)
     app.component('Question', Question) // 全局注册组件
   },
   extends: Teek,
