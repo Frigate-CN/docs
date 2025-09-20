@@ -179,7 +179,6 @@ docker run -d \
 ```yaml
 telemetry:
   stats:
-    sriov: true
     intel_gpu_device: "sriov"
 ```
 
