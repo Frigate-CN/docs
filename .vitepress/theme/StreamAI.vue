@@ -61,6 +61,7 @@
 import { ref, onUnmounted, computed } from 'vue';
 import DOMPurify from 'dompurify';
 import MarkdownIt from "markdown-it";
+import hljs from 'highlight.js';
 
 const md = MarkdownIt({ 
   html: true, 
@@ -322,47 +323,6 @@ const processDataChunk = (data) => {
   background-color: #f3f4f6;
   color: #1f2937;
   border-bottom-left-radius: 4px;
-}
-
-/* 适配MarkdownIt渲染的内容 */
-.message-content {
-  line-height: 1.6;
-}
-
-/* 链接样式 */
-.message-content a {
-  color: #3b82f6;
-  text-decoration: underline;
-}
-
-.user .message-content a {
-  color: #bfdbfe;
-}
-
-/* 代码块样式 */
-.message-content pre {
-  background-color: rgba(175, 184, 193, 0.2);
-  padding: 0.5rem;
-  border-radius: 6px;
-  overflow-x: auto;
-  margin: 0.5rem 0;
-}
-
-.message-content code {
-  background-color: rgba(175, 184, 193, 0.2);
-  padding: 0.1rem 0.3rem;
-  border-radius: 3px;
-}
-
-/* 标题和列表样式 */
-.message-content h1, .message-content h2, .message-content h3 {
-  margin: 0.8rem 0 0.4rem;
-  font-weight: 600;
-}
-
-.message-content ul, .message-content ol {
-  padding-left: 1.5rem;
-  margin: 0.5rem 0;
 }
 
 /* 其他样式保持不变 */
