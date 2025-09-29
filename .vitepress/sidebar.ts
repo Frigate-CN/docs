@@ -102,7 +102,7 @@ export const sidebar = [
       { text: 'Home Assistant', link: '/integrations/home-assistant' },
       {
         text: 'HTTP API',
-        link: 'https://docs.frigate.video/integrations/api/frigate-http-api',
+        link: 'https://apidoc.frigate-cn.video/',
       },
       { text: 'MQTT', link: '/integrations/mqtt' },
       { text: '指标', link: '/configuration/metrics' },
