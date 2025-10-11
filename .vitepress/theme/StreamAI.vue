@@ -559,6 +559,13 @@ const processDataChunk = (data) => {
 
 <style scoped>
 /* 基础样式保持不变 */
+
+.dark .stream-ai-container {
+  background: #1f2937;
+  border-color: #374151;
+  color: #d1d5db;
+}
+
 .stream-ai-container {
   /* width/height are now controlled inline via containerStyle */
   max-width: 100%;
