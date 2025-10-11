@@ -22,11 +22,10 @@ const showAiChat = ref(false)
           <div
             v-show="showAiChat"
             class="feedback-overlay"
-            @click.self="showFeedback = false"
+            @click.self="showAiChat = false"
           >
             <div class="aichat-popup">
-              <button class="close-button" @click="showAiChat = false">×</button>
-              <StreamAI />
+              <StreamAI @close="showAiChat = false" />
             </div>
           </div>
         </Transition>
@@ -146,11 +145,6 @@ iframe {
 }
 
 .aichat-popup {
-  background: var(--tk-bg-color-elm);
-  width: 480px;
-  height: 600px;
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
 }
