@@ -16,7 +16,7 @@ title: 请求你的第一个模型
 一旦你有了初始的已验证图片集，你就可以在模型页面上请求一个模型。关于选择模型类型的指导，请参考[文档的这一部分](./index.md#available-model-types)。每个模型请求需要使用年度订阅中包含的12次训练中的1次。这个模型将支持所有[可用的标签类型](./index.md#available-label-types)，即使你没有为这些标签提交任何示例。模型创建可能需要长达36小时。
 ![Plus模型页面](/img/plus/plus-models.jpg)
 
-## 步骤3：在配置中设置你的模型ID
+## 步骤3：在配置中设置你的模型ID {#step-3-set-your-model-id-in-the-config}
 
 当你的Frigate+模型准备就绪时，你将收到电子邮件通知。
 ![模型就绪邮件](/img/plus/model-ready-email.jpg)
@@ -31,6 +31,12 @@ model:
 :::note
 
 模型ID不是机密内容，可以自由共享。对你的模型的访问由你的API密钥保护。
+
+:::
+
+:::tip
+
+设置为Plus ID后，其他所有关于模型的字段都应清空，因为这些配置会通过Frigate+模型配置自动设置。
 
 :::
 

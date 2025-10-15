@@ -172,7 +172,7 @@ services:
 
 有关更多信息，请参阅[go2rtc WebRTC文档](https://github.com/AlexxIT/go2rtc/tree/v1.8.3#module-webrtc)。
 
-### 双向通话
+### 双向通话 {#two-way-talk}
 
 对于支持双向通话的设备，可以配置Frigate从Web UI的摄像头实时监控页面中使用该功能。你应该：
 

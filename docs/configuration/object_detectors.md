@@ -28,6 +28,7 @@ Frigate支持多种不同类型的检测器，可在不同硬件上运行：
 - [ONNX](#onnx)：当配置了受支持的 ONNX 模型时，在-tensorrt Frigate 镜像中，TensorRT 将被自动检测并用作检测器。
 
 **Nvidia Jetson**
+
 - [TensortRT](#nvidia-tensorrt检测器)：TensorRT可在Jetson设备上运行，使用多种预设模型。
 - [ONNX](#onnx)：当配置了支持的ONNX模型时，TensorRT会在`-tensorrt-jp6`版Frigate镜像中自动被检测并使用。
 
@@ -136,13 +137,13 @@ detectors:
 
 ## Hailo-8检测器 {#hailo-8}
 
-Hailo-8检测器支持Hailo-8和Hailo-8L AI加速模块。该集成会自动通过Hailo CLI检测您的硬件架构，如果未指定自定义模型，则会选择适当的默认模型。
+Hailo-8检测器支持Hailo-8和Hailo-8L AI加速模块。该集成会自动通过Hailo CLI检测你的硬件架构，如果未指定自定义模型，则会选择适当的默认模型。
 
 有关配置Hailo硬件的详细信息，请参阅[安装文档](../frigate/installation.md#hailo-8)。
 
 ### 配置
 
-配置Hailo检测器时，您有两种指定模型的方式：本地**路径**或**URL**。
+配置Hailo检测器时，你有两种指定模型的方式：本地**路径**或**URL**。
 如果同时提供两者，检测器将首先检查给定的本地路径。如果未找到文件，则会从指定的URL下载模型。模型文件缓存在`/config/model_cache/hailo`目录下。
 
 #### YOLO模型
@@ -167,23 +168,23 @@ model:
   model_type: yolo-generic
   labelmap_path: /labelmap/coco-80.txt
 
-  # 检测器会根据您的硬件自动选择默认模型：
+  # 检测器会根据你的硬件自动选择默认模型：
   # - Hailo-8硬件：YOLOv6n（默认：yolov6n.hef）
   # - Hailo-8L硬件：YOLOv6n（默认：yolov6n.hef）
   #
-  # 可选：您可以指定本地模型路径来覆盖默认值。
+  # 可选：你可以指定本地模型路径来覆盖默认值。
   # 如果提供了本地路径且文件存在，将使用该文件而不是下载。
   # 示例：
   # path: /config/model_cache/hailo/yolov6n.hef
   #
-  # 您也可以使用自定义URL覆盖：
+  # 你也可以使用自定义URL覆盖：
   # path: https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v2.14.0/hailo8/yolov6n.hef
   # 只需确保根据模型提供正确的配置
 ```
 
 #### SSD模型
 
-对于基于SSD的模型，请提供您编译的SSD模型的路径或URL。集成将首先检查本地路径，必要时才会下载。
+对于基于SSD的模型，请提供你编译的SSD模型的路径或URL。集成将首先检查本地路径，必要时才会下载。
 
 ```yaml
 detectors:
@@ -207,7 +208,7 @@ model:
 
 #### 自定义模型
 
-Hailo检测器支持所有为Hailo硬件编译并包含后处理的YOLO模型。您可以指定自定义URL或本地路径来下载或直接使用您的模型。如果同时提供两者，检测器会优先检查本地路径。
+Hailo检测器支持所有为Hailo硬件编译并包含后处理的YOLO模型。你可以指定自定义URL或本地路径来下载或直接使用你的模型。如果同时提供两者，检测器会优先检查本地路径。
 
 ```yaml
 detectors:
@@ -232,7 +233,7 @@ model:
 
 更多现成模型，请访问：[Hailo模型库](https://github.com/hailo-ai/hailo_model_zoo)
 
-Hailo8支持Hailo模型库中所有包含HailoRT后处理的模型。您可以选择任何这些预配置模型用于您的实现。
+Hailo8支持Hailo模型库中所有包含HailoRT后处理的模型。你可以选择任何这些预配置模型用于你的实现。
 
 > **注意：**
 > config.path参数可以接受以.hef结尾的本地文件路径或URL。当提供时，检测器将首先检查路径是否为本地文件路径。如果文件在本地存在，将直接使用。如果未找到本地文件或提供了URL，则会尝试从指定URL下载模型。
@@ -288,11 +289,17 @@ model:
 
 #### YOLOX模型
 
-该检测器也支持YOLOX模型。Frigate没有预加载任何YOLOX模型，因此您需要自行提供模型。
+该检测器也支持YOLOX模型。Frigate没有预加载任何YOLOX模型，因此你需要自行提供模型。
 
 #### YOLO-NAS模型
 
 [YOLO-NAS](https://github.com/Deci-AI/super-gradients/blob/master/YOLONAS.md)模型受支持，但默认不包含。有关下载YOLO-NAS模型用于Frigate的更多信息，请参阅[模型部分](#下载yolo-nas模型)。
+
+:::warning
+
+如果你使用的是 Frigate+ YOLO-NAS 模型，则除了 path 参数外，不应在配置中定义以下任何 model 相关参数。有关模型设置的更多信息，请参阅 [Frigate+ 模型文档](../plus/first_model#step-3-set-your-model-id-in-the-config)。
+
+:::
 
 将下载的onnx模型放入配置文件夹后，可以使用以下配置：
 
@@ -321,6 +328,12 @@ YOLOv3、YOLOv4、YOLOv7和[YOLOv9](https://github.com/WongKinYiu/yolov9)模型�
 :::tip
 
 YOLO检测器设计用于支持YOLOv3、YOLOv4、YOLOv7和YOLOv9模型，但也可能支持其他YOLO模型架构。
+
+:::
+
+:::warning
+
+如果你使用的是 Frigate+ YOLOv9 模型，则除了 path 参数外，不应在配置中定义以下任何 model 相关参数。有关模型设置的更多信息，请参阅 [Frigate+ 模型文档](../plus/first_model#step-3-set-your-model-id-in-the-config)。
 
 :::
 
@@ -434,7 +447,7 @@ devices:
 
 ### 覆盖GPU芯片组的Docker设置 {#docker-settings-for-overriding-the-gpu-chipset}
 
-您的GPU可能无需特殊配置即可正常工作，但在许多情况下需要手动设置。AMD/ROCm软件栈附带有限的GPU驱动程序集，对于较新或缺失的型号，您需要将芯片组版本覆盖为较旧/通用版本才能使其工作。
+你的GPU可能无需特殊配置即可正常工作，但在许多情况下需要手动设置。AMD/ROCm软件栈附带有限的GPU驱动程序集，对于较新或缺失的型号，你需要将芯片组版本覆盖为较旧/通用版本才能使其工作。
 
 此外，AMD/ROCm不"正式"支持核显。它仍然可以与大多数核显正常工作，但需要特殊设置。必须配置`HSA_OVERRIDE_GFX_VERSION`环境变量。有关背景和示例，请参阅[ROCm问题报告](https://github.com/ROCm/ROCm/issues/1743)。
 
@@ -443,7 +456,7 @@ devices:
 - gfx1031 -> 10.3.0
 - gfx1103 -> 11.0.0
 
-如果您有其他芯片组，可能需要在Docker启动时覆盖`HSA_OVERRIDE_GFX_VERSION`。假设您需要的版本是`10.0.0`，则应从命令行配置为：
+如果你有其他芯片组，可能需要在Docker启动时覆盖`HSA_OVERRIDE_GFX_VERSION`。假设你需要的版本是`10.0.0`，则应从命令行配置为：
 
 ```bash
 $ docker run -e HSA_OVERRIDE_GFX_VERSION=10.0.0 \
@@ -460,21 +473,21 @@ environment:
   HSA_OVERRIDE_GFX_VERSION: "10.0.0"
 ```
 
-确定您需要的版本可能很复杂，因为您无法从AMD品牌名称中判断芯片组名称和驱动程序。
+确定你需要的版本可能很复杂，因为你无法从AMD品牌名称中判断芯片组名称和驱动程序。
 
 1. 首先通过在frigate容器中运行`/opt/rocm/bin/rocminfo`确保rocm环境正常运行 - 它应该列出CPU和GPU及其属性
-2. 从`rocminfo`的输出中找到您拥有的芯片组版本(gfxNNN)（见下文）
+2. 从`rocminfo`的输出中找到你拥有的芯片组版本(gfxNNN)（见下文）
 3. 使用搜索引擎查询给定gfx名称所需的`HSA_OVERRIDE_GFX_VERSION`("gfxNNN ROCm HSA_OVERRIDE_GFX_VERSION")
 4. 用相关值覆盖`HSA_OVERRIDE_GFX_VERSION`
 5. 如果仍然无法工作，请检查frigate docker日志
 
-#### 检查AMD/ROCm是否正常工作并找到您的GPU {#figuring-out-if-amdrocm-is-working-and-found-your-gpu}
+#### 检查AMD/ROCm是否正常工作并找到你的GPU {#figuring-out-if-amdrocm-is-working-and-found-your-gpu}
 
 ```bash
 $ docker exec -it frigate /opt/rocm/bin/rocminfo
 ```
 
-#### 确定您的AMD GPU芯片组版本：{#figuring-out-your-amd-gpu-chipset-version}
+#### 确定你的AMD GPU芯片组版本：{#figuring-out-your-amd-gpu-chipset-version}
 
 我们取消设置`HSA_OVERRIDE_GFX_VERSION`以防止现有覆盖干扰结果：
 
@@ -495,7 +508,7 @@ ONNX是一种用于构建机器学习模型的开放格式，Frigate支持在CPU
 
 :::info
 
-如果使用了适合您GPU的正确构建版本，GPU将被自动检测并使用。
+如果使用了适合你GPU的正确构建版本，GPU将被自动检测并使用。
 
 - **AMD**
 
@@ -557,6 +570,12 @@ YOLOv3、YOLOv4、YOLOv7和[YOLOv9](https://github.com/WongKinYiu/yolov9)模型�
 :::tip
 
 YOLO检测器设计用于支持YOLOv3、YOLOv4、YOLOv7和YOLOv9模型，但也可能支持其他YOLO模型架构。有关下载YOLO模型用于Frigate的更多信息，请参阅[模型部分](#下载yolo模型)。
+
+:::
+
+:::warning
+
+如果你使用的是 Frigate+ YOLOv9 模型，则除了 path 参数外，不应在配置中定义以下任何 model 相关参数。有关模型设置的更多信息，请参阅 [Frigate+ 模型文档](../plus/first_model#step-3-set-your-model-id-in-the-config)。
 
 :::
 
@@ -651,7 +670,7 @@ CPU检测器类型运行TensorFlow Lite模型，使用CPU进行处理而不使�
 
 :::danger
 
-不建议将CPU检测器用于一般用途。如果您没有GPU或Edge TPU硬件，使用[OpenVINO检测器](#openvino-detector)的CPU模式通常比使用CPU检测器更高效。
+不建议将CPU检测器用于一般用途。如果你没有GPU或Edge TPU硬件，使用[OpenVINO检测器](#openvino-detector)的CPU模式通常比使用CPU检测器更高效。
 
 :::
 
@@ -676,25 +695,25 @@ model:
 
 ## Deepstack / CodeProject.AI 服务器检测器
 
-Frigate的Deepstack/CodeProject.AI服务器检测器允许您将Deepstack和CodeProject.AI的物体/目标检测功能集成到Frigate中。CodeProject.AI和DeepStack是开源AI平台，可以在各种设备上运行，如树莓派、NVIDIA Jetson和其他兼容硬件。需要注意的是，集成是通过网络进行的，因此推理时间可能不如原生Frigate检测器快，但它仍然为物体/目标检测和跟踪提供了高效可靠的解决方案。
+Frigate的Deepstack/CodeProject.AI服务器检测器允许你将Deepstack和CodeProject.AI的物体/目标检测功能集成到Frigate中。CodeProject.AI和DeepStack是开源AI平台，可以在各种设备上运行，如树莓派、NVIDIA Jetson和其他兼容硬件。需要注意的是，集成是通过网络进行的，因此推理时间可能不如原生Frigate检测器快，但它仍然为物体/目标检测和跟踪提供了高效可靠的解决方案。
 
 ### 设置
 
-要开始使用CodeProject.AI，请访问其[官方网站](https://www.codeproject.com/Articles/5322557/CodeProject-AI-Server-AI-the-easy-way)，按照说明在您选择的设备上下载并安装AI服务器。CodeProject.AI的详细设置说明不在Frigate文档范围内。
+要开始使用CodeProject.AI，请访问其[官方网站](https://www.codeproject.com/Articles/5322557/CodeProject-AI-Server-AI-the-easy-way)，按照说明在你选择的设备上下载并安装AI服务器。CodeProject.AI的详细设置说明不在Frigate文档范围内。
 
-要将CodeProject.AI集成到Frigate中，您需要对Frigate配置文件进行以下更改：
+要将CodeProject.AI集成到Frigate中，你需要对Frigate配置文件进行以下更改：
 
 ```yaml
 detectors:
   deepstack:
-    api_url: http://<您的codeproject_ai服务器IP>:<端口>/v1/vision/detection
+    api_url: http://<你的codeproject_ai服务器IP>:<端口>/v1/vision/detection
     type: deepstack
     api_timeout: 0.1 # 秒
 ```
 
-将`<您的codeproject_ai服务器IP>`和`<端口>`替换为您的CodeProject.AI服务器的IP地址和端口。
+将`<你的codeproject_ai服务器IP>`和`<端口>`替换为你的CodeProject.AI服务器的IP地址和端口。
 
-要验证集成是否正常工作，请启动Frigate并观察日志中是否有与CodeProject.AI相关的错误消息。此外，您可以检查Frigate网络界面，查看CodeProject.AI检测到的对象是否正确显示和跟踪。
+要验证集成是否正常工作，请启动Frigate并观察日志中是否有与CodeProject.AI相关的错误消息。此外，你可以检查Frigate网络界面，查看CodeProject.AI检测到的对象是否正确显示和跟踪。
 
 # 由社区支持的检测器
 
@@ -814,7 +833,7 @@ detectors:
 
 :::tip
 
-您可以通过以下命令查看NPU负载：
+你可以通过以下命令查看NPU负载：
 
 ```bash
 $ cat /sys/kernel/debug/rknpu/load
@@ -849,7 +868,7 @@ detectors: # 必填
 | rock-i8_yolox_tiny    | 6          | 18                   |
 
 - 所有模型都会自动下载并存储在`config/model_cache/rknn_cache`文件夹中。升级Frigate后，应删除旧模型以释放空间。
-- 您也可以提供自己的`.rknn`模型。请不要将自己的模型保存在`rknn_cache`文件夹中，应直接存储在`model_cache`文件夹或其他子文件夹中。要将模型转换为`.rknn`格式，请参阅`rknn-toolkit2`（需要x86机器）。注意，仅支持对特定模型进行后处理。
+- 你也可以提供自己的`.rknn`模型。请不要将自己的模型保存在`rknn_cache`文件夹中，应直接存储在`model_cache`文件夹或其他子文件夹中。要将模型转换为`.rknn`格式，请参阅`rknn-toolkit2`（需要x86机器）。注意，仅支持对特定模型进行后处理。
 
 #### YOLO-NAS模型
 
@@ -860,7 +879,7 @@ model: # required
   # - deci-fp16-yolonas_s
   # - deci-fp16-yolonas_m
   # - deci-fp16-yolonas_l
-  # 或您的yolonas_model.rknn容器内完整路径
+  # 或你的yolonas_model.rknn容器内完整路径
   path: deci-fp16-yolonas_s
   model_type: yolonas
   width: 320
@@ -887,7 +906,7 @@ model: # required
   # - frigate-fp16-yolov9-m
   # - frigate-fp16-yolov9-c
   # - frigate-fp16-yolov9-e
-  # 或您的yolo_model.rknn容器内完整路径
+  # 或你的yolo_model.rknn容器内完整路径
   path: frigate-fp16-yolov9-t
   model_type: yolo-generic
   width: 320
@@ -906,7 +925,7 @@ model: # required
   # - rock-i8-yolox_tiny
   # - rock-fp16-yolox_nano
   # - rock-fp16-yolox_tiny
-  # 或您的yolox_model.rknn容器内完整路径
+  # 或你的yolox_model.rknn容器内完整路径
   path: rock-i8-yolox_nano
   model_type: yolox
   width: 416
@@ -915,15 +934,15 @@ model: # required
   labelmap_path: /labelmap/coco-80.txt
 ```
 
-### 将自定义onnx模型转换为rknn格式
+### 将自定义onnx模型转换为rknn格式 {converting-your-own-onnx-model-to-rknn-format}
 
-要使用[rknn-toolkit2](https://github.com/airockchip/rknn-toolkit2/)将onnx模型转换为rknn格式，您需要：
+要使用[rknn-toolkit2](https://github.com/airockchip/rknn-toolkit2/)将onnx模型转换为rknn格式，你需要：
 
 1. 将一个或多个onnx格式的模型放置在Docker主机的`config/model_cache/rknn_cache/onnx`目录下（可能需要`sudo`权限）
 2. 将配置文件保存为`config/conv2rknn.yaml`（详见下文）
 3. 运行`docker exec <frigate_container_id> python3 /opt/conv2rknn.py`。如果转换成功，rknn模型将被放置在`config/model_cache/rknn_cache`中
 
-以下是需要根据您的onnx模型进行调整的示例配置文件：
+以下是需要根据你的onnx模型进行调整的示例配置文件：
 
 ```yaml
 soc: ["rk3562", "rk3566", "rk3568", "rk3576", "rk3588"]
@@ -939,7 +958,7 @@ config:
 
 参数说明：
 
-- `soc`: 要为其构建rknn模型的SoC列表。如果不指定此参数，脚本会尝试检测您的SoC并为其构建rknn模型
+- `soc`: 要为其构建rknn模型的SoC列表。如果不指定此参数，脚本会尝试检测你的SoC并为其构建rknn模型
 - `quantization`: true表示8位整数(i8)量化，false表示16位浮点(fp16)。默认值：false
 - `output_name`: 模型的输出名称。可用变量：
   - `quant`: 根据配置为"i8"或"fp16"
@@ -959,30 +978,39 @@ config:
 
 ### 下载D-FINE模型
 
-导出为ONNX格式：
+您可以通过运行以下命令将D-FINE模型导出为ONNX格式。请将整段命令复制粘贴到终端执行，只需修改第一行中的`MODEL_SIZE=s`参数，将其调整为`s`、`m`或`l`尺寸。
 
-1. 克隆：https://github.com/Peterande/D-FINE 并安装所有依赖项
-2. 从[readme](https://github.com/Peterande/D-FINE)中选择并下载检查点
-3. 修改`tools/deployment/export_onnx.py`第58行，将批量大小改为1：`data = torch.rand(1, 3, 640, 640)`
-4. 运行导出，确保为您的检查点选择正确的配置
-
-示例：
-
+```sh
+docker build . --build-arg MODEL_SIZE=s --output . -f- <<'EOF'
+FROM python:3.11 AS build
+RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
+WORKDIR /dfine
+RUN git clone https://github.com/Peterande/D-FINE.git .
+RUN uv pip install --system -r requirements.txt
+RUN uv pip install --system onnx onnxruntime onnxsim
+# Create output directory and download checkpoint
+RUN mkdir -p output
+ARG MODEL_SIZE
+RUN wget https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_${MODEL_SIZE}_obj2coco.pth -O output/dfine_${MODEL_SIZE}_obj2coco.pth
+# Modify line 58 of export_onnx.py to change batch size to 1
+RUN sed -i '58s/data = torch.rand(.*)/data = torch.rand(1, 3, 640, 640)/' tools/deployment/export_onnx.py
+RUN python3 tools/deployment/export_onnx.py -c configs/dfine/objects365/dfine_hgnetv2_${MODEL_SIZE}_obj2coco.yml -r output/dfine_${MODEL_SIZE}_obj2coco.pth
+FROM scratch
+ARG MODEL_SIZE
+COPY --from=build /dfine/output/dfine_${MODEL_SIZE}_obj2coco.onnx /dfine-${MODEL_SIZE}.onnx
+EOF
 ```
-python3 tools/deployment/export_onnx.py -c configs/dfine/objects365/dfine_hgnetv2_m_obj2coco.yml -r output/dfine_m_obj2coco.pth
-```
 
-:::tip
+::: warning
 
-模型导出仅在Linux(或WSL2)上测试过。并非所有依赖项都在`requirements.txt`中。有些在部署文件夹中，有些则完全缺失，必须手动安装。
-
-导出前请确保将批量大小改为1。
+相关模型的构建需要使用代理，国内网络可能无法正常访问国外的部分服务。
 
 :::
 
 ### 下载RF-DETR模型
 
-您可以通过运行以下命令将RF-DETR导出为ONNX格式。请将整段命令复制粘贴到终端执行，并根据需要将第一行中的`MODEL_SIZE=Nano`修改为`Nano`、`Small`或`Medium`规格。
+你可以通过运行以下命令将RF-DETR导出为ONNX格式。请将整段命令复制粘贴到终端执行，并根据需要将第一行中的`MODEL_SIZE=Nano`修改为`Nano`、`Small`或`Medium`规格。
 
 ```sh
 docker build . --build-arg MODEL_SIZE=Nano --output . -f- <<'EOF'
@@ -990,9 +1018,9 @@ FROM python:3.11 AS build
 RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
 COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
 WORKDIR /rfdetr
-RUN uv pip install --system rfdetr onnx onnxruntime onnxsim onnx-graphsurgeon
+RUN uv pip install --system rfdetr[onnxexport]
 ARG MODEL_SIZE
-RUN python3 -c "from rfdetr import RFDETR${MODEL_SIZE}; x = RFDETR${MODEL_SIZE}(resolution=320); x.export()"
+RUN python3 -c "from rfdetr import RFDETR${MODEL_SIZE}; x = RFDETR${MODEL_SIZE}(resolution=320); x.export(simplify=True)"
 FROM scratch
 ARG MODEL_SIZE
 COPY --from=build /rfdetr/output/inference_model.onnx /rfdetr-${MODEL_SIZE}.onnx
@@ -1012,7 +1040,7 @@ DeciAI提供的预训练YOLO-NAS权重受其许可证约束，不可用于商业
 
 :::
 
-本笔记本中的输入图像尺寸默认设置为320x320。由于Frigate在执行检测前会将视频帧裁剪至关注区域，这种设置通常不会影响检测性能，同时还能降低CPU使用率并加快推理速度。如果需要，您可以将笔记本和配置更新为640x640的输入尺寸。
+本笔记本中的输入图像尺寸默认设置为320x320。由于Frigate在执行检测前会将视频帧裁剪至关注区域，这种设置通常不会影响检测性能，同时还能降低CPU使用率并加快推理速度。如果需要，你可以将笔记本和配置更新为640x640的输入尺寸。
 
 ### 下载YOLO模型
 
@@ -1033,23 +1061,25 @@ python3 yolo_to_onnx.py -m yolov7-320
 
 #### YOLOv9
 
-您可以使用以下命令将YOLOv9模型导出为ONNX格式。请将整段命令复制粘贴到终端执行，并根据需要修改第一行中的`MODEL_SIZE=t`参数（可替换为`t`, `s`, `m`, `c`, 以及 `e`等 [模型尺寸](https://github.com/WongKinYiu/yolov9#performance)）。
+你可以使用以下命令将YOLOv9模型导出为ONNX格式。请将整段命令复制粘贴到终端执行，并根据需要修改第一行中的`MODEL_SIZE=t`和`IMG_SIZE=320`参数（模型大小`MODEL_SIZE`的值可替换为`t`, `s`, `m`, `c`, 以及 `e`等 [模型尺寸](https://github.com/WongKinYiu/yolov9#performance)，图像大小`IMG_SIZE`可替换为`320` 或 `640`）。
 
 ```sh
-docker build . --build-arg MODEL_SIZE=t --output . -f- <<'EOF'
+docker build . --build-arg MODEL_SIZE=t --build-arg IMG_SIZE=320 --output . -f- <<'EOF'
 FROM python:3.11 AS build
 RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
 COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
 WORKDIR /yolov9
 ADD https://github.com/WongKinYiu/yolov9.git .
 RUN uv pip install --system -r requirements.txt
-RUN uv pip install --system onnx onnxruntime onnx-simplifier>=0.4.1
+RUN uv pip install --system onnx==1.18.0 onnxruntime onnx-simplifier>=0.4.1
 ARG MODEL_SIZE
+ARG IMG_SIZE
 ADD https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-${MODEL_SIZE}-converted.pt yolov9-${MODEL_SIZE}.pt
 RUN sed -i "s/ckpt = torch.load(attempt_download(w), map_location='cpu')/ckpt = torch.load(attempt_download(w), map_location='cpu', weights_only=False)/g" models/experimental.py
-RUN python3 export.py --weights ./yolov9-${MODEL_SIZE}.pt --imgsz 320 --simplify --include onnx
+RUN python3 export.py --weights ./yolov9-${MODEL_SIZE}.pt --imgsz ${IMG_SIZE} --simplify --include onnx
 FROM scratch
 ARG MODEL_SIZE
-COPY --from=build /yolov9/yolov9-${MODEL_SIZE}.onnx /
+ARG IMG_SIZE
+COPY --from=build /yolov9/yolov9-${MODEL_SIZE}.onnx /yolov9-${MODEL_SIZE}-${IMG_SIZE}.onnx
 EOF
 ```

@@ -18,7 +18,7 @@ genai:
   enabled: True
   provider: gemini
   api_key: "{FRIGATE_GEMINI_API_KEY}"
-  model: gemini-1.5-flash
+  model: gemini-2.0-flash
 
 cameras:
   front_camera: 
@@ -80,7 +80,7 @@ Google Gemini有一个免费等级，允许每分钟[15次查询](https://ai.goo
 
 ### 支持的模型
 
-您必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://ai.google.dev/gemini-api/docs/models/gemini)中找到。在撰写本文时，这包括`gemini-1.5-pro`和`gemini-1.5-flash`。
+您必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://ai.google.dev/gemini-api/docs/models/gemini)中找到。
 
 ### 获取API密钥
 
@@ -98,7 +98,7 @@ genai:
   enabled: True
   provider: gemini
   api_key: "{FRIGATE_GEMINI_API_KEY}"
-  model: gemini-1.5-flash
+  model: gemini-2.0-flash
 ```
 
 :::note

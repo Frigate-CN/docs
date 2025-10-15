@@ -178,9 +178,31 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 
 <a name="api"></a>
 
+## 摄像头API
+
+动态禁用摄像头：
+
+```
+action: camera.turn_off
+data: {}
+target:
+  entity_id: camera.back_deck_cam  # your Frigate camera entity ID
+```
+
+重新启用已动态禁用的摄像头
+
+
+```
+action: camera.turn_on
+data: {}
+target:
+  entity_id: camera.back_deck_cam  # your Frigate camera entity ID
+```
+
+
 ## 通知API
 
-许多人不想将Frigate暴露给网络，因此该集成创建了一些可用于通知的公共API端点。
+许多人不想将Frigate暴露给网络，因此该集成创建了一些可用于通知的公共API接口。
 
 加载跟踪目标的缩略图：
 

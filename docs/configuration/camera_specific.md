@@ -207,14 +207,14 @@ cameras:
 
 Reolink门铃支持通过go2rtc和其他应用实现双向音频。重要的是为了稳定性仍要使用http-flv流，可以添加一个仅用于双向音频的辅助RTSP流。
 
-确保在摄像头的高级网络设置中启用了HTTP。要使用Frigate的双向通话功能，请参阅[实时视图文档](/configuration/live#双向通话)。
+确保在摄像头的高级网络设置中启用了HTTP。要使用Frigate的双向通话功能，请参阅[实时视图文档](../configuration/live#two-way-talk)。
 
 ```yaml
 go2rtc:
   streams:
     your_reolink_doorbell:
       - "ffmpeg:http://reolink_ip/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=username&password=password#video=copy#audio=copy#audio=opus"
-      - rtsp://reolink_ip/Preview_01_sub
+      - rtsp://username:password@reolink_ip/Preview_01_sub
     your_reolink_doorbell_sub:
       - "ffmpeg:http://reolink_ip/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=username&password=password"
 ```

@@ -23,16 +23,34 @@ title: 模型
 
 ## 可用模型类型
 
-Frigate+提供两种模型类型：`mobiledet`和`yolonas`。两者都是目标检测模型，能检测[下方列出的相同标签](#可用标签类型)。
+Frigate+提供三种模型类型：`mobiledet`、`yolonas`和`yolov9`。所有都是目标检测模型，能检测[下方列出的相同标签](#available-label-types)。
 
-不是所有检测器都支持所有模型类型，请根据[支持的检测器类型](#支持的检测器类型)表格选择匹配您检测器的模型。你可以通过先使用基础模型，在你的硬件上测试模型类型的兼容性和速度。
+不是所有检测器都支持所有模型类型，请根据[支持的检测器类型](#supported-detector-types)表格选择匹配您检测器的模型。你可以通过先使用基础模型，在你的硬件上测试模型类型的兼容性和速度。
 
 | 模型类型   | 描述                                                                                                   |
 | ---------- | ----------------------------------------------------------------------------------------------------- |
 | `mobiledet` | 基于与Frigate默认模型相同的架构。可在Google Coral设备和CPU上运行。                                    |
 | `yolonas`   | 新架构，精度略高且对小目标检测有改进。支持Intel、NVIDIA GPU和AMD GPU。                                |
+| `yolov9`    | 一款处于行业领先水平的SOTA（最先进技术）目标检测模型，其性能与YoloNAS相当，但支持更广泛的硬件平台。该模型可在Intel、NVIDIA GPU、AMD GPU、Hailo、MemryX\*、Apple Silicon\*以及瑞芯微NPU上运行。 |
 
-## 支持的检测器类型
+***\* 将会在0.17支持***
+
+### YOLOv9信息
+YOLOv9 模型提供 `s` 和 `t` 两种尺寸规格。当您申请 `yolov9`模型时，系统将提示您选择具体尺寸。如果你不确定该选择哪种尺寸，建议您先对基础模型进行测试，以找到符合您需求的性能水平。其中，`s` 尺寸在推理速度和精度方面与当前的 `yolonas` 模型最为接近，若想入手体验，推荐从`320x320`分辨率的 `yolov9s` 模型开始尝试。
+
+:::info
+切换到 YOLOv9 时，您可能需要针对某些目标调整检测阈值。
+:::
+
+#### Hailo 支持
+如果您使用的是Hailo设备，在提交模型请求时需要明确说明您的具体硬件型号，因为Hailo的不同硬件之间并不兼容。建议您先使用现有的基础模型进行测试，然后再提交模型训练请求。
+
+#### Rockchip (RKNN) 支持
+在 0.16 版本中，YOLOv9 的 ONNX 模型需要手动转换。首先，您需要配置 Frigate 使用该 YOLOv9 ONNX 模型的模型 ID，以便将模型下载到您的 model_cache目录。然后，您可以按照[相关文档](../configuration/object_detectors.md#converting-your-own-onnx-model-to-rknn-format)进行转换。自动转换功能将在 0.17 版本中推出。
+
+
+
+## 支持的检测器类型 {#supported-detector-types}
 
 目前Frigate+模型支持CPU(`cpu`)、Google Coral(`edgetpu`)、OpenVino(`openvino`)和ONNX(`onnx`)检测器。
 
@@ -46,11 +64,13 @@ Frigate+模型与`onnx`检测器的配合使用仅限Frigate 0.15及以上版本
 | ------------------------------------------------------------------------------------------------------------------------ | -------------- | ------------ |
 | [CPU](/configuration/object_detectors.md#cpu检测器不推荐使用)                                                   | `cpu`          | `mobiledet`  |
 | [Coral(所有形态)](/configuration/object_detectors.md#edge-tpu检测器)                                                  | `edgetpu`      | `mobiledet`  |
-| [Intel](/configuration/object_detectors.md#openvino检测器)                                                             | `openvino`     | `yolonas`    |
-| [NVIDIA GPU](/configuration/object_detectors#onnx)\*               | `onnx`         | `yolonas`    |
-| [AMD ROCm GPU](/configuration/object_detectors#amdrocm-gpu检测器)\* | `onnx`         | `yolonas`    |
+| [Intel](/configuration/object_detectors.md#openvino检测器)                                                             | `openvino`     | `yolov9`    |
+| [NVIDIA GPU](/configuration/object_detectors#onnx)\*               | `onnx`         | `yolov9`    |
+| [AMD ROCm GPU](/configuration/object_detectors#amdrocm-gpu检测器)\* | `onnx`         | `yolov9`    |
+| [Hailo8/Hailo8L/Hailo8R](/configuration/object_detectors#hailo-8)                | `hailo8l`                 | `yolov9`               |
+| [Rockchip NPU](/configuration/object_detectors#rockchip-platform)\*              | `rknn`                    | `yolov9`               |
 
-**\* 需要Frigate 0.15版本**
+***\* 0.16版本需要手动转换，0.17版本将支持自动转换。***
 
 ### 改进你的模型
 
