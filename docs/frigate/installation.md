@@ -222,6 +222,7 @@ services:
       FRIGATE_RTSP_PASSWORD: "password" # rtsp的密码，请修改"password"为你期望的密码
       TZ: "Asia/Shanghai" # 设置为中国+8时区
       HF_ENDPOINT: "https://huggingface.mirror.frigate-cn.video" # 由我们提供的Huggingface国内镜像源，提供Frigate需要用到的部分模型加速下载
+      GITHUB_ENDPOINT: "https://github.mirror.frigate-cn.video" # 由我们提供的GitHub国内镜像源，提供Frigate需要用到的部分模型加速下载
 ```
 
 如果您无法使用Docker Compose，可以使用类似以下命令运行容器：
@@ -241,6 +242,7 @@ docker run -d \
   -e FRIGATE_RTSP_PASSWORD='password' \
   -e TZ='Asia/Shanghai' \
   -e HF_ENDPOINT='https://huggingface.mirror.frigate-cn.video' \
+  -e GITHUB_ENDPOINT='https://github.mirror.frigate-cn.video' \
   -p 8971:8971 \
   -p 8554:8554 \
   -p 8555:8555/tcp \
@@ -435,6 +437,7 @@ docker run \
   --restart=unless-stopped \
   --env=TZ=Asia/Shanghai \
   --env=HF_ENDPOINT='https://huggingface.mirror.frigate-cn.video' \
+  --env=GITHUB_ENDPOINT='https://github.mirror.frigate-cn.video' \
   --volume=/share/Container/frigate/config:/config:rw \
   --volume=/share/share_vol2/frigate/media:/media/frigate:rw \
   --network=bridge \
