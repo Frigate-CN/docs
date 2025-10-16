@@ -35,12 +35,6 @@
         </div>
       </div>
     </div>
-    
-    <!-- 切换是否显示思考过程的按钮 -->
-    <div class="toggle-reasoning" @click="showReasoning = !showReasoning">
-      <i class="fas" :class="showReasoning ? 'fa-eye' : 'fa-eye-slash'"></i>
-      {{ showReasoning ? '隐藏思考过程' : '显示思考过程' }}
-    </div>
 
     <!-- 回到底部按钮（仅当用户中断自动滚动时显示） -->
     <button 
@@ -52,8 +46,27 @@
       回到底部
     </button>
     
-    <div class="input-container">
-      <textarea
+    <div>
+      <!-- 推荐问题展示：仅在无对话时显示 -->
+      <div v-if="messages.length === 0" class="recommended-questions">
+        <div class="recommended-title">推荐提问：</div>
+        <div class="recommended-list">
+          <button
+            v-for="(q, idx) in displayedQuestions"
+            :key="idx"
+            class="recommended-question"
+            @click="handleRecommendedClick(q)"
+          >{{ q }}</button>
+        </div>
+      </div>
+      <!-- 切换是否显示思考过程的按钮 -->
+      <div class="toggle-reasoning" @click="showReasoning = !showReasoning">
+        <i class="fas" :class="showReasoning ? 'fa-eye' : 'fa-eye-slash'"></i>
+        {{ showReasoning ? '隐藏思考过程' : '显示思考过程' }}
+      </div>
+
+      <div class="input-container">
+        <textarea
         v-model="userInput"
         :disabled="isLoading"
         placeholder="输入你的问题..."
@@ -67,6 +80,7 @@
       >
         <i class="fas fa-paper-plane"></i>
       </button>
+      </div>
     </div>
     <!-- Resize handles: left, top, top-left -->
     <div
@@ -93,7 +107,44 @@
 </template>
 
 <script setup>
+// 推荐问题点击后直接发送
+function handleRecommendedClick(q) {
+  if (isLoading.value) return;
+  userInput.value = q;
+  sendMessage();
+}
 import { ref, onUnmounted, onMounted, computed, nextTick } from 'vue';
+// 推荐问题常量
+const recommendedQuestions = [
+  '是否支持小米摄像头？',
+  '如何配置摄像头？',
+  '如何设置物体检测？',
+  '如何集成 Home Assistant？',
+  '如何使用硬件加速？',
+  '如何设置录像保存？',
+  '如何使用人脸识别？',
+  '如何排查硬件加速问题？',
+];
+
+// 随机抽选4条推荐问题
+function getRandomQuestions(arr, n) {
+  const copy = arr.slice();
+  const result = [];
+  while (copy.length && result.length < n) {
+    const idx = Math.floor(Math.random() * copy.length);
+    result.push(copy[idx]);
+    copy.splice(idx, 1);
+  }
+  return result;
+}
+
+const displayedQuestions = ref(getRandomQuestions(recommendedQuestions, 4));
+
+// 每次弹窗打开时刷新推荐问题
+onMounted(() => {
+  displayedQuestions.value = getRandomQuestions(recommendedQuestions, 4);
+  attachScrollListener();
+});
 const emit = defineEmits(['close']);
 import DOMPurify from 'dompurify';
 import MarkdownIt from "markdown-it";
@@ -391,6 +442,15 @@ const sendMessage = async () => {
   // 解析用户输入的Markdown（如果需要）
   const userHtml = md ? DOMPurify.sanitize(md.render(input)) : input;
   
+    // 构建最多4条上下文，忽略reasoning内容
+  const context = messages.value
+    .filter(msg => msg.role === 'user' || msg.role === 'ai')
+    .slice(-6)
+    .map(msg => ({
+      role: msg.role === 'ai' ? 'assistant' : 'user',
+      content: msg.content
+    }));
+
   // 添加用户消息
   messages.value.push({ 
     role: 'user', 
@@ -423,7 +483,7 @@ const sendMessage = async () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ question: input }),
+      body: JSON.stringify({ question: input, context: context}),
       signal: abortController.value.signal,
     });
 
@@ -656,6 +716,8 @@ const processDataChunk = (data) => {
   display: flex;
   align-items: center;
   gap: 4px;
+  position: absolute;
+  right: 30px;
 }
 
 .toggle-reasoning:hover {
@@ -804,5 +866,36 @@ const processDataChunk = (data) => {
 /* When resizing, change cursor globally for clarity */
 html.resizing, body.resizing {
   cursor: nwse-resize !important;
+}
+
+/* 推荐问题样式 */
+.recommended-questions {
+  margin-bottom: 16px;
+  padding: 12px 0;
+  text-align: left;
+}
+.recommended-title {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+.recommended-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.recommended-question {
+  background: #f3f4f6;
+  color: #2563eb;
+  border: none;
+  border-radius: 16px;
+  padding: 6px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.recommended-question:hover {
+  background: #2563eb;
+  color: #fff;
 }
 </style>
