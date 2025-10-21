@@ -194,12 +194,13 @@ volumes:
 services:
   frigate:
     container_name: frigate
-    privileged: true # 部分设置可能不需要此选项
+    privileged: true # 使用特权模式
     restart: unless-stopped
     stop_grace_period: 30s # 为各服务提供足够的关闭时间
     image: docker.cnb.cool/frigate-cn/frigate:stable # 此处为国内镜像源地址，原地址为 ghcr.io/blakeblackshear/frigate:stable
     shm_size: "512mb" # 根据上述计算结果为您的摄像头更新此值
     devices:
+      # 以下内容根据你的实际情况进行删改。例如你不用Coral，就将Coral的设备映射给删除
       - /dev/bus/usb:/dev/bus/usb # 用于USB Coral，其他版本需要修改
       - /dev/apex_0:/dev/apex_0 # 用于PCIe Coral，请按照此处的驱动说明操作 https://coral.ai/docs/m2/get-started/#2a-on-linux
       - /dev/video11:/dev/video11 # 用于树莓派4B
@@ -208,13 +209,13 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
       - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
-      - type: tmpfs # 可选：1GB内存，减少SSD/SD卡损耗
+      - type: tmpfs # 可选：将使用1GB内存作为缓存文件，减少SSD/SD卡损耗
         target: /tmp/cache
         tmpfs:
           size: 1000000000
     ports:
       - "8971:8971"
-      # - "5000:5000" # 内部未认证访问。谨慎暴露。
+      # - "5000:5000" # 用于内部无鉴权验证的访问。谨慎暴露。
       - "8554:8554" # RTSP视频流
       - "8555:8555/tcp" # 基于TCP的WebRTC
       - "8555:8555/udp" # 基于UDP的WebRTC

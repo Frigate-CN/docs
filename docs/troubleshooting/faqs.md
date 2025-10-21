@@ -3,7 +3,20 @@ id: faqs
 title: 常见问题解答
 ---
 
-### Python致命错误: Bus error
+### 为什么我一些增强功能（如语义搜索、车牌识别、人脸识别）无法使用
+
+这些增强功能 Frigate 需要**下载额外的模型文件**才能正常使用，默认情况下，将会从 `Github` 和 `huggingface` 上进行下载，但这些服务均在海外，国内可能出现访问困难的情况，导致模型文件下载失败。
+
+我们也提供有国内的下载加速服务，需要在 `docker compose` 文件的 `environment` 下配置以下环境变量：
+
+```yaml
+HF_ENDPOINT: "https://huggingface.mirror.frigate-cn.video"
+GITHUB_ENDPOINT: "https://github.mirror.frigate-cn.video"
+```
+
+详细可见文档里的[Docker容器安装教程](../frigate/installation.md#docker)
+
+### Fatal Python error: Bus error （Python致命错误： Bus error）
 
 此错误是由于共享内存(shm-size)设置过小导致的。请根据[此指南](../frigate/installation.md#calculating-required-shm-size)调整shm-size大小。
 
@@ -115,7 +128,11 @@ TCP能确保数据包有序到达，这对视频录制、解码和流处理至�
 ### 默认登录密码是什么？/我忘记登录后台密码了怎么办？
 在首次安装Frigate的时候，会在日志里生成账号密码，请打开容器日志进行查看。
 
-如果已经重启导致日志丢失的话，可使用5000端口进行访问，5000端口没有鉴权。然后可以在端口下进入设置中修改密码。
+如果已经重启导致日志丢失的话，有两个方法可以重置密码：
+
+- 方法一：在Frigate的配置文件中配置`reset_admin_password`，重新生成管理员密码。具体参数详见[配置文件文档](../configuration/authentication.md#resetting-admin-password)。
+
+- 方法二：可使用5000端口进行访问，5000端口没有鉴权。然后可以在端口下进入设置中修改密码。
 
 :::warning
 
