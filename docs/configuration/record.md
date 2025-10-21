@@ -13,68 +13,68 @@ H265编码的录制只能在Chrome 108+、Edge和Safari浏览器中能够正常�
 国产浏览器（例如360浏览器）基本上基于Chrome内核进行开发，大多数内核版本高于108，基本上能正常播放H265编码的视频。
 :::
 
-## 常见录制配置
+## 常见录制配置例子 {#common-recording-configurations}
 
-### 最保守方案：保存所有视频
+### 最保守方案：保存所有视频 {#most-conservative-ensure-all-video-is-saved}
 
 对于需要在没有检测到画面变动时也保存连续视频的环境，以下配置将保存3天内的所有视频。3天后，只有**画面变动**且属于 [**核查**](/configuration/review) 中`警报`或`检测`的视频会保留30天。
 
 ```yaml
 record:
-  enabled: True  # 只有设置了enabled为True时录制功能才会生效
-  retain:
-    days: 3
-    mode: all # 将在3天期间保存所有的录制视频，包括没有画面变动或没有检测到物体/目标的视频
-  alerts:
+  enabled: True  # 只有设置了enabled为True时录制功能才会生效 # [!code highlight]
+  retain: # 所有原始录制保留 
+    days: 3 # [!code highlight]
+    mode: all # 将在3天期间保存所有的录制视频，包括没有画面变动或没有检测到物体/目标的视频 [!code highlight]
+  alerts: # 核查警报类型录制
     retain:
-      days: 30
-      mode: motion # 将在最上面的3天后，仅保存画面有变动且属于核查中"警报"的视频30天
-  detections:
+      days: 30 # [!code highlight]
+      mode: motion # 将在最上面的3天后，仅保存画面有变动且属于核查中"警报"的视频30天 [!code highlight]
+  detections: # 核查检测类型录制
     retain:
-      days: 30
-      mode: motion # 将在最上面的3天后，仅保存画面有变动且属于核查中"检测"的视频30天
+      days: 30 # [!code highlight]
+      mode: motion # 将在最上面的3天后，仅保存画面有变动且属于核查中"检测"的视频30天 [!code highlight]
 ```
 
-### 减少存储：仅保存检测到画面变动的视频
+### 减少存储：仅保存检测到画面变动的视频 {#reduced-storage-only-saving-video-when-motion-is-detected}
 
-为了减少存储需求，可以调整配置只保留检测到画面变动的视频。
+为了减少存储需求，可以调整配置**只保留检测到画面变动**的视频。
 
 ```yaml
 record:
   enabled: True
   retain:
-    days: 3
-    mode: motion # 只会保存画面变动的视频
+    days: 3 # [!code highlight]
+    mode: motion # 只会保存画面变动的视频 [!code highlight]
   alerts:
     retain:
-      days: 30
-      mode: motion # 将在最上面的3天后，仅保存画面有变动且属于核查中"警报"的视频30天
+      days: 30 # [!code highlight]
+      mode: motion # 将在最上面的3天后，仅保存画面有变动且属于核查中"警报"的视频30天 [!code highlight]
   detections:
     retain:
-      days: 30
-      mode: motion # 将在最上面的3天后，仅保存画面有变动且属于核查中"检测"的视频30天
+      days: 30 # [!code highlight]
+      mode: motion # 将在最上面的3天后，仅保存画面有变动且属于核查中"检测"的视频30天 [!code highlight]
 ```
 
-### 最小方案：仅保存警报视频
+### 最小方案：仅保存警报视频 {#minimum-alerts-only}
 
-如果只想保留检测追踪到`物体/目标`期间的视频，可以参考以下配置。不属于[核查](/configuration/review)中**警报**的视频将不会保留。
+如果只想保留检测追踪到`物体/目标`期间的视频，可以参考以下配置。不属于[核查](../configuration/review.md)中**警报**的视频将不会保留。
 
 ```yaml
 record:
   enabled: True
   retain:
-    days: 0 # 设置为0后默认就不会录制所有没有指定类型的监控视频
-  alerts: # 这里指定只有警报的视频会录制，不用遵守全局设定
+    days: 0 # 设置为0后默认就不会录制所有没有指定类型的监控视频 [!code highlight]
+  alerts: # 这里指定只有警报的视频会录制，会无视上面的设定
     retain:
-      days: 30
-      mode: motion
+      days: 30 # [!code highlight]
+      mode: motion # [!code highlight]
 ```
 
-## 存储空间不足时Frigate会删除旧录制吗？
+## 存储空间不足时Frigate会删除旧录制吗？ {#will-frigate-delete-old-recordings-if-my-storage-runs-out}
 
 从Frigate 0.12开始，当剩余存储空间不足1小时时，系统会自动删除最早的2小时录制。
 
-## 配置录制保留策略
+## 配置录制保留策略 {#configuring-recording-retention}
 
 Frigate支持连续录制和基于追踪`物体/目标`的录制，具有独立的保留模式和保留期限。
 
@@ -84,7 +84,7 @@ Frigate支持连续录制和基于追踪`物体/目标`的录制，具有独立�
 
 :::
 
-### 连续录制
+### 连续录制 {#continuous-recording}
 
 可以通过以下配置设置保留连续录制的天数（X为数字），默认情况下连续录制被禁用。
 
@@ -92,12 +92,12 @@ Frigate支持连续录制和基于追踪`物体/目标`的录制，具有独立�
 record:
   enabled: True
   retain:
-    days: 1 # <- 保留连续录制的天数
+    days: 1 # <- 保留连续录制的天数 [!code highlight]
 ```
 
-连续录制支持不同的保留模式，[详见下文](#不同保留模式的含义)
+连续录制支持不同的保留模式，[详见下文](#what-do-the-different-retain-modes-mean)
 
-### `物体/目标`录制
+### 针对识别到的物体/目标的录制 {#object-recording}
 
 可以为分类为警报和检测的回放条目分别指定保留天数。
 
@@ -116,9 +116,9 @@ record:
 
 **警告**：必须在配置中启用录制功能。如果摄像头在配置中禁用了录制，通过上述方法启用将不会生效。
 
-## 不同保留模式的含义
+## 不同保留模式的含义 {#what-do-the-different-retain-modes-mean}
 
-Frigate以10秒为片段保存具有`record`功能的视频流。这些选项决定了哪些录制片段会被保留（也会影响追踪`物体/目标`）。
+Frigate 以10秒为片段保存配置了`record`功能的视频流。这些选项决定了哪些录制片段会被保留（也会影响追踪物体/目标）。
 
 假设您配置门铃摄像头保留最近2天的连续录制：
 
@@ -152,11 +152,17 @@ record:
 
 通过Frigate页面、Home Assistant或MQTT，可以设置摄像头只在特定情况或时间进行录制。
 
-## 如何导出录制？
+## 如何导出录制文件 {#how-do-i-export-recordings}
 
-可以通过在回放面板中右键点击（电脑）或长按（手机）回放条目，或在历史视图中点击导出按钮来导出录制。导出的录制会通过主导航栏中的导出视图进行组织和搜索。
+可以通过在**核查**页面中右键点击（电脑）或长按（手机）回放条目，或在摄像头的**历史**页面中点击导出按钮来导出录制。导出的录制会通过主导航栏中的导出页面进行管理和搜索，也可下载为录制文件。
 
-### 延时摄影导出
+::: tip
+
+请不要直接从 Frigate 保存视频的路径直接获取视频，也无法设置默认保存录制文件时间长度，如需要导出视频，请使用 Frigate 内的**导出**功能来导出指定时间的录制。
+
+:::
+
+### 延时摄影导出 {#time-lapse-export}
 
 延时摄影导出只能通过[HTTP API](https://docs.frigate.video/integrations/api/export-recording-export-camera-name-start-start-time-end-end-time-post.api.mdx)实现。
 
@@ -178,11 +184,11 @@ record:
 
 :::
 
-## Apple设备H.265流兼容性说明
+## Apple设备H.265流兼容性说明 {#apple-compatibility-with-h265-streams}
 
 使用Safari浏览器的Apple设备在播放H.265格式录制时可能出现兼容性问题。为确保在Apple设备上的正常播放，建议启用[Apple兼容性选项](/configuration/camera_specific.md#safari浏览器下的h265摄像头支持)。
 
-## 同步录制与硬盘上的文件
+## 同步录制与硬盘上的文件 {#syncing-recordings-with-disk}
 
 在某些情况下，录制文件可能被删除但Frigate并不知道。可以启用录制同步功能，让Frigate检查文件系统并删除数据库中不存在的文件记录。
 
