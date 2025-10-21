@@ -20,25 +20,25 @@ title: 摄像头配置
 ```yaml
 mqtt:
   host: mqtt.server.com
-cameras:
-  back: # <- 摄像头名称，暂时只支持英文数字和下划线
-    enabled: True
-    ffmpeg:
-      inputs:
-        # 摄像头rtsp流地址可查阅摄像头文档或互联网其他人分享的教程，下面的地址仅为范例
+cameras: # [!code highlight]
+  back: # <- back为示例摄像头名称，改为你需要的名称，暂时只支持英文数字和下划线 [!code ++]
+    enabled: True # [!code ++]
+    ffmpeg: # [!code ++]
+      inputs: # [!code ++]
+        # 摄像头rtsp流地址可查阅摄像头文档或互联网其他人分享的教程，下面的地址仅为范例 
         # 可以考虑使用go2rtc，请参考文档后面的说明
-        - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
-          roles:
-            - detect  # <- 用于物体检测
+        - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2 # [!code ++]
+          roles: # [!code ++]
+            - detect  # <- 用于目标/物体检测 [!code ++]
         # 可以设置不同的流用于不同功能，例如上面的流为子码流，节省带宽，适合检测，能够降低检测器负担
-        # 主码流画面清晰，适合录制
+        # 而下方的主码流画面清晰，适合录制
         # 可以考虑使用go2rtc，请参考文档后面的说明
-        - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/live
-          roles:
-            - record  # <- 用于录像
-    detect:
-      width: 1280 # <- 可选，默认Frigate会尝试自动检测分辨率
-      height: 720 # <- 可选，默认Frigate会尝试自动检测分辨率
+        - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/live # [!code ++]
+          roles: # [!code ++]
+            - record  # <- 用于录像的视频流 [!code ++]
+    detect: # [!code highlight]
+      width: 1280 # <- 可选，默认Frigate会尝试自动检测分辨率 [!code highlight]
+      height: 720 # <- 可选，默认Frigate会尝试自动检测分辨率 [!code highlight]
 ```
 
 :::tip
@@ -56,7 +56,7 @@ cameras:
   front: ...
   side: ...
 
-# 上面的back、front、side均为不同的摄像头名字
+# 上面的back、front、side均为不同的摄像头名字，后面的省略号为文档省略的内容，根据实际情况添加
 ```
 
 :::note
@@ -83,12 +83,12 @@ cameras:
 ```yaml
 cameras:
   back: # <- 为名为back的摄像头配置ONVIF
-    ffmpeg: ...
-    onvif:
-      host: 10.0.10.10
-      port: 8000
-      user: admin
-      password: password
+    ffmpeg: ... # 省略号为文档省略部分，不代表后面没内容
+    onvif: # [!code ++]
+      host: 10.0.10.10 # [!code ++]
+      port: 8000 # [!code ++]
+      user: admin # [!code ++]
+      password: password # [!code ++]
 ```
 
 如果ONVIF连接成功，PTZ控制将在摄像头的Web界面中可用。
@@ -97,9 +97,11 @@ cameras:
 
 如果你的ONVIF摄像头不需要认证凭据，你可能仍需要为`user`和`password`指定空字符串，例如：`user: ""`和`password: ""`。
 
+需要注意的是，Frigate 只会使用 `ONVIF` 的 `PTZ控制`功能，如果需要使用 ONVIF 的视频流，请使用 go2rtc 进行转流。
+
 :::
 
-支持视野(FOV)内相对移动的ONVIF摄像头还可以配置为自动跟踪移动物体并将其保持在画面中央。关于自动跟踪的设置，请参阅[自动跟踪](autotracking.md)文档。
+支持视野(FOV)内相对移动的ONVIF摄像头还可以配置为自动跟踪移动物体并将其保持在画面中央。关于自动跟踪的设置，请参阅[自动追踪](autotracking.md)文档。
 
 ## ONVIF PTZ摄像头推荐
 
@@ -133,7 +135,7 @@ cameras:
 
 :::tip
 
-建议在网页上直接设置摄像头分组。
+建议直接在页面上设置摄像头分组。
 
 :::
 

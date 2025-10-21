@@ -3,13 +3,13 @@ id: recordings
 title: 录制故障排除
 ---
 
-## 我已将Frigate配置为仅在有运动时录制，但即使没有运动也似乎在录制。为什么？
+## 我已将Frigate配置为仅在有画面变动时录制，但即使没有画面变动也似乎在录制。为什么？
 
 你需要：
 
-- 确保摄像头的时间戳被运动遮罩覆盖。即使场景中没有运动，如果画面变动检测设置过于敏感，可能会将时间戳计为运动。
-- 如果启用了音频检测，请记住任何高于`min_volume`的音频都会被视为运动。
-- 通过编辑配置文件或使用UI中的运动调节器来[调整你的画面变动检测设置](/configuration/motion_detection)。
+- 确保摄像头的时间戳被画面变动遮罩覆盖。即使场景中没有画面变动，如果画面变动检测设置过于敏感，可能会将时间戳计为画面变动。
+- 如果启用了音频检测，请记住任何高于`min_volume`的音频都会被视为画面变动。
+- 通过编辑配置文件或使用UI中的画面变动调节器来[调整你的画面变动检测设置](../configuration/motion_detection.md)。
 
 ## 我看到警告信息：WARNING : Unable to keep up with recording segments in cache for camera. Keeping the 5 most recent segments out of 6 and discarding the rest...（无法跟上摄像头录制片段的缓存。保留6个中最新的5个片段，丢弃其余部分...）
 
@@ -18,7 +18,7 @@ title: 录制故障排除
 ```yaml
 logger:
   logs:
-    frigate.record.maintainer: debug
+    frigate.record.maintainer: debug # [!code highlight]
 ```
 
 这将包含如下日志：

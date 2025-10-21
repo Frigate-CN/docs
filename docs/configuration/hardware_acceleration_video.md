@@ -17,11 +17,11 @@ title: 视频解码
 ```yaml
 # 如果要解码 h264 流
 ffmpeg:
-  hwaccel_args: preset-rpi-64-h264
+  hwaccel_args: preset-rpi-64-h264 # [!code ++]
 
 # 如果要解码 h265 (hevc) 流
 ffmpeg:
-  hwaccel_args: preset-rpi-64-h265
+  hwaccel_args: preset-rpi-64-h265 # [!code ++]
 ```
 
 :::note
@@ -31,9 +31,9 @@ ffmpeg:
 ```yaml
 services:
   frigate:
-    ...
-    devices:
-      - /dev/video11:/dev/video11
+    ... # 省略号为文档省略部分，不代表后面没内容
+    devices: # [!code highlight]
+      - /dev/video11:/dev/video11 # [!code ++]
 ```
 
 或使用 `docker run`：
@@ -42,11 +42,11 @@ services:
 docker run -d \
   --name frigate \
   ...
-  --device /dev/video11 \
+  --device /dev/video11 \  # [!code ++]
   docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
-`/dev/video11` 是正确的设备（在树莓派 4B 上）。您可以通过运行以下命令并查找 `H264` 来检查：
+一般情况下树莓派 4B 的视频设备是 `/dev/video11` 。如果不是，你可以通过运行以下命令并查找 `H264` 设备：
 
 ```bash
 for d in /dev/video*; do
@@ -55,11 +55,11 @@ for d in /dev/video*; do
 done
 ```
 
-或者映射所有 `/dev/video*` 设备。
+或者直接映射所有 `/dev/video*` 设备。
 
 :::
 
-## 基于 Intel 的 CPU
+## 基于 Intel 的 CPU {#intel-based-cpus}
 
 :::info
 
@@ -83,88 +83,91 @@ done
 
 :::
 
-### 通过 VAAPI
+### 通过 QuickSync <Badge text="优先建议"/> {#via-quicksync}
 
-VAAPI 支持自动配置文件选择，可自动处理 H.264 和 H.265 流。
-
-```yaml
-ffmpeg:
-  hwaccel_args: preset-vaapi
-```
-
-### 通过 QuickSync
-
-#### H.264 流
+#### H.264 流 {#h264-streams}
 
 ```yaml
 ffmpeg:
-  hwaccel_args: preset-intel-qsv-h264
+  hwaccel_args: preset-intel-qsv-h264 # [!code ++]
 ```
 
-#### H.265 流
+#### H.265 流 {#h265-streams}
 
 ```yaml
 ffmpeg:
   hwaccel_args: preset-intel-qsv-h265
 ```
 
-### Docker 中配置 Intel GPU 统计
+### 通过 VAAPI {#via-vaapi}
+
+如果你的设备不支持`qsv`，或者使用`qsv`时出现问题，你可以尝试使用vaapi。
+
+VAAPI 支持自动配置文件选择，可自动处理 `H.264` 和 `H.265` 视频流。
+
+```yaml
+ffmpeg:
+  hwaccel_args: preset-vaapi # [!code ++]
+```
+
+
+### Docker 中配置 Intel GPU 统计 {#configuring-intel-gpu-stats-in-docker}
 
 需要额外配置才能使 Docker 容器访问 `intel_gpu_top` 命令获取 GPU 统计信息。有两种选择：
 
 1. 以特权模式运行容器。
 2. 添加 `CAP_PERFMON` 能力（注意：您可能需要将 `perf_event_paranoid` 设置得足够低以允许访问性能事件系统。）
 
-#### 以特权模式运行
+#### 以特权模式运行 {#run-as-privileged}
 
 这种方法有效，但会赋予容器超出实际需要的权限。
 
-##### Docker Compose - 特权模式
+##### Docker Compose - 特权模式 {#docker-compose---privileged}
 
 ```yaml
 services:
   frigate:
-    ...
+    ... # 省略号为文档省略部分，不代表后面没内容
     image: docker.cnb.cool/frigate-cn/frigate:stable
-    privileged: true
+    privileged: true # [!code ++]
 ```
 
-##### Docker Run CLI - 特权模式
+##### Docker Run CLI - 特权模式 {#docker-run-cli---privileged}
 
 ```bash
 docker run -d \
   --name frigate \
-  ...
-  --privileged \
+  ...  # 省略号为文档省略部分，不代表后面没内容
+  --privileged \  # [!code ++]
   docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
-#### CAP_PERFMON
+#### CAP_PERFMON {#cap_perfmon}
 
 只有较新版本的 Docker 支持 `CAP_PERFMON` 能力。您可以通过运行以下命令测试您的版本是否支持：`docker run --cap-add=CAP_PERFMON hello-world`
 
-##### Docker Compose - CAP_PERFMON
+##### Docker Compose - CAP_PERFMON {#docker-compose---cap_perfmon}
 
 ```yaml
 services:
   frigate:
-    ...
+    ... # 省略号为文档省略部分，不代表后面没内容
     image: docker.cnb.cool/frigate-cn/frigate:stable
-    cap_add:
-      - CAP_PERFMON
+    cap_add: # [!code ++]
+      - CAP_PERFMON # [!code ++]
 ```
 
-##### Docker Run CLI - CAP_PERFMON
+##### Docker Run CLI - CAP_PERFMON {#docker-run-cli---cap_perfmon}
 
 ```bash
 docker run -d \
   --name frigate \
-  ...
-  --cap-add=CAP_PERFMON \
+  ...  # 省略号为文档省略部分，不代表后面没内容
+  --cap-add=CAP_PERFMON \  # [!code ++]
   docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
-#### perf_event_paranoid
+#### perf_event_paranoid {#perf_event_paranoid}
 
 **注意：此设置必须针对整个系统修改。**
 
@@ -172,14 +175,14 @@ docker run -d \
 
 根据您的操作系统和内核配置，您可能需要更改 `/proc/sys/kernel/perf_event_paranoid` 内核可调参数。您可以通过运行 `sudo sh -c 'echo 2 >/proc/sys/kernel/perf_event_paranoid'` 来测试更改，这将持续到重启。通过运行 `sudo sh -c 'echo kernel.perf_event_paranoid=2 >> /etc/sysctl.d/local.conf'` 使其永久生效。
 
-#### SR-IOV或其他设备的统计信息配置
+#### SR-IOV或其他设备的统计信息配置 {#stats-for-sr-iov-or-other-devices}
 
 当通过SR-IOV使用虚拟化GPU时，需要额外参数才能获取GPU统计信息。您可以通过指定以下配置来启用此功能：即设置用于从`intel_gpu_top`收集统计信息的设备路径。以下示例可能适用于某些使用SR-IOV的系统：
 
 ```yaml
-telemetry:
-  stats:
-    intel_gpu_device: "sriov"
+telemetry: # [!code ++]
+  stats: # [!code ++]
+    intel_gpu_device: "sriov" # [!code ++]
 ```
 
 对于其他虚拟化GPU，可以尝试直接指定设备路径：
@@ -187,12 +190,12 @@ telemetry:
 ```yaml
 telemetry:
   stats:
-    intel_gpu_device: "drm:/dev/dri/card0"
+    intel_gpu_device: "drm:/dev/dri/card0" # [!code ++]
 ```
 
 如果您指定了设备路径，请确保已将设备透传到容器中。
 
-## AMD/ATI GPU（Radeon HD 2000 及更新的 GPU）通过 libva-mesa-driver
+## AMD/ATI GPU（Radeon HD 2000 及更新的 GPU）通过 libva-mesa-driver {#amdati-gpus-radeon-hd-2000-and-newer-gpus-via-libva-mesa-driver}
 
 VAAPI 支持自动配置文件选择，可自动处理 H.264 和 H.265 流。
 
@@ -203,11 +206,11 @@ VAAPI 支持自动配置文件选择，可自动处理 H.264 和 H.265 流。
 :::
 
 ```yaml
-ffmpeg:
-  hwaccel_args: preset-vaapi
+ffmpeg: # [!code highlight]
+  hwaccel_args: preset-vaapi # [!code ++]
 ```
 
-## NVIDIA GPU
+## NVIDIA GPU {#nvidia-gpus}
 
 虽然旧的 GPU 可能也能工作，但建议使用现代的、受支持的 GPU。NVIDIA 提供了[支持的 GPU 和功能矩阵](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new)。如果您的显卡在列表中并支持 CUVID/NVDEC，它很可能可以用于 Frigate 的解码。但是，您必须使用[与 FFmpeg 兼容的驱动版本](https://github.com/FFmpeg/nv-codec-headers/blob/master/README)。旧的驱动版本可能缺少符号而无法工作，而旧的显卡不受新驱动版本支持。解决这个问题的唯一方法是[提供您自己的 FFmpeg](/configuration/advanced#custom-ffmpeg-build)，使其能与您的驱动版本一起工作，但这是不受支持的，可能效果不佳甚至完全无法工作。
 
@@ -215,44 +218,44 @@ ffmpeg:
 
 如果您的发行版不提供 NVIDIA 驱动包，您可以[在此下载](https://www.nvidia.com/en-us/drivers/unix/)。
 
-### Docker 中配置 NVIDIA GPU
+### Docker 中配置 NVIDIA GPU {#configuring-nvidia-gpus-in-docker}
 
 Docker 容器需要额外配置才能访问 NVIDIA GPU。支持的方法是安装 [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) 并向 Docker 指定 GPU。具体方法取决于 Docker 的运行方式：
 
-#### Docker Compose - Nvidia GPU
+#### Docker Compose - Nvidia GPU {#docker-compose---nvidia-gpu}
 
 ```yaml
 services:
   frigate:
     ...
     image: docker.cnb.cool/frigate-cn/frigate:stable-tensorrt
-    deploy:    # <------------- 添加此部分到底部的代码
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['0'] # 仅在使用多个 GPU 时需要
-              count: 1 # GPU 数量
-              capabilities: [gpu]
+    deploy:    # <------------- 添加此部分到底部的代码 [!code ++]
+      resources: # [!code ++]
+        reservations: # [!code ++]
+          devices: # [!code ++]
+            - driver: nvidia # [!code ++]
+              device_ids: ['0'] # 仅在使用多个 GPU 时需要 [!code ++]
+              count: 1 # GPU 数量 [!code ++]
+              capabilities: [gpu] # [!code ++]
 ```
 
-#### Docker Run CLI - Nvidia GPU
+#### Docker Run CLI - Nvidia GPU {#docker-run-cli---nvidia-gpu}
 
 ```bash
 docker run -d \
   --name frigate \
-  ...
-  --gpus=all \
+  ... # 省略号为文档省略部分，不代表后面没内容
+  --gpus=all \  # [!code ++]
   docker.cnb.cool/frigate-cn/frigate:stable-tensorrt
 ```
 
-### 设置解码器
+### 设置解码器 {#setup-decoder}
 
 使用 `preset-nvidia` 时，ffmpeg 会自动为输入视频选择必要的配置文件，如果您的 GPU 不支持该配置文件，将记录错误。
 
 ```yaml
-ffmpeg:
-  hwaccel_args: preset-nvidia
+ffmpeg: # [!code highlight]
+  hwaccel_args: preset-nvidia # [!code ++]
 ```
 
 如果一切正常工作，您应该能看到性能显著提升。
@@ -296,9 +299,9 @@ ffmpeg:
 
 这些说明最初基于 [Jellyfin 文档](https://jellyfin.org/docs/general/administration/hardware-acceleration.html#nvidia-hardware-acceleration-on-docker-linux)。
 
-# 社区支持
+# 社区支持 {#community-supported}
 
-## NVIDIA Jetson（Orin AGX、Orin NX、Orin Nano*、Xavier AGX、Xavier NX、TX2、TX1、Nano）
+## NVIDIA Jetson（Orin AGX、Orin NX、Orin Nano*、Xavier AGX、Xavier NX、TX2、TX1、Nano）{#nvidia-jetson-orin-agx-orin-nx-orin-nano-xavier-agx-xavier-nx-tx2-tx1-nano}
 
 提供基于 Jetpack/L4T 的专用 Docker 镜像。它们包含使用 Jetson 专用媒体引擎的 `ffmpeg` 构建。如果您的 Jetson 主机运行 Jetpack 6.0+，请使用 `stable-tensorrt-jp6` 标签镜像。注意，Orin Nano 没有视频编码器，因此 frigate 将在此平台上使用软件编码，但该镜像仍然允许硬件解码和 tensorrt 物体/目标检测。
 
@@ -309,7 +312,7 @@ ffmpeg:
 ```bash
 docker run -d \
   ...
-  --runtime nvidia
+  --runtime nvidia # [!code ++]
   docker.cnb.cool/frigate-cn/frigate:stable-tensorrt-jp6
 ```
 
@@ -320,7 +323,7 @@ services:
   frigate:
     ...
     image: docker.cnb.cool/frigate-cn/frigate:stable-tensorrt-jp6
-    runtime: nvidia   # 添加此行
+    runtime: nvidia   # 添加此行 [!code ++]
 ```
 
 :::note
@@ -335,13 +338,13 @@ services:
             "runtimeArgs": []
         }
     },
-    "default-runtime": "nvidia"
+    "default-runtime": "nvidia" //[!code ++]
 }
 ```
 
 :::
 
-### 设置解码器
+### 设置解码器 {#setup-decoder-1}
 
 您需要在 `hwaccel_args` 中传递的解码器将取决于输入视频。
 
@@ -360,27 +363,27 @@ services:
 
 ```yaml
 ffmpeg:
-  hwaccel_args: preset-jetson-h264
+  hwaccel_args: preset-jetson-h264 # [!code ++]
 ```
 
 如果一切正常工作，您应该能看到 ffmpeg CPU 负载和功耗显著降低。
 通过运行 `jtop`（`sudo pip3 install -U jetson-stats`）验证硬件解码是否正常工作，应该能看到 NVDEC/NVDEC1 正在使用。
 
-## Rockchip 平台
+## Rockchip 平台 {#rockchip-platform}
 
 所有 Rockchip SoC 都支持使用基于 [Rockchip 的 mpp 库](https://github.com/rockchip-linux/mpp)的 [Nyanmisaka 的 FFmpeg 6.1 分支](https://github.com/nyanmisaka/ffmpeg-rockchip)进行硬件加速视频编解码。
 
-### 前提条件
+### 前提条件 {#prerequisites}
 
 请确保遵循 [Rockchip 特定安装说明](/frigate/installation#rockchip-platform)。
 
-### 配置
+### 配置 {#configuration}
 
 在您的 `config.yml` 中添加以下 FFmpeg 预设之一以启用硬件视频处理：
 
 ```yaml
 ffmpeg:
-  hwaccel_args: preset-rkmpp
+  hwaccel_args: preset-rkmpp # [!code ++]
 ```
 
 :::note
@@ -405,19 +408,19 @@ Restarting ffmpeg...
 
 建议您尝试升级至 FFmpeg 7 版本。可通过以下配置选项实现升级：
 
-```
+``` yaml
 ffmpeg:
-  path: "7.0"
+  path: "7.0" # [!code ++]
 ```
 
 该选项可全局设置（为所有摄像头启用 FFmpeg 7），也可针对单个摄像头单独配置。请注意不要与以下摄像头配置项混淆：
 
-```
+```yaml
 cameras:
   name:
     ffmpeg:
-      inputs:
-        - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
+      inputs: # 注意，不要把ffmpeg的path和摄像头视频流配置（inputs）下的path混淆！[!code warning]
+        - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2 # [!code warning]
 ```
 
 :::

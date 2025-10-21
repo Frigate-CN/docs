@@ -26,8 +26,8 @@ GITHUB_ENDPOINT: "https://github.mirror.frigate-cn.video"
 
 ```yaml
 ffmpeg:
-  output_args:
-    record: preset-record-generic-audio-aac
+  output_args: # [!code ++]
+    record: preset-record-generic-audio-aac # [!code ++]
 ```
 
 ### 为什么实时监控中没有声音？

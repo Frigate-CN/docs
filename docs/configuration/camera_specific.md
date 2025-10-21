@@ -21,9 +21,9 @@ title: 摄像头品牌特定配置
 
 ```yaml
 cameras:
-  h265_cam: # <------ 摄像头名称可自定义
-    ffmpeg:
-      apple_compatibility: true # <- 启用MacOS和iPhone设备兼容模式
+  h265_cam: # <------ 这里是你摄像头的名称
+    ffmpeg: # [!code highlight]
+      apple_compatibility: true # <- 启用MacOS和iPhone设备兼容模式 [!code ++]
 ```
 
 ## MJPEG摄像头
@@ -256,24 +256,24 @@ TP-Link VIGI摄像头需要调整主码流设置以避免问题。需要将流�
   - 若在容器环境（如TrueNAS上的Docker）中使用Frigate，需确保已启用USB透传功能，并在配置中明确指定主机设备（`/dev/video0`）与容器设备（`/dev/video0`）的映射关系
 - 在Frigate配置文件中，按需添加go2rtc流媒体配置及功能：
 
-```
-go2rtc:
-  streams:
-    usb_camera:
-      - "ffmpeg:device?video=0&video_size=1024x576#video=h264" 
+```yaml
+go2rtc: # [!code ++]
+  streams: # [!code ++]
+    usb_camera: # 视频流名称，可自行设置，需要与cameras中配置名称保持一致 [!code ++]
+      - "ffmpeg:device?video=0&video_size=1024x576#video=h264" # [!code ++]
 
 cameras:
-  usb_camera:
+  usb_camera: # 摄像头名称，与go2rtc中配置名称保持一致 [!code highlight]
     enabled: true
     ffmpeg:
       inputs:
-        - path: rtsp://127.0.0.1:8554/usb_camera
-          input_args: preset-rtsp-restream
+        - path: rtsp://127.0.0.1:8554/usb_camera # usb_camera为go2rtc中配置的视频流名称 [!code ++]
+          input_args: preset-rtsp-restream # [!code ++]
           roles:
             - detect
             - record
     detect:
-      enabled: false # <---- 在正常获得摄像头视频流之前，先暂时禁用检测功能，正常后再改为true
+      enabled: false # <---- 在正常获得摄像头视频流之前，先暂时禁用检测功能，正常后再改为true [!code warning]
       width: 1024
       height: 576
 ```

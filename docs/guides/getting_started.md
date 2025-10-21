@@ -142,19 +142,19 @@ services:
 mqtt:
   enabled: False
 
-cameras:
-  name_of_your_camera: # <------ 命名你的摄像头
-    enabled: True
-    ffmpeg:
-      inputs:
-        - path: rtsp://10.0.10.10:554/rtsp # <----- 你想用于检测的视频流地址
-          roles:
-            - detect
+cameras: # [!code ++]
+  name_of_your_camera: # <------ 命名你的摄像头 [!code ++]
+    enabled: True # [!code ++]
+    ffmpeg: # [!code ++]
+      inputs: # [!code ++]
+        - path: rtsp://10.0.10.10:554/rtsp # <----- 你想用于检测的视频流地址 [!code ++]
+          roles: # [!code ++]
+            - detect # [!code ++]
 ```
 
 ### 步骤2：启动Frigate
 
-此时你应该能够启动Frigate并在UI中看到视频流。
+此时你应该能够启动 Frigate 并在实时监控页面中看到视频画面。
 
 如果你从摄像头获得错误图像，这意味着ffmpeg无法从你的摄像头获取视频流。检查日志中的ffmpeg错误消息。默认的ffmpeg参数设计用于支持TCP连接的H264 RTSP摄像头。
 
@@ -172,23 +172,32 @@ cameras:
 services:
   frigate:
     ...
-    devices:
-      - /dev/dri/renderD128:/dev/dri/renderD128 # 用于intel硬件加速，需要根据你的硬件更新
+    devices: # [!code highlight]
+      - /dev/dri/renderD128:/dev/dri/renderD128 # 用于intel硬件加速，需要根据你的实际硬件添加 [!code ++]
     ...
 ```
 
 `config.yml`
 
 ```yaml
-mqtt: ...
+mqtt: ... # 省略号为文档省略部分，不代表后面没内容
+
+ffmpeg: # [!code ++]
+  hwaccel_args: preset-vaapi # 此处为所有摄像头设置全局硬件加速参数 [!code ++]
 
 cameras:
   name_of_your_camera:
     ffmpeg:
-      inputs: ...
-      hwaccel_args: preset-vaapi
-    detect: ...
+      inputs: ... # 省略号为文档省略部分，不代表后面没内容
+      hwaccel_args: preset-vaapi # 此处为针对单个摄像头使用特定硬件加速参数，不遵循全局设定。 [!code ++]
+    detect: ... # 省略号为文档省略部分，不代表后面没内容
 ```
+
+:::tip
+
+如果你是7代以上的Intel处理器，更推荐使用`qsv`进行硬件加速。更多详细信息请见[qsv配置文档](../configuration/hardware_acceleration_video.md#via-quicksync)。
+
+:::
 
 ### 步骤4：配置检测器
 
@@ -199,42 +208,40 @@ cameras:
 ```yaml
 services:
   frigate:
-    ...
+    ... # 省略号为文档省略部分，不代表后面没内容
     devices:
-      - /dev/bus/usb:/dev/bus/usb # 传递USB Coral，需要为其他版本修改
-      - /dev/apex_0:/dev/apex_0 # 传递PCIe Coral，按照这里的驱动说明操作 https://coral.ai/docs/m2/get-started/#2a-on-linux
-    ...
+      - /dev/bus/usb:/dev/bus/usb # 传递USB Coral，需要为其他版本修改 [!code ++]
+      - /dev/apex_0:/dev/apex_0 # 传递PCIe Coral，按照这里的驱动说明操作 https://coral.ai/docs/m2/get-started/#2a-on-linux [!code ++]
+    ... # 省略号为文档省略部分，不代表后面没内容
 ```
 
 ```yaml
-mqtt: ...
+mqtt: ... # 省略号为文档省略部分，不代表后面没内容
 
-detectors: # <---- 添加检测器
-  coral:
-    type: edgetpu
-    device: usb
+detectors: # 下面将添加 Coral 检测器，根据你实际的硬件情况去调整
+  coral: # [!code ++]
+    type: edgetpu # [!code ++]
+    device: usb # [!code ++]
 
 cameras:
   name_of_your_camera:
-    ffmpeg: ...
-    detect:
-      enabled: True # <---- 开启检测
-      ...
+    ffmpeg: ... # 省略号为文档省略部分，不代表后面没内容
+    detect: # [!code ++]
+      enabled: True # <---- 开启检测 [!code ++]
+      ... # 省略号为文档省略部分，不代表后面没内容
 ```
 
 更多关于可用检测器的详细信息可以在[这里](../configuration/object_detectors.md)找到。
 
-重启Frigate，你应该就能开始看到`person`的检测结果。如果你想跟踪其他对象，需要根据[配置文件参考](../configuration/reference.md)添加。
+重启Frigate，你应该就能开始看到`person`的检测结果。如果你想跟踪其他目标/物体，需要根据[配置文件参考](../configuration/reference.md)添加（请在页面下搜索`检测的目标/物体配置`）。
 
-### 步骤5：设置运动遮罩
+### 步骤5：设置画面变动遮罩
 
-现在你已经优化了解码视频流的配置，你需要检查在哪里实现运动遮罩。要做到这一点，在UI中导航到摄像头，选择顶部的“调试”，并在视频流下方的选项中启用“运动遮罩”。观察持续触发不需要的画面变动检测的区域。常见的需要遮罩的区域包括摄像头时间戳和经常在风中摇摆的树木。目标是避免浪费物体/目标检测周期来查看这些区域。
-
-现在你知道需要在哪里遮罩，使用选项窗格中的"Mask & Zone creator"来生成配置文件所需的坐标。更多关于遮罩的信息可以在[这里](../configuration/masks.md)找到。
+现在你已经优化了解码视频流的配置，你需要检查在哪里实现画面变动遮罩。你可以直接在设置页面的`遮罩/ 区域`选项卡中来设置遮罩。更多关于遮罩的信息可以在[这里](../configuration/masks.md)找到。
 
 :::warning
 
-注意，运动遮罩不应用于标记你不想检测物品/目标的区域或减少误报。它们不会改变发送到物体/目标检测的图像，所以你仍然可以在有运动遮罩的区域获得跟踪目标、警报和检测。这些只是防止这些区域的运动启动物体/目标检测。
+注意，画面变动遮罩**不应用于**标记你不想检测物品/目标的区域或减少误报。它们不会改变发送到物体/目标检测的图像，所以你仍然可以在有运动遮罩的区域获得跟踪目标、警报和检测。这些只是防止这些区域的运动启动物体/目标检测。
 
 :::
 
@@ -256,9 +263,9 @@ cameras:
         - path: rtsp://10.0.10.10:554/rtsp
           roles:
             - detect
-    motion:
-      mask:
-        - 0,461,3,0,1919,0,1919,843,1699,492,1344,458,1346,336,973,317,869,375,866,432
+    motion: # 请直接在设置页面中添加遮罩，这里只是范例 [!code ++]
+      mask: # [!code ++]
+        - 0,461,3,0,1919,0,1919,843,1699,492,1344,458,1346,336,973,317,869,375,866,432 # [!code ++]
 ```
 
 ### 步骤6：启用录制
@@ -268,9 +275,9 @@ cameras:
 要启用视频录制，向流添加`record`角色并在配置中启用它。如果在配置中禁用了录制，就无法在UI中启用它。
 
 ```yaml
-mqtt: ...
+mqtt: ... # 省略号为文档省略部分，不代表后面没内容
 
-detectors: ...
+detectors: ... # 省略号为文档省略部分，不代表后面没内容
 
 cameras:
   name_of_your_camera:
@@ -279,13 +286,13 @@ cameras:
         - path: rtsp://10.0.10.10:554/rtsp
           roles:
             - detect
-        - path: rtsp://10.0.10.10:554/high_res_stream # <----- 添加你想要录制的流
-          roles:
-            - record
-    detect: ...
-    record: # <----- 启用录制
-      enabled: True
-    motion: ...
+        - path: rtsp://10.0.10.10:554/high_res_stream # <----- 可以给录制设置独立的流 # [!code highlight]
+          roles: # [!code highlight]
+            - record # 需要像这样给流配置record功能才能录制 [!code ++]
+    detect: ... # 省略号为文档省略部分，不代表后面没内容
+    record: # <----- 启用录制 [!code ++]
+      enabled: True # [!code ++]
+    motion: ... # 省略号为文档省略部分，不代表后面没内容
 ```
 
 如果你的检测和录制没有单独的流，你只需要在第一个输入的角色列表中添加record角色。

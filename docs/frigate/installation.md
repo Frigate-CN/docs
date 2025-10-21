@@ -56,7 +56,7 @@ services:
     volumes:
       - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
       - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
-      - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
+      - type: tmpfs # 可选：将使用1GB内存作为缓存文件，减少SSD/SD卡损耗
         target: /tmp/cache
         tmpfs:
           size: 1000000000
@@ -221,9 +221,9 @@ services:
       - "8555:8555/udp" # 基于UDP的WebRTC
     environment:
       FRIGATE_RTSP_PASSWORD: "password" # rtsp的密码，请修改"password"为你期望的密码
-      TZ: "Asia/Shanghai" # 设置为中国+8时区
-      HF_ENDPOINT: "https://huggingface.mirror.frigate-cn.video" # 由我们提供的Huggingface国内镜像源，提供Frigate需要用到的部分模型加速下载
-      GITHUB_ENDPOINT: "https://github.mirror.frigate-cn.video" # 由我们提供的GitHub国内镜像源，提供Frigate需要用到的部分模型加速下载
+      TZ: "Asia/Shanghai" # 设置为中国+8时区 [!code highlight]
+      HF_ENDPOINT: "https://huggingface.mirror.frigate-cn.video" # 由我们提供的Huggingface国内镜像源，提供Frigate需要用到的部分模型加速下载 [!code highlight]
+      GITHUB_ENDPOINT: "https://github.mirror.frigate-cn.video" # 由我们提供的GitHub国内镜像源，提供Frigate需要用到的部分模型加速下载 [!code highlight]
 ```
 
 如果您无法使用Docker Compose，可以使用类似以下命令运行容器：
