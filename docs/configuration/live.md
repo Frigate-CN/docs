@@ -215,7 +215,7 @@ Frigate在摄像头组编辑面板中提供了一个对话框，其中包含几�
 
 1. **为什么我的实时监控页面中没有声音？**
 
-   你必须要给摄像头配置[go2rtc](guides/configuring_go2rtc)后的视频流才能在实时监控中听到声音。如果已配置go2rtc，需要确保摄像头发送PCMA/PCMU或AAC音频。如果无法更改摄像头的音频编解码器，需要使用go2rtc[转码音频](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#source-ffmpeg)。
+   你必须要给摄像头配置[go2rtc](../configuration/guides/configuring_go2rtc.md)后的视频流才能在实时监控中听到声音。如果已配置go2rtc，需要确保摄像头发送PCMA/PCMU或AAC音频。如果无法更改摄像头的音频编解码器，需要使用go2rtc[转码音频](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#source-ffmpeg)。
 
    请注意低带宽模式播放器是仅视频流。即使已设置go2rtc，也**不能够在低带宽模式下听到声音**。
 
