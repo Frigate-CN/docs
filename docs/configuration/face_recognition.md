@@ -3,6 +3,14 @@ id: face_recognition
 title: 人脸识别 <Badge type="tip" text="0.16.0 和 以上版本" />
 ---
 
+:::tip
+
+人脸识别功能需要依赖外部下载的模型文件。相关模型托管在Github上。
+
+如果你在中国大陆地区，请参考[通过Docker安装](../frigate/installation.md#docker)的教程，在`environment`中配置`GITHUB_ENDPOINT`环境变量，否则功能可能无法正常使用。
+
+:::
+
 人脸识别功能通过将检测到的人脸与预先学习的人脸数据进行匹配，来识别已知个体。当识别出已知人员（`person`）时，他们的姓名将作为`sub_label`添加。这些信息会显示在UI界面、过滤器中，也会包含在通知中。
 
 ## 模型要求

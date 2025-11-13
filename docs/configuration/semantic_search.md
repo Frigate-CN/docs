@@ -3,6 +3,14 @@ id: semantic_search
 title: 语义搜索 <Badge type="tip" text="0.15.0 和 以上版本" />
 ---
 
+:::tip
+
+车牌识别功能需要依赖外部下载的模型文件。相关模型托管在HuggingFace上。
+
+如果你在中国大陆地区，请参考[通过Docker安装](../frigate/installation.md#docker)的教程，在`environment`中配置`HF_ENDPOINT`环境变量，否则功能可能无法正常使用。
+
+:::
+
 Frigate中的语义搜索功能允许您通过图像本身、用户定义的文本描述或自动生成的描述来查找回顾项目中的跟踪目标。该功能通过为跟踪目标的图像和文本描述创建_嵌入向量_(数值向量表示)来实现。通过比较这些嵌入向量，Frigate评估它们的相似度以提供相关的搜索结果。
 
 Frigate使用来自[Jina AI](https://huggingface.co/jinaai)的模型创建嵌入向量并保存到Frigate数据库中。所有处理都在本地运行。
