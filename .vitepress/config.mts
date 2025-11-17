@@ -210,7 +210,8 @@ export default defineConfig({
 
     sidebar,
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/blakeblackshear/frigate' }
+      { icon: 'github', link: 'https://github.com/blakeblackshear/frigate' },
+      { icon: 'bilibili', link: 'https://space.bilibili.com/3546894915602564' },
     ]
   }
 })
