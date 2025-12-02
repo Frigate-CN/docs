@@ -83,6 +83,7 @@ export default defineConfig({
     ["link", { rel: "shortcut icon", href: "/img/favicon.ico", type: "image/x-icon" }],
     ["link", { rel: "icon", href: "/img/favicon.ico", type: "image/x-icon" }],
   ],
+  titleTemplate: ':title - Frigate 中文文档',
   sitemap: {
     hostname: 'https://docs.frigate-cn.video',
     xmlns: {
