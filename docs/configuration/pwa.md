@@ -11,7 +11,7 @@ Frigate支持作为[渐进式网页应用(PWA)](https://web.dev/explore/progress
 
 要将Frigate安装为PWA，需满足以下条件：
 
-- 必须通过安全上下文访问Frigate（如localhost、https安全连接等）
+- 必须通过安全上下文访问Frigate（如localhost、https安全连接、VPN等）
 - Android设备需使用Firefox、Chrome、Edge、Opera或三星互联网浏览器等支持PWA的浏览器
 - iOS 16.4及以上版本可通过Safari、Chrome、Edge、Firefox或Orion浏览器的分享菜单安装
 
@@ -22,3 +22,7 @@ Frigate支持作为[渐进式网页应用(PWA)](https://web.dev/explore/progress
 - **桌面端**：通常使用地址栏右侧的安装按钮
 - **Android设备**：对于Chrome，可通过浏览器菜单中的"安装为应用"选项；FireFox则是`添加APP到首页屏幕`选项
 - **iOS设备**：通过分享菜单中的"添加到主屏幕"功能
+
+
+## 使用
+完成设置后，Frigate 应用可以在任何能访问 Frigate 服务的地方使用。这意味着您可以根据需求，将其设置为仅本地访问、仅 VPN 访问，或完全开放访问。

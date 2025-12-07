@@ -141,7 +141,7 @@ WEB摘要算法 - MD5
 
 :::
 
-### Reolink摄像头
+### Reolink摄像头 {#reolink-cameras}
 Reolink 推出了多款不同型号的摄像头，这些型号在功能支持和行为表现上存在不一致性。下表总结了各种功能特性及使用建议。
 
 
@@ -164,14 +164,30 @@ Frigate与配置了以下选项的新款Reolink摄像头配合使用效果更好
 通过Reolink NVR连接的摄像头可以使用HTTP流，在流URL中使用`channel[0..15]`表示附加通道。
 主码流也可以通过RTSP设置，但并非在所有硬件版本上都可靠。以下示例配置适用于最老的RLN16-410设备和多种类型的摄像头。
 
+:::tip
+
+Reolink 最新款摄像头支持通过 go2rtc 和其他应用程序实现双向音频功能。需要注意的是，为了保证稳定性，仍需使用 HTTP-FLV 流，同时可以额外添加一个 RTSP 流，该流将仅用于双向音频。
+注意：RTSP 流不能以 ffmpeg:开头，因为 go2rtc 需要直接处理该流以实现双向音频功能。
+请确保已在摄像头的高级网络设置中启用了 HTTP。如需在 Frigate 中使用双向通话功能，请参考[实时预览文档](/configuration/live#two-way-talk)。
+
+:::
 
 ```yaml
 go2rtc:
   streams:
+    # 连接标准Reolink摄像头的示例
     your_reolink_camera:
       - "ffmpeg:http://reolink_ip/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=username&password=password#video=copy#audio=copy#audio=opus"
     your_reolink_camera_sub:
       - "ffmpeg:http://reolink_ip/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=username&password=password"
+    # 支持双向通话的Reolink摄像头连接示例
+    your_reolink_camera_twt:
+      - "ffmpeg:http://reolink_ip/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=username&password=password#video=copy#audio=copy#audio=opus"
+      - "rtsp://username:password@reolink_ip/Preview_01_sub"
+    your_reolink_camera_twt_sub:
+      - "ffmpeg:http://reolink_ip/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=username&password=password"
+      - "rtsp://username:password@reolink_ip/Preview_01_sub"
+    # 连接Reolink NVR的示例
     your_reolink_camera_via_nvr:
       - "ffmpeg:http://reolink_nvr_ip/flv?port=1935&app=bcs&stream=channel3_main.bcs&user=username&password=password" # 通道号为0-15
       - "ffmpeg:your_reolink_camera_via_nvr#audio=aac"
@@ -220,6 +236,10 @@ go2rtc:
 ```
 
 ### Unifi Protect摄像头
+
+:::note
+UniFi G5 及更新型号的摄像机需要通过 UniFi Protect 服务器才能启用 RTSPS 流，这些型号在独立模式下无法启用该功能。
+:::
 
 Unifi Protect摄像头需要使用rtspx流与go2rtc配合。
 要使用Unifi Protect摄像头，将rtsps链接修改为以rtspx开头。

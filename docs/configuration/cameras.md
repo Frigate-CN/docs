@@ -114,6 +114,7 @@ cameras:
 | Amcrest IP4M-S2112EW-AI      |      ✅      |      ❌      | 不支持FOV相对移动。                                                                                                            |
 | Amcrest IP5M-1190EW          |      ✅      |      ❌      | ONVIF端口: 80。不支持FOV相对移动。                                                                                            |
 | Annke CZ504                  |      ✅      |      ✅      | 安克（Annke）官方支持提供了专用固件版本（[V5.7.1 build 250227](https://github.com/pierrepinon/annke_cz504/raw/refs/heads/main/digicap_V5-7-1_build_250227.dav)）以修复ONVIF协议中"TranslationSpaceFov"参数的兼容性问题。 |
+| Axis Q-6155E                 |      ✅      |      ❌      | ONVIF 服务端口：80；该摄像机不支持 MoveStatus 功能。                                                                                               |
 | Ctronics PTZ                 |      ✅      |      ❌      |                                                                                                                                                 |
 | Dahua                        |      ✅      |      ✅      | 据用户反馈，部分低端大华摄像头（尤其是Lite系列等入门机型）存在​​不支持自动跟踪功能​​的情况。                                                     |
 | Dahua DH-SD2A500HB           |      ✅      |      ❌      |                                                                                                                                                 |

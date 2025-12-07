@@ -119,7 +119,7 @@ OpenAI没有为其API提供免费等级。随着gpt-4o的发布，价格已经�
 
 ### 支持的模型
 
-您必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://platform.openai.com/docs/models)中找到。在撰写本文时 `gpt-4o` 和 `gpt-4-turbo` 都支持图生文功能。
+您必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://platform.openai.com/docs/models)中找到。
 
 :::note
 
@@ -154,11 +154,11 @@ genai:
 
 ### 支持的模型
 
-您必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models)中找到。在撰写本文时，这包括`gpt-4o`和`gpt-4-turbo`。
+您必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models)中找到。
 
 ### 创建资源并获取API密钥
 
-要开始使用Azure OpenAI，您必须首先[创建资源](https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)。您需要您的API密钥和资源URL，其中必须包含`api-version`参数(参见下面的示例)。配置中不需要模型字段，因为模型是您部署资源时选择的部署名称的一部分。
+要开始使用Azure OpenAI，您必须首先[创建资源](https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)。你需要您的API密钥、模型名称和资源URL，其中必须包含`api-version`参数(参见下面的示例)。
 
 ### 配置
 
@@ -166,7 +166,8 @@ genai:
 genai:
   enabled: True
   provider: azure_openai
-  base_url: https://example-endpoint.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2023-03-15-preview
+  base_url: https://instance.cognitiveservices.azure.com/openai/responses?api-version=2025-04-01-preview
+  model: gpt-5-mini
   api_key: "{FRIGATE_OPENAI_API_KEY}"
 ```
 

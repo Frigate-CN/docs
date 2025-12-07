@@ -211,7 +211,7 @@ services:
     ... # 省略号为文档省略部分，不代表后面没内容
     devices:
       - /dev/bus/usb:/dev/bus/usb # 传递USB Coral，需要为其他版本修改 [!code ++]
-      - /dev/apex_0:/dev/apex_0 # 传递PCIe Coral，按照这里的驱动说明操作 https://coral.ai/docs/m2/get-started/#2a-on-linux [!code ++]
+      - /dev/apex_0:/dev/apex_0 # 传递PCIe Coral，按照这里的驱动说明操作 https://github.com/jnicolson/gasket-builder [!code ++]
     ... # 省略号为文档省略部分，不代表后面没内容
 ```
 

@@ -988,7 +988,7 @@ COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
 WORKDIR /dfine
 RUN git clone https://github.com/Peterande/D-FINE.git .
 RUN uv pip install --system -r requirements.txt
-RUN uv pip install --system onnx onnxruntime onnxsim
+RUN uv pip install --system onnx onnxruntime onnxsim onnxscript
 # Create output directory and download checkpoint
 RUN mkdir -p output
 ARG MODEL_SIZE
@@ -1013,12 +1013,12 @@ EOF
 你可以通过运行以下命令将RF-DETR导出为ONNX格式。请将整段命令复制粘贴到终端执行，并根据需要将第一行中的`MODEL_SIZE=Nano`修改为`Nano`、`Small`或`Medium`规格。
 
 ```sh
-docker build . --build-arg MODEL_SIZE=Nano --output . -f- <<'EOF'
+docker build . --build-arg MODEL_SIZE=Nano --rm --output . -f- <<'EOF'
 FROM python:3.11 AS build
 RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
 COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
 WORKDIR /rfdetr
-RUN uv pip install --system rfdetr[onnxexport]
+RUN uv pip install --system rfdetr[onnxexport] torch==2.8.0 onnx==1.19.1 onnxscript
 ARG MODEL_SIZE
 RUN python3 -c "from rfdetr import RFDETR${MODEL_SIZE}; x = RFDETR${MODEL_SIZE}(resolution=320); x.export(simplify=True)"
 FROM scratch

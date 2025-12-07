@@ -91,9 +91,17 @@ Frigate可以使用Hailo-8或Hailo-8L AI加速器，包括集成了Hailo模块�
 
 ### Google Coral TPU
 
+:::warning
+
+如果你是新安装 Frigate，我们不再推荐使用 Coral 设备，除非你对功耗有特别严苛的要求，或者你的硬件无法使用其他可用于目标检测的 AI 加速器。我们建议你改用其他众多受支持的目标检测器之一。
+
+Frigate 仍将为 Coral TPU 提供支持，因为它仍然是执行目标检测模型时能效最高的设备之一。
+
+:::
+
 Frigate 同时支持 USB 和 M.2 两种版本的 Google Coral 加速模块：
 - USB版兼容性最佳，无需安装额外驱动，但缺少自动温控节流功能（长时间高负载可能降频）
-- PCIe 和 M.2 需要安装对应的驱动才能运行，参考：https://coral.ai
+- PCIe 和 M.2 需要安装对应的驱动才能运行，参考：https://github.com/jnicolson/gasket-builder 应该有用
 
 单个 Coral 使用默认模型即可处理多路摄像头，能满足大多数用户需求。你可以根据 Frigate 报告的推理速度计算 Coral 的最大性能：
 
@@ -137,11 +145,11 @@ Frigate能够使用支持12.x系列CUDA库的NVIDIA GPU。
 
 #### 最低硬件支持
 
-本系统使用的是具有**次版本兼容性**的CUDA 12.x系列库。主机系统必须安装**最低版本号为 >=545 的驱动程序**，同时您的GPU需支持**计算能力（Compute Capability）5.0或更高版本**，这通常对应的是**Maxwell架构或更新的GPU**，具体可参考下方链接中的**NVIDIA GPU计算能力**。
+本系统使用的是具有**次版本兼容性**的CUDA 12.x系列库。主机系统必须安装**最低版本号为 >=545 的驱动程序**，同时你的GPU需支持**计算能力（Compute Capability）5.0或更高版本**，这通常对应的是**Maxwell架构或更新的GPU**，具体可参考下方链接中的**NVIDIA GPU计算能力**。
 
-请确保您的主机系统已安装 [nvidia-container-runtime](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu)，这样才能将GPU设备透传给容器；同时主机上还需为当前GPU安装**兼容的驱动程序**。
+请确保你的主机系统已安装 [nvidia-container-runtime](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu)，这样才能将GPU设备透传给容器；同时主机上还需为当前GPU安装**兼容的驱动程序**。
 
-较新的GPU架构（如支持INT8运算和Tensor Core的架构）具备更强大的特性，TensorRT可以充分利用这些优化能力。当模型转换为trt文件时，系统会针对您的硬件自动优化兼容的功能特性。当前提供的模型生成脚本中包含一个开关，可用于**启用或禁用FP16运算**。但如果您希望使用INT8优化等更新的特性，则需要进行额外的适配工作。
+较新的GPU架构（如支持INT8运算和Tensor Core的架构）具备更强大的特性，TensorRT可以充分利用这些优化能力。当模型转换为trt文件时，系统会针对你的硬件自动优化兼容的功能特性。当前提供的模型生成脚本中包含一个开关，可用于**启用或禁用FP16运算**。但如果你希望使用INT8优化等更新的特性，则需要进行额外的适配工作。
 
 #### 兼容性参考资料
 

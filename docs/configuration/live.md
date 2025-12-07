@@ -21,7 +21,7 @@ jsmpeg实时监控会消耗更多浏览器和客户端GPU资源。强烈推荐�
 | ---- | --------------------------------- | ------ | ---------------------------| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | jsmpeg | 与`detect -> fps`相同，上限10fps | 720p   | 无                         | 否          | 分辨率可配置，但如需更高分辨率和更好帧率推荐使用go2rtc。未配置go2rtc时Frigate将默认采用这个方式。 | 
 | mse  | 原生                              | 原生   | 是(取决于音频编解码器)       | 是          | iPhone需要iOS 17.1+，Firefox仅支持h.264。配置go2rtc后Frigate将默认采用这个方式。                                       |
-| webrtc | 原生                            | 原生   | 是(取决于音频编解码器)        | 是          | 需要额外配置，不支持h.265。当MSE失败或使用摄像头双向通话功能时，Frigate会尝试使用WebRTC。                   |
+| webrtc | 原生                            | 原生   | 是(取决于音频编解码器)        | 是          | 需要额外配置。当MSE失败或使用摄像头双向通话功能时，Frigate会尝试使用WebRTC。                   |
 
 ### 摄像头设置建议
 
@@ -133,7 +133,7 @@ WebRTC通过在端口`8555`上创建TCP或UDP连接工作。但是，它需要�
   ```
 
 - 对于通过Tailscale的访问，必须将Frigate系统的Tailscale IP添加为WebRTC候选。Tailscale IP都以`100.`开头，并保留在`100.64.0.0/10` CIDR块中。
-- 注意WebRTC不支持H.265。
+- 请注意，某些浏览器可能不支持 H.265（HEVC）编码。你可以通过[此链接](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#codecs-madness)查看当前浏览器版本是否兼容 H.265。
 
 :::tip
 
@@ -180,7 +180,7 @@ services:
 - 确保通过https访问Frigate(可能需要[打开端口8971](/frigate/installation/#端口))。
 - 对于Home Assistant Frigate卡片，[按照文档](http://card.camera/#/usage/2-way-audio)获取正确的源。
 
-要使用Reolink门铃的双向通话，应使用[推荐的Reolink配置](/configuration/camera_specific#reolink摄像头)
+要使用Reolink门铃的双向通话，应使用[推荐的Reolink配置](/configuration/camera_specific#reolink-cameras)
 
 ### 摄像头组仪表板上的视频流选项
 
