@@ -61,7 +61,7 @@ export const sidebar = [
           { text: '<i class="fa-solid fa-crow"></i>鸟瞰图', link: '/configuration/birdseye' },
           { text: '<i class="fa-solid fa-circle-play"></i>实时监控', link: '/configuration/live' },
           { text: '<i class="fa-regular fa-file-video"></i>转流传输', link: '/configuration/restream' },
-          { text: '<i class="fa-solid fa-users-viewfinder"></i>自动跟踪', link: '/configuration/autotracking' },
+          { text: '<i class="fa-solid fa-users-viewfinder"></i>自动追踪', link: '/configuration/autotracking' },
           { text: '<i class="fa-solid fa-circle-info"></i>特定摄像头', link: '/configuration/camera_specific' },
         ]
       },

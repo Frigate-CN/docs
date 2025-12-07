@@ -7,7 +7,7 @@ title: Home Assistant 通知
 
 通常建议基于`frigate/reviews` mqtt主题来触发通知。这提供了获取[缩略图/快照/剪辑](/integrations/home-assistant.md#notification-api)所需的event_id以及其他用于自定义何时何地接收警报的有用信息。数据以变更源的形式发布，这意味着你可以在`before`部分引用对象的"前一个状态"，在`after`部分引用对象的"当前状态"。你可以在[这里](/integrations/mqtt.md#frigateevents)查看示例。
 
-以下是一个简单的跟踪目标通知自动化示例，它会为每个变更更新现有的通知。这意味着当Frigate找到"更好的"图像时，你在通知中看到的图像会更新。
+以下是一个简单的追踪目标通知自动化示例，它会为每个变更更新现有的通知。这意味着当Frigate找到"更好的"图像时，你在通知中看到的图像会更新。
 
 ```yaml
 automation:

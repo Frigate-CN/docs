@@ -128,6 +128,7 @@ export default defineConfig({
     // 更改容器默认值标题
     container: {
       tipLabel: "提示",
+      noteLabel: "笔记",
       warningLabel: "警告",
       dangerLabel: "危险",
       infoLabel: "信息",

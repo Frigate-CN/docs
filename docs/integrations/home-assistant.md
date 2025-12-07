@@ -159,7 +159,7 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 
 该集成提供：
 
-- 带缩略图的跟踪目标录像浏览
+- 带缩略图的追踪目标录像浏览
 - 快照浏览
 - 按月、日、摄像头、时间浏览录像
 
@@ -204,31 +204,31 @@ target:
 
 许多人不想将Frigate暴露给网络，因此该集成创建了一些可用于通知的公共API接口。
 
-加载跟踪目标的缩略图：
+加载追踪目标的缩略图：
 
 ```
 https://HA_URL/api/frigate/notifications/<event-id>/thumbnail.jpg
 ```
 
-加载跟踪目标的快照：
+加载追踪目标的快照：
 
 ```
 https://HA_URL/api/frigate/notifications/<event-id>/snapshot.jpg
 ```
 
-使用Android设备加载跟踪目标的视频剪辑：
+使用Android设备加载追踪目标的视频剪辑：
 
 ```
 https://HA_URL/api/frigate/notifications/<event-id>/clip.mp4
 ```
 
-使用iOS设备加载跟踪目标的视频剪辑：
+使用iOS设备加载追踪目标的视频剪辑：
 
 ```
 https://HA_URL/api/frigate/notifications/<event-id>/master.m3u8
 ```
 
-加载跟踪目标的预览gif：
+加载追踪目标的预览gif：
 
 ```
 https://HA_URL/api/frigate/notifications/<event-id>/event_preview.gif

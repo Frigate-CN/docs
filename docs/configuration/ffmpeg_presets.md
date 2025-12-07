@@ -5,7 +5,7 @@ title: FFmpeg预设参数
 
 Frigate默认提供了一些FFmpeg参数预设，以简化配置流程。所有预设参数可在[此文件](https://github.com/blakeblackshear/frigate/blob/master/frigate/ffmpeg_presets.py)中查看。
 
-### 硬件加速预设
+### 硬件加速预设 {#hwaccel-presets}
 
 强烈建议在配置中使用硬件加速预设。这些预设不仅能替代冗长的参数，还能让Frigate了解可用硬件信息，从而进行其他GPU优化（如鸟瞰图转流编码或非原生分辨率缩放）。
 
@@ -23,7 +23,7 @@ Frigate默认提供了一些FFmpeg参数预设，以简化配置流程。所有�
 | preset-jetson-h265 | NVIDIA Jetson+h265流    |                         |
 | preset-rkmpp     | 瑞芯微MPP视频流        | 需使用*-rk后缀镜像以及开启特权模式 |
 
-### 输入参数预设
+### 输入参数预设 {#input-args-presets}
 
 输入参数预设可提升配置可读性，并针对不同类型的视频流提供最佳兼容性方案。
 
@@ -64,7 +64,7 @@ cameras:
             - record
 ```
 
-### 输出参数预设
+### 输出参数预设 {#output-args-presets}
 
 输出参数预设可优化录制文件的生成逻辑，确保录制内容的一致性。
 

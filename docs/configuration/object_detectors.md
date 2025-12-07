@@ -695,7 +695,7 @@ model:
 
 ## Deepstack / CodeProject.AI 服务器检测器
 
-Frigate的Deepstack/CodeProject.AI服务器检测器允许你将Deepstack和CodeProject.AI的物体/目标检测功能集成到Frigate中。CodeProject.AI和DeepStack是开源AI平台，可以在各种设备上运行，如树莓派、NVIDIA Jetson和其他兼容硬件。需要注意的是，集成是通过网络进行的，因此推理时间可能不如原生Frigate检测器快，但它仍然为物体/目标检测和跟踪提供了高效可靠的解决方案。
+Frigate的Deepstack/CodeProject.AI服务器检测器允许你将Deepstack和CodeProject.AI的物体/目标检测功能集成到Frigate中。CodeProject.AI和DeepStack是开源AI平台，可以在各种设备上运行，如树莓派、NVIDIA Jetson和其他兼容硬件。需要注意的是，集成是通过网络进行的，因此推理时间可能不如原生Frigate检测器快，但它仍然为物体/目标检测和追踪提供了高效可靠的解决方案。
 
 ### 设置
 
@@ -713,7 +713,7 @@ detectors:
 
 将`<你的codeproject_ai服务器IP>`和`<端口>`替换为你的CodeProject.AI服务器的IP地址和端口。
 
-要验证集成是否正常工作，请启动Frigate并观察日志中是否有与CodeProject.AI相关的错误消息。此外，你可以检查Frigate网络界面，查看CodeProject.AI检测到的对象是否正确显示和跟踪。
+要验证集成是否正常工作，请启动Frigate并观察日志中是否有与CodeProject.AI相关的错误消息。此外，你可以检查Frigate网络界面，查看CodeProject.AI检测到的对象是否正确显示和追踪。
 
 # 由社区支持的检测器
 

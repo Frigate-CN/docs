@@ -25,7 +25,7 @@ title: MQTT
 
 ### `frigate/events`
 
-为每个变化的跟踪目标发布消息。当跟踪目标不再被标记为false_positive时发布第一条消息。当Frigate找到跟踪目标的更好快照或发生区域变化时，它将发布具有相同id的消息。当跟踪目标结束时，将发布一条带有`end_time`设置的最终消息。
+为每个变化的追踪目标发布消息。当追踪目标不再被标记为false_positive时发布第一条消息。当Frigate找到追踪目标的更好快照或发生区域变化时，它将发布具有相同id的消息。当追踪目标结束时，将发布一条带有`end_time`设置的最终消息。
 
 ```json
 {
@@ -124,7 +124,7 @@ title: MQTT
 
 ### `frigate/tracked_object_update`
 
-当跟踪目标元数据更新时发布的消息，例如当GenAI运行并返回跟踪目标描述时。
+当追踪目标元数据更新时发布的消息，例如当GenAI运行并返回追踪目标描述时。
 
 ```json
 {
@@ -338,15 +338,15 @@ title: MQTT
 
 ### `frigate/<camera_name>/ptz_autotracker/set`
 
-控制摄像头PTZ自动跟踪器的开关主题。期望值为`ON`和`OFF`。
+控制摄像头PTZ自动追踪器的开关主题。期望值为`ON`和`OFF`。
 
 ### `frigate/<camera_name>/ptz_autotracker/state`
 
-摄像头PTZ自动跟踪器当前状态的主题。发布值为`ON`和`OFF`。
+摄像头PTZ自动追踪器当前状态的主题。发布值为`ON`和`OFF`。
 
 ### `frigate/<camera_name>/ptz_autotracker/active`
 
-确定PTZ自动跟踪器是否正在主动跟踪目标的主题。发布值为`ON`和`OFF`。
+确定PTZ自动追踪器是否正在主动追踪目标的主题。发布值为`ON`和`OFF`。
 
 ### `frigate/<camera_name>/review_alerts/set`
 
@@ -382,7 +382,7 @@ _注意：从`CONTINUOUS`切换到`MOTION | OBJECTS`值时，摄像头从视图�
 | ------------ | ----------------------------------------------------------------- |
 | `CONTINUOUS` | 始终包含                                                    |
 | `MOTION`     | 在最近30秒内检测到运动时显示                               |
-| `OBJECTS`    | 在最近30秒内有活动跟踪目标时显示                           |
+| `OBJECTS`    | 在最近30秒内有活动追踪目标时显示                           |
 
 ### `frigate/<camera_name>/birdseye_mode/state`
 

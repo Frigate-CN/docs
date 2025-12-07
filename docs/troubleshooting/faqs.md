@@ -16,6 +16,14 @@ GITHUB_ENDPOINT: "https://github.mirror.frigate-cn.video"
 
 详细可见文档里的[Docker容器安装教程](../frigate/installation.md#docker)
 
+
+### 为什么我页面打不开，提示400 Bad Request
+
+如果提示为`The plain HTTP request was sent to HTTPS port`，则说明目前 Frigate 开启了 `TLS` 验证，但你目前使用`http`协议进行访问。
+
+你需要改为使用`https`协议进行访问，亦或者[关闭 `TLS` 验证](../configuration/tls.md#禁用tls)。
+
+
 ### Fatal Python error: Bus error （Python致命错误： Bus error）
 
 此错误是由于共享内存(shm-size)设置过小导致的。请根据[此指南](../frigate/installation.md#calculating-required-shm-size)调整shm-size大小。
@@ -90,7 +98,7 @@ Frigate既会内部管理日志，也会直接输出到Docker标准输出。通�
    ```
    docker logs -f frigate
    ```
-   注意：若容器名称不是"frigate"，请替换为实际名称。"-f"参数表示实时跟踪日志更新，按`Ctrl+C`可退出。
+   注意：若容器名称不是"frigate"，请替换为实际名称。"-f"参数表示实时追踪日志更新，按`Ctrl+C`可退出。
 
 更多日志查看选项可参考Docker[官方文档](https://docs.docker.com/engine/reference/commandline/logs/)。
 
