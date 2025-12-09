@@ -1061,9 +1061,55 @@ python3 yolo_to_onnx.py -m yolov7-320
 
 #### YOLOv9
 
-你可以使用以下命令将YOLOv9模型导出为ONNX格式。请将整段命令复制粘贴到终端执行，并根据需要修改第一行中的`MODEL_SIZE=t`和`IMG_SIZE=320`参数（模型大小`MODEL_SIZE`的值可替换为`t`, `s`, `m`, `c`, 以及 `e`等 [模型尺寸](https://github.com/WongKinYiu/yolov9#performance)，图像大小`IMG_SIZE`可替换为`320` 或 `640`）。
+你可以使用以下命令将 YOLOv9 模型导出为 ONNX 格式。请根据需要修改第一行中的`MODEL_SIZE=t`和`IMG_SIZE=320`参数（模型大小`MODEL_SIZE`的值可替换为`t`, `s`, `m`, `c`, 以及 `e`等 [模型尺寸](https://github.com/WongKinYiu/yolov9#performance)，图像大小`IMG_SIZE`可替换为`320` 或 `640`），然后将整段命令复制粘贴到运行 Frigate 的服务器终端执行。
 
-```sh
+:::tip
+
+如果你当前在中国大陆，建议使用`国内加速优化命令`，将会在构建过程中使用镜像源，提高构建模型的速度。
+
+:::
+
+::: code-group
+```sh [国内加速优化命令]
+docker build . --build-arg MODEL_SIZE=t --build-arg IMG_SIZE=320 --output . -f- <<'EOF'
+FROM docker.cnb.cool/frigate-cn/mirrors/docker-image/python:3.11 AS build
+RUN rm -rf /etc/apt/sources.list
+RUN echo "deb http://mirrors.tencent.com/debian/ bookworm main contrib non-free non-free-firmware" > /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.tencent.com/debian/ bookworm main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.tencent.com/debian/ bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.tencent.com/debian/ bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.tencent.com/debian/ bookworm-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.tencent.com/debian/ bookworm-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.tencent.com/debian-security bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.tencent.com/debian-security bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.tencent.com/debian/ trixie main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.tencent.com/debian/ trixie main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.tencent.com/debian/ trixie-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.tencent.com/debian/ trixie-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.tencent.com/debian/ trixie-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.tencent.com/debian/ trixie-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.tencent.com/debian-security trixie-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.tencent.com/debian-security trixie-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list
+
+RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.nju.edu.cn/astral-sh/uv:0.8.0 /uv /bin/
+WORKDIR /yolov9
+ADD https://github.com/WongKinYiu/yolov9.git .
+RUN uv pip install -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple --system -r requirements.txt
+RUN uv pip install -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple --system onnx==1.18.0 onnxruntime onnx-simplifier>=0.4.1 onnxscript
+ARG MODEL_SIZE
+ARG IMG_SIZE
+ADD https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-${MODEL_SIZE}-converted.pt yolov9-${MODEL_SIZE}.pt
+RUN sed -i "s/ckpt = torch.load(attempt_download(w), map_location='cpu')/ckpt = torch.load(attempt_download(w), map_location='cpu', weights_only=False)/g" models/experimental.py
+RUN python3 export.py --weights ./yolov9-${MODEL_SIZE}.pt --imgsz ${IMG_SIZE} --simplify --include onnx
+FROM scratch
+ARG MODEL_SIZE
+ARG IMG_SIZE
+COPY --from=build /yolov9/yolov9-${MODEL_SIZE}.onnx /yolov9-${MODEL_SIZE}-${IMG_SIZE}.onnx
+EOF
+```
+
+```sh [原版命令]
 docker build . --build-arg MODEL_SIZE=t --build-arg IMG_SIZE=320 --output . -f- <<'EOF'
 FROM python:3.11 AS build
 RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
@@ -1083,3 +1129,4 @@ ARG IMG_SIZE
 COPY --from=build /yolov9/yolov9-${MODEL_SIZE}.onnx /yolov9-${MODEL_SIZE}-${IMG_SIZE}.onnx
 EOF
 ```
+:::
