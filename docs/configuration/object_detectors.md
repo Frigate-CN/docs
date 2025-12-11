@@ -7,44 +7,44 @@ title: 物体/目标检测器
 
 :::info
 
-Frigate支持多种不同类型的检测器，可在不同硬件上运行：
+Frigate 支持多种不同类型的检测器，可在不同硬件上运行：
 
 **通用硬件**
 
-- [Coral EdgeTPU](#edge-tpu-detector)：Google Coral EdgeTPU提供USB和m.2两种接口，兼容多种设备。
-- [Hailo](#hailo-8)：Hailo8和Hailo8L AI加速模块提供m.2接口和树莓派HAT，兼容多种设备。
+- [Coral EdgeTPU](#edge-tpu-detector)：Google Coral EdgeTPU 提供 USB 和 m.2 两种接口，兼容多种设备。
+- [Hailo](#hailo-8)：Hailo8 和 Hailo8L AI 加速模块提供 m.2 接口和树莓派 HAT，兼容多种设备。
 
 **AMD**
 
-- [ROCm](#amdrocm-gpu-detector)：ROCm可在AMD独立显卡上运行，提供高效物体/目标检测。
-- [ONNX](#onnx)：当配置了支持的ONNX模型时，ROCm会在`-rocm`版Frigate镜像中自动被检测并使用。
+- [ROCm](#amdrocm-gpu-detector)：ROCm 可在 AMD 独立显卡上运行，提供高效物体/目标检测。
+- [ONNX](#onnx)：当配置了支持的 ONNX 模型时，ROCm 会在`-rocm`版 Frigate 镜像中自动被检测并使用。
 
 **Intel**
 
-- [OpenVino](#openvino-detector)：OpenVino可在Intel Arc 显卡、核显和CPU上运行，提供高效物体/目标检测。
-- [ONNX](#onnx)：当配置了支持的ONNX模型时，OpenVINO会在标准Frigate镜像中自动被检测并使用。
+- [OpenVino](#openvino-detector)：OpenVino 可在 Intel Arc 显卡、核显和 CPU 上运行，提供高效的物体/目标检测。
+- [ONNX](#onnx)：当配置了支持的 ONNX 模型时，OpenVINO 会在默认 Frigate 镜像中自动被检测并使用。
 
 **NVIDIA**
 - [ONNX](#onnx)：当配置了受支持的 ONNX 模型时，在-tensorrt Frigate 镜像中，TensorRT 将被自动检测并用作检测器。
 
 **Nvidia Jetson**
 
-- [TensortRT](#nvidia-tensorrt检测器)：TensorRT可在Jetson设备上运行，使用多种预设模型。
-- [ONNX](#onnx)：当配置了支持的ONNX模型时，TensorRT会在`-tensorrt-jp6`版Frigate镜像中自动被检测并使用。
+- [TensortRT](#nvidia-tensorrt检测器)：TensorRT 可在 Jetson 设备上运行，使用多种预设模型。
+- [ONNX](#onnx)：当配置了支持的ONNX模型时，TensorRT 会在`-tensorrt-jp6`版Frigate镜像中自动被检测并使用。
 
-**瑞芯微Rockchip**
+**瑞芯微 Rockchip**
 
-- [RKNN](#rockchip-platform)：RKNN模型可在内置NPU的瑞芯微Rockchip设备上运行。
+- [RKNN](#rockchip-platform)：RKNN 模型可在内置 NPU 的瑞芯微 Rockchip 设备上运行。
 
 **测试用途**
 
-- [CPU检测器(不推荐实际使用)](#cpu检测器不推荐使用)：使用CPU运行tflite模型，不推荐使用，在大多数情况下使用OpenVINO CPU模式可获得更好效果。
+- [CPU检测器(不推荐实际使用)](#cpu检测器不推荐使用)：使用 CPU 运行 tflite 模型，不推荐使用，在大多数情况下使用 OpenVINO CPU 模式可获得更好效果。
 
 :::
 
 :::note
 
-不能混合使用多种检测器进行物体/目标检测（例如：不能同时使用OpenVINO和Coral EdgeTPU进行物体/目标检测）。
+不能混合使用多种检测器进行物体/目标检测（例如：不能同时使用 OpenVINO 和 Coral EdgeTPU 进行物体/目标检测）。
 
 当然，不影响其他需要使用硬件加速任务，如[语义搜索](./semantic_search.md)。
 
@@ -52,15 +52,15 @@ Frigate支持多种不同类型的检测器，可在不同硬件上运行：
 
 # 官方支持的检测器
 
-Frigate提供以下内置检测器类型：`cpu`、`edgetpu`、`hailo8l`、`onnx`、`openvino`、`rknn`和`tensorrt`。默认情况下，Frigate会使用单个CPU检测器。其他检测器可能需要额外配置，如下所述。使用多个检测器时，它们会在专用进程中运行，但会从所有摄像头的公共检测请求队列中获取任务。
+Frigate提供以下内置检测器类型：`cpu`、`edgetpu`、`hailo8l`、`onnx`、`openvino`、`rknn`和`tensorrt`。默认情况下，Frigate 会使用单个 CPU 检测器。其他检测器可能需要额外配置，如下所述。使用多个检测器时，它们会在专用进程中运行，但会从所有摄像头的公共检测请求队列中获取任务。
 
-## Edge TPU检测器 {#edge-tpu-detector}
+## Edge TPU 检测器 {#edge-tpu-detector}
 
-Edge TPU检测器类型运行TensorFlow Lite模型，利用Google Coral代理进行硬件加速。要配置Edge TPU检测器，将`"type"`属性设置为`"edgetpu"`。
+Edge TPU 检测器类型运行 TensorFlow Lite 模型，利用 Google Coral 代理进行硬件加速。要配置 Edge TPU 检测器，将`"type"`属性设置为`"edgetpu"`。
 
-Edge TPU设备可使用`"device"`属性指定，参考[TensorFlow Lite Python API文档](https://coral.ai/docs/edgetpu/multiple-edgetpu/#using-the-tensorflow-lite-python-api)。如果未设置，代理将使用它找到的第一个设备。
+Edge TPU 设备可使用`"device"`属性指定，参考[TensorFlow Lite Python API文档](https://coral.ai/docs/edgetpu/multiple-edgetpu/#using-the-tensorflow-lite-python-api)。如果未设置，代理将使用它找到的第一个设备。
 
-容器中提供了位于`/edgetpu_model.tflite`的TensorFlow Lite模型，默认情况下此检测器类型使用该模型。要提供自己的模型，请将文件绑定挂载到容器中，并通过`model.path`提供路径。
+容器中提供了位于`/edgetpu_model.tflite`的 TensorFlow Lite 模型，默认情况下此检测器类型使用该模型。要提供自己的模型，请将文件绑定挂载到容器中，并通过`model.path`提供路径。
 
 :::tip
 
@@ -137,18 +137,18 @@ detectors:
 
 ## Hailo-8检测器 {#hailo-8}
 
-Hailo-8检测器支持Hailo-8和Hailo-8L AI加速模块。该集成会自动通过Hailo CLI检测你的硬件架构，如果未指定自定义模型，则会选择适当的默认模型。
+Hailo-8 检测器支持 Hailo-8 和 Hailo-8L AI 加速模块。该集成会自动通过 Hailo CLI 检测你的硬件架构，如果未指定自定义模型，则会选择适当的默认模型。
 
-有关配置Hailo硬件的详细信息，请参阅[安装文档](../frigate/installation.md#hailo-8)。
+有关配置 Hailo 硬件的详细信息，请参阅[安装文档](../frigate/installation.md#hailo-8)。
 
 ### 配置
 
-配置Hailo检测器时，你有两种指定模型的方式：本地**路径**或**URL**。
+配置 Hailo 检测器时，你有两种指定模型的方式：本地**路径**或**URL**。
 如果同时提供两者，检测器将首先检查给定的本地路径。如果未找到文件，则会从指定的URL下载模型。模型文件缓存在`/config/model_cache/hailo`目录下。
 
 #### YOLO模型
 
-此配置适用于基于YOLO的模型。当未提供自定义模型路径或URL时，检测器会根据检测到的硬件自动下载默认模型：
+此配置适用于基于 YOLO 的模型。当未提供自定义模型路径或 URL 时，检测器会根据检测到的硬件自动下载默认模型：
 
 - **Hailo-8硬件**：使用**YOLOv6n**（默认：`yolov6n.hef`）
 - **Hailo-8L硬件**：使用**YOLOv6n**（默认：`yolov6n.hef`）
@@ -184,7 +184,7 @@ model:
 
 #### SSD模型
 
-对于基于SSD的模型，请提供你编译的SSD模型的路径或URL。集成将首先检查本地路径，必要时才会下载。
+对于基于 SSD 的模型，请提供你编译的 SSD 模型的路径或 URL。集成将首先检查本地路径，必要时才会下载。
 
 ```yaml
 detectors:
@@ -208,7 +208,7 @@ model:
 
 #### 自定义模型
 
-Hailo检测器支持所有为Hailo硬件编译并包含后处理的YOLO模型。你可以指定自定义URL或本地路径来下载或直接使用你的模型。如果同时提供两者，检测器会优先检查本地路径。
+Hailo 检测器支持所有为 Hailo 硬件编译并包含后处理的 YOLO 模型。你可以指定自定义 URL 或本地路径来下载或直接使用你的模型。如果同时提供两者，检测器会优先检查本地路径。
 
 ```yaml
 detectors:
@@ -233,24 +233,24 @@ model:
 
 更多现成模型，请访问：[Hailo模型库](https://github.com/hailo-ai/hailo_model_zoo)
 
-Hailo8支持Hailo模型库中所有包含HailoRT后处理的模型。你可以选择任何这些预配置模型用于你的实现。
+Hailo8 支持 Hailo 模型库中所有包含 HailoRT 后处理的模型。你可以选择任何这些预配置模型。
 
 > **注意：**
-> config.path参数可以接受以.hef结尾的本地文件路径或URL。当提供时，检测器将首先检查路径是否为本地文件路径。如果文件在本地存在，将直接使用。如果未找到本地文件或提供了URL，则会尝试从指定URL下载模型。
+> `config > path`参数可以接受以`.hef`结尾的本地文件路径或在线 URL 地址。当提供时，检测器将首先检查路径是否为本地文件路径。如果文件在本地存在，将直接使用。如果未找到本地文件或提供了 URL，则会尝试从指定 URL 下载模型。
 
 ---
 
 ## OpenVINO检测器 {#openvino-detector}
 
-OpenVINO检测器类型可在AMD和Intel CPU、Intel GPU以及Intel VPU硬件上运行OpenVINO IR模型。要配置OpenVINO检测器，请将`"type"`属性设置为`"openvino"`。
+OpenVINO 检测器可在 AMD CPU 和 Intel CPU、Intel GPU 以及 Intel VPU 硬件上运行 OpenVINO IR 模型。要配置 OpenVINO 检测器，请将`"type"`属性设置为`"openvino"`。
 
-使用的OpenVINO设备通过`"device"`属性指定，遵循[设备文档](https://docs.openvino.ai/2024/openvino-workflow/running-inference/inference-devices-and-modes.html)中的命名约定。最常见的设备是`CPU`和`GPU`。目前已知使用`AUTO`存在问题。为了向后兼容，如果在配置中设置了`AUTO`，Frigate将尝试使用`GPU`。
+使用的 OpenVINO 设备通过`device`属性指定，需遵循[设备文档](https://docs.openvino.ai/2024/openvino-workflow/running-inference/inference-devices-and-modes.html)中的命名规定。最常见的设备是`CPU`和`GPU`。目前已知使用`AUTO`存在问题。为了向后兼容，如果在配置中设置了`AUTO`，Frigate将尝试使用`GPU`。
 
-OpenVINO支持第6代Intel平台(Skylake)及更新版本。尽管没有官方支持，它也可以在AMD CPU上运行。使用`GPU`设备需要支持的Intel平台。有关详细的系统要求，请参阅[OpenVINO系统要求](https://docs.openvino.ai/2024/about-openvino/release-notes-openvino/system-requirements.html)
+OpenVINO 支持 第6代 Intel 平台（Skylake）以及更新的版本。虽然没有官方支持，但它也可以在 AMD CPU 上运行。使用`GPU`设备需要支持的 Intel 平台。有关详细的系统要求，请参阅[OpenVINO系统要求](https://docs.openvino.ai/2024/about-openvino/release-notes-openvino/system-requirements.html)
 
 :::tip
 
-当使用多个摄像头时，一个检测器可能无法满足需求。如果有可用的GPU资源，可以定义多个检测器。示例配置如下：
+当使用多个摄像头时，一个检测器可能无法满足需求。如果有可用的 GPU 资源，可以定义多个检测器。示例配置如下：
 
 ```yaml
 detectors:
@@ -268,9 +268,9 @@ detectors:
 
 #### SSDLite MobileNet v2
 
-容器中提供了位于`/openvino-model/ssdlite_mobilenet_v2.xml`的OpenVINO模型，默认情况下此检测器类型使用该模型。该模型来自Intel的开放模型库[SSDLite MobileNet V2](https://github.com/openvinotoolkit/open_model_zoo/tree/master/models/public/ssdlite_mobilenet_v2)，并转换为FP16精度的IR模型。
+容器中提供了位于`/openvino-model/ssdlite_mobilenet_v2.xml`的 OpenVINO 模型，默认情况下此检测器类型使用该模型。该模型来自 Intel 的开放模型库[SSDLite MobileNet V2](https://github.com/openvinotoolkit/open_model_zoo/tree/master/models/public/ssdlite_mobilenet_v2)，并转换为 FP16 精度的 IR 模型。
 
-使用默认OpenVINO模型时，请使用如下所示的模型配置：
+使用默认 OpenVINO 模型时，请使用如下所示的模型配置：
 
 ```yaml
 detectors:
@@ -289,7 +289,7 @@ model:
 
 #### YOLOX模型
 
-该检测器也支持YOLOX模型。Frigate没有预加载任何YOLOX模型，因此你需要自行提供模型。
+该检测器也支持 YOLOX 模型。Frigate 没有自带任何 YOLOX 模型，因此你需要自行提供模型。
 
 #### YOLO-NAS模型
 
@@ -301,7 +301,7 @@ model:
 
 :::
 
-将下载的onnx模型放入配置文件夹后，可以使用以下配置：
+将下载的 onnx 模型放入配置文件夹后，可以使用以下配置：
 
 ```yaml
 detectors:
@@ -319,15 +319,15 @@ model:
   labelmap_path: /labelmap/coco-80.txt
 ```
 
-注意：标签映射使用的是完整COCO标签集的子集，仅包含80个对象。
+注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
 
 #### YOLO(v3,v4,v7,v9)模型
 
-YOLOv3、YOLOv4、YOLOv7和[YOLOv9](https://github.com/WongKinYiu/yolov9)模型受支持，但默认不包含。
+YOLOv3、YOLOv4、YOLOv7 和 [YOLOv9](https://github.com/WongKinYiu/yolov9)模型受支持，但默认不包含。
 
 :::tip
 
-YOLO检测器设计用于支持YOLOv3、YOLOv4、YOLOv7和YOLOv9模型，但也可能支持其他YOLO模型架构。
+YOLO检测器设计用于支持 YOLOv3、YOLOv4、YOLOv7 和 YOLOv9 模型，但也可能支持其他 YOLO 模型架构。
 
 :::
 
@@ -337,7 +337,7 @@ YOLO检测器设计用于支持YOLOv3、YOLOv4、YOLOv7和YOLOv9模型，但也�
 
 :::
 
-将下载的onnx模型放入配置文件夹后，可以使用以下配置：
+将下载的 onnx 模型放入配置文件夹后，可以使用以下配置：
 
 ```yaml
 detectors:
@@ -355,19 +355,19 @@ model:
   labelmap_path: /labelmap/coco-80.txt
 ```
 
-注意：标签映射使用的是完整COCO标签集的子集，仅包含80个对象。
+注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
 
 #### RF-DETR模型
 
-[RF-DETR](https://github.com/roboflow/rf-detr)是基于DETR的模型。支持导出的ONNX模型，但默认不包含。有关下载RF-DETR模型用于Frigate的更多信息，请参阅[模型部分](#下载rf-detr模型)。
+[RF-DETR](https://github.com/roboflow/rf-detr)是基于 DETR 的模型。支持导出为 ONNX 模型，Frigate 默认不包含该模型。有关下载 RF-DETR 模型用于 Frigate 的更多信息，请参阅[模型部分](#下载rf-detr模型)。
 
 :::warning
 
-由于RF-DETR模型的尺寸和复杂性，建议仅在独立Arc显卡上运行。
+由于 RF-DETR 模型的尺寸和复杂性，建议仅在独立 Arc 显卡上运行。
 
 :::
 
-将下载的onnx模型放入`config/model_cache`文件夹后，可以使用以下配置：
+将下载的 onnx 模型放入`config/model_cache`文件夹后，可以使用以下配置：
 
 ```yaml
 detectors:
@@ -386,33 +386,32 @@ model:
 
 #### D-FINE模型
 
-[D-FINE](https://github.com/Peterande/D-FINE)是基于DETR的模型。支持导出的ONNX模型，但默认不包含。有关下载D-FINE模型用于Frigate的更多信息，请参阅[模型部分](#下载d-fine模型)。
+[D-FINE](https://github.com/Peterande/D-FINE)是基于 DETR 的模型。支持导出为 ONNX 模型，Frigate 默认不包含该模型。有关下载 D-FINE 模型用于 Frigate 的更多信息，请参阅[模型部分](#下载d-fine模型)。
 
 :::warning
 
-目前D-FINE模型只能在OpenVINO的CPU模式下运行，GPU目前无法编译该模型
+目前 D-FINE 模型只能在 OpenVINO 的 CPU 模式下运行，GPU 目前无法编译该模型
 
 :::
 
-将下载的onnx模型放入`config/model_cache`文件夹后，可以使用以下配置：
+将下载的 onnx 模型放入`config/model_cache`文件夹后，可以使用以下配置：
 
 ```yaml
 detectors:
-  ov:
-    type: openvino
-    device: GPU
+  ov: # [!code ++]
+    type: openvino # [!code ++]
 
-model:
-  model_type: dfine
-  width: 640
-  height: 640
-  input_tensor: nchw
-  input_dtype: float
-  path: /config/model_cache/dfine_s_obj2coco.onnx
-  labelmap_path: /labelmap/coco-80.txt
+model: # [!code ++]
+  model_type: dfine # [!code ++]
+  width: 640 # [!code ++]
+  height: 640 # [!code ++]
+  input_tensor: nchw # [!code ++]
+  input_dtype: float # [!code ++]
+  path: /config/model_cache/dfine_s_obj2coco.onnx # [!code ++]
+  labelmap_path: /labelmap/coco-80.txt # [!code ++]
 ```
 
-注意：标签映射使用的是完整COCO标签集的子集，仅包含80个对象。
+注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
 
 
 ## AMD/ROCm GPU检测器 {#amdrocm-gpu-detector}
@@ -425,61 +424,61 @@ AMD GPU的支持通过[ONNX检测器](#ONNX)提供。要使用AMD GPU进行物�
 
 ROCm需要访问`/dev/kfd`和`/dev/dri`设备。当docker或frigate不以root身份运行时，还应添加`video`（可能还有`render`和`ssl/_ssl`）组。
 
-直接运行docker时，应添加以下标志以访问设备：
+直接使用`docker run`时，应添加以下变量以访问设备：
 
 ```bash
 $ docker run --device=/dev/kfd --device=/dev/dri  \
-    ...
+    ... # 此处省略其他参数
 ```
 
-使用Docker Compose时：
+使用 Docker Compose 时：
 
 ```yaml
 services:
   frigate:
----
-devices:
-  - /dev/dri
-  - /dev/kfd
+    ... # 此处省略其他参数
+    devices: 
+    - /dev/dri # [!code ++]
+    - /dev/kfd # [!code ++]
 ```
 
 有关推荐设置的参考，请参阅[在Docker中运行ROCm/pytorch](https://rocm.docs.amd.com/projects/install-on-linux/en/develop/how-to/3rd-party/pytorch-install.html#using-docker-with-pytorch-pre-installed)。
 
-### 覆盖GPU芯片组的Docker设置 {#docker-settings-for-overriding-the-gpu-chipset}
+### 覆盖 GPU 芯片组的 Docker 设置 {#docker-settings-for-overriding-the-gpu-chipset}
 
-你的GPU可能无需特殊配置即可正常工作，但在许多情况下需要手动设置。AMD/ROCm软件栈附带有限的GPU驱动程序集，对于较新或缺失的型号，你需要将芯片组版本覆盖为较旧/通用版本才能使其工作。
+你的 GPU 可能无需特殊配置即可正常工作，但在许多情况下需要手动调整一些配置。因为 AMD/ROCm 自带的 GPU 驱动程序集并不完整，对于较新或缺失的型号，你需要将芯片组版本覆盖为较旧/通用版本才能使其工作。
 
-此外，AMD/ROCm不"正式"支持核显。它仍然可以与大多数核显正常工作，但需要特殊设置。必须配置`HSA_OVERRIDE_GFX_VERSION`环境变量。有关背景和示例，请参阅[ROCm问题报告](https://github.com/ROCm/ROCm/issues/1743)。
+此外，AMD/ROCm 没有“官方正式”支持核显。它仍然可以与大多数核显正常工作，但需要特殊设置。必须配置`HSA_OVERRIDE_GFX_VERSION`环境变量。有关背景和示例，请参阅[ROCm问题报告](https://github.com/ROCm/ROCm/issues/1743)。
 
 对于rocm frigate构建，有一些自动检测：
 
 - gfx1031 -> 10.3.0
 - gfx1103 -> 11.0.0
 
-如果你有其他芯片组，可能需要在Docker启动时覆盖`HSA_OVERRIDE_GFX_VERSION`。假设你需要的版本是`10.0.0`，则应从命令行配置为：
+如果你有其他芯片组，可能需要在 Docker 启动时覆盖`HSA_OVERRIDE_GFX_VERSION`。假设你需要的版本是`10.0.0`，则应从命令行配置为：
 
 ```bash
 $ docker run -e HSA_OVERRIDE_GFX_VERSION=10.0.0 \
     ...
 ```
 
-使用Docker Compose时：
+使用 Docker Compose 时：
 
 ```yaml
 services:
   frigate:
-
-environment:
-  HSA_OVERRIDE_GFX_VERSION: "10.0.0"
+    ...
+    environment:
+      HSA_OVERRIDE_GFX_VERSION: "10.0.0" # [!code ++]
 ```
 
-确定你需要的版本可能很复杂，因为你无法从AMD品牌名称中判断芯片组名称和驱动程序。
+确定你需要的版本可能很复杂，因为你无法从 AMD 品牌名称中判断芯片组名称和驱动程序。
 
 1. 首先通过在frigate容器中运行`/opt/rocm/bin/rocminfo`确保rocm环境正常运行 - 它应该列出CPU和GPU及其属性
-2. 从`rocminfo`的输出中找到你拥有的芯片组版本(gfxNNN)（见下文）
-3. 使用搜索引擎查询给定gfx名称所需的`HSA_OVERRIDE_GFX_VERSION`("gfxNNN ROCm HSA_OVERRIDE_GFX_VERSION")
+2. 从`rocminfo`的输出中找到你拥有的芯片组版本（格式为gfxNNN，N为数字）（见下文）
+3. 使用搜索引擎查询给定 gfx 名称所需的`HSA_OVERRIDE_GFX_VERSION`("gfxNNN ROCm HSA_OVERRIDE_GFX_VERSION")
 4. 用相关值覆盖`HSA_OVERRIDE_GFX_VERSION`
-5. 如果仍然无法工作，请检查frigate docker日志
+5. 如果仍然无法工作，请检查 frigate docker 日志
 
 #### 检查AMD/ROCm是否正常工作并找到你的GPU {#figuring-out-if-amdrocm-is-working-and-found-your-gpu}
 
@@ -596,7 +595,7 @@ model:
   labelmap_path: /labelmap/coco-80.txt
 ```
 
-注意：标签映射使用的是完整COCO标签集的子集，仅包含80个对象。
+注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
 
 #### YOLOx
 
@@ -619,7 +618,7 @@ model:
   labelmap_path: /labelmap/coco-80.txt
 ```
 
-注意：标签映射使用的是完整COCO标签集的子集，仅包含80个对象。
+注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
 
 #### RF-DETR
 
@@ -662,7 +661,7 @@ model:
   labelmap_path: /labelmap/coco-80.txt
 ```
 
-注意：标签映射使用的是完整COCO标签集的子集，仅包含80个对象。
+注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
 
 ## CPU检测器(不推荐使用)
 
@@ -936,13 +935,13 @@ model: # required
 
 ### 将自定义onnx模型转换为rknn格式 {converting-your-own-onnx-model-to-rknn-format}
 
-要使用[rknn-toolkit2](https://github.com/airockchip/rknn-toolkit2/)将onnx模型转换为rknn格式，你需要：
+要使用[rknn-toolkit2](https://github.com/airockchip/rknn-toolkit2/)将 onnx 模型转换为 rknn 格式，你需要：
 
-1. 将一个或多个onnx格式的模型放置在Docker主机的`config/model_cache/rknn_cache/onnx`目录下（可能需要`sudo`权限）
+1. 将一个或多个 onnx 格式的模型文件放置在 Docker 容器内的`config/model_cache/rknn_cache/onnx`目录下（可能需要`sudo`权限）
 2. 将配置文件保存为`config/conv2rknn.yaml`（详见下文）
-3. 运行`docker exec <frigate_container_id> python3 /opt/conv2rknn.py`。如果转换成功，rknn模型将被放置在`config/model_cache/rknn_cache`中
+3. 运行`docker exec <此处填写frigate的容器ID> python3 /opt/conv2rknn.py`。如果转换成功，rknn模型将被放置在`config/model_cache/rknn_cache`中
 
-以下是需要根据你的onnx模型进行调整的示例配置文件：
+以下是需要根据你的 onnx 模型进行调整的配置文件范例：
 
 ```yaml
 soc: ["rk3562", "rk3566", "rk3568", "rk3576", "rk3588"]
@@ -958,19 +957,19 @@ config:
 
 参数说明：
 
-- `soc`: 要为其构建rknn模型的SoC列表。如果不指定此参数，脚本会尝试检测你的SoC并为其构建rknn模型
-- `quantization`: true表示8位整数(i8)量化，false表示16位浮点(fp16)。默认值：false
-- `output_name`: 模型的输出名称。可用变量：
+- `soc`: 要为其构建 rknn 模型的 SoC 列表。如果不指定此参数，脚本会尝试检测你的 SoC 并为其构建 rknn 模型
+- `quantization`: `true`表示将进行8位整数(i8)量化，`false`表示为16位浮点(fp16)。默认值：`false`
+- `output_name`: 模型的输出名称。可以使用下面几个变量：
   - `quant`: 根据配置为"i8"或"fp16"
   - `input_basename`: 输入模型的基本名称（例如，如果输入模型名为"my_model.onnx"，则为"my_model"）
-  - `soc`: 模型构建的目标SoC（如"rk3588"）
+  - `soc`: 模型构建的目标 SoC（如"rk3588"）
   - `tk_version`: `rknn-toolkit2`的版本（如"2.3.0"）
   - **示例**: 指定`output_name = "frigate-{quant}-{input_basename}-{soc}-v{tk_version}"`可能会生成名为`frigate-i8-my_model-rk3588-v2.3.0.rknn`的模型
 - `config`: 传递给`rknn-toolkit2`进行模型转换的配置。所有可用参数的说明请参阅[本手册](https://github.com/MarcA711/rknn-toolkit2/releases/download/v2.3.2/03_Rockchip_RKNPU_API_Reference_RKNN_Toolkit2_V2.3.2_EN.pdf)的"2.2. 模型配置"部分
 
 # 模型
 
-某些模型类型默认不包含在Frigate中。
+Frigate 受限于协议等版权限制，不会自带某些模型，请自行下载相关模型并引用。
 
 ## 下载模型
 
@@ -978,7 +977,7 @@ config:
 
 ### 下载D-FINE模型
 
-您可以通过运行以下命令将D-FINE模型导出为ONNX格式。请将整段命令复制粘贴到终端执行，只需修改第一行中的`MODEL_SIZE=s`参数，将其调整为`s`、`m`或`l`尺寸。
+您可以通过运行以下命令将 D-FINE 模型导出为 ONNX 格式。请将整段命令复制粘贴到终端执行，只需修改第一行中的`MODEL_SIZE=s`参数，将其调整为`s`、`m`或`l`尺寸。
 
 ```sh
 docker build . --build-arg MODEL_SIZE=s --output . -f- <<'EOF'
@@ -1010,7 +1009,7 @@ EOF
 
 ### 下载RF-DETR模型
 
-你可以通过运行以下命令将RF-DETR导出为ONNX格式。请将整段命令复制粘贴到终端执行，并根据需要将第一行中的`MODEL_SIZE=Nano`修改为`Nano`、`Small`或`Medium`规格。
+你可以通过运行以下命令将 RF-DETR 导出为 ONNX 格式。请将整段命令复制粘贴到终端执行，并根据需要将第一行中的`MODEL_SIZE=Nano`修改为`Nano`、`Small`或`Medium`规格。
 
 ```sh
 docker build . --build-arg MODEL_SIZE=Nano --rm --output . -f- <<'EOF'
@@ -1029,24 +1028,24 @@ EOF
 
 ### 下载YOLO-NAS模型
 
-点击下方的`Open in colab`按钮即可在 Google Colab中使用此[构建脚本](https://github.com/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb)可直接构建并下载预训练兼容模型。
+点击下方的`Open in colab`按钮即可在 Google Colab 中使用此[构建脚本](https://github.com/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb)可直接构建并下载预训练兼容模型。
 [![在Colab中打开](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/blakeblackshear/frigate/blob/dev/notebooks/YOLO_NAS_Pretrained_Export.ipynb)
 
 :::warning
 
-注意，该在线构建服务由Google提供，中国大陆地区可能无法正常访问，请使用科学上网。
+注意，该在线构建服务由 Google 提供，中国大陆地区可能无法正常访问，请使用科学上网。
 
-DeciAI提供的预训练YOLO-NAS权重受其许可证约束，不可用于商业用途。更多信息请参阅：https://docs.deci.ai/super-gradients/latest/LICENSE.YOLONAS.html
+DeciAI 提供的预训练 YOLO-NAS 权重文件受其许可证约束，**不可用于商业用途**。更多信息请参阅：https://docs.deci.ai/super-gradients/latest/LICENSE.YOLONAS.html
 
 :::
 
-本笔记本中的输入图像尺寸默认设置为320x320。由于Frigate在执行检测前会将视频帧裁剪至关注区域，这种设置通常不会影响检测性能，同时还能降低CPU使用率并加快推理速度。如果需要，你可以将笔记本和配置更新为640x640的输入尺寸。
+该 notebook 中的输入图像尺寸默认设置为320x320。由于 Frigate 在执行检测前会将视频帧裁剪至关注区域，这种设置通常不会影响检测性能，同时还能降低 CPU 使用率并加快推理速度。如果需要，你可以将 notebook 和配置更新为 640x640 的输入尺寸。
 
 ### 下载YOLO模型
 
 #### YOLOx
 
-YOLOx模型可以从[YOLOx仓库](https://github.com/Megvii-BaseDetection/YOLOX/tree/main/demo/ONNXRuntime)下载。
+YOLOx 模型可以从[YOLOx仓库](https://github.com/Megvii-BaseDetection/YOLOX/tree/main/demo/ONNXRuntime)下载。
 
 #### YOLOv3、YOLOv4和YOLOv7
 
@@ -1061,45 +1060,31 @@ python3 yolo_to_onnx.py -m yolov7-320
 
 #### YOLOv9
 
-你可以使用以下命令将 YOLOv9 模型导出为 ONNX 格式。请根据需要修改第一行中的`MODEL_SIZE=t`和`IMG_SIZE=320`参数（模型大小`MODEL_SIZE`的值可替换为`t`, `s`, `m`, `c`, 以及 `e`等 [模型尺寸](https://github.com/WongKinYiu/yolov9#performance)，图像大小`IMG_SIZE`可替换为`320` 或 `640`），然后将整段命令复制粘贴到运行 Frigate 的服务器终端执行。
+你可以使用以下命令将 YOLOv9 模型导出为 ONNX 格式。请根据需要修改第一行中的`MODEL_SIZE=t`和`IMG_SIZE=320`参数（模型大小`MODEL_SIZE`的值可替换为`t`, `s`, `m`, `c`, 以及 `e`等（从小到大排序） [模型尺寸](https://github.com/WongKinYiu/yolov9#performance)，图像大小`IMG_SIZE`可替换为`320` 或 `640`），然后将整段命令复制粘贴到安装了 Docker 的 Linux 系统中 或 运行 Frigate 的服务器终端执行（注意，**不是** Frigate 的容器终端里！）。
 
 :::tip
 
 如果你当前在中国大陆，建议使用`国内加速优化命令`，将会在构建过程中使用镜像源，提高构建模型的速度。
 
+镜像构建时间大约在10-15分钟左右，请耐心等待。
+
 :::
 
 ::: code-group
-```sh [国内加速优化命令]
+```sh [国内加速优化的脚本]
 docker build . --build-arg MODEL_SIZE=t --build-arg IMG_SIZE=320 --output . -f- <<'EOF'
 FROM docker.cnb.cool/frigate-cn/mirrors/docker-image/python:3.11 AS build
 RUN rm -rf /etc/apt/sources.list
-RUN echo "deb http://mirrors.tencent.com/debian/ bookworm main contrib non-free non-free-firmware" > /etc/apt/sources.list && \
-    echo "deb-src http://mirrors.tencent.com/debian/ bookworm main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb http://mirrors.tencent.com/debian/ bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb-src http://mirrors.tencent.com/debian/ bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb http://mirrors.tencent.com/debian/ bookworm-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb-src http://mirrors.tencent.com/debian/ bookworm-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb http://mirrors.tencent.com/debian-security bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb-src http://mirrors.tencent.com/debian-security bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb http://mirrors.tencent.com/debian/ trixie main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb-src http://mirrors.tencent.com/debian/ trixie main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb http://mirrors.tencent.com/debian/ trixie-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb-src http://mirrors.tencent.com/debian/ trixie-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb http://mirrors.tencent.com/debian/ trixie-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb-src http://mirrors.tencent.com/debian/ trixie-backports main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb http://mirrors.tencent.com/debian-security trixie-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb-src http://mirrors.tencent.com/debian-security trixie-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list
-
+ADD https://cnb.cool/frigate-cn/frigate-cn/-/git/raw/main/scripts/sources.list /etc/apt/sources.list
 RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
 COPY --from=ghcr.nju.edu.cn/astral-sh/uv:0.8.0 /uv /bin/
 WORKDIR /yolov9
-ADD https://github.com/WongKinYiu/yolov9.git .
-RUN uv pip install -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple --system -r requirements.txt
-RUN uv pip install -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple --system onnx==1.18.0 onnxruntime onnx-simplifier>=0.4.1 onnxscript
+ADD https://cnb.cool/frigate-cn/mirrors/wongkinyiu/yolov9.git .
+RUN uv pip install -i https://mirrors.ustc.edu.cn/pypi/simple --system -r requirements.txt
+RUN uv pip install -i https://mirrors.ustc.edu.cn/pypi/simple --system onnx==1.18.0 onnxruntime onnx-simplifier>=0.4.1 onnxscript
 ARG MODEL_SIZE
 ARG IMG_SIZE
-ADD https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-${MODEL_SIZE}-converted.pt yolov9-${MODEL_SIZE}.pt
+ADD https://cnb.cool/frigate-cn/mirrors/wongkinyiu/yolov9/-/releases/download/v0.1/yolov9-${MODEL_SIZE}-converted.pt yolov9-${MODEL_SIZE}.pt
 RUN sed -i "s/ckpt = torch.load(attempt_download(w), map_location='cpu')/ckpt = torch.load(attempt_download(w), map_location='cpu', weights_only=False)/g" models/experimental.py
 RUN python3 export.py --weights ./yolov9-${MODEL_SIZE}.pt --imgsz ${IMG_SIZE} --simplify --include onnx
 FROM scratch
