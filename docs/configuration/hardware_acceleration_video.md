@@ -65,13 +65,13 @@ done
 
 **推荐硬件加速预设**
 
-| CPU 代数 | Intel 驱动 | 推荐预设 | 说明 |
-|---------|------------|----------|------|
-| 1-5代   | i965       | preset-vaapi | 不支持 qsv |
-| 6-7代   | iHD        | preset-vaapi | 不支持 qsv |
-| 8-12代  | iHD        | preset-vaapi | 也可使用 preset-intel-qsv-* |
-| 13代+   | iHD/Xe     | preset-intel-qsv-* | |
-| Intel Arc GPU | iHD/Xe | preset-intel-qsv-* | |
+| CPU 代数      | Intel 驱动 | 推荐预设            | 说明                         |
+| ------------- | ---------- | ------------------- | ---------------------------- |
+| 1-5 代        | i965       | preset-vaapi        | 不支持 qsv                   |
+| 6-7 代        | iHD        | preset-vaapi        | 不支持 qsv                   |
+| 8-12 代       | iHD        | preset-vaapi        | 也可使用 preset-intel-qsv-\* |
+| 13 代+        | iHD/Xe     | preset-intel-qsv-\* |                              |
+| Intel Arc GPU | iHD/Xe     | preset-intel-qsv-\* |                              |
 
 :::
 
@@ -96,12 +96,12 @@ ffmpeg:
 
 ```yaml
 ffmpeg:
-  hwaccel_args: preset-intel-qsv-h265
+  hwaccel_args: preset-intel-qsv-h265 # [!code ++]
 ```
 
 ### 通过 VAAPI {#via-vaapi}
 
-如果你的设备不支持`qsv`，或者使用`qsv`时出现问题，你可以尝试使用vaapi。
+如果你的设备不支持`qsv`，或者使用`qsv`时出现问题，你可以尝试使用 vaapi。
 
 VAAPI 支持自动配置文件选择，可自动处理 `H.264` 和 `H.265` 视频流。
 
@@ -109,7 +109,6 @@ VAAPI 支持自动配置文件选择，可自动处理 `H.264` 和 `H.265` 视�
 ffmpeg:
   hwaccel_args: preset-vaapi # [!code ++]
 ```
-
 
 ### Docker 中配置 Intel GPU 统计 {#configuring-intel-gpu-stats-in-docker}
 
@@ -175,22 +174,22 @@ docker run -d \
 
 根据您的操作系统和内核配置，您可能需要更改 `/proc/sys/kernel/perf_event_paranoid` 内核可调参数。您可以通过运行 `sudo sh -c 'echo 2 >/proc/sys/kernel/perf_event_paranoid'` 来测试更改，这将持续到重启。通过运行 `sudo sh -c 'echo kernel.perf_event_paranoid=2 >> /etc/sysctl.d/local.conf'` 使其永久生效。
 
-#### SR-IOV或其他设备的统计信息配置 {#stats-for-sr-iov-or-other-devices}
+#### SR-IOV 或其他设备的统计信息配置 {#stats-for-sr-iov-or-other-devices}
 
-当通过SR-IOV使用虚拟化GPU时，需要额外参数才能获取GPU统计信息。您可以通过指定以下配置来启用此功能：即设置用于从`intel_gpu_top`收集统计信息的设备路径。以下示例可能适用于某些使用SR-IOV的系统：
+当通过 SR-IOV 使用虚拟化 GPU 时，需要额外参数才能获取 GPU 统计信息。您可以通过指定以下配置来启用此功能：即设置用于从`intel_gpu_top`收集统计信息的设备路径。以下示例可能适用于某些使用 SR-IOV 的系统：
 
 ```yaml
 telemetry: # [!code ++]
   stats: # [!code ++]
-    intel_gpu_device: "sriov" # [!code ++]
+    intel_gpu_device: 'sriov' # [!code ++]
 ```
 
-对于其他虚拟化GPU，可以尝试直接指定设备路径：
+对于其他虚拟化 GPU，可以尝试直接指定设备路径：
 
 ```yaml
 telemetry:
   stats:
-    intel_gpu_device: "drm:/dev/dri/card0" # [!code ++]
+    intel_gpu_device: 'drm:/dev/dri/card0' # [!code ++]
 ```
 
 如果您指定了设备路径，请确保已将设备透传到容器中。
@@ -301,7 +300,7 @@ ffmpeg: # [!code highlight]
 
 # 社区支持 {#community-supported}
 
-## NVIDIA Jetson（Orin AGX、Orin NX、Orin Nano*、Xavier AGX、Xavier NX、TX2、TX1、Nano）{#nvidia-jetson-orin-agx-orin-nx-orin-nano-xavier-agx-xavier-nx-tx2-tx1-nano}
+## NVIDIA Jetson（Orin AGX、Orin NX、Orin Nano\*、Xavier AGX、Xavier NX、TX2、TX1、Nano）{#nvidia-jetson-orin-agx-orin-nx-orin-nano-xavier-agx-xavier-nx-tx2-tx1-nano}
 
 提供基于 Jetpack/L4T 的专用 Docker 镜像。它们包含使用 Jetson 专用媒体引擎的 `ffmpeg` 构建。如果您的 Jetson 主机运行 Jetpack 6.0+，请使用 `stable-tensorrt-jp6` 标签镜像。注意，Orin Nano 没有视频编码器，因此 frigate 将在此平台上使用软件编码，但该镜像仍然允许硬件解码和 tensorrt 物体/目标检测。
 
@@ -408,9 +407,9 @@ Restarting ffmpeg...
 
 建议您尝试升级至 FFmpeg 7 版本。可通过以下配置选项实现升级：
 
-``` yaml
+```yaml
 ffmpeg:
-  path: "7.0" # [!code ++]
+  path: '7.0' # [!code ++]
 ```
 
 该选项可全局设置（为所有摄像头启用 FFmpeg 7），也可针对单个摄像头单独配置。请注意不要与以下摄像头配置项混淆：

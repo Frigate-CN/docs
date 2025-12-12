@@ -23,7 +23,7 @@ Frigate 的一些功能增强可以使用独立的 GPU 进行加速处理。
   - Nvidia GPU 将在 `-tensorrt` Frigate 镜像中自动被检测和使用于功能增强。
   - Jetson 设备将在 `-tensorrt-jp6` Frigate 镜像中自动被检测和使用于功能增强。
 
-将 GPU 用于功能增强不要求您将同一个 GPU 用于物体/目标检测。例如，您可以运行 `tensorrt` Docker 镜像用于功能增强，同时仍然使用其他专用硬件例如 Coral 或者 Hailo 进行物体/目标检测。但需要注意，TensorRT（用于目标检测）与OpenVINO（用于图像增强）的混合搭配方案当前不受支持。
+将 GPU 用于功能增强不要求您将同一个 GPU 用于物体/目标检测。例如，您可以运行 `tensorrt` Docker 镜像用于功能增强，同时仍然使用其他专用硬件例如 Coral 或者 Hailo 进行物体/目标检测。但需要注意，TensorRT（用于目标检测）与 OpenVINO（用于图像增强）的混合搭配方案当前不受支持。
 
 :::note
 

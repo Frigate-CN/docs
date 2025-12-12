@@ -7,9 +7,9 @@ title: 通知功能
 
 :::warning
 
-注意，受限于Google相关服务在中国大陆地区被屏蔽，该功能可能**无法在中国大陆地区使用**。
+注意，受限于 Google 相关服务在中国大陆地区被屏蔽，该功能可能**无法在中国大陆地区使用**。
 
-如有手机通知的需求，建议使用MQTT配合Home Assistant 通知功能。
+如有手机通知的需求，建议使用 MQTT 配合 Home Assistant 通知功能。
 
 :::
 
@@ -33,13 +33,14 @@ Frigate 采用 [WebPush 协议](https://web.dev/articles/push-notifications-web-
 可通过配置文件修改默认通知冷却时间（单位：秒），该参数也可按摄像头单独设置。
 
 以下情况将阻止通知发送：
+
 - 全局冷却时间内收到过任意摄像头的通知
 - 特定摄像头的冷却时间未结束
 
 ```yaml
 notifications:
   enabled: True
-  email: "johndoe@gmail.com"
+  email: 'johndoe@gmail.com'
   cooldown: 10 # 全局冷却时间10秒
 ```
 
@@ -71,5 +72,6 @@ cameras:
 ### Android 设备
 
 多数安卓手机具有电池优化设置。为确保可靠接收通知，建议：
+
 1. 为浏览器（Chrome/Firefox）禁用电池优化
 2. 若以 PWA 形式运行 Frigate，需同时禁用 Frigate 应用的电池优化

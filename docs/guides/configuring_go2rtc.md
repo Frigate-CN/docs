@@ -4,8 +4,9 @@ title: 配置 go2rtc
 ---
 
 # 配置 go2rtc
-Frigate内置了 go2rtc 功能。
-虽然你可以让Frigate直接使用你的摄像头的FFmpeg视频流而不是通过go2rtc，但如果你需要以下功能，则必须配置 go2rtc。使用 go2rtc 有以下优点：
+
+Frigate 内置了 go2rtc 功能。
+虽然你可以让 Frigate 直接使用你的摄像头的 FFmpeg 视频流而不是通过 go2rtc，但如果你需要以下功能，则必须配置 go2rtc。使用 go2rtc 有以下优点：
 
 - WebRTC 或 MSE 实时监控，能够支持音频、更高的分辨率和帧率，比仅限于检测流且不支持音频的 jsmpeg 流效果更好
 - Home Assistant 集成中摄像头的实时流支持
@@ -56,7 +57,7 @@ go2rtc:
       streams:
         back:
           - rtsp://user:password@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
-          - "ffmpeg:back#video=h264#hardware"
+          - 'ffmpeg:back#video=h264#hardware'
     ```
 
 - 如果需要，切换到 FFmpeg：
@@ -79,7 +80,7 @@ go2rtc:
       streams:
         back:
           - rtsp://user:password@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
-          - "ffmpeg:back#audio=aac"
+          - 'ffmpeg:back#audio=aac'
     ```
 
     如果你需要同时转换音频和视频流，可以使用以下配置：
@@ -89,7 +90,7 @@ go2rtc:
       streams:
         back:
           - rtsp://user:password@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
-          - "ffmpeg:back#video=h264#audio=aac#hardware"
+          - 'ffmpeg:back#video=h264#audio=aac#hardware'
     ```
 
     当使用 ffmpeg 模块时，你可以这样添加 AAC 音频：
@@ -98,7 +99,7 @@ go2rtc:
     go2rtc:
       streams:
         back:
-          - "ffmpeg:rtsp://user:password@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2#video=copy#audio=copy#audio=aac#hardware"
+          - 'ffmpeg:rtsp://user:password@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2#video=copy#audio=copy#audio=aac#hardware'
     ```
 
 :::warning
@@ -111,7 +112,7 @@ go2rtc:
 ## 后续步骤
 
 1. 如果你添加到 go2rtc 的流也被 Frigate 用于 `record` 或 `detect` 角色，你可以将配置迁移到从 RTSP 转流中获取，以减少与摄像头的连接数，如[这里](../configuration/restream#with-single-stream)所示。
-2. 如果你的摄像头支持双向通话，还可以[设置 WebRTC](../configuration/live#webrtc-extra-configuration)，使Frigate可以使用双向通话。注意，WebRTC **仅支持** 特定的音频格式，以及可能需要在路由器上开放相关端口。
+2. 如果你的摄像头支持双向通话，还可以[设置 WebRTC](../configuration/live#webrtc-extra-configuration)，使 Frigate 可以使用双向通话。注意，WebRTC **仅支持** 特定的音频格式，以及可能需要在路由器上开放相关端口。
 
 ## 重要注意事项
 
