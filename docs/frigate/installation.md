@@ -315,7 +315,7 @@ RKNPU driver: v0.9.2 # 或更高版本
 
 如果你的开发板受支持，我推荐使用[Armbian](https://www.armbian.com/download/?arch=aarch64)。
 
-#### 设置 {#setup-1}
+#### 设置 {#setup-5}
 
 按照 Frigate 的默认安装说明进行操作，但使用带有`-rk`后缀的 docker 镜像，例如`docker.cnb.cool/frigate-cn/frigate:stable-rk`。
 
@@ -349,7 +349,7 @@ volumes:
 --volume /sys/:/sys/:ro
 ```
 
-#### 配置 {#configuration-1}
+#### 配置 {#configuration-5}
 
 接下来，你应该配置[硬件物体/目标检测](/configuration/object_detectors#rockchip平台)和[硬件视频处理](/configuration/hardware_acceleration_video#rockchip平台)。
 
