@@ -5,11 +5,11 @@ title: 功能增强
 
 # 功能增强
 
-Frigate 的一些功能增强可以使用独立的 GPU 进行加速处理。
+Frigate 的一些功能增强可以使用**独立显卡**或**核显**进行加速。
 
 ## 要求
 
-物体/目标检测和功能增强（如语义搜索、人脸识别和车牌识别）是独立的功能。要使用 GPU 进行物体/目标检测，请参阅[物体/目标检测器](/configuration/object_detectors.md)文档。如果您想将 GPU 用于任何支持的功能增强，您必须为您的 GPU 选择适当的 Frigate Docker 镜像，并根据其具体文档配置功能增强。
+物体/目标检测和功能增强（如语义搜索、人脸识别和车牌识别）是独立的功能。要使用 GPU 或 NPU 进行物体/目标检测，请参阅[物体/目标检测器](/configuration/object_detectors.md)文档。如果你想将 GPU 用于任何支持的功能增强，你必须为你的 GPU 或 NPU 选择适当的 Frigate Docker 镜像，并根据其具体文档配置功能增强。
 
 - **AMD**
 
@@ -18,12 +18,17 @@ Frigate 的一些功能增强可以使用独立的 GPU 进行加速处理。
 - **Intel**
 
   - OpenVINO 将在默认 Frigate 镜像中自动被检测和使用于功能增强。
+  - 注意：​ Intel NPU 对增强功能的模型支持有限。如有条件，建议使用 GPU 来加速增强功能的处理。
 
 - **Nvidia**
+
   - Nvidia GPU 将在 `-tensorrt` Frigate 镜像中自动被检测和使用于功能增强。
   - Jetson 设备将在 `-tensorrt-jp6` Frigate 镜像中自动被检测和使用于功能增强。
 
-将 GPU 用于功能增强不要求您将同一个 GPU 用于物体/目标检测。例如，您可以运行 `tensorrt` Docker 镜像用于功能增强，同时仍然使用其他专用硬件例如 Coral 或者 Hailo 进行物体/目标检测。但需要注意，TensorRT（用于目标检测）与 OpenVINO（用于图像增强）的混合搭配方案当前不受支持。
+- **RockChip**
+  - 在 Frigate 的`-rk`镜像版本中，RockChip NPU 将被自动检测并用于**语义搜索 v1**和**人脸识别**功能。
+
+将 GPU 用于功能增强不要求你将同一个 GPU 用于物体/目标检测。例如，你可以运行 `tensorrt` Docker 镜像用于功能增强，同时仍然使用其他专用硬件例如 Coral 或者 Hailo 进行物体/目标检测。但需要注意，TensorRT（用于目标检测）与 OpenVINO（用于图像增强）的混合搭配方案当前不受支持。
 
 :::note
 

@@ -6,7 +6,7 @@ sidebar_label: 高级选项
 
 ### 日志配置
 
-#### Frigate日志设置
+#### Frigate 日志设置
 
 可调整日志级别用于故障排查。
 
@@ -22,16 +22,17 @@ logger:
 可用日志级别：`debug`, `info`, `warning`, `error`, `critical`
 
 可配置模块示例：
+
 - `frigate.app`
-- `frigate.mqtt` 
-- `frigate.object_detection`
+- `frigate.mqtt`
+- `frigate.object_detection.base`
 - `detector.<检测器名称>`
 - `watchdog.<摄像头名称>`
-- `ffmpeg.<摄像头名称>.<功能>` 注意：所有FFmpeg日志均以`error`级别记录
+- `ffmpeg.<摄像头名称>.<功能>` 注意：所有 FFmpeg 日志均以`error`级别记录
 
-#### Go2RTC日志设置
+#### Go2RTC 日志设置
 
-参考[go2rtc文档](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#module-log)配置日志
+参考[go2rtc 文档](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#module-log)配置日志
 
 ```yaml
 go2rtc:
@@ -43,19 +44,31 @@ go2rtc:
 
 ### 环境变量
 
-此配置项适用于无法直接修改容器环境的情况（如Home Assistant OS）。
+此配置项适用于无法直接修改容器环境的情况（如 Home Assistant OS）。
 
 示例：
+
 ```yaml
 environment_vars:
   变量名: 变量值
 ```
 
+### TensorFlow 线程配置
+
+如果在分类模型训练过程中遇到线程创建错误，可以限制 TensorFlow 的线程使用量：
+
+```yaml
+environment_vars:
+  TF_INTRA_OP_PARALLELISM_THREADS: '2' # 单个运算内部的线程数（0 = 使用默认值）
+  TF_INTER_OP_PARALLELISM_THREADS: '2' # 不同运算之间的线程数（0 = 使用默认值）
+  TF_DATASET_THREAD_POOL_SIZE: '2' # 数据管道线程池大小（0 = 使用默认值）
+```
+
 ### 数据库配置
 
-追踪的物体/目标信息和录像信息存储在`/config/frigate.db`的SQLite数据库中。若删除该数据库，录像文件将变为孤立文件需手动清理，且不会显示在Home Assistant的媒体浏览器中。
+追踪的物体/目标信息和录像信息存储在`/config/frigate.db`的 SQLite 数据库中。若删除该数据库，录像文件将变为孤立文件需手动清理，且不会显示在 Home Assistant 的媒体浏览器中。
 
-若使用网络存储（SMB/NFS等），启动时可能出现`database is locked`错误。可自定义数据库路径：
+若使用网络存储（SMB/NFS 等），启动时可能出现`database is locked`错误。可自定义数据库路径：
 
 ```yaml
 database:
@@ -66,27 +79,27 @@ database:
 
 使用自定义模型时需指定宽高尺寸。
 
-自定义模型可能需要不同的输入张量格式。支持RGB、BGR或YUV色彩空间转换。输入张量形状参数需与模型要求匹配。
+自定义模型可能需要不同的输入张量格式。支持 RGB、BGR 或 YUV 色彩空间转换。输入张量形状参数需与模型要求匹配。
 
-| 张量维度 | 描述         |
-|---------|-------------|
-| N       | 批量大小     |
-| H       | 模型高度     |
-| W       | 模型宽度     |
-| C       | 色彩通道数   |
+| 张量维度 | 描述       |
+| -------- | ---------- |
+| N        | 批量大小   |
+| H        | 模型高度   |
+| W        | 模型宽度   |
+| C        | 色彩通道数 |
 
 | 可用输入张量形状 |
-|----------------|
-| "nhwc"         |
-| "nchw"         |
+| ---------------- |
+| "nhwc"           |
+| "nchw"           |
 
 ```yaml
 model:
   path: /模型路径
   width: 320
-  height: 320  
-  input_tensor: "nhwc"
-  input_pixel_format: "bgr"
+  height: 320
+  input_tensor: 'nhwc'
+  input_pixel_format: 'bgr'
 ```
 
 #### 标签映射
@@ -95,7 +108,7 @@ model:
 自定义标签映射后需同步调整[警报标签](/configuration/review.md#限制警报的标签类型)配置
 :::
 
-可自定义标签映射，常见场景是合并易混淆的物体类型（如car/truck）。默认已将truck重命名为car。
+可自定义标签映射，常见场景是合并易混淆的物体类型（如 car/truck）。默认已将 truck 重命名为 car。
 
 ```yaml
 model:
@@ -104,20 +117,21 @@ model:
     3: vehicle
     5: vehicle
     7: vehicle
-    15: animal  
+    15: animal
     16: animal
     17: animal
 ```
 
 :::warning
 部分标签有特殊处理逻辑：
+
 - `person`关联`face`和`amazon`
 - `car`关联`license_plate`, `ups`, `fedex`, `amazon`
-:::
+  :::
 
 ## 网络配置
 
-可通过绑定挂载nginx.conf文件修改内部网络配置：
+可通过绑定挂载 nginx.conf 文件修改内部网络配置：
 
 ```yaml
 services:
@@ -126,17 +140,19 @@ services:
       - /自定义路径/nginx.conf:/usr/local/nginx/conf/nginx.conf
 ```
 
-### 启用IPv6
+### 启用 IPv6
 
-默认禁用IPv6，需修改listen.gotmpl文件：
+默认禁用 IPv6，需修改 listen.gotmpl 文件：
 
 原始配置：
+
 ```
 listen 8971;
 ```
 
 修改为：
-``` 
+
+```
 listen [::]:8971 ipv6only=off;
 ```
 
@@ -144,11 +160,12 @@ listen [::]:8971 ipv6only=off;
 
 默认运行在根路径(`/`)，反向代理场景可能需要自定义路径前缀(如`/frigate`)。
 
-### 通过HTTP头设置
+### 通过 HTTP 头设置
 
 推荐方式是在反向代理中设置`X-Ingress-Path`头：
 
-Nginx示例：
+Nginx 示例：
+
 ```
 location /frigate {
     proxy_set_header X-Ingress-Path /frigate;
@@ -167,38 +184,45 @@ services:
 
 ## 自定义依赖
 
-### 自定义FFmpeg
+### 自定义 FFmpeg
 
 将静态编译的`ffmpeg`和`ffprobe`放入`/config/custom-ffmpeg/bin`：
 
-1. 下载FFmpeg并解压到`/config/custom-ffmpeg`
+1. 下载 FFmpeg 并解压到`/config/custom-ffmpeg`
 2. 更新配置：
+
 ```yaml
 ffmpeg:
   path: /config/custom-ffmpeg
 ```
-3. 重启Frigate
 
-### 自定义go2rtc版本
+3. 重启 Frigate
 
-1. 下载go2rtc到`/config`目录
+### 自定义 go2rtc 版本
+
+Frigate 目前内置的 go2rtc 版本为 `v1.9.10`，在某些特定情况下，你可能希望运行不同版本的 go2rtc。
+
+操作步骤如下：
+
+1. 下载 go2rtc 到`/config`目录
 2. 重命名为`go2rtc`
 3. 添加执行权限
-4. 重启Frigate
+4. 重启 Frigate
 
 ## 配置文件验证
 
 更新配置时可通过以下方式验证：
 
-### 通过API验证
+### 通过 API 验证
 
 ```bash
 curl -X POST http://frigate_host:5000/api/config/save -d @config.json
 ```
 
-或使用yq转换yaml：
+或使用 yq 转换 yaml：
+
 ```bash
-yq r -j config.yml | curl -X POST http://frigate_host:5000/api/config/save -d @-
+yq -o=json '.' config.yaml | curl -X POST 'http://frigate_host:5000/api/config/save?save_option=saveonly' --data-binary @-
 ```
 
 ### 命令行验证

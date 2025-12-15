@@ -229,6 +229,77 @@ devices:
 
 最后，配置[硬件物体/目标检测](/configuration/object_detectors#hailo-8)以完成设置。
 
+### MemryX MX3
+
+The MemryX MX3 Accelerator is available in the M.2 2280 form factor (like an NVMe SSD), and supports a variety of configurations:
+
+- x86 (Intel/AMD) PCs
+- Raspberry Pi 5
+- Orange Pi 5 Plus/Max
+- Multi-M.2 PCIe carrier cards
+
+#### Configuration
+
+#### Installation
+
+To get started with MX3 hardware setup for your system, refer to the [Hardware Setup Guide](https://developer.memryx.com/get_started/hardware_setup.html).
+
+Then follow these steps for installing the correct driver/runtime configuration:
+
+1. Copy or download [this script](https://github.com/blakeblackshear/frigate/blob/dev/docker/memryx/user_installation.sh).
+2. Ensure it has execution permissions with `sudo chmod +x user_installation.sh`
+3. Run the script with `./user_installation.sh`
+4. **Restart your computer** to complete driver installation.
+
+#### Setup
+
+To set up Frigate, follow the default installation instructions, for example: `ghcr.io/blakeblackshear/frigate:stable`
+
+Next, grant Docker permissions to access your hardware by adding the following lines to your `docker-compose.yml` file:
+
+```yaml
+devices:
+  - /dev/memx0
+```
+
+During configuration, you must run Docker in privileged mode and ensure the container can access the max-manager.
+
+In your `docker-compose.yml`, also add:
+
+```yaml
+privileged: true
+
+volumes:
+  - /run/mxa_manager:/run/mxa_manager
+```
+
+If you can't use Docker Compose, you can run the container with something similar to this:
+
+```bash
+  docker run -d \
+    --name frigate-memx \
+    --restart=unless-stopped \
+    --mount type=tmpfs,target=/tmp/cache,tmpfs-size=1000000000 \
+    --shm-size=256m \
+    -v /path/to/your/storage:/media/frigate \
+    -v /path/to/your/config:/config \
+    -v /etc/localtime:/etc/localtime:ro \
+    -v /run/mxa_manager:/run/mxa_manager \
+    -e FRIGATE_RTSP_PASSWORD='password' \
+    --privileged=true \
+    -p 8971:8971 \
+    -p 8554:8554 \
+    -p 5000:5000 \
+    -p 8555:8555/tcp \
+    -p 8555:8555/udp \
+    --device /dev/memx0 \
+    ghcr.io/blakeblackshear/frigate:stable
+```
+
+#### Configuration
+
+Finally, configure [hardware object detection](/configuration/object_detectors#memryx-mx3) to complete the setup.
+
 ### Rockchip 平台 {#rockchip-platform}
 
 确保使用带有 Rockchip BSP 内核 5.10 或 6.1 以及必要驱动程序（特别是 rkvdec2 和 rknpu）的 Linux 发行版。要检查是否满足要求，请输入以下命令：
@@ -282,6 +353,37 @@ volumes:
 
 接下来，你应该配置[硬件物体/目标检测](/configuration/object_detectors#rockchip平台)和[硬件视频处理](/configuration/hardware_acceleration_video#rockchip平台)。
 
+### Synaptics
+
+- SL1680
+
+#### Setup
+
+Follow Frigate's default installation instructions, but use a docker image with `-synaptics` suffix for example `ghcr.io/blakeblackshear/frigate:stable-synaptics`.
+
+Next, you need to grant docker permissions to access your hardware:
+
+- During the configuration process, you should run docker in privileged mode to avoid any errors due to insufficient permissions. To do so, add `privileged: true` to your `docker-compose.yml` file or the `--privileged` flag to your docker run command.
+
+```yaml
+devices:
+  - /dev/synap
+  - /dev/video0
+  - /dev/video1
+```
+
+or add these options to your `docker run` command:
+
+```
+--device /dev/synap \
+--device /dev/video0 \
+--device /dev/video1
+```
+
+#### Configuration
+
+Next, you should configure [hardware object detection](/configuration/object_detectors#synaptics) and [hardware video processing](/configuration/hardware_acceleration_video#synaptics).
+
 ## Docker
 
 推荐使用 Docker Compose 进行安装。
@@ -308,12 +410,13 @@ services:
       - /dev/bus/usb:/dev/bus/usb # 用于USB Coral，其他版本需要修改
       - /dev/apex_0:/dev/apex_0 # 用于PCIe Coral，请按照此处的驱动说明操作 https://github.com/jnicolson/gasket-builder
       - /dev/video11:/dev/video11 # 用于树莓派4B
-      - /dev/dri/renderD128:/dev/dri/renderD128 # 用于Intel硬件加速，需要根据你的硬件更新
+      - /dev/dri/renderD128:/dev/dri/renderD128 # 用于AMD/Intel GPU硬件加速，需要根据你的硬件更新
+      - /dev/accel:/dev/accel # Intel NPU
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
       - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
-      - type: tmpfs # 可选：将使用1GB内存作为缓存文件，减少SSD/SD卡损耗
+      - type: tmpfs # 必选：将使用1GB内存作为缓存文件
         target: /tmp/cache
         tmpfs:
           size: 1000000000
@@ -437,6 +540,8 @@ Home Assistant OS 用户可以通过插件仓库进行安装。
 
 - 与宿主机实现强隔离
 - 支持实时迁移等高级功能（这些功能在直接使用容器时无法实现）
+
+Ensure that ballooning is **disabled**, especially if you are passing through a GPU to the VM.
 
 :::warning
 

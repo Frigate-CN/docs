@@ -423,3 +423,29 @@ cameras:
 ```
 
 :::
+
+## Synaptics
+
+Synaptics SL 系列 SoC 支持硬件加速的视频编解码。
+
+### 前提条件
+
+请确保按照 [Synaptics 安装说明](../frigate/installation.md#synaptics)进行操作。
+
+### 配置
+
+在你的 `config.yml` 中添加以下任意一个 FFmpeg 预设，以启用硬件视频处理：
+
+```yaml
+ffmpeg:
+  hwaccel_args: -c:v h264_v4l2m2m
+  input_args: preset-rtsp-restream
+output_args:
+  record: preset-record-generic-audio-aac
+```
+
+:::warning
+
+请确保你的 SoC 支持对输入流进行硬件加速，并且输入流为 **h264 编码**。例如，如果你的摄像头以 h264 编码推流，那么你的 SoC 必须能够对其进行解码和编码。如果不确定你的 SoC 是否满足要求，请查阅其数据手册。
+
+:::

@@ -182,6 +182,10 @@ services:
 
 要使用 Reolink 门铃的双向通话，应使用[推荐的 Reolink 配置](/configuration/camera_specific#reolink-cameras)
 
+请查看 [go2rtc 代码库](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#two-way-audio) 中支持双向通话的摄像头列表，来确定你摄像头兼容性。对于属于 `ONVIF Profile T` 类别的摄像头，你可以使用 [ONVIF 合规产品数据库](https://www.onvif.org/conformant-products/) 的功能列表来检查是否存在 `AudioOutput`（音频输出）功能。支持 `ONVIF Profile T` 的摄像头**通常**也支持该功能，但由于支持情况不一致，即使明确列出此功能的摄像头也可能无法正常工作。如果数据库中没有你的摄像头，建议不要购买该摄像头，或咨询制造商的客服以了解该功能是否可用。
+
+为防止 go2rtc 阻止其他应用程序访问你摄像头的双向音频，你必须将流配置为 `#backchannel=0`。请参阅重流文档中的 [防止 go2rtc 阻止双向音频](../configuration/restream.md#two-way-talk-restream)。
+
 ### 摄像头组仪表板上的视频流选项
 
 Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几个用于摄像头组仪表板上视频流的选项。这些设置是*每设备*的，并保存在你设备的本地存储中。
@@ -211,6 +215,42 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
 
 注意，通过配置文件禁用的摄像头(`enabled: False`)会移除页面上该摄像头所有相关内容，包括历史录像访问。要保留访问权限同时禁用摄像头，请在配置中保持启用状态，并在页面上或使用 MQTT 临时禁用它。
 
+### Live player error messages
+
+When your browser runs into problems playing back your camera streams, it will log short error messages to the browser console. They indicate playback, codec, or network issues on the client/browser side, not something server side with Frigate itself. Below are the common messages you may see and simple actions you can take to try to resolve them.
+
+- **startup**
+
+  - What it means: The player failed to initialize or connect to the live stream (network or startup error).
+  - What to try: Reload the Live view or click _Reset_. Verify `go2rtc` is running and the camera stream is reachable. Try switching to a different stream from the Live UI dropdown (if available) or use a different browser.
+
+  - Possible console messages from the player code:
+
+    - `Error opening MediaSource.`
+    - `Browser reported a network error.`
+    - `Max error count ${errorCount} exceeded.` (the numeric value will vary)
+
+- **mse-decode**
+
+  - What it means: The browser reported a decoding error while trying to play the stream, which usually is a result of a codec incompatibility or corrupted frames.
+  - What to try: Check the browser console for the supported and negotiated codecs. Ensure your camera/restream is using H.264 video and AAC audio (these are the most compatible). If your camera uses a non-standard audio codec, configure `go2rtc` to transcode the stream to AAC. Try another browser (some browsers have stricter MSE/codec support) and, for iPhone, ensure you're on iOS 17.1 or newer.
+
+  - Possible console messages from the player code:
+
+    - `Safari cannot open MediaSource.`
+    - `Safari reported InvalidStateError.`
+    - `Safari reported decoding errors.`
+
+- **stalled**
+
+  - What it means: Playback has stalled because the player has fallen too far behind live (extended buffering or no data arriving).
+  - What to try: This is usually indicative of the browser struggling to decode too many high-resolution streams at once. Try selecting a lower-bandwidth stream (substream), reduce the number of live streams open, improve the network connection, or lower the camera resolution. Also check your camera's keyframe (I-frame) interval — shorter intervals make playback start and recover faster. You can also try increasing the timeout value in the UI pane of Frigate's settings.
+
+  - Possible console messages from the player code:
+
+    - `Buffer time (10 seconds) exceeded, browser may not be playing media correctly.`
+    - `Media playback has stalled after <n> seconds due to insufficient buffering or a network interruption.` (the seconds value will vary)
+
 ## 实时监控页面常见问题
 
 1. **为什么我的实时监控页面中没有声音？**
@@ -225,9 +265,27 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
 
    配置 go2rtc 后，实时监控页面最初尝试使用更清晰、流畅的视频流技术 (MSE) 加载和播放流。而 加载超时、达到流缓冲的低带宽条件 或 视频流解码错误 将导致 Frigate 切换到分配`detect`功能的视频流，并使用 jsmpeg 格式进行传输。这就是页面标记为“低带宽模式”的原因。在实时仪表板上，当配置智能视频流且活动停止时，模式会自动重置。详情页面没有自动重置机制，但可以使用右上角设置中的**重置**选项强制重新加载流。
 
-   如果使用连续视频流或在仪表板上同时加载多个高分辨率流，浏览器可能在超时前难以开始正常播放。Frigate 始终优先尽可能快地显示实时流，即使是较低质量的 jsmpeg 流。可以使用"重置"链接/按钮尝试再次加载高分辨率流。
+   Errors in stream playback (e.g., connection failures, codec issues, or buffering timeouts) that cause the fallback to low bandwidth mode (jsmpeg) are logged to the browser console for easier debugging. These errors may include:
 
-   如果 Frigate 仍然回退到低带宽模式，可能需要根据[上述建议](#摄像头设置建议)调整摄像头设置。
+   - Network issues (e.g., MSE or WebRTC network connection problems).
+   - Unsupported codecs or stream formats (e.g., H.265 in WebRTC, which is not supported in some browsers).
+   - Buffering timeouts or low bandwidth conditions causing fallback to jsmpeg.
+   - Browser compatibility problems (e.g., iOS Safari limitations with MSE).
+
+   To view browser console logs:
+
+   1. Open the Frigate Live View in your browser.
+   2. Open the browser's Developer Tools (F12 or right-click > Inspect > Console tab).
+   3. Reproduce the error (e.g., load a problematic stream or simulate network issues).
+   4. Look for messages prefixed with the camera name.
+
+   These logs help identify if the issue is player-specific (MSE vs. WebRTC) or related to camera configuration (e.g., go2rtc streams, codecs). If you see frequent errors:
+
+   - Verify your camera's H.264/AAC settings (see [Frigate's camera settings recommendations](#camera_settings_recommendations)).
+   - Check go2rtc configuration for transcoding (e.g., audio to AAC/OPUS).
+   - Test with a different stream via the UI dropdown (if `live -> streams` is configured).
+   - For WebRTC-specific issues, ensure port 8555 is forwarded and candidates are set (see (WebRTC Extra Configuration)(#webrtc-extra-configuration)).
+   - If your cameras are streaming at a high resolution, your browser may be struggling to load all of the streams before the buffering timeout occurs. Frigate prioritizes showing a true live view as quickly as possible. If the fallback occurs often, change your live view settings to use a lower bandwidth substream.
 
 3. **我的摄像头似乎没有在实时仪表板上实时播放。为什么？**
 
@@ -254,3 +312,38 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
 7. **我的摄像头画面出现大量花屏以及失真 ​​**
 
 部分摄像头硬件不支持高分辨率视频流的多路连接，可能导致这种画面问题。这种情况建议使用`go2rtc`对高分辨率视频流做[转流](restream.md)处理，专门用于实时监控画面和录像存储。
+
+8. **Why does my camera stream switch aspect ratios on the Live dashboard?**
+
+   Your camera may change aspect ratios on the dashboard because Frigate uses different streams for different purposes. With go2rtc and Smart Streaming, Frigate shows a static image from the `detect` stream when no activity is present, and switches to the live stream when motion is detected. The camera image will change size if your streams use different aspect ratios.
+
+   To prevent this, make the `detect` stream match the go2rtc live stream's aspect ratio (resolution does not need to match, just the aspect ratio). You can either adjust the camera's output resolution or set the `width` and `height` values in your config's `detect` section to a resolution with an aspect ratio that matches.
+
+   Example: Resolutions from two streams
+
+   - Mismatched (may cause aspect ratio switching on the dashboard):
+
+     - Live/go2rtc stream: 1920x1080 (16:9)
+     - Detect stream: 640x352 (~1.82:1, not 16:9)
+
+   - Matched (prevents switching):
+     - Live/go2rtc stream: 1920x1080 (16:9)
+     - Detect stream: 640x360 (16:9)
+
+   You can update the detect settings in your camera config to match the aspect ratio of your go2rtc live stream. For example:
+
+   ```yaml
+   cameras:
+     front_door:
+       detect:
+         width: 640
+         height: 360 # set this to 360 instead of 352
+       ffmpeg:
+         inputs:
+           - path: rtsp://127.0.0.1:8554/front_door # main stream 1920x1080
+             roles:
+               - record
+           - path: rtsp://127.0.0.1:8554/front_door_sub # sub stream 640x352
+             roles:
+               - detect
+   ```

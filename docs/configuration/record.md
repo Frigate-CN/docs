@@ -17,34 +17,34 @@ H265 编码的录制只能在 Chrome 108+、Edge 和 Safari 浏览器中能够�
 
 ### 最保守方案：保存所有视频 {#most-conservative-ensure-all-video-is-saved}
 
-对于需要在没有检测到画面变动时也保存连续视频的环境，以下配置将保存 3 天内的所有视频。3 天后，只有**画面变动**且属于 [**核查**](/configuration/review) 中`警报`或`检测`的视频会保留 30 天。
+对于需要在没有检测到画面变动时也保存连续视频的环境，以下配置将保存 3 天内的所有视频。3 天后，只有**画面变动**的视频会保留 30 天，7 天后，只有包含画面变动且属于 [**核查**](../configuration/review.md) 中`警报`或`检测`的视频会保留 30 天。
 
 ```yaml
 record:
   enabled: True # 只有设置了enabled为True时录制功能才会生效 # [!code highlight]
-  retain: # 所有原始录制保留
-    days: 3 # [!code highlight]
-    mode: all # 将在3天期间保存所有的录制视频，包括没有画面变动或没有检测到物体/目标的视频 [!code highlight]
+  continuous:
+    days: 3
+  motion: # 所有原始录制保留
+    days: 7 # [!code highlight]
   alerts: # 核查警报类型录制
     retain:
       days: 30 # [!code highlight]
-      mode: motion # 将在最上面的3天后，仅保存画面有变动且属于核查中"警报"的视频30天 [!code highlight]
+      mode: all # 将在最上面的3天后，仅保存画面有变动且属于核查中"警报"的视频30天 [!code highlight]
   detections: # 核查检测类型录制
     retain:
       days: 30 # [!code highlight]
-      mode: motion # 将在最上面的3天后，仅保存画面有变动且属于核查中"检测"的视频30天 [!code highlight]
+      mode: all # 将在最上面的3天后，仅保存画面有变动且属于核查中"检测"的视频30天 [!code highlight]
 ```
 
 ### 减少存储：仅保存检测到画面变动的视频 {#reduced-storage-only-saving-video-when-motion-is-detected}
 
-为了减少存储需求，可以调整配置**只保留检测到画面变动**的视频。
+为了减少存储需求，可以调整配置**只保留检测到画面变动**和活动的视频。
 
 ```yaml
 record:
   enabled: True
-  retain:
+  motion:
     days: 3 # [!code highlight]
-    mode: motion # 只会保存画面变动的视频 [!code highlight]
   alerts:
     retain:
       days: 30 # [!code highlight]
@@ -57,12 +57,12 @@ record:
 
 ### 最小方案：仅保存警报视频 {#minimum-alerts-only}
 
-如果只想保留检测追踪到`物体/目标`期间的视频，可以参考以下配置。不属于[核查](../configuration/review.md)中**警报**的视频将不会保留。
+如果只想保留检测追踪到的目标活动期间的视频，可以参考以下配置。不属于[核查](../configuration/review.md)中**警报**的视频将不会保留。
 
 ```yaml
 record:
   enabled: True
-  retain:
+  continuous:
     days: 0 # 设置为0后默认就不会录制所有没有指定类型的监控视频 [!code highlight]
   alerts: # 这里指定只有警报的视频会录制，会无视上面的设定
     retain:
@@ -84,15 +84,17 @@ Frigate 支持连续录制和基于追踪`物体/目标`的录制，具有独立
 
 :::
 
-### 连续录制 {#continuous-recording}
+### 连续录制 {#continuous-and-motion-recording}
 
 可以通过以下配置设置保留连续录制的天数（X 为数字），默认情况下连续录制被禁用。
 
 ```yaml
 record:
   enabled: True
-  retain:
+  continuous:
     days: 1 # <- 保留连续录制的天数 [!code highlight]
+  motion:
+    days: 2 # <- 保留画面变动记录的天数 [!code highlight]
 ```
 
 连续录制支持不同的保留模式，[详见下文](#what-do-the-different-retain-modes-mean)
@@ -115,38 +117,6 @@ record:
 此配置将保留与警报和检测重叠的录制片段 10 天。由于多个追踪 物体/目标 可能引用相同的录制片段，这样可以避免存储重复内容并减少总体存储需求。
 
 **警告**：必须在配置中启用录制功能。如果摄像头在配置中禁用了录制，通过上述方法启用将不会生效。
-
-## 不同保留模式的含义 {#what-do-the-different-retain-modes-mean}
-
-Frigate 以 10 秒为片段保存配置了`record`功能的视频流。这些选项决定了哪些录制片段会被保留（也会影响追踪物体/目标）。
-
-假设您配置门铃摄像头保留最近 2 天的连续录制：
-
-- 使用`all`选项会保留这 2 天内的全部 48 小时录制（不管画面有没有变动）
-- 使用`motion`选项只会保留 Frigate 检测到画面变动的部分监控片段。这是相对折中的方案。该方案不会保留全部 48 小时的视频，但可能会保留画面变动并且会额外保存一段时间的片段。
-- 使用`active_objects`选项只会保留正在活动的`物体/目标`（非静止）的片段
-
-警报（`alerts`）和检测（`detections`）也有相同的选项，但只会保存与之相对应的录制。
-
-以下配置示例将保留 7 天所有画面变动片段，保存 14 天活动的`物体/目标`片段：
-
-```yaml
-record:
-  enabled: True
-  retain:
-    days: 7
-    mode: motion
-  alerts:
-    retain:
-      days: 14
-      mode: active_objects
-  detections:
-    retain:
-      days: 14
-      mode: active_objects
-```
-
-上述配置可以全局应用或针对单个摄像头设置。
 
 ## 可以只在特定时间进行"连续"录制吗？
 

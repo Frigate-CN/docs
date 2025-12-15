@@ -73,6 +73,12 @@ tls:
   # 可选：为8971端口启用TLS（默认值：如下所示）
   enabled: True
 
+# 可选: IPv6 选项
+networking:
+  # 可选: 如果在配置tls的情况下，在 5000、8971 端口上开启 IPv6（默认值：如下所示）
+  ipv6:
+    enabled: False
+
 # 可选：代理配置
 proxy:
   # 可选：上游代理的请求头映射。仅在Frigate的身份验证被禁用时使用。
@@ -81,7 +87,13 @@ proxy:
   #      更多信息请参见文档。
   header_map:
     user: x-forwarded-user
-    role: x-forwarded-role
+    role: x-forwarded-groups
+    role_map:
+      admin:
+        - sysadmins
+        - access-level-security
+      viewer:
+        - camera-viewer
   # 可选：用户登出的URL。这设置了UI中登出URL的位置。
   logout_url: /api/logout
   # 可选：用于检查代理发送的X-Proxy-Secret请求头的认证密钥。
@@ -90,7 +102,7 @@ proxy:
   # 可选：设置代理的默认权限组。必须为 "admin" 或者 "viewer"
   default_role: viewer
   # 可选：用于分隔代理头信息中多个值的字符（默认值：如下所示）
-  separator: ","
+  separator: ','
 
 # 可选：身份验证配置
 auth:
@@ -109,7 +121,7 @@ auth:
   # 可选：刷新时间（秒）（默认值：如下所示）
   # 当会话将在小于此设置的时间内过期时，
   # 它将被刷新回session_length的时长。
-  refresh_time: 43200 # 12小时
+  refresh_time: 1800 # 30 分钟
   # 可选：登录失败的速率限制，用于防止暴力破解
   # 登录攻击（默认值：如下所示）
   # 有关有效值的更多信息，请参见文档
@@ -174,11 +186,11 @@ audio:
   min_volume: 500
   # 可选：要监听的音频类型（默认值：如下所示）
   listen:
-    - bark      # 狗叫
+    - bark # 狗叫
     - fire_alarm # 火警
-    - scream    # 尖叫
-    - speech    # 说话
-    - yell      # 喊叫
+    - scream # 尖叫
+    - speech # 说话
+    - yell # 喊叫
   # 可选：配置检测过滤器
   filters:
     # 与listen配置中标签匹配的标签
@@ -226,19 +238,20 @@ birdseye:
     scaling_factor: 2.0
     # 可选：一次最多显示的摄像头数量，显示最近的摄像头（默认值：显示所有摄像头）
     max_cameras: 1
-
+  # Optional: Frames-per-second to re-send the last composed Birdseye frame when idle (no motion or active updates). (default: shown below)
+  idle_heartbeat_fps: 0.0
 # 可选：ffmpeg配置
 # 关于预设的更多信息请访问 https://docs.frigate.video/configuration/ffmpeg_presets
 ffmpeg:
   # 可选：ffmpeg二进制文件路径（默认值：如下所示）
   # 可以设置为`7.0`或`5.0`以指定其中一个包含的版本
   # 或者可以设置为任何包含`bin/ffmpeg`和`bin/ffprobe`的路径
-  path: "default"
+  path: 'default'
   # 可选：全局ffmpeg参数（默认值：如下所示）
   global_args: -hide_banner -loglevel warning -threads 2
   # 可选：全局硬件加速参数（默认值：自动检测）
   # 注意：请参阅特定设备的硬件加速文档
-  hwaccel_args: "auto"
+  hwaccel_args: 'auto'
   # 可选：全局输入参数（默认值：如下所示）
   input_args: preset-rtsp-generic
   # 可选：全局输出参数
@@ -254,6 +267,8 @@ ffmpeg:
   retry_interval: 10
   # 可选：在HEVC（H.265）录制流上设置标签以提高与Apple播放器的兼容性（默认值：如下所示）
   apple_compatibility: false
+  # Optional: Set the index of the GPU to use for hardware acceleration. (default: shown below)
+  gpu: 0
 
 # 可选：检测配置
 # 注意：可以在摄像头级别重写
@@ -273,6 +288,9 @@ detect:
   max_disappeared: 25
   # 可选：静止对象追踪配置
   stationary:
+    # Optional: Stationary classifier that uses visual characteristics to determine if an object
+    # is stationary even if the box changes enough to be considered motion (default: shown below).
+    classifier: True
     # 可选：确认静止对象的频率（默认值：与阈值相同）
     # 当设置为1时，每帧都会运行物体/目标检测来确认对象是否仍然存在。
     # 如果设置为10，则每10帧运行一次物体/目标检测来确认对象是否仍然存在。
@@ -311,14 +329,42 @@ detect:
 objects:
   # 可选：从labelmap.txt中要追踪的对象列表（默认值：如下所示）
   track:
-    - person    # 人
+    - person # 人
   # 可选：防止在某些区域检测所有类型对象的蒙版（默认值：无蒙版）
   # 基于对象边界框的底部中心进行检查。
   # 注意：此蒙版与下面的对象类型特定蒙版组合使用
-  mask: 0.000,0.000,0.781,0.000,0.781,0.278,0.000,0.278
+  mask:
+    0.000,0.000,0.781,0.000,0.781,0.278,0.000,0.278
+    # Optional: Configuration for AI generated tracked object descriptions
+  genai:
+    # Optional: Enable AI object description generation (default: shown below)
+    enabled: False
+    # Optional: Use the object snapshot instead of thumbnails for description generation (default: shown below)
+    use_snapshot: False
+    # Optional: The default prompt for generating descriptions. Can use replacement
+    # variables like "label", "sub_label", "camera" to make more dynamic. (default: shown below)
+    prompt: 'Describe the {label} in the sequence of images with as much detail as possible. Do not describe the background.'
+    # Optional: Object specific prompts to customize description results
+    # Format: {label}: {prompt}
+    object_prompts:
+      person: 'My special person prompt.'
+    # Optional: objects to generate descriptions for (default: all objects that are tracked)
+    objects:
+      - person
+      - cat
+    # Optional: Restrict generation to objects that entered any of the listed zones (default: none, all zones qualify)
+    required_zones: []
+    # Optional: What triggers to use to send frames for a tracked object to generative AI (default: shown below)
+    send_triggers:
+      # Once the object is no longer tracked
+      tracked_object_end: True
+      # Optional: After X many significant updates are received (default: shown below)
+      after_significant_updates: None
+    # Optional: Save thumbnails sent to generative AI for review/debugging purposes (default: shown below)
+    debug_save_thumbnails: False
   # 可选：减少特定对象类型误报的过滤器
   filters:
-    person:    # 人
+    person: # 人
       # 可选：检测到的对象边界框的最小尺寸（默认值：0）。
       # 可以指定为像素宽度*高度的整数，或表示帧百分比的小数（0.000001到0.99）。
       min_area: 5000
@@ -346,28 +392,52 @@ review:
     enabled: True
     # 可选：符合警报条件的标签（默认值：如下所示）
     labels:
-      - car      # 汽车
-      - person   # 人
+      - car # 汽车
+      - person # 人
+    # Time to cutoff alerts after no alert-causing activity has occurred (default: shown below)
+    cutoff_time: 40
     # 可选：对象被标记为警报所需的区域（默认值：无）
     # 注意：当在全局设置必需区域时，此区域必须存在于所有摄像头中，
     #      否则配置将被视为无效。在这种情况下，required_zones
     #      应该在摄像头级别配置。
     required_zones:
-      - driveway  # 车道
+      - driveway # 车道
+  # Optional: GenAI Review Summary Configuration
+  genai:
+    # Optional: Enable the GenAI review summary feature (default: shown below)
+    enabled: False
+    # Optional: Enable GenAI review summaries for alerts (default: shown below)
+    alerts: True
+    # Optional: Enable GenAI review summaries for detections (default: shown below)
+    detections: False
+    # Optional: Activity Context Prompt to give context to the GenAI what activity is and is not suspicious.
+    # It is important to be direct and detailed. See documentation for the default prompt structure.
+    activity_context_prompt: """Define what is and is not suspicious
+"""
+    # Optional: Image source for GenAI (default: preview)
+    # Options: "preview" (uses cached preview frames at ~180p) or "recordings" (extracts frames from recordings at 480p)
+    # Using "recordings" provides better image quality but uses more tokens per image.
+    # Frame count is automatically calculated based on context window size, aspect ratio, and image source (capped at 20 frames).
+    image_source: preview
+    # Optional: Additional concerns that the GenAI should make note of (default: None)
+    additional_concerns:
+      - Animals in the garden
+    # Optional: Preferred response language (default: English)
+    preferred_language: English
   # 可选：检测配置
   detections:
     # 可选：启用摄像头的检测（默认值：如下所示）
     enabled: True
     # 可选：符合检测条件的标签（默认值：所有被追踪/监听的标签）
     labels:
-      - car      # 汽车
-      - person   # 人
+      - car # 汽车
+      - person # 人
     # 可选：对象被标记为检测所需的区域（默认值：无）
     # 注意：当在全局设置必需区域时，此区域必须存在于所有摄像头中，
     #      否则配置将被视为无效。在这种情况下，required_zones
     #      应该在摄像头级别配置。
     required_zones:
-      - driveway  # 车道
+      - driveway # 车道
 
 # 可选：运动配置
 # 注意：可以在摄像头级别重写
@@ -419,7 +489,7 @@ notifications:
   enabled: False
   # 可选：推送服务要联系的电子邮件
   # 注意：这是使用通知功能所必需的
-  email: "admin@example.com"
+  email: 'admin@example.com'
   # 可选：通知的冷却时间（秒）（默认值：如下所示）
   cooldown: 0
 
@@ -435,10 +505,14 @@ record:
   # 可选：在启动时及每日一次（默认设置如下）与硬盘进行录像数据库的双向同步。
   sync_recordings: False
   # 可选：录制保留设置
-  retain:
-    # 可选：无论是否有追踪目标都要保留录像的天数（默认值：如下所示）
-    # 注意：如果你只想保留警报和检测的录像，应该将此设置为0，
-    #      并在下面的alerts和detections部分定义保留设置。
+  # Optional: Continuous retention settings
+  continuous:
+    # Optional: Number of days to retain recordings regardless of tracked objects or motion (default: shown below)
+    # NOTE: This should be set to 0 and retention should be defined in alerts and detections section below
+    #       if you only want to retain recordings of alerts and detections.
+    days: 0
+  # Optional: Motion retention settings
+  motion:
     days: 0
     # 可选：保留模式。可用选项有：all、motion和active_objects
     #   all - 保存所有录制片段，无论是否有活动
@@ -455,7 +529,7 @@ record:
     # 即1800 / 86400 = 0.02。
     # -r（帧率）决定了输出视频的流畅度。
     # 所以在这种情况下参数应该是 -vf setpts=0.02*PTS -r 30。
-    timelapse_args: "-vf setpts=0.04*PTS -r 30"
+    timelapse_args: '-vf setpts=0.04*PTS -r 30'
   # 可选：录制预览设置
   preview:
     # 可选：录制预览质量（默认值：如下所示）。
@@ -470,7 +544,7 @@ record:
     # 可选：警报录像的保留设置
     retain:
       # 必需：保留天数（默认值：如下所示）
-      days: 14
+      days: 10
       # 可选：保留模式（默认值：如下所示）
       #   all - 保存所有警报录制片段，无论是否有活动
       #   motion - 保存所有检测到运动的警报录制片段
@@ -490,7 +564,7 @@ record:
     # 可选：检测录像的保留设置
     retain:
       # 必需：保留天数（默认值：如下所示）
-      days: 14
+      days: 10
       # 可选：保留模式（默认值：如下所示）
       #   all - 保存所有检测录制片段，无论是否有活动
       #   motion - 保存所有检测到运动的检测录制片段
@@ -507,7 +581,7 @@ record:
 snapshots:
   # 可选：启用将jpg快照写入/media/frigate/clips（默认值：如下所示）
   enabled: False
-  # 可选：保存快照图像的干净PNG副本（默认值：如下所示）
+  # 可选：保存快照图像的干净副本（默认值：如下所示）
   clean_copy: True
   # 可选：在快照上打印时间戳（默认值：如下所示）
   timestamp: False
@@ -525,7 +599,7 @@ snapshots:
     default: 10
     # 可选：按对象保留天数
     objects:
-      person: 15    # 人
+      person: 15 # 人
   # 可选：编码jpeg的质量，0-100（默认值：如下所示）
   quality: 70
 
@@ -536,10 +610,13 @@ semantic_search:
   # 可选：从历史追踪目标重新索引嵌入数据库（默认值：如下所示）
   reindex: False
   # 可选：设置用于嵌入的模型（默认值：如下所示）
-  model: "jinav1"
+  model: 'jinav1'
   # 可选：设置用于嵌入的模型大小（默认值：如下所示）
   # 注意：小型模型在CPU上运行，大型模型在GPU上运行
-  model_size: "small"
+  model_size: 'small'
+  # Optional: Target a specific device to run the model (default: shown below)
+  # NOTE: See https://onnxruntime.ai/docs/execution-providers/ for more information
+  device: None
 
 # 可选：人脸识别功能配置
 # 注意：enabled和min_area可以在摄像头级别重写
@@ -558,11 +635,14 @@ face_recognition:
   # 可选：需满足最低人脸检测次数，子标签才会应用于目标人员。（默认值：如下所示）
   min_faces: 1
   # 可选：保存用于训练的已识别人脸图像数量（默认值：如下所示）
-  save_attempts: 100
+  save_attempts: 200
   # 可选：应用模糊质量过滤器，根据图像的模糊程度调整置信度（默认值：如下所示）
   blur_confidence_filter: True
   # 可选：设置人脸识别的模型大小（默认值：如下所示）
   model_size: small
+  # Optional: Target a specific device to run the model (default: shown below)
+  # NOTE: See https://onnxruntime.ai/docs/execution-providers/ for more information
+  device: None
 
 # 可选：车牌识别功能配置
 # 注意：enabled、min_area和enhancement可以在摄像头级别重写
@@ -592,30 +672,80 @@ lpr:
   enhancement: 0
   # 可选：保存车牌图像到/media/frigate/clips/lpr用于调试目的（默认值：如下所示）
   debug_save_plates: False
+  # Optional: List of regex replacement rules to normalize detected plates (default: shown below)
+  replace_rules: {}
 
-# 可选：AI生成的追踪目标描述配置
+# 可选：AI大模型生成的追踪目标描述配置
 # 警告：根据提供者的不同，这将通过互联网将缩略图发送到
 # Google或OpenAI的LLM来生成描述。可以在摄像头级别重写
 # （enabled: False）以增强室内摄像头的隐私保护。
 genai:
-  # 可选：启用AI描述生成（默认值：如下所示）
-  enabled: False
-  # 启用时必需：提供者必须是ollama、gemini或openai之一
+  # 必填：提供者必须是ollama、gemini或openai之一
   provider: ollama
   # 当提供者是ollama时必需。也可以用于openai提供者的OpenAI API兼容后端。如果要使用openai类接口的第三方服务商，请使用系统变量，请参考文档https://docs.frigate-cn.video/configuration/genai
   base_url: http://localhost:11434
   # 当使用gemini或openai时必需
-  api_key: "{FRIGATE_GENAI_API_KEY}"
-  # 可选：生成描述的默认提示。可以使用替换变量
-  # 如"label"、"sub_label"、"camera"来使其更加动态（默认值：如下所示）
-  prompt: "请分析以下监控摄像头画面中的 “{label}” 元素，如果可以，请尽可能描述 “{label}” 的动作、行为和潜在意图，并尽可能详细的描述它的外观，同时请不要描述周围环境和其他元素细节等。注意，引号内的对象名可能为英文，同时需要将它转换为中文。"
-  # 可选：自定义描述结果的对象特定提示
-  # 格式：{label}: {prompt}
-  object_prompts:
-    person: "分析这些图像中的主要人物。他们在做什么，他们的行动可能暗示他们的意图是什么（例如，接近一扇门，离开一个区域，静止不动）？不要描述周围环境或静态细节。"
+  api_key: '{FRIGATE_GENAI_API_KEY}'
+  # Required: The model to use with the provider.
+  model: gemini-1.5-flash
+  # Optional additional args to pass to the GenAI Provider (default: None)
+  provider_options:
+    keep_alive: -1
+
+
+# Optional: Configuration for audio transcription
+# NOTE: only the enabled option can be overridden at the camera level
+audio_transcription:
+  # Optional: Enable live and speech event audio transcription (default: shown below)
+  enabled: False
+  # Optional: The device to run the models on for live transcription. (default: shown below)
+  device: CPU
+  # Optional: Set the model size used for live transcription. (default: shown below)
+  model_size: small
+  # Optional: Set the language used for transcription translation. (default: shown below)
+  # List of language codes: https://github.com/openai/whisper/blob/main/whisper/tokenizer.py#L10
+  language: en
+
+# Optional: Configuration for classification models
+classification:
+  # Optional: Configuration for bird classification
+  bird:
+    # Optional: Enable bird classification (default: shown below)
+    enabled: False
+    # Optional: Minimum classification score required to be considered a match (default: shown below)
+    threshold: 0.9
+  custom:
+    # Required: name of the classification model
+    model_name:
+      # Optional: Enable running the model (default: shown below)
+      enabled: True
+      # Optional: Name of classification model (default: shown below)
+      name: None
+      # Optional: Classification score threshold to change the state (default: shown below)
+      threshold: 0.8
+      # Optional: Number of classification attempts to save in the recent classifications tab (default: shown below)
+      # NOTE: Defaults to 200 for object classification and 100 for state classification if not specified
+      save_attempts: None
+      # Optional: Object classification configuration
+      object_config:
+        # Required: Object types to classify
+        objects: [dog]
+        # Optional: Type of classification that is applied (default: shown below)
+        classification_type: sub_label
+      # Optional: State classification configuration
+      state_config:
+        # Required: Cameras to run classification on
+        cameras:
+          camera_name:
+            # Required: Crop of image frame on this camera to run classification on
+            crop: [0, 180, 220, 400]
+        # Optional: If classification should be run when motion is detected in the crop (default: shown below)
+        motion: False
+        # Optional: Interval to run classification on in seconds (default: shown below)
+        interval: None
 
 # 可选：重新串流配置
-# 使用 https://github.com/AlexxIT/go2rtc (v1.9.9)
+# 使用 https://github.com/AlexxIT/go2rtc (v1.9.10)
 # 注意：必须使用默认的go2rtc API端口（1984），
 #      不支持更改集成的go2rtc实例的端口。
 go2rtc:
@@ -642,11 +772,11 @@ live:
 timestamp_style:
   # 可选：时间戳的位置（默认值：如下所示）
   #      "tl"（左上）、"tr"（右上）、"bl"（左下）、"br"（右下）
-  position: "tl"
+  position: 'tl'
   # 可选：符合Python包"datetime"的格式指定符（默认值：如下所示）
   #      其他示例：
   #        德语格式："%d.%m.%Y %H:%M:%S"
-  format: "%m/%d/%Y %H:%M:%S"
+  format: '%m/%d/%Y %H:%M:%S'
   # 可选：字体颜色
   color:
     # 指定颜色时所有参数都必需（默认值：如下所示）
@@ -671,7 +801,7 @@ cameras:
     enabled: True
     # 可选：用于某些Frigate功能的摄像头类型（默认值：如下所示）
     # 选项为 "generic"（通用）和 "lpr"（车牌识别）
-    type: "generic"
+    type: 'generic'
     # 必需：摄像头的ffmpeg设置
     ffmpeg:
       # 必需：摄像头的输入流列表。更多信息请参见文档。
@@ -705,14 +835,16 @@ cameras:
     best_image_timeout: 60
 
     # 可选：从系统页面直接访问摄像头Web界面的URL。可能并非所有摄像头都支持。
-    webui_url: ""
+    webui_url: ''
 
     # 可选：此摄像头的区域配置
     zones:
       # 必需：区域名称，目前仅能使用英文数字与下划线
       # 注意：这必须与任何摄像头名称不同，但可以与其他摄像头上的
       #      另一个区域名称相匹配。
-      front_steps:    # 前台阶
+      front_steps: # 前台阶
+        # Optional: A friendly name or descriptive text for the zones
+        friendly_name: ""
         # 必需：定义区域多边形的x,y坐标列表。
         # 注意：区域内的存在仅基于对象边界框的底部中心进行评估。
         coordinates: 0.033,0.306,0.324,0.138,0.439,0.185,0.042,0.428
@@ -725,11 +857,11 @@ cameras:
         loitering_time: 0
         # 可选：可以触发此区域的对象列表（默认值：所有被追踪的对象）
         objects:
-          - person    # 人
+          - person # 人
         # 可选：区域级别的物体/目标过滤器。
         # 注意：全局和摄像头过滤器在上游应用。
         filters:
-          person:    # 人
+          person: # 人
             min_area: 5000
             max_area: 100000
             threshold: 0.7
@@ -803,7 +935,7 @@ cameras:
         zoom_factor: 0.3
         # 可选：从labelmap.txt中要追踪的对象列表（默认值：如下所示）
         track:
-          - person    # 人
+          - person # 人
         # 必需：当对象进入任何列出的区域时开始自动追踪
         required_zones:
           - zone_name
@@ -820,33 +952,27 @@ cameras:
       # 默认情况下摄像头按字母顺序排序。
       order: 0
 
-    # 可选：AI生成的追踪目标描述配置
-    genai:
-      # 可选：启用AI描述生成（默认值：如下所示）
-      enabled: False
-      # 可选：使用对象快照而非缩略图进行描述生成（默认值：如下所示）
-      use_snapshot: False
-      # 可选：生成描述的默认提示。可以使用替换变量
-      # 如"label"、"sub_label"、"camera"来使其更加动态（默认值：如下所示）
-      prompt: "请分析以下监控摄像头画面中的'{label}'元素，尽可能详细描述其动作、行为和潜在意图，同时避免描述背景环境。"
-      # 可选：自定义描述结果的对象特定提示
-      # 格式：{label}: {prompt}
-      object_prompts:
-        person: "分析画面中人物的行为特征，包括动作方向、停留时间和可能的意图，但不要描述周围环境。"
-      # 可选：要生成描述的对象（默认值：所有被追踪的对象）
-      objects:
-        - person    # 人
-        - cat       # 猫
-      # 可选：限制描述生成仅针对进入所列区域的对象（默认值：无限制，所有区域都适用）
-      required_zones: []
-      # 可选：触发将追踪目标的帧发送给生成式AI的条件（默认值：如下所示）
-      send_triggers:
-        # 当对象不再被追踪时
-        tracked_object_end: True
-        # 可选：在收到X次重要更新后（默认值：如下所示）
-        after_significant_updates: None
-      # 可选：保存发送给生成式AI的缩略图以供审查/调试（默认值：如下所示）
-      debug_save_thumbnails: False
+    # Optional: Configuration for triggers to automate actions based on semantic search results.
+    triggers:
+      # Required: Unique identifier for the trigger (generated automatically from friendly_name if not specified).
+      trigger_name:
+        # Required: Enable or disable the trigger. (default: shown below)
+        enabled: true
+        # Optional: A friendly name or descriptive text for the trigger
+        friendly_name: Unique name or descriptive text
+        # Type of trigger, either `thumbnail` for image-based matching or `description` for text-based matching. (default: none)
+        type: thumbnail
+        # Reference data for matching, either an event ID for `thumbnail` or a text string for `description`. (default: none)
+        data: 1751565549.853251-b69j73
+        # Similarity threshold for triggering. (default: shown below)
+        threshold: 0.8
+        # List of actions to perform when the trigger fires. (default: none)
+        # Available options:
+        # - `notification` (send a webpush notification)
+        # - `sub_label` (add trigger friendly name as a sub label to the triggering tracked object)
+        # - `attribute` (add trigger's name and similarity score as a data attribute to the triggering tracked object)
+        actions:
+          - notification
 
 # 可选：UI配置
 ui:
@@ -871,10 +997,6 @@ ui:
   #    full: 8:15:22 PM Mountain Standard Time
   # （默认值：如下所示）
   time_style: medium
-  # 可选：手动覆盖日期/时间样式，使用strftime格式
-  # https://www.gnu.org/software/libc/manual/html_node/Formatting-Calendar-Time.html
-  # 可能的值如上所示（默认值：未设置）
-  strftime_fmt: "%Y/%m/%d %H:%M"
   # 可选：设置单位系统为"imperial"（英制）或"metric"（公制）（默认值：metric）
   # 用于UI和MQTT主题
   unit_system: metric
@@ -901,7 +1023,7 @@ telemetry:
     # 注意：容器必须具有特权或启用cap_net_admin、cap_net_raw能力
     network_bandwidth: False
   # 可选：启用最新版本检查（默认值：如下所示）
-    # 注意：如果使用Home Assistant集成，禁用此功能将阻止它报告新版本
+  # 注意：如果使用Home Assistant集成，禁用此功能将阻止它报告新版本
   version_check: True
 
 # 可选：摄像头组配置（默认值：未设置任何组）
@@ -911,9 +1033,9 @@ camera_groups:
   front:
     # 必需：组中的摄像头列表
     cameras:
-      - front_cam    # 前摄像头
-      - side_cam     # 侧摄像头
-      - front_doorbell_cam  # 前门铃摄像头
+      - front_cam # 前摄像头
+      - side_cam # 侧摄像头
+      - front_doorbell_cam # 前门铃摄像头
     # 必需：组使用的图标
     icon: LuCar
     # 必需：该组的索引

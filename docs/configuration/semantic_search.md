@@ -91,17 +91,22 @@ semantic_search:
 
 ### GPU 加速
 
-CLIP 模型以 ONNX 格式下载，当可用时，`large`模型可以使用 GPU 硬件加速。这取决于使用的 Docker 构建版本。
+CLIP 模型以 ONNX 格式下载，当可用时，`large`模型可以使用 GPU 硬件加速。这取决于使用的 Docker 构建版本。You can also target a specific device in a multi-GPU installation.
 
 ```yaml
 semantic_search:
   enabled: True
   model_size: large
+  # Optional, if using the 'large' model in a multi-GPU installation
+  device: 0 # [!code ++]
 ```
 
 :::info
 
-如果使用了适合你 GPU 的正确构建版本并配置了`large`模型，GPU 将被自动检测并使用。
+如果使用了适合你 GPU / NPU 的正确构建版本并配置了`large`模型，GPU 将被自动检测并使用。
+
+Specify the `device` option to target a specific GPU in a multi-GPU system (see [onnxruntime's provider options](https://onnxruntime.ai/docs/execution-providers/)).
+If you do not specify a device, the first available GPU will be used.
 
 更多信息请参考[功能增强](../configuration/hardware_acceleration_enrichments.md)文档.
 
@@ -115,3 +120,61 @@ semantic_search:
 4. 使搜索语言和语气与你要查找的内容紧密匹配。如果使用缩略图搜索，将查询短语作为图像标题。搜索"红色汽车"可能不如"阳光明媚的住宅区街道上行驶的红色轿车"效果好。
 5. 缩略图的语义搜索在匹配占据大部分画面的大主体时效果更好。"猫"等小物体往往效果不佳。
 6. 多尝试！找到一个想测试的追踪目标，开始输入关键词和短语，看看什么对你有效。
+
+## Triggers
+
+Triggers utilize Semantic Search to automate actions when a tracked object matches a specified image or description. Triggers can be configured so that Frigate executes a specific actions when a tracked object's image or description matches a predefined image or text, based on a similarity threshold. Triggers are managed per camera and can be configured via the Frigate UI in the Settings page under the Triggers tab.
+
+:::note
+
+Semantic Search must be enabled to use Triggers.
+
+:::
+
+### Configuration
+
+Triggers are defined within the `semantic_search` configuration for each camera in your Frigate configuration file or through the UI. Each trigger consists of a `friendly_name`, a `type` (either `thumbnail` or `description`), a `data` field (the reference image event ID or text), a `threshold` for similarity matching, and a list of `actions` to perform when the trigger fires - `notification`, `sub_label`, and `attribute`.
+
+Triggers are best configured through the Frigate UI.
+
+#### Managing Triggers in the UI
+
+1. Navigate to the **Settings** page and select the **Triggers** tab.
+2. Choose a camera from the dropdown menu to view or manage its triggers.
+3. Click **Add Trigger** to create a new trigger or use the pencil icon to edit an existing one.
+4. In the **Create Trigger** wizard:
+   - Enter a **Name** for the trigger (e.g., "Red Car Alert").
+   - Enter a descriptive **Friendly Name** for the trigger (e.g., "Red car on the driveway camera").
+   - Select the **Type** (`Thumbnail` or `Description`).
+   - For `Thumbnail`, select an image to trigger this action when a similar thumbnail image is detected, based on the threshold.
+   - For `Description`, enter text to trigger this action when a similar tracked object description is detected.
+   - Set the **Threshold** for similarity matching.
+   - Select **Actions** to perform when the trigger fires.
+     If native webpush notifications are enabled, check the `Send Notification` box to send a notification.
+     Check the `Add Sub Label` box to add the trigger's friendly name as a sub label to any triggering tracked objects.
+     Check the `Add Attribute` box to add the trigger's internal ID (e.g., "red_car_alert") to a data attribute on the tracked object that can be processed via the API or MQTT.
+5. Save the trigger to update the configuration and store the embedding in the database.
+
+When a trigger fires, the UI highlights the trigger with a blue dot for 3 seconds for easy identification. Additionally, the UI will show the last date/time and tracked object ID that activated your trigger. The last triggered timestamp is not saved to the database or persisted through restarts of Frigate.
+
+### Usage and Best Practices
+
+1. **Thumbnail Triggers**: Select a representative image (event ID) from the Explore page that closely matches the object you want to detect. For best results, choose images where the object is prominent and fills most of the frame.
+2. **Description Triggers**: Write concise, specific text descriptions (e.g., "Person in a red jacket") that align with the tracked object’s description. Avoid vague terms to improve matching accuracy.
+3. **Threshold Tuning**: Adjust the threshold to balance sensitivity and specificity. A higher threshold (e.g., 0.8) requires closer matches, reducing false positives but potentially missing similar objects. A lower threshold (e.g., 0.6) is more inclusive but may trigger more often.
+4. **Using Explore**: Use the context menu or right-click / long-press on a tracked object in the Grid View in Explore to quickly add a trigger based on the tracked object's thumbnail.
+5. **Editing triggers**: For the best experience, triggers should be edited via the UI. However, Frigate will ensure triggers edited in the config will be synced with triggers created and edited in the UI.
+
+### Notes
+
+- Triggers rely on the same Jina AI CLIP models (V1 or V2) used for semantic search. Ensure `semantic_search` is enabled and properly configured.
+- Reindexing embeddings (via the UI or `reindex: True`) does not affect trigger configurations but may update the embeddings used for matching.
+- For optimal performance, use a system with sufficient RAM (8GB minimum, 16GB recommended) and a GPU for `large` model configurations, as described in the Semantic Search requirements.
+
+### FAQ
+
+#### Why can't I create a trigger on thumbnails for some text, like "person with a blue shirt" and have it trigger when a person with a blue shirt is detected?
+
+TL;DR: Text-to-image triggers aren’t supported because CLIP can confuse similar images and give inconsistent scores, making automation unreliable. The same word–image pair can give different scores and the score ranges can be too close together to set a clear cutoff.
+
+Text-to-image triggers are not supported due to fundamental limitations of CLIP-based similarity search. While CLIP works well for exploratory, manual queries, it is unreliable for automated triggers based on a threshold. Issues include embedding drift (the same text–image pair can yield different cosine distances over time), lack of true semantic grounding (visually similar but incorrect matches), and unstable thresholding (distance distributions are dataset-dependent and often too tightly clustered to separate relevant from irrelevant results). Instead, it is recommended to set up a workflow with thumbnail triggers: first use text search to manually select 3–5 representative reference tracked objects, then configure thumbnail triggers based on that visual similarity. This provides robust automation without the semantic ambiguity of text to image matching.

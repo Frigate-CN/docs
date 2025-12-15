@@ -51,31 +51,50 @@ Frigate 支持多种硬件平台的检测器方案：
   - 最好使用 tiny/small 尺寸的模型
 
 - [Google Coral EdgeTPU](#google-coral-tpu): Google Coral EdgeTPU 有 USB/M.2 两种版本。M.2 版参考价约为 **250 元**。
+
   - [主要支持 ssdlite 和 mobilenet 模型](/configuration/object_detectors#edge-tpu检测器)
+
+- <Badge text="社区支持" type="warning" /> [MemryX](#memryx-mx3): The MX3 M.2 accelerator module is available in m.2 format allowing for a wide range of compatibility with devices.
+  - [Supports many model architectures](../../configuration/object_detectors#memryx-mx3)
+  - Runs best with tiny, small, or medium-size models
 
 **AMD**
 
 - [ROCm](#rocm-amd-gpu): ROCm 能够在 AMD 显卡上运行，提供高效的检测功能
-  - [支持一部分模型](/configuration/object_detectors#支持的模型-1)
+  - [支持一部分模型](/configuration/object_detectors#rocm-supported-models)
   - 最好运行在 AMD 独显上
+
+**Apple Silicon**
+
+- [Apple Silicon](#apple-silicon): Apple Silicon is usable on all M1 and newer Apple Silicon devices to provide efficient and fast object detection
+  - [Supports primarily ssdlite and mobilenet model architectures](../../configuration/object_detectors#apple-silicon-supported-models)
+  - Runs well with any size models including large
+  - Runs via ZMQ proxy which adds some latency, only recommended for local connection
 
 **Intel**
 
 - [OpenVino](#openvino-intel): OpenVino 可以运行在 Intel Arc 独立显卡、Intel 核显以及 Intel 的 CPU
-  - [支持大部分主流模型](/configuration/object_detectors#支持的模型)
+  - [支持大部分主流模型](/configuration/object_detectors#openvino-supported-models)
   - 推荐使用 tiny/small/medium 尺寸的模型
 
 **Nvidia**
 
 - [TensortRT](#tensorrt-nvidia-gpu): TensorRT 可以运行在 Nvidia 显卡和 Jetson 开发板上
-  - [通过 ONNX 支持主流模型](/configuration/object_detectors#支持的模型-2)
+
+  - [通过 ONNX 支持主流模型](/configuration/object_detectors#onnx-supported-models)
   - 可流畅运行包括 large 在内各尺寸模型
 
-**Rockchip**
+- <Badge text="社区支持" type="warning" />[Jetson](#nvidia-jetson): Jetson devices are supported via the TensorRT or ONNX detectors when running Jetpack 6.
+
+**Rockchip**<Badge text="社区支持" type="warning" />
 
 - [RKNN](#rockchip-平台): 需搭载 NPU 的瑞芯微芯片
   - [支持少量模型](/configuration/object_detectors#支持的模型-5)
   - 专为低功耗设备优化，适合 tiny/small 模型
+
+**Synaptics**<Badge text="社区支持" type="warning" />
+
+- [Synaptics](#synaptics): synap models can run on Synaptics devices(e.g astra machina) with included NPUs to provide efficient object detection.
 
 :::
 
@@ -190,6 +209,31 @@ Frigate 能够使用支持 12.x 系列 CUDA 库的 NVIDIA GPU。
 
 ## 社区支持的检测器
 
+### MemryX MX3
+
+Frigate supports the MemryX MX3 M.2 AI Acceleration Module on compatible hardware platforms, including both x86 (Intel/AMD) and ARM-based SBCs such as Raspberry Pi 5.
+
+A single MemryX MX3 module is capable of handling multiple camera streams using the default models, making it sufficient for most users. For larger deployments with more cameras or bigger models, multiple MX3 modules can be used. Frigate supports multi-detector configurations, allowing you to connect multiple MX3 modules to scale inference capacity.
+
+Detailed information is available [in the detector docs](/configuration/object_detectors#memryx-mx3).
+
+**Default Model Configuration:**
+
+- Default model is **YOLO-NAS-Small**.
+
+The MX3 is a pipelined architecture, where the maximum frames per second supported (and thus supported number of cameras) cannot be calculated as `1/latency` (1/"Inference Time") and is measured separately. When estimating how many camera streams you may support with your configuration, use the **MX3 Total FPS** column to approximate of the detector's limit, not the Inference Time.
+
+| Model                | Input Size | MX3 Inference Time | MX3 Total FPS |
+| -------------------- | ---------- | ------------------ | ------------- |
+| YOLO-NAS-Small       | 320        | ~ 9 ms             | ~ 378         |
+| YOLO-NAS-Small       | 640        | ~ 21 ms            | ~ 138         |
+| YOLOv9s              | 320        | ~ 16 ms            | ~ 382         |
+| YOLOv9s              | 640        | ~ 41 ms            | ~ 110         |
+| YOLOX-Small          | 640        | ~ 16 ms            | ~ 263         |
+| SSDlite MobileNet v2 | 320        | ~ 5 ms             | ~ 1056        |
+
+Inference speeds may vary depending on the host platform. The above data was measured on an **Intel 13700 CPU**. Platforms like Raspberry Pi, Orange Pi, and other ARM-based SBCs have different levels of processing capability, which may limit total FPS.
+
 ### Nvidia Jetson
 
 Frigate 支持所有的 Jetson 开发板，从经济实惠的 Jetson Nano 到性能强劲的 Jetson Orin AGX 都有覆盖。能够通过专门的[编解码预设参数](../configuration/ffmpeg_presets.md#hwaccel-presets)来[调用 Jetson 视频硬解码功能](/configuration/hardware_acceleration_video#nvidia-jetson系列)进行加速。如果还配置了[TensorRT 检测器](/configuration/object_detectors#nvidia-tensorrt检测器)则会利用 Jetson 的 GPU 和 DLA（深度学习加速器）执行目标检测任务。
@@ -213,6 +257,15 @@ Frigate 支持所有 Rockchip 开发板的硬件视频加速功能，但硬件�
 | rk3566 1 core  |                 | small: ~ 96 ms              |                         |
 
 启用全部 3 个核心的 RK3588 芯片运行 YOLO-NAS S 模型时，典型推理时间为 25-30 毫秒。
+
+### Synaptics
+
+- **Synaptics** Default model is **mobilenet**
+
+| Name          | Synaptics SL1680 Inference Time |
+| ------------- | ------------------------------- |
+| ssd mobilenet | ~ 25 ms                         |
+| yolov5m       | ~ 118 ms                        |
 
 ## Frigate 如何分配 CPU 和检测器的工作？（通俗说法）
 

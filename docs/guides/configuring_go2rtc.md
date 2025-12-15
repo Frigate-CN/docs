@@ -3,8 +3,6 @@ id: configuring_go2rtc
 title: 配置 go2rtc
 ---
 
-# 配置 go2rtc
-
 Frigate 内置了 go2rtc 功能。
 虽然你可以让 Frigate 直接使用你的摄像头的 FFmpeg 视频流而不是通过 go2rtc，但如果你需要以下功能，则必须配置 go2rtc。使用 go2rtc 有以下优点：
 
@@ -12,9 +10,9 @@ Frigate 内置了 go2rtc 功能。
 - Home Assistant 集成中摄像头的实时流支持
 - RTSP 中继，用于其他用户，以减少与摄像头流的连接数
 
-# 设置 go2rtc 流
+## 设置 go2rtc 流
 
-首先，你需要在 Frigate 配置文件中添加想用于实时查看的流，配置 go2rtc 连接到你的摄像头流。在这一步中避免更改配置的其他部分。注意，go2rtc 支持[多种不同的流类型](https://github.com/AlexxIT/go2rtc/tree/v1.9.9#module-streams)，不仅仅是 rtsp。
+首先，你需要在 Frigate 配置文件中添加想用于实时查看的流，配置 go2rtc 连接到你的摄像头流。在这一步中避免更改配置的其他部分。注意，go2rtc 支持[多种不同的流类型](https://github.com/AlexxIT/go2rtc/tree/v1.9.10#module-streams)，不仅仅是 rtsp。
 
 :::tip
 
@@ -50,8 +48,8 @@ go2rtc:
 - 检查视频编解码器：
 
   - 如果摄像头流在 go2rtc 中工作但在浏览器中不工作，可能是视频编解码器不受支持。
-  - 如果使用 H265，切换到 H264。参考 go2rtc 文档中的[视频编解码器兼容性](https://github.com/AlexxIT/go2rtc/tree/v1.9.9#codecs-madness)。
-  - 如果无法从 H265 切换到 H264，或者流格式不同（如 MJPEG），使用 [FFmpeg 参数](https://github.com/AlexxIT/go2rtc/tree/v1.9.9#source-ffmpeg)重新编码视频。它支持旋转和调整视频源大小以及硬件加速。请记住，将视频从一种格式转换为另一种格式是一项资源密集型任务，使用内置的 jsmpeg 查看可能更好。
+  - 如果使用 H265，切换到 H264。参考 go2rtc 文档中的[视频编解码器兼容性](https://github.com/AlexxIT/go2rtc/tree/v1.9.10#codecs-madness)。
+  - 如果无法从 H265 切换到 H264，或者流格式不同（如 MJPEG），使用 [FFmpeg 参数](https://github.com/AlexxIT/go2rtc/tree/v1.9.10#source-ffmpeg)重新编码视频。它支持旋转和调整视频源大小以及硬件加速。请记住，将视频从一种格式转换为另一种格式是一项资源密集型任务，使用内置的 jsmpeg 查看可能更好。
     ```yaml
     go2rtc:
       streams:
@@ -109,11 +107,11 @@ go2rtc:
 
 :::
 
-## 后续步骤
+### 后续步骤
 
 1. 如果你添加到 go2rtc 的流也被 Frigate 用于 `record` 或 `detect` 角色，你可以将配置迁移到从 RTSP 转流中获取，以减少与摄像头的连接数，如[这里](../configuration/restream#with-single-stream)所示。
 2. 如果你的摄像头支持双向通话，还可以[设置 WebRTC](../configuration/live#webrtc-extra-configuration)，使 Frigate 可以使用双向通话。注意，WebRTC **仅支持** 特定的音频格式，以及可能需要在路由器上开放相关端口。
 
-## 重要注意事项
+## Homekit 配置
 
 如果你配置 go2rtc 发布 HomeKit 摄像头流，在配对时配置会写入容器内的 `/dev/shm/go2rtc.yaml` 文件。这些更改必须手动复制到 Frigate 配置的 `go2rtc` 部分，以便在重启后保持不变。

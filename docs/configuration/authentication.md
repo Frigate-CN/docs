@@ -11,9 +11,9 @@ Frigate 在其数据库中存储用户信息。密码哈希使用行业标准 PB
 
 以下端口可用于访问 Frigate 页面。
 
-| 端口   | 描述                                                                                                                                                                                                  |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `8971` | 经过认证的 页面 和 API。各类反向代理（例如nginx）应使用此端口。                                                                                                                                              |
+| 端口   | 描述                                                                                                                           |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `8971` | 经过认证的 页面 和 API。各类反向代理（例如 nginx）应使用此端口。                                                               |
 | `5000` | 内部未经认证的 页面 和 API 访问。应该严格限制该端口的使用。一般用于 docker 网络内部，供与 Frigate 集成但不支持认证的服务使用。 |
 
 ## 初始设置 {#onboarding}
@@ -47,19 +47,21 @@ auth:
 
 ```yaml
 auth:
-  failed_login_rate_limit: "1/second;5/minute;20/hour"
+  failed_login_rate_limit: '1/second;5/minute;20/hour'
   trusted_proxies:
     - 172.18.0.0/16 # <---- 这是内部 Docker Compose 网络的子网
 ```
 
 ## 会话有效期 {#session-length}
-Frigate系统默认的用户认证会话有效期为24小时。该设置决定了用户认证会话在需要刷新令牌前保持活跃的时长——超过此时限后，用户必须重新登录才能继续使用系统。
+
+Frigate 系统默认的用户认证会话有效期为 24 小时。该设置决定了用户认证会话在需要刷新令牌前保持活跃的时长——超过此时限后，用户必须重新登录才能继续使用系统。
 
 虽然默认值在安全性和用户体验之间取得了不错的平衡，但你可以根据具体的安全需求和使用偏好自定义这个时长。会话有效期以秒为单位进行配置。
 
-默认值`86400`表示认证会话将在24小时后过期。其他配置示例：
-- `0`：将会话有效期设为0意味着用户每次访问应用时都需要重新登录，或会在极短的立即超时后就需要重新认证
-- `604800`：设置会话有效期为`604800`秒（7天）意味着用户只需在7天内刷新令牌即可保持登录状态
+默认值`86400`表示认证会话将在 24 小时后过期。其他配置示例：
+
+- `0`：将会话有效期设为 0 意味着用户每次访问应用时都需要重新登录，或会在极短的立即超时后就需要重新认证
+- `604800`：设置会话有效期为`604800`秒（7 天）意味着用户只需在 7 天内刷新令牌即可保持登录状态
 
 ```yaml
 auth:
@@ -79,7 +81,7 @@ python3 -c 'import secrets; print(secrets.token_hex(64))'
 Frigate 按以下顺序查找 JWT 令牌密钥：
 
 1. 名为 `FRIGATE_JWT_SECRET` 的环境变量
-2. `/run/secrets/` 中名为 `FRIGATE_JWT_SECRET` 的 docker 密钥
+2. 名为 FRIGATE_JWT_SECRET 的文件，位于由环境变量`CREDENTIALS_DIRECTORY`指定的目录中（默认为 Docker Secrets 目录：/run/secrets/）。
 3. Home Assistant 插件选项中的 `jwt_secret` 选项
 4. 配置目录中的 `.jwt_secret` 文件
 
@@ -109,9 +111,9 @@ proxy:
 python3 -c 'import secrets; print(secrets.token_hex(64))'
 ```
 
-### Header映射 {#header-mapping}
+### Header 映射 {#header-mapping}
 
-如果你已禁用 Frigate 的认证，并且你的代理支持传递带有已认证用户名和/或权限组的头部，你可以使用 `header_map` 配置来指定头部名称，以便将其传递给 Frigate。例如，以下配置将映射 `X-Forwarded-User` 和 `X-Forwarded-Groups` 值。头部名称不区分大小写。Header头中可以包含多个值，但必须使用英文逗号分隔。
+如果你已禁用 Frigate 的认证，并且你的代理支持传递带有已认证用户名和/或权限组的头部，你可以使用 `header_map` 配置来指定头部名称，以便将其传递给 Frigate。例如，以下配置将映射 `X-Forwarded-User` 和 `X-Forwarded-Groups` 值。Header 名称不区分大小写。Header 头中可以包含多个值，但必须使用英文逗号分隔。
 
 ```yaml
 proxy:
@@ -122,15 +124,43 @@ proxy:
     role: x-forwarded-groups
 ```
 
-Frigate 支持 `admin` 和 `viewer` 两种权限组（见下文）。当使用端口 `8971` 时，Frigate 验证这些头部，后续请求使用 `remote-user` 和 `remote-role` 头部进行授权。
+Frigate 支持**管理员**（`admin`） 和**成员**（`viewer`）以及**自定义**权限组（见下文）。当使用端口 `8971` 时，Frigate 验证这些头部，后续请求使用 `remote-user` 和 `remote-role` Header 进行授权。
 
-可以提供默认权限组。映射的 `role` 头部中的任何值都将覆盖默认值。
+可以提供默认权限组。映射的 `role` Header 中的任何值都将覆盖默认值。
 
 ```yaml
 proxy:
   ...
   default_role: viewer
 ```
+
+## 权限组映射
+
+在某些环境中，上游身份提供者（如 OIDC、SAML、LDAP 等）并不会直接传递与 Frigate 兼容的权限组，而是传递一个或多个组声明（group claims）。为了处理这种情况，Frigate 支持通过`role_map`将上游的组名映射为 Frigate 的内部权限组（`admin`、`viewer`以及自定义权限组）。
+
+```yaml
+proxy:
+  ...
+  header_map:
+    user: x-forwarded-user
+    role: x-forwarded-groups
+    role_map:
+      admin:
+        - sysadmins
+        - access-level-security
+      viewer:
+        - camera-viewer
+      operator:  # 自定义权限组映射
+        - operators
+```
+
+在上述例子中：
+
+- 如果代理传递的权限组 Header 中包含 sysadmins 或 access-level-security，该用户将被分配 admin 权限组。
+- 如果代理传递的权限组 Header 中包含 camera-viewer，该用户将被分配 viewer 权限组。
+- 如果代理传递的权限组 Header 中包含 operators，该用户将被分配 operator 自定义权限组。
+- 如果没有匹配的映射，Frigate 将回退到配置的 default_role（若存在）。
+- 如果未定义 role_map，Frigate 会假定权限组 Header 直接包含 admin、viewer 或一个自定义权限组名称。
 
 ### 端口注意事项 {#port-considerations}
 
@@ -140,16 +170,17 @@ proxy:
 - `remote-role` 头部决定用户的权限：
   - **admin** → 完全访问权限（用户管理、配置更改）。
   - **viewer** → 只读访问权限。
+  - **自定义权限组**​ → 只读访问权限，仅能访问`auth.roles[role]`中设置的摄像头。
 - 确保你的代理同时发送用户和权限组头部以正确执行权限组控制。
 
 **未认证端口 (5000)**
 
-- 忽略头部用于权限组控制。
+- 忽略 Header 用于权限组控制。
 - 所有请求都被视为匿名请求。
 - `remote-role` 值被覆盖为管理员级别访问权限。
 - 此设计确保在受信任网络内的未认证内部使用。
 
-注意，默认情况下只允许以下头部：
+注意，默认情况下只允许以下 Header：
 
 ```
 Remote-User
@@ -179,16 +210,52 @@ Frigate 优雅地执行登录页面重定向，应该可以与大多数认证代
 
 ## 用户权限组 {#user-roles}
 
-Frigate 支持用户权限组来控制对 UI 和 API 中某些功能的访问，例如管理用户或修改配置设置。权限组可以在数据库中分配给用户或通过代理头部分配，并在通过认证端口（`8971`）访问 UI 或 API 时强制执行。
+Frigate 支持用户权限组来控制对网页和 API 中某些功能的访问，例如管理用户或修改配置设置。权限组可以在数据库中分配给用户或通过代理头部分配，并在通过认证端口（`8971`）访问 UI 或 API 时强制执行。
 
 ### 支持的权限组 {#supported-roles}
 
 - **admin**：完全访问所有功能，包括用户管理和配置。
-- **viewer**：对 UI 和 API 的只读访问，包括查看摄像头、核查和回放。UI 中的配置编辑器和设置不可访问。
+- **viewer**：对网页和 API 的只读访问，包括查看摄像头、核查和回放。网页中的配置编辑器和设置不可访问。
+- **自定义权限组**：任意权限组名称（支持字母数字、点号/下划线），并可配置特定的摄像头权限。这些权限组可扩展系统功能，实现细粒度的访问控制（例如，为特定摄像头设置名为 “operator” 的权限）。
+
+### 自定义权限组与摄像头访问权限
+
+成员（`viewer`）权限组在网页和 API 中会提供对所有摄像头的只读访问权限。而**自定义权限组**允许管理员将只读访问权限限制到指定的摄像头。每个权限组需指定一个允许访问的摄像头名称列表。当用户被分配了自定义权限组时，其账户权限与成员（`viewer`）类似，但只能查看指定摄像头的实时监控、回放/历史、浏览与导出功能。
+后端 API 会在服务器端强制执行此限制（例如，对未授权的摄像头返回 403），前端网页也会相应过滤内容（例如，摄像头下拉菜单仅显示被允许的摄像头）。
+
+### 权限组配置示例
+
+```yaml
+cameras:
+  front_door:
+    # ... 摄像头配置，此处省略
+  side_yard:
+    # ... 摄像头配置，此处省略
+  garage:
+    # ... 摄像头配置，此处省略
+
+auth:
+  enabled: true
+  roles: # [!code ++]
+    operator: # 自定义权限组的名称，仅支持英文数字 [!code ++]
+      - front_door # [!code ++]
+      - garage # Operator 权限组可以访问 front_door 和 garage 两个摄像头 [!code ++]
+    neighbor: # 自定义权限组的名称 [!code ++]
+      - side_yard # neighbor权限组可以访问 side_yard 摄像头 [!code ++]
+```
+
+如果希望某个用户能访问所有摄像头，只需为其分配成员（`viewer`）权限组即可。
+
+### 管理用户权限组
+
+1. 通过**admin** 用户在端口`8971`登录（推荐），或通过端口 5000 以未认证方式登录。
+2. 进入设置页面。
+3. 在设置 -> 用户里，从可用权限组（**管理员**、**成员**或**自定义权限组**）中选择并编辑用户的权限。
+4. 在 权限组 部分，可添加/编辑/删除自定义权限组（通过开关选择摄像头）。删除某个权限组时，系统会自动将该权限组下的用户重新分配到成员（`views`）。
 
 ### 权限组强制执行 {#role-enforcement}
 
-当使用认证端口（`8971`）时，通过 JWT 令牌或代理Header（如 `remote-role`）验证权限组。
+当使用认证端口（`8971`）时，通过 JWT 令牌或代理 Header（如 `remote-role`）验证权限组。
 
 在内部**未认证**端口（`5000`）上，**不强制执行**权限组。所有请求都被视为**匿名**，授予相当于**管理员**权限组的访问权限，没有限制。
 
@@ -204,3 +271,42 @@ Frigate 支持用户权限组来控制对 UI 和 API 中某些功能的访问，
 1. 通过端口 `8971` 以**管理员**用户身份登录。
 2. 导航到**设置 > 用户**。
 3. 通过选择**admin**或**viewer**编辑用户的权限组。
+
+## API 鉴权指南
+
+### 获取 Bearer Token
+
+要使用 Frigate API，需要先完成鉴权。按照以下步骤获取 Bearer Token：
+
+#### 1. 登录
+
+向`/login`发送 POST​ 请求，并提供你的凭证：
+
+```bash
+curl -i -X POST https://frigate_ip:8971/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"user": "admin", "password": "your_password"}'
+```
+
+:::note
+
+如果你的 Frigate 实例使用的是自签名证书，可能需要在命令中加入 `-k` 参数（例如：`curl -k -i -X POST ...`）。
+
+:::
+
+响应中会包含一个带有 JWT Token 的 Cookie。
+
+#### 2. 使用 Bearer Token
+
+获取到 Token 后，在后续请求的 Authorization​ 头部中加入该 Token：
+
+```bash
+curl -H "Authorization: Bearer <your_token>" https://frigate_ip:8971/api/profile
+```
+
+#### 3. Token 生命周期
+
+- Token 在配置的会话时长内有效
+- 访问 /auth 端点时，Token 会自动刷新
+- 当用户密码更改时，Token 会失效
+- 使用 /logout 可清除会话 Cookie
