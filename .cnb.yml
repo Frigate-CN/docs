@@ -1,12 +1,8 @@
-main:
+"**":
   push:
     - imports:
       - https://cnb.cool/frigate-cn/github-key/-/blob/87d2daf01d7346e48f6d45986c579f82e28a4d57/github-token.yml
       stages:
-        - name: build knowledge base
-          image: cnbcool/knowledge-base
-          settings:
-            include: "docs/**/**.md"
         - name: sync to github
           image: tencentcom/git-sync
           settings:
@@ -14,3 +10,11 @@ main:
             auth_type: https
             username: ${github_username}
             password: ${github_access_token}
+
+main:
+  push:
+    - stages:
+      - name: build knowledge base
+        image: cnbcool/knowledge-base
+        settings:
+          include: "docs/**/**.md"
