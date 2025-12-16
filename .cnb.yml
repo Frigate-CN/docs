@@ -1,4 +1,4 @@
-"**":
+"*":
   push:
     - imports:
       - https://cnb.cool/frigate-cn/github-key/-/blob/87d2daf01d7346e48f6d45986c579f82e28a4d57/github-token.yml
