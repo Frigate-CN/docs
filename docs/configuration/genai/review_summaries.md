@@ -1,119 +1,129 @@
 ---
 id: genai_review
-title: Review Summaries
+title: 核查总结
 ---
 
-Generative AI can be used to automatically generate structured summaries of review items. These summaries will show up in Frigate's native notifications as well as in the UI. Generative AI can also be used to take a collection of summaries over a period of time and provide a report, which may be useful to get a quick report of everything that happened while out for some amount of time.
+生成式 AI 可以用于自动生成核查项目的结构化总结。这些总结将显示在 Frigate 的原生通知以及用户界面中。生成式 AI 还可以用于收集一段时间内的总结并提供报告，这对于在外出一段时间后快速了解发生的所有事件可能很有用。
 
-Requests for a summary are requested automatically to your AI provider for alert review items when the activity has ended, they can also be optionally enabled for detections as well.
+当活动结束时，总结请求会自动发送给你的 AI 提供商用于警报核查项目，也可以选择性地为检测启用。
 
-Generative AI review summaries can also be toggled dynamically for a [camera via MQTT](/integrations/mqtt/#frigatecamera_namereviewdescriptionsset).
+生成式 AI 核查总结也可以通过[MQTT](/integrations/mqtt/#frigatecamera_namereviewdescriptionsset)为摄像头动态切换。
 
-## Review Summary Usage and Best Practices
+## 核查总结使用方法和最佳实践
 
-Review summaries provide structured JSON responses that are saved for each review item:
-
-```
-- `title` (string): A concise, direct title that describes the purpose or overall action (e.g., "Person taking out trash", "Joe walking dog").
-- `scene` (string): A narrative description of what happens across the sequence from start to finish, including setting, detected objects, and their observable actions.
-- `confidence` (float): 0-1 confidence in the analysis. Higher confidence when objects/actions are clearly visible and context is unambiguous.
-- `other_concerns` (list): List of user-defined concerns that may need additional investigation.
-- `potential_threat_level` (integer): 0, 1, or 2 as defined below.
-```
-
-This will show in multiple places in the UI to give additional context about each activity, and allow viewing more details when extra attention is required. Frigate's built in notifications will also automatically show the title and description when the data is available.
-
-### Defining Typical Activity
-
-Each installation and even camera can have different parameters for what is considered suspicious activity. Frigate allows the `activity_context_prompt` to be defined globally and at the camera level, which allows you to define more specifically what should be considered normal activity. It is important that this is not overly specific as it can sway the output of the response.
-
-<details>
-  <summary>Default Activity Context Prompt</summary>
+核查总结为每个核查项目提供结构化的 JSON 响应：
 
 ```
-### Normal Activity Indicators (Level 0)
-- Known/verified people in any zone at any time
-- People with pets in residential areas
-- Deliveries or services during daytime/evening (6 AM - 10 PM): carrying packages to doors/porches, placing items, leaving
-- Services/maintenance workers with visible tools, uniforms, or service vehicles during daytime
-- Activity confined to public areas only (sidewalks, streets) without entering property at any time
-
-### Suspicious Activity Indicators (Level 1)
-- **Testing or attempting to open doors/windows/handles on vehicles or buildings** — ALWAYS Level 1 regardless of time or duration
-- **Unidentified person in private areas (driveways, near vehicles/buildings) during late night/early morning (11 PM - 5 AM)** — ALWAYS Level 1 regardless of activity or duration
-- Taking items that don't belong to them (packages, objects from porches/driveways)
-- Climbing or jumping fences/barriers to access property
-- Attempting to conceal actions or items from view
-- Prolonged loitering: remaining in same area without visible purpose throughout most of the sequence
-
-### Critical Threat Indicators (Level 2)
-- Holding break-in tools (crowbars, pry bars, bolt cutters)
-- Weapons visible (guns, knives, bats used aggressively)
-- Forced entry in progress
-- Physical aggression or violence
-- Active property damage or theft in progress
-
-### Assessment Guidance
-Evaluate in this order:
-
-1. **If person is verified/known** → Level 0 regardless of time or activity
-2. **If person is unidentified:**
-   - Check time: If late night/early morning (11 PM - 5 AM) AND in private areas (driveways, near vehicles/buildings) → Level 1
-   - Check actions: If testing doors/handles, taking items, climbing → Level 1
-   - Otherwise, if daytime/evening (6 AM - 10 PM) with clear legitimate purpose (delivery, service worker) → Level 0
-3. **Escalate to Level 2 if:** Weapons, break-in tools, forced entry in progress, violence, or active property damage visible (escalates from Level 0 or 1)
-
-The mere presence of an unidentified person in private areas during late night hours is inherently suspicious and warrants human review, regardless of what activity they appear to be doing or how brief the sequence is.
+- `title` (string): 一个简洁、直接的标题，描述目的或整体动作（例如：人正在倒垃圾、张三正在遛狗）。
+- `scene` (string): 关于序列中从开始到结束发生的事情的叙述性描述，包括场景、检测到的目标及其可观察的动作。
+- `confidence` (float): 分析的0-1置信度。当目标/动作清晰可见且上下文明确时，置信度更高。
+- `other_concerns` (list): 可能需要额外调查的用户定义关注点列表。
+- `potential_threat_level` (integer): 0、1或2，如下定义。
 ```
 
-</details>
+这将在用户界面的多个位置显示，为每个活动提供额外的上下文，并在需要额外关注时允许查看更多详细信息。当数据可用时，Frigate 的内置通知也会自动显示标题和描述。
 
-### Image Source
+### 定义典型活动
 
-By default, review summaries use preview images (cached preview frames) which have a lower resolution but use fewer tokens per image. For better image quality and more detailed analysis, you can configure Frigate to extract frames directly from recordings at a higher resolution:
+每个环境甚至不同类型的摄像头对于什么被认为是可疑活动都可能有不同的参数。Frigate 允许在全局和摄像头级别定义`activity_context_prompt`，这让你可以更具体地定义什么应该被认为是正常活动。
+需要注意的是，描述不要过于具体，因为它会影响响应的输出。
+
+:::tip
+
+需要注意的是，默认的 prompt 是英文，可能会导致生成的结果为英文。你可以参考以下配置，修改为中文。
+
+:::
+
+```yaml
+review:
+  genai:
+    alerts: true # 这里设置只有警报类核查项才会触发
+    activity_context_prompt: | # 自定义为中文的 prompt
+      所有的回答必须使用中文，其中包括object名称
+      ### 正常活动指标（0级）
+      - 任何时间任何区域内的已知/verified人员
+      - 住宅区域内带宠物的人员
+      - 白天/晚间（上午6点-晚上10点）的快递/外卖配送人员，例如：携带包裹到门口/门廊、放置物品、离开
+      - 白天期间有可见工具、身穿有工作服或开专用车辆的服务/维护人员
+      - 活动仅限于公共区域（人行道、街道），任何时候都不进入私人领地
+
+      ### 可疑活动指标（1级）
+      - **测试或试图打开车辆或建筑物的门/窗/把手**，无论几点和持续多久，始终为1级
+      - **深夜/凌晨（晚上11点-早上5点）在私人区域（车道、车辆/建筑物附近）的未识别人员（person）**，无论是否活动和持续多久，始终为1级
+      - 拿走不属于他们的物品（包裹、门廊/车道上的物体）
+      - 攀爬或跳过围栏/障碍物进入房产
+      - 试图隐藏动作或隐藏物品不被看到
+      - 长时间徘徊：在整个序列的大部分时间内停留在同一区域而没有明显目的
+
+      ### 关键威胁指标（2级）
+      - 持有破门工具（撬棍、撬杆、螺栓剪）
+      - 可见武器（枪支、刀具、铁棍）
+      - 正在进行强行进入
+      - 正在攻击他人或其他暴力行为
+      - 正在进行的财产破坏或盗窃
+
+      ### 评估方法
+      按此顺序评估：
+
+      1. **如果人员是verified/有名称的** → 无论时间或活动，均为0级
+      2. **如果人员是未识别的 person：**
+        - 检查时间：如果是深夜/凌晨（晚上11点-早上5点）且在私人区域（车道、车辆/建筑物附近）→ 1级
+        - 检查动作：如果测试门/把手、拿走物品、攀爬 → 1级
+        - 如果没有上述动作，如果是白天/晚间（上午6点-晚上10点）且有明确的合法目的（快递/外卖、服务人员）→ 0级
+      3. **如果出现以下情况升级到2级：** 可见武器、破门工具、正在进行强行进入、有暴力行为或正在进行的财产破坏（从0级或1级升级）
+
+      在深夜时分，私人区域仅仅出现未识别人员本身就是可疑的，都需要人工核查，无论他们看起来在做什么活动或出现时间多么短暂。
+    preferred_language: 简体中文
+```
+
+
+### 画面来源
+
+默认情况下，核查总结使用预览画面（缓存的预览帧），这些画面分辨率较低但每张画面使用的 token 更少。
+如果希望更好的画面质量和更详细的分析，你可以配置 Frigate 以更高分辨率直接从录制中提取帧：
 
 ```yaml
 review:
   genai:
     enabled: true
-    image_source: recordings # Options: "preview" (default) or "recordings"
+    image_source: recordings # 选项：默认为"preview"（预览），可修改为"recordings"（从录制流中获取）
 ```
 
-When using `recordings`, frames are extracted at 480px height while maintaining the camera's original aspect ratio, providing better detail for the LLM while being mindful of context window size. This is particularly useful for scenarios where fine details matter, such as identifying license plates, reading text, or analyzing distant objects.
+使用`recordings`时，画面以 480px 高度提取，同时保持摄像头的原始宽高比，为 AI 大模型 提供更好的细节，同时注意上下文窗口大小。这对于细节很重要的场景特别有用，例如识别车牌、阅读文本或分析远处目标。
 
-The number of frames sent to the LLM is dynamically calculated based on:
+发送给 AI 大模型 的帧数根据以下因素动态计算：
 
-- Your LLM provider's context window size
-- The camera's resolution and aspect ratio (ultrawide cameras like 32:9 use more tokens per image)
-- The image source (recordings use more tokens than preview images)
+- 你的 AI 大模型提供商的上下文窗口大小
+- 摄像头的分辨率和宽高比（超宽摄像头如 32:9 每张画面将使用更多 token）
+- 画面来源（`image_source`），录制（`recordings`）比预览（`preview`）画面使用更多 token
 
-Frame counts are automatically optimized to use ~98% of the available context window while capping at 20 frames maximum to ensure reasonable inference times. Note that using recordings will:
+帧数会自动优化以使用约 98% 的可用上下文窗口，同时最多限制在 `20` 帧，以确保合理的推理时间。请注意，画面来源使用录制（`recordings`）将会有以下变化：
 
-- Provide higher quality images to the LLM (480p vs 180p preview images)
-- Use more tokens per image due to higher resolution
-- Result in fewer frames being sent for ultrawide cameras due to larger image size
-- Require that recordings are enabled for the camera
+- 为 AI 大模型 提供更高质量的画面（画面分辨率为 480p，而预览画面只有 180p）
+- 由于分辨率更高，每帧画面将使用更多 token
+- 对于超宽摄像头，由于画面尺寸更大，导致发送的帧数更少
+- 要求为摄像头启用录制功能
 
-If recordings are not available for a given time period, the system will automatically fall back to using preview frames.
+如果在给定时间段内没有录制可用，系统将自动回退到使用预览帧。
 
-### Additional Concerns
+### 附加关注点
 
-Along with the concern of suspicious activity or immediate threat, you may have concerns such as animals in your garden or a gate being left open. These concerns can be configured so that the review summaries will make note of them if the activity requires additional review. For example:
+除了可疑活动或直接威胁的关注外，你可能还有其他关注点，如花园中的动物或门未关。这些关注点可以配置，以便核查总结在活动需要额外核查时会注意到它们。例如：
 
 ```yaml
 review:
   genai:
     enabled: true
-    additional_concerns:
-      - animals in the garden
+    additional_concerns: # [!code +++]
+      - 有动物在花园里 # [!code +++]
 ```
 
-## Review Reports
+## 核查报告
 
-Along with individual review item summaries, Generative AI provides the ability to request a report of a given time period. For example, you can get a daily report while on a vacation of any suspicious activity or other concerns that may require review.
+除了个别核查项目总结外，生成式 AI 还提供了请求给定时间段报告的能力。例如，你可以在度假时获取任何可疑活动或可能需要核查的其他关注点的每日报告。
 
-### Requesting Reports Programmatically
+### 以编程方式请求报告
 
-Review reports can be requested via the [API](/integrations/api#review-summarization) by sending a POST request to `/api/review/summarize/start/{start_ts}/end/{end_ts}` with Unix timestamps.
+核查报告可以通过[API](/integrations/api#review-summarization)请求，方法是将 POST 请求发送到`/api/review/summarize/start/{start_ts}/end/{end_ts}`，其中`start_ts`和`end_ts`是 Unix 时间戳。
 
-For Home Assistant users, there is a built-in service (`frigate.review_summarize`) that makes it easy to request review reports as part of automations or scripts. This allows you to automatically generate daily summaries, vacation reports, or custom time period reports based on your specific needs.
+对于 Home Assistant 用户，有一个内置服务（`frigate.review_summarize`），可以轻松请求作为自动化或脚本一部分的核查报告。这允许你根据你的特定需求自动生成每日总结、度假报告或自定义时间段报告。

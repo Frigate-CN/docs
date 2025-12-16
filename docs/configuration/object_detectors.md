@@ -13,8 +13,8 @@ Frigate 支持多种不同类型的检测器，可在不同硬件上运行：
 
 - [Coral EdgeTPU](#edge-tpu-detector)：Google Coral EdgeTPU 提供 USB 和 m.2 两种接口，兼容多种设备。
 - [Hailo](#hailo-8)：Hailo8 和 Hailo8L AI 加速模块提供 m.2 接口和树莓派 HAT，兼容多种设备。
-- <Badge text="社区支持" type="warning" />[MemryX](#memryx-mx3): The MX3 Acceleration module is available in m.2 format, offering broad compatibility across various platforms.
-- <Badge text="社区支持" type="warning" />[DeGirum](#degirum): Service for using hardware devices in the cloud or locally. Hardware and models provided on the cloud on [their website](https://hub.degirum.com).
+- [MemryX](#memryx-mx3)<Badge text="社区支持" type="warning" />：MX3 加速模块提供 m.2 接口版本，为各种平台提供广泛的兼容性。
+- [DeGirum](#degirum)<Badge text="社区支持" type="warning" />：用于在云端或本地使用硬件设备的服务。硬件和模型在[其网站](https://hub.degirum.com)上提供。
 
 **AMD**
 
@@ -106,7 +106,7 @@ detectors:
 detectors:
   coral:
     type: edgetpu
-    device: ''
+    device: ""
 ```
 
 ### 单个 PCIE/M.2 Coral
@@ -142,24 +142,24 @@ detectors:
     device: pci
 ```
 
-### EdgeTPU Supported Models
+### EdgeTPU 支持的模型
 
-| Model                                 | Notes                                       |
-| ------------------------------------- | ------------------------------------------- |
-| [MobileNet v2](#ssdlite-mobilenet-v2) | Default model                               |
-| [YOLOv9](#yolo-v9)                    | More accurate but slower than default model |
+| 模型                                  | 注释                   |
+| ------------------------------------- | ---------------------- |
+| [MobileNet v2](#ssdlite-mobilenet-v2) | 默认模型               |
+| [YOLOv9](#yolov9)                    | 比默认模型更准确但更慢 |
 
 #### SSDLite MobileNet v2
 
-A TensorFlow Lite model is provided in the container at `/edgetpu_model.tflite` and is used by this detector type by default. To provide your own model, bind mount the file into the container and provide the path with `model.path`.
+容器中提供了位于`/edgetpu_model.tflite`的 TensorFlow Lite 模型，默认情况下此检测器类型使用该模型。要提供自己的模型，将文件绑定挂载到容器中，并通过`model.path`提供路径。
 
-#### YOLO v9
+#### YOLOv9
 
-[YOLOv9](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite) models that are compiled for Tensorflow Lite and properly quantized are supported, but not included by default. To provide your own model, bind mount the file into the container and provide the path with `model.path`. Note that the model may require a custom label file (eg. [use this 17 label file](https://raw.githubusercontent.com/dbro/frigate-detector-edgetpu-yolo9/refs/heads/main/labels-coco17.txt) for the model linked above.)
+支持为 TensorFlow Lite 编译并正确量化的[YOLOv9](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite)模型，但默认不包含。要提供自己的模型，将文件绑定挂载到容器中，并通过`model.path`提供路径。注意模型可能需要自定义标签文件（例如，为上面链接的模型[使用这个 17 标签文件](https://raw.githubusercontent.com/dbro/frigate-detector-edgetpu-yolo9/refs/heads/main/labels-coco17.txt)）。
 
-##### YOLOv9 Setup & Config
+##### YOLOv9 设置和配置
 
-After placing the downloaded files for the tflite model and labels in your config folder, you can use the following configuration:
+将 tflite 模型和标签的下载文件放置在配置文件夹中后，你可以使用以下配置：
 
 ```yaml
 detectors:
@@ -169,13 +169,13 @@ detectors:
 
 model:
   model_type: yolo-generic
-  width: 320 # <--- should match the imgsize of the model, typically 320
-  height: 320 # <--- should match the imgsize of the model, typically 320
+  width: 320 # <--- 应与模型的 imgsize 匹配，通常为 320
+  height: 320 # <--- 应与模型的 imgsize 匹配，通常为 320
   path: /config/model_cache/yolov9-s-relu6-best_320_int8_edgetpu.tflite
   labelmap_path: /config/labels-coco17.txt
 ```
 
-Note that the labelmap uses a subset of the complete COCO label set that has only 17 objects.
+注意标签图使用了完整 COCO 标签集的一个子集，仅包含 17 个对象。
 
 ---
 
@@ -242,7 +242,7 @@ model:
   input_tensor: nhwc
   input_pixel_format: rgb
   model_type: ssd
-  # 为SSD MobileNet v1指定本地模型路径（如果可用）或URL
+  # 为 SSD MobileNet v1 指定本地模型路径（如果可用）或 URL
   # 本地路径示例：
   # path: /config/model_cache/h8l_cache/ssd_mobilenet_v1.hef
   #
@@ -468,18 +468,19 @@ model: # [!code ++]
 
 注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
 
-## Apple Silicon detector
+## Apple Silicon 检测器
 
-The NPU in Apple Silicon can't be accessed from within a container, so the [Apple Silicon detector client](https://github.com/frigate-nvr/apple-silicon-detector) must first be setup. It is recommended to use the Frigate docker image with `-standard-arm64` suffix, for example `ghcr.io/blakeblackshear/frigate:stable-standard-arm64`.
+Apple Silicon 中的 NPU 无法从容器内访问，因此必须先设置[Apple Silicon 检测器客户端](https://cnb.cool/frigate-cn/apple-silicon-detector)。
+建议使用带有`-standard-arm64`后缀的 Frigate docker 镜像，例如`ghcr.io/blakeblackshear/frigate:stable-standard-arm64`。
 
-### Setup {#setup-2}
+### 设置 {#setup-2}
 
-1. Setup the [Apple Silicon detector client](https://github.com/frigate-nvr/apple-silicon-detector) and run the client
-2. Configure the detector in Frigate and startup Frigate
+1. 设置[Apple Silicon 检测器客户端](https://cnb.cool/frigate-cn/apple-silicon-detector)并运行客户端
+2. 在 Frigate 中配置检测器并启动 Frigate
 
-### Configuration
+### 配置
 
-Using the detector config below will connect to the client:
+使用下面的检测器配置将连接到客户端：
 
 ```yaml
 detectors:
@@ -488,21 +489,21 @@ detectors:
     endpoint: tcp://host.docker.internal:5555
 ```
 
-### Apple Silicon Supported Models
+### Apple Silicon 支持的模型
 
-There is no default model provided, the following formats are supported:
+没有提供默认模型，支持以下格式：
 
 #### YOLO (v3, v4, v7, v9)
 
-YOLOv3, YOLOv4, YOLOv7, and [YOLOv9](https://github.com/WongKinYiu/yolov9) models are supported, but not included by default.
+YOLOv3、YOLOv4、YOLOv7 和[YOLOv9](https://github.com/WongKinYiu/yolov9)模型受支持，但默认不包含。
 
 :::tip
 
-The YOLO detector has been designed to support YOLOv3, YOLOv4, YOLOv7, and YOLOv9 models, but may support other YOLO model architectures as well. See [the models section](#downloading-yolo-models) for more information on downloading YOLO models for use in Frigate.
+YOLO 检测器设计用于支持 YOLOv3、YOLOv4、YOLOv7 和 YOLOv9 模型，但也可能支持其他 YOLO 模型架构。有关下载 YOLO 模型用于 Frigate 的更多信息，请参见[模型部分](#downloading-yolo-models)。
 
 :::
 
-When Frigate is started with the following config it will connect to the detector client and transfer the model automatically:
+当 Frigate 使用以下配置启动时，它将连接到检测器客户端并自动传输模型：
 
 ```yaml
 detectors:
@@ -512,8 +513,8 @@ detectors:
 
 model:
   model_type: yolo-generic
-  width: 320 # <--- should match the imgsize set during model export
-  height: 320 # <--- should match the imgsize set during model export
+  width: 320 # <--- 应与模型导出时设置的imgsize匹配
+  height: 320 # <--- 应与模型导出时设置的imgsize匹配
   input_tensor: nchw
   input_dtype: float
   path: /config/model_cache/yolo.onnx
@@ -801,7 +802,7 @@ detectors:
     num_threads: 3
 
 model:
-  path: '/custom_model.tflite'
+  path: "/custom_model.tflite"
 ```
 
 使用 CPU 检测器时，可以为每个摄像头添加一个 CPU 检测器。添加比摄像头数量更多的检测器不会提高性能。
@@ -832,17 +833,17 @@ detectors:
 
 ## MemryX MX3
 
-This detector is available for use with the MemryX MX3 accelerator M.2 module. Frigate supports the MX3 on compatible hardware platforms, providing efficient and high-performance object detection.
+此检测器可用于 MemryX MX3 加速器 M.2 模块。Frigate 在兼容硬件平台上支持 MX3，提供高效和高性能的物体检测。
 
-See the [installation docs](../frigate/installation.md#memryx-mx3) for information on configuring the MemryX hardware.
+有关配置 MemryX 硬件的信息，请参阅[安装文档](../frigate/installation.md#memryx-mx3)。
 
-To configure a MemryX detector, simply set the `type` attribute to `memryx` and follow the configuration guide below.
+要配置 MemryX 检测器，只需将`type`属性设置为`memryx`并按照下面的配置指南。
 
-### Configuration
+### 配置
 
-To configure the MemryX detector, use the following example configuration:
+要配置 MemryX 检测器，请使用以下示例配置：
 
-#### Single PCIe MemryX MX3
+#### 单个 PCIe MemryX MX3
 
 ```yaml
 detectors:
@@ -851,7 +852,7 @@ detectors:
     device: PCIe:0
 ```
 
-#### Multiple PCIe MemryX MX3 Modules
+#### 多个 PCIe MemryX MX3 模块
 
 ```yaml
 detectors:
@@ -868,23 +869,23 @@ detectors:
     device: PCIe:2
 ```
 
-### Supported Models
+### 支持的模型
 
-MemryX `.dfp` models are automatically downloaded at runtime, if enabled, to the container at `/memryx_models/model_folder/`.
+如果启用，MemryX `.dfp`模型会在运行时自动下载到容器的`/memryx_models/model_folder/`中。
 
 #### YOLO-NAS
 
-The [YOLO-NAS](https://github.com/Deci-AI/super-gradients/blob/master/YOLONAS.md) model included in this detector is downloaded from the [Models Section](#downloading-yolo-nas-model) and compiled to DFP with [mx_nc](https://developer.memryx.com/tools/neural_compiler.html#usage).
+此检测器中包含的[YOLO-NAS](https://github.com/Deci-AI/super-gradients/blob/master/YOLONAS.md)模型从[模型部分](#downloading-yolo-nas-model)下载，并使用[mx_nc](https://developer.memryx.com/tools/neural_compiler.html#usage)编译为 DFP。
 
-**Note:** The default model for the MemryX detector is YOLO-NAS 320x320.
+**注意：** MemryX 检测器的默认模型是 YOLO-NAS 320x320。
 
-The input size for **YOLO-NAS** can be set to either **320x320** (default) or **640x640**.
+**YOLO-NAS**的输入大小可以设置为**320x320**（默认）或**640x640**。
 
-- The default size of **320x320** is optimized for lower CPU usage and faster inference times.
+- **320x320**的默认大小针对较低的 CPU 使用和更快的推理时间进行了优化。
 
-##### Configuration
+##### 配置
 
-Below is the recommended configuration for using the **YOLO-NAS** (small) model with the MemryX detector:
+以下是使用**YOLO-NAS**（小）模型与 MemryX 检测器的推荐配置：
 
 ```yaml
 detectors:
@@ -894,25 +895,25 @@ detectors:
 
 model:
   model_type: yolonas
-  width: 320 # (Can be set to 640 for higher resolution)
-  height: 320 # (Can be set to 640 for higher resolution)
+  width: 320 # （可以设置为 640 以获得更高分辨率）
+  height: 320 # （可以设置为 640 以获得更高分辨率）
   input_tensor: nchw
   input_dtype: float
   labelmap_path: /labelmap/coco-80.txt
-  # Optional: The model is normally fetched through the runtime, so 'path' can be omitted unless you want to use a custom or local model.
+  # 可选：模型通常通过运行时获取，因此除非你想使用自定义或本地模型，否则可以省略 'path'。
   # path: /config/yolonas.zip
-  # The .zip file must contain:
-  # ├── yolonas.dfp          (a file ending with .dfp)
-  # └── yolonas_post.onnx    (optional; only if the model includes a cropped post-processing network)
+  # .zip 文件必须包含：
+  # ├── yolonas.dfp          （以 .dfp 结尾的文件）
+  # └── yolonas_post.onnx    （可选；仅当模型包含裁剪的后处理网络时）
 ```
 
 #### YOLOv9
 
-The YOLOv9s model included in this detector is downloaded from [the original GitHub](https://github.com/WongKinYiu/yolov9) like in the [Models Section](#yolov9-1) and compiled to DFP with [mx_nc](https://developer.memryx.com/tools/neural_compiler.html#usage).
+此检测器中包含的 YOLOv9s 模型从[原始 GitHub](https://github.com/WongKinYiu/yolov9)下载，就像[模型部分](#yolov9-1)中那样，并使用[mx_nc](https://developer.memryx.com/tools/neural_compiler.html#usage)编译为 DFP。
 
-##### Configuration
+##### 配置
 
-Below is the recommended configuration for using the **YOLOv9** (small) model with the MemryX detector:
+以下是使用**YOLOv9**（小）模型与 MemryX 检测器的推荐配置：
 
 ```yaml
 detectors:
@@ -922,24 +923,24 @@ detectors:
 
 model:
   model_type: yolo-generic
-  width: 320 # (Can be set to 640 for higher resolution)
-  height: 320 # (Can be set to 640 for higher resolution)
+  width: 320 # （可以设置为 640 以获得更高分辨率）
+  height: 320 # （可以设置为 640 以获得更高分辨率）
   input_tensor: nchw
   input_dtype: float
   labelmap_path: /labelmap/coco-80.txt
-  # Optional: The model is normally fetched through the runtime, so 'path' can be omitted unless you want to use a custom or local model.
+  # 可选：模型通常通过运行时获取，因此除非你想使用自定义或本地模型，否则可以省略 'path'。
   # path: /config/yolov9.zip
-  # The .zip file must contain:
-  # ├── yolov9.dfp          (a file ending with .dfp)
+  # .zip 文件必须包含：
+  # ├── yolov9.dfp          （以 .dfp 结尾的文件）
 ```
 
 #### YOLOX
 
-The model is sourced from the [OpenCV Model Zoo](https://github.com/opencv/opencv_zoo) and precompiled to DFP.
+该模型源自[OpenCV 模型库](https://github.com/opencv/opencv_zoo)并预编译为 DFP。
 
-##### Configuration
+##### 配置
 
-Below is the recommended configuration for using the **YOLOX** (small) model with the MemryX detector:
+以下是使用**YOLOX**（小）模型与 MemryX 检测器的推荐配置：
 
 ```yaml
 detectors:
@@ -954,19 +955,19 @@ model:
   input_tensor: nchw
   input_dtype: float_denorm
   labelmap_path: /labelmap/coco-80.txt
-  # Optional: The model is normally fetched through the runtime, so 'path' can be omitted unless you want to use a custom or local model.
+  # 可选：模型通常通过运行时获取，因此除非你想使用自定义或本地模型，否则可以省略 'path'。
   # path: /config/yolox.zip
-  # The .zip file must contain:
-  # ├── yolox.dfp          (a file ending with .dfp)
+  # .zip 文件必须包含：
+  # ├── yolox.dfp          （以 .dfp 结尾的文件）
 ```
 
 #### SSDLite MobileNet v2
 
-The model is sourced from the [OpenMMLab Model Zoo](https://mmdeploy-oss.openmmlab.com/model/mmdet-det/ssdlite-e8679f.onnx) and has been converted to DFP.
+该模型源自[OpenMMLab 模型库](https://mmdeploy-oss.openmmlab.com/model/mmdet-det/ssdlite-e8679f.onnx)并已转换为 DFP。
 
-##### Configuration
+##### 配置
 
-Below is the recommended configuration for using the **SSDLite MobileNet v2** model with the MemryX detector:
+以下是使用**SSDLite MobileNet v2**模型与 MemryX 检测器的推荐配置：
 
 ```yaml
 detectors:
@@ -981,41 +982,41 @@ model:
   input_tensor: nchw
   input_dtype: float
   labelmap_path: /labelmap/coco-80.txt
-  # Optional: The model is normally fetched through the runtime, so 'path' can be omitted unless you want to use a custom or local model.
+  # 可选：模型通常通过运行时获取，因此除非你想使用自定义或本地模型，否则可以省略 'path'。
   # path: /config/ssdlite_mobilenet.zip
-  # The .zip file must contain:
-  # ├── ssdlite_mobilenet.dfp          (a file ending with .dfp)
-  # └── ssdlite_mobilenet_post.onnx    (optional; only if the model includes a cropped post-processing network)
+  # .zip 文件必须包含：
+  # ├── ssdlite_mobilenet.dfp          （以 .dfp 结尾的文件）
+  # └── ssdlite_mobilenet_post.onnx    （可选；仅当模型包含裁剪的后处理网络时）
 ```
 
-#### Using a Custom Model
+#### 使用自定义模型
 
-To use your own model:
+要使用你自己的模型：
 
-1.  Package your compiled model into a `.zip` file.
+1.  将编译好的模型打包成 `.zip` 文件。
 
-2.  The `.zip` must contain the compiled `.dfp` file.
+2.  `.zip` 文件必须包含编译好的 `.dfp` 文件。
 
-3.  Depending on the model, the compiler may also generate a cropped post-processing network. If present, it will be named with the suffix `_post.onnx`.
+3.  根据模型的不同，编译器可能还会生成裁剪的后处理网络。如果存在，将以 `_post.onnx` 为后缀命名。
 
-4.  Bind-mount the `.zip` file into the container and specify its path using `model.path` in your config.
+4.  将 `.zip` 文件绑定挂载到容器中，并在配置中使用 `model.path` 指定其路径。
 
-5.  Update the `labelmap_path` to match your custom model's labels.
+5.  更新 `labelmap_path` 以匹配自定义模型的标签。
 
-For detailed instructions on compiling models, refer to the [MemryX Compiler](https://developer.memryx.com/tools/neural_compiler.html#usage) docs and [Tutorials](https://developer.memryx.com/tutorials/tutorials.html).
+有关编译模型的详细说明，请参阅[MemryX 编译器](https://developer.memryx.com/tools/neural_compiler.html#usage)文档和[教程](https://developer.memryx.com/tutorials/tutorials.html)。
 
 ```yaml
-# The detector automatically selects the default model if nothing is provided in the config.
+# 如果配置中未提供任何内容，检测器将自动选择默认模型。
 #
-# Optionally, you can specify a local model path as a .zip file to override the default.
-# If a local path is provided and the file exists, it will be used instead of downloading.
+# 或者，你可以指定本地模型路径作为 .zip 文件来覆盖默认值。
+# 如果提供了本地路径且文件存在，将使用该文件而不是下载。
 #
-# Example:
+# 示例：
 # path: /config/yolonas.zip
 #
-# The .zip file must contain:
-# ├── yolonas.dfp          (a file ending with .dfp)
-# └── yolonas_post.onnx    (optional; only if the model includes a cropped post-processing network)
+# .zip 文件必须包含：
+# ├── yolonas.dfp          （以 .dfp 结尾的文件）
+# └── yolonas_post.onnx    （可选；仅当模型包含裁剪的后处理网络时）
 ```
 
 ---
@@ -1032,11 +1033,11 @@ For detailed instructions on compiling models, refer to the [MemryX Compiler](ht
 
 默认情况下，不会生成任何模型，但可以通过在 Docker 中指定`YOLO_MODELS`环境变量来覆盖此设置。可以以逗号分隔的格式列出一个或多个模型，每个模型都将被生成。仅当`model_cache`文件夹中不存在相应的`{model}.trt`文件时，才会生成模型，因此，你可以通过从 Frigate 数据文件夹中删除模型文件，来强制重新生成模型。
 
-如果你拥有带有 DLA（Xavier 或 Orin）的 Jetson 设备，可以通过在模型名称后附加`-dla`来生成将在 DLA 上运行的模型，例如指定`YOLO_MODELS=yolov7 - 320 - dla`。该模型将在 DLA0 上运行（Frigate 目前不支持 DLA1）。与 DLA 不兼容的层将回退到在 GPU 上运行。
+如果你拥有带有 DLA（Xavier 或 Orin）的 Jetson 设备，可以通过在模型名称后附加`-dla`来生成将在 DLA 上运行的模型，例如指定`YOLO_MODELS=yolov7-320-dla`。该模型将在 DLA0 上运行（Frigate 目前不支持 DLA1）。与 DLA 不兼容的层将回退到在 GPU 上运行。
 
 如果你的 GPU 不支持 FP16 操作，可以传递环境变量`USE_FP16=False`来禁用它。
 
-可以通过向`docker run`命令或在`docker - compose.yml`文件中传递环境变量来选择特定的模型。使用`-e YOLO_MODELS=yolov4 - 416,yolov4 - tiny - 416`的形式来选择一个或多个模型名称。可用的模型如下所示。
+可以通过向`docker run`命令或在`docker-compose.yml`文件中传递环境变量来选择特定的模型。使用`-e YOLO_MODELS=yolov4-416,yolov4-tiny-416`的形式来选择一个或多个模型名称。可用的模型如下所示。
 
 <details>
 <summary>可用模型</summary>
@@ -1081,7 +1082,7 @@ frigate:
 
 ### 配置参数
 
-通过将`tensorrt`指定为模型类型，可以选择 TensorRT 检测器。需要使用[硬件加速](hardware_acceleration_video.md#nvidia-gpu)部分所述的相同方法，将 GPU 透传到 Docker 容器。如果透传多个 GPU，可以使用`device`配置参数选择检测器使用哪个 GPU。`device`参数是 GPU 索引的整数值，可在容器内通过`nvidia - smi`查看。
+通过将`tensorrt`指定为模型类型，可以选择 TensorRT 检测器。需要使用[硬件加速](hardware_acceleration_video.md#nvidia-gpu)部分所述的相同方法，将 GPU 透传到 Docker 容器。如果透传多个 GPU，可以使用`device`配置参数选择检测器使用哪个 GPU。`device`参数是 GPU 索引的整数值，可在容器内通过`nvidia-smi`查看。
 
 TensorRT 检测器默认使用位于`/config/model_cache/tensorrt`中的`.trt`模型文件。所使用的模型路径和维度将取决于你生成的模型。
 
@@ -1091,7 +1092,7 @@ TensorRT 检测器默认使用位于`/config/model_cache/tensorrt`中的`.trt`�
 detectors:
   tensorrt:
     type: tensorrt
-    device: 0 #这是默认值，选择第一个GPU
+    device: 0 # 这是默认值，选择第一个GPU
 
 model:
   path: /config/model_cache/tensorrt/yolov7-320.trt
@@ -1104,37 +1105,37 @@ model:
 
 ## Synaptics
 
-Hardware accelerated object detection is supported on the following SoCs:
+以下 SoC 支持硬件加速物体检测：
 
 - SL1680
 
-This implementation uses the [Synaptics model conversion](https://synaptics-synap.github.io/doc/v/latest/docs/manual/introduction.html#offline-model-conversion), version v3.1.0.
+此实现使用[Synaptics 模型转换](https://synaptics-synap.github.io/doc/v/latest/docs/manual/introduction.html#offline-model-conversion)，版本 v3.1.0。
 
-This implementation is based on sdk `v1.5.0`.
+此实现基于 sdk `v1.5.0`。
 
-See the [installation docs](../frigate/installation.md#synaptics) for information on configuring the SL-series NPU hardware.
+有关配置 SL 系列 NPU 硬件的信息，请参阅[安装文档](../frigate/installation.md#synaptics)。
 
-### Configuration
+### 配置
 
-When configuring the Synap detector, you have to specify the model: a local **path**.
+配置 Synap 检测器时，你必须指定模型：本地**路径**。
 
 #### SSD Mobilenet
 
-A synap model is provided in the container at /mobilenet.synap and is used by this detector type by default. The model comes from [Synap-release Github](https://github.com/synaptics-astra/synap-release/tree/v1.5.0/models/dolphin/object_detection/coco/model/mobilenet224_full80).
+容器中提供了位于 `/mobilenet.synap` 的 synap 模型，默认情况下此检测器类型使用该模型。该模型来自[Synap-release Github](https://github.com/synaptics-astra/synap-release/tree/v1.5.0/models/dolphin/object_detection/coco/model/mobilenet224_full80)。
 
-Use the model configuration shown below when using the synaptics detector with the default synap model:
+使用 synaptics 检测器和默认 synap 模型时，请使用如下所示的模型配置：
 
 ```yaml
-detectors: # required
-  synap_npu: # required
-    type: synaptics # required
+detectors: # 必填
+  synap_npu: # 必填
+    type: synaptics # 必填
 
-model: # required
-  path: /synaptics/mobilenet.synap # required
-  width: 224 # required
-  height: 224 # required
-  tensor_format: nhwc # default value (optional. If you change the model, it is required)
-  labelmap_path: /labelmap/coco-80.txt # required
+model: # 必填
+  path: /synaptics/mobilenet.synap # 必填
+  width: 224 # 必填
+  height: 224 # 必填
+  tensor_format: nhwc # 默认值（可选。如果你更改模型，则为必填）
+  labelmap_path: /labelmap/coco-80.txt # 必填
 ```
 
 ## 瑞芯微 Rockchip 平台检测器 {#rockchip-platform}
@@ -1283,10 +1284,10 @@ model: # required
 以下是需要根据你的 onnx 模型进行调整的配置文件范例：
 
 ```yaml
-soc: ['rk3562', 'rk3566', 'rk3568', 'rk3576', 'rk3588']
+soc: ["rk3562", "rk3566", "rk3568", "rk3576", "rk3588"]
 quantization: false
 
-output_name: '{input_basename}'
+output_name: "{input_basename}"
 
 config:
   mean_values: [[0, 0, 0]]
@@ -1308,13 +1309,13 @@ config:
 
 ## DeGirum
 
-DeGirum is a detector that can use any type of hardware listed on [their website](https://hub.degirum.com). DeGirum can be used with local hardware through a DeGirum AI Server, or through the use of `@local`. You can also connect directly to DeGirum's AI Hub to run inferences. **Please Note:** This detector _cannot_ be used for commercial purposes.
+DeGirum 可以使用[其网站](https://hub.degirum.com)上列出的任何类型硬件的检测器。DeGirum 可以通过 DeGirum AI 服务器或使用 `@local` 与本地硬件一起使用。你也可以直接连接到 DeGirum 的 AI Hub 来运行推理。**请注意：**此检测器**不能**用于商业目的。
 
-### Configuration
+### 配置
 
-#### AI Server Inference
+#### AI 服务器推理
 
-Before starting with the config file for this section, you must first launch an AI server. DeGirum has an AI server ready to use as a docker container. Add this to your `docker-compose.yml` to get started:
+在开始本部分的配置文件之前，你必须首先启动一个 AI 服务器。DeGirum 提供了一个可用的 AI 服务器作为 docker 容器。将此添加到你的 `docker-compose.yml` 以开始：
 
 ```yaml
 degirum_detector:
@@ -1322,87 +1323,87 @@ degirum_detector:
   image: degirum/aiserver:latest
   privileged: true
   ports:
-    - '8778:8778'
+    - "8778:8778"
 ```
 
-All supported hardware will automatically be found on your AI server host as long as relevant runtimes and drivers are properly installed on your machine. Refer to [DeGirum's docs site](https://docs.degirum.com/pysdk/runtimes-and-drivers) if you have any trouble.
+只要相关运行时和驱动程序在你的机器上正确安装，所有支持的硬件都会在你的 AI 服务器主机上自动找到。如果你有任何问题，请参阅[DeGirum 文档站点](https://docs.degirum.com/pysdk/runtimes-and-drivers)。
 
-Once completed, changing the `config.yml` file is simple.
+完成后，更改 `config.yml` 文件很简单。
 
 ```yaml
 degirum_detector:
   type: degirum
-  location: degirum # Set to service name (degirum_detector), container_name (degirum), or a host:port (192.168.29.4:8778)
-  zoo: degirum/public # DeGirum's public model zoo. Zoo name should be in format "workspace/zoo_name". degirum/public is available to everyone, so feel free to use it if you don't know where to start. If you aren't pulling a model from the AI Hub, leave this and 'token' blank.
-  token: dg_example_token # For authentication with the AI Hub. Get this token through the "tokens" section on the main page of the [AI Hub](https://hub.degirum.com). This can be left blank if you're pulling a model from the public zoo and running inferences on your local hardware using @local or a local DeGirum AI Server
+  location: degirum # 设置为服务名称（degirum_detector）、容器名称（degirum）或主机:端口（192.168.29.4:8778）
+  zoo: degirum/public # DeGirum 的公共模型库。库名称应为 "workspace/zoo_name" 格式。degirum/public 对所有人开放，所以如果你不知道从哪里开始，请随意使用。如果你不是从 AI Hub 拉取模型，请将此和 'token' 留空。
+  token: dg_example_token # 用于 AI Hub 的身份验证。通过 [AI Hub](https://hub.degirum.com) 主页的"tokens"部分获取此令牌。如果你从公共库拉取模型并使用 @local 或本地 DeGirum AI 服务器在你的本地硬件上运行推理，则可以留空
 ```
 
-Setting up a model in the `config.yml` is similar to setting up an AI server.
-You can set it to:
+在 `config.yml` 中设置模型类似于设置 AI 服务器。
+你可以将其设置为：
 
-- A model listed on the [AI Hub](https://hub.degirum.com), given that the correct zoo name is listed in your detector
-  - If this is what you choose to do, the correct model will be downloaded onto your machine before running.
-- A local directory acting as a zoo. See DeGirum's docs site [for more information](https://docs.degirum.com/pysdk/user-guide-pysdk/organizing-models#model-zoo-directory-structure).
-- A path to some model.json.
+- [AI Hub](https://hub.degirum.com)上列出的模型，前提是在你的检测器中列出了正确的库名称
+  - 如果你选择这样做，正确的模型将在运行前下载到你的机器上。
+- 作为库的本地目录。请参阅 DeGirum 文档站点[获取更多信息](https://docs.degirum.com/pysdk/user-guide-pysdk/organizing-models#model-zoo-directory-structure)。
+- 某个 model.json 的路径。
 
 ```yaml
 model:
-  path: ./mobilenet_v2_ssd_coco--300x300_quant_n2x_orca1_1 # directory to model .json and file
-  width: 300 # width is in the model name as the first number in the "int"x"int" section
-  height: 300 # height is in the model name as the second number in the "int"x"int" section
-  input_pixel_format: rgb/bgr # look at the model.json to figure out which to put here
+  path: ./mobilenet_v2_ssd_coco--300x300_quant_n2x_orca1_1 # 模型 .json 和文件的目录
+  width: 300 # 宽度在模型名称中作为"int"x"int"部分的第一个数字
+  height: 300 # 高度在模型名称中作为"int"x"int"部分的第二个数字
+  input_pixel_format: rgb/bgr # 查看 model.json 以确定在这里放置哪个
 ```
 
-#### Local Inference
+#### 本地推理
 
-It is also possible to eliminate the need for an AI server and run the hardware directly. The benefit of this approach is that you eliminate any bottlenecks that occur when transferring prediction results from the AI server docker container to the frigate one. However, the method of implementing local inference is different for every device and hardware combination, so it's usually more trouble than it's worth. A general guideline to achieve this would be:
+也可以不使用 AI 服务器的并直接运行硬件。这种方法的好处是没有将预测结果从 AI 服务器 docker 容器传输到 frigate 容器时产生的任何瓶颈。但是，实现本地推理的方法对每个设备和硬件组合都不同，所以通常得不偿失。实现这一目标的一般指南是：
 
-1. Ensuring that the frigate docker container has the runtime you want to use. So for instance, running `@local` for Hailo means making sure the container you're using has the Hailo runtime installed.
-2. To double check the runtime is detected by the DeGirum detector, make sure the `degirum sys-info` command properly shows whatever runtimes you mean to install.
-3. Create a DeGirum detector in your `config.yml` file.
+1. 确保 frigate docker 容器具有你想要使用的运行时。例如，为 Hailo 运行 `@local` 意味着确保你使用的容器安装了 Hailo 运行时。
+2. 要再次检查运行时是否被 DeGirum 检测器检测到，确保 `degirum sys-info` 命令正确显示你打算安装的任何运行时。
+3. 在你的 `config.yml` 文件中创建 DeGirum 检测器。
 
 ```yaml
 degirum_detector:
   type: degirum
-  location: '@local' # For accessing AI Hub devices and models
-  zoo: degirum/public # DeGirum's public model zoo. Zoo name should be in format "workspace/zoo_name". degirum/public is available to everyone, so feel free to use it if you don't know where to start.
-  token: dg_example_token # For authentication with the AI Hub. Get this token through the "tokens" section on the main page of the [AI Hub](https://hub.degirum.com). This can be left blank if you're pulling a model from the public zoo and running inferences on your local hardware using @local or a local DeGirum AI Server
+  location: "@local" # 用于访问 AI Hub 设备和模型
+  zoo: degirum/public # DeGirum 的公共模型库。库名称应为 "workspace/zoo_name" 格式。degirum/public 对所有人开放，所以如果你不知道从哪里开始，请随意使用。
+  token: dg_example_token # 用于 AI Hub 的身份验证。通过 [AI Hub](https://hub.degirum.com) 主页的"tokens"部分获取此令牌。如果你从公共库拉取模型并使用 @local 或本地 DeGirum AI 服务器在你的本地硬件上运行推理，则可以留空
 ```
 
-Once `degirum_detector` is setup, you can choose a model through 'model' section in the `config.yml` file.
-
-```yaml
-model:
-  path: mobilenet_v2_ssd_coco--300x300_quant_n2x_orca1_1
-  width: 300 # width is in the model name as the first number in the "int"x"int" section
-  height: 300 # height is in the model name as the second number in the "int"x"int" section
-  input_pixel_format: rgb/bgr # look at the model.json to figure out which to put here
-```
-
-#### AI Hub Cloud Inference
-
-If you do not possess whatever hardware you want to run, there's also the option to run cloud inferences. Do note that your detection fps might need to be lowered as network latency does significantly slow down this method of detection. For use with Frigate, we highly recommend using a local AI server as described above. To set up cloud inferences,
-
-1. Sign up at [DeGirum's AI Hub](https://hub.degirum.com).
-2. Get an access token.
-3. Create a DeGirum detector in your `config.yml` file.
-
-```yaml
-degirum_detector:
-  type: degirum
-  location: '@cloud' # For accessing AI Hub devices and models
-  zoo: degirum/public # DeGirum's public model zoo. Zoo name should be in format "workspace/zoo_name". degirum/public is available to everyone, so feel free to use it if you don't know where to start.
-  token: dg_example_token # For authentication with the AI Hub. Get this token through the "tokens" section on the main page of the (AI Hub)[https://hub.degirum.com).
-```
-
-Once `degirum_detector` is setup, you can choose a model through 'model' section in the `config.yml` file.
+一旦 `degirum_detector` 设置完成，你可以通过 `config.yml` 文件中的'model'部分选择模型。
 
 ```yaml
 model:
   path: mobilenet_v2_ssd_coco--300x300_quant_n2x_orca1_1
-  width: 300 # width is in the model name as the first number in the "int"x"int" section
-  height: 300 # height is in the model name as the second number in the "int"x"int" section
-  input_pixel_format: rgb/bgr # look at the model.json to figure out which to put here
+  width: 300 # 宽度在模型名称中作为"int"x"int"部分的第一个数字
+  height: 300 # 高度在模型名称中作为"int"x"int"部分的第二个数字
+  input_pixel_format: rgb/bgr # 查看 model.json 以确定在这里放置哪个
+```
+
+#### AI Hub 云推理
+
+如果你不具备想要运行的硬件，也可以选择运行云推理。请注意，你的检测 fps 可能需要降低，因为网络延迟确实会显著减慢这种检测方法。对于与 Frigate 一起使用，我们强烈建议使用如上所述的本地 AI 服务器。要设置云推理，
+
+1. 在[DeGirum 的 AI Hub](https://hub.degirum.com)注册。
+2. 获取访问令牌。
+3. 在你的 `config.yml` 文件中创建 DeGirum 检测器。
+
+```yaml
+degirum_detector:
+  type: degirum
+  location: "@cloud" # 用于访问 AI Hub 设备和模型
+  zoo: degirum/public # DeGirum 的公共模型库。库名称应为 "workspace/zoo_name" 格式。degirum/public 对所有人开放，所以如果你不知道从哪里开始，请随意使用。
+  token: dg_example_token # 用于 AI Hub 的身份验证。通过 (AI Hub)[https://hub.degirum.com) 主页的"tokens"部分获取此令牌
+```
+
+一旦 `degirum_detector` 设置完成，你可以通过 `config.yml` 文件中的'model'部分选择模型。
+
+```yaml
+model:
+  path: mobilenet_v2_ssd_coco--300x300_quant_n2x_orca1_1
+  width: 300 # 宽度在模型名称中作为"int"x"int"部分的第一个数字
+  height: 300 # 高度在模型名称中作为"int"x"int"部分的第二个数字
+  input_pixel_format: rgb/bgr # 查看 model.json 以确定在这里放置哪个
 ```
 
 # 模型
@@ -1426,11 +1427,11 @@ WORKDIR /dfine
 RUN git clone https://github.com/Peterande/D-FINE.git .
 RUN uv pip install --system -r requirements.txt
 RUN uv pip install --system onnx onnxruntime onnxsim onnxscript
-# Create output directory and download checkpoint
+# 创建输出目录并下载检查点
 RUN mkdir -p output
 ARG MODEL_SIZE
 RUN wget https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_${MODEL_SIZE}_obj2coco.pth -O output/dfine_${MODEL_SIZE}_obj2coco.pth
-# Modify line 58 of export_onnx.py to change batch size to 1
+# 修改 export_onnx.py 的第 58 行以将批处理大小更改为 1
 RUN sed -i '58s/data = torch.rand(.*)/data = torch.rand(1, 3, 640, 640)/' tools/deployment/export_onnx.py
 RUN python3 tools/deployment/export_onnx.py -c configs/dfine/objects365/dfine_hgnetv2_${MODEL_SIZE}_obj2coco.yml -r output/dfine_${MODEL_SIZE}_obj2coco.pth
 FROM scratch
