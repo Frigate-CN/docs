@@ -269,7 +269,7 @@ detect:
   fps: 5
   # 可选：目标在追踪器中初始化所需的连续检测命中次数（默认值：帧率的1/2）
   min_initialized: 2
-  # 可选：Frigate认为目标消失前的无检测帧数（默认值：帧率的5倍）
+  # 可选：Frigate 认为目标消失前的无检测帧数（默认值：帧率的5倍）
   max_disappeared: 25
   # 可选：静止目标追踪配置
   stationary:
