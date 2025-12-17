@@ -18,3 +18,4 @@ main:
         image: docker.cnb.cool/johannli/knowledge-base
         settings:
           include: "docs/**/**.md"
+          chunk_size: 3000
