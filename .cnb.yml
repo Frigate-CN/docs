@@ -15,6 +15,6 @@ main:
   push:
     - stages:
       - name: build knowledge base
-        image: cnbcool/knowledge-base
+        image: docker.cnb.cool/johannli/knowledge-base
         settings:
           include: "docs/**/**.md"
