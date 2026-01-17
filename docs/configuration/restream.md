@@ -168,17 +168,16 @@ go2rtc:
 
 更多信息请参阅[此评论](https://github.com/AlexxIT/go2rtc/issues/1217#issuecomment-2242296489)。
 
-## Preventing go2rtc from blocking two-way audio {#two-way-talk-restream}
 
-For cameras that support two-way talk, go2rtc will automatically establish an audio output backchannel when connecting to an RTSP stream. This backchannel blocks access to the camera's audio output for two-way talk functionality, preventing both Frigate and other applications from using it.
+## 避免 go2rtc 阻塞双向语音功能 {#two-way-talk-restream}
 
-To prevent this, you must configure two separate stream instances:
+对于支持双向语音的摄像头，当 go2rtc 连接到其 RTSP 流时，会自动建立一条音频输出反向通道。该反向通道会占用摄像头的音频输出资源，从而阻塞双向语音功能，导致 Frigate 及其他应用均无法使用该功能。
 
-1. One stream instance with `#backchannel=0` for Frigate's viewing, recording, and detection (prevents go2rtc from establishing the blocking backchannel)
-2. A second stream instance without `#backchannel=0` for two-way talk functionality (can be used by Frigate's WebRTC viewer or other applications)
+要解决此问题，你需要配置两个独立的流实例：
+1.  第一个流实例添加 `#backchannel=0` 参数，用于 Frigate 的实时查看、录像和检测功能（此参数可阻止 go2rtc 建立会造成阻塞的反向通道）
+2.  第二个流实例不添加 `#backchannel=0` 参数，专门用于双向语音功能（可供 Frigate 的 WebRTC 查看器或其他应用使用）
 
-Configuration example:
-
+配置示例如下：
 ```yaml
 go2rtc:
   streams:
@@ -188,14 +187,37 @@ go2rtc:
       - rtsp://user:password@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
 ```
 
-In this configuration:
+本配置的作用说明：
+- `front_door` 流用于 Frigate 的实时查看、录像和检测。`#backchannel=0` 参数可阻止 go2rtc 建立音频输出反向通道，避免占用双向语音的资源。
+- `front_door_twoway` 流用于双向语音功能。当启用双向语音后，该流可被 Frigate 的 WebRTC 查看器调用，也能供其他需要访问摄像头音频输出通道的应用（如 Home Assistant 高级摄像头卡片）使用。
 
-- `front_door` stream is used by Frigate for viewing, recording, and detection. The `#backchannel=0` parameter prevents go2rtc from establishing the audio output backchannel, so it won't block two-way talk access.
-- `front_door_twoway` stream is used for two-way talk functionality. This stream can be used by Frigate's WebRTC viewer when two-way talk is enabled, or by other applications (like Home Assistant Advanced Camera Card) that need access to the camera's audio output channel.
+## 安全限制：受管控的流源 {#security-restricted-stream-sources}
+
+出于安全考量，`echo:`、`expr:` 以及 `exec:` 这三类流源在 go2rtc 中默认处于禁用状态。这类流源支持执行任意系统命令，若配置不当，会带来严重的安全风险。
+
+如果你的配置中尝试使用了上述流源，相关的流会被自动移除，同时日志中会输出对应的错误信息。
+
+若需启用这类流源，你必须设置环境变量 `GO2RTC_ALLOW_ARBITRARY_EXEC=true`。该配置可在 Docker Compose 文件或容器的环境变量中进行设置：
+```yaml
+environment:
+  - GO2RTC_ALLOW_ARBITRARY_EXEC=true
+```
+
+:::warning
+
+启用任意命令执行类流源后，攻击者可通过 go2rtc 的流配置执行任意系统命令。**请务必在充分理解其安全风险，且完全信任所有配置来源的前提下，再开启该功能。**
+
+:::
 
 ## 高级转流配置 {#advanced-restream-configurations}
 
 go2rtc 中的[exec](https://github.com/AlexxIT/go2rtc/tree/v1.9.10#source-exec)源可用于自定义 ffmpeg 命令。示例如下：
+
+:::warning
+
+出于安全考量，`exec:`、`echo:` 及 `expr:` 这三类流源默认处于禁用状态。若需使用它们，你必须将环境变量 `GO2RTC_ALLOW_ARBITRARY_EXEC` 设置为 `true`。更多详情请参阅 [安全限制：受管控的流源](#security-restricted-stream-sources)。
+
+:::
 
 注意：output 需要使用两个花括号传递，如<code v-pre>{{output}}</code>
 

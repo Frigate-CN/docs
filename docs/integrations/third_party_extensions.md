@@ -37,3 +37,6 @@ title: 第三方扩展
 
 ## [Periscope](https://github.com/maksz42/periscope)
 [Periscope](https://github.com/maksz42/periscope)是一款轻量级Android应用，可将旧设备改造为Frigate NVR的实时监控查看器。该应用支持Android 2.2及以上系统（包括Android TV），提供身份验证和HTTPS安全连接功能。
+
+## [Scrypted - Frigate 桥接插件](https://github.com/apocaliss92/scrypted-frigate-bridge)
+[Scrypted - Frigate 桥接插件](https://github.com/apocaliss92/scrypted-frigate-bridge)是一款可将 Frigate 的检测结果、移动侦测数据、视频片段接入 Scrypted 的插件，同时还提供模板，用于导出 Frigate 上的转播配置。

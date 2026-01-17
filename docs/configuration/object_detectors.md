@@ -144,18 +144,18 @@ detectors:
 
 ### EdgeTPU 支持的模型
 
-| 模型                                  | 注释                   |
-| ------------------------------------- | ---------------------- |
-| [MobileNet v2](#ssdlite-mobilenet-v2) | 默认模型               |
-| [YOLOv9](#yolov9)                    | 比默认模型更准确但更慢 |
+| 模型                    | 注释                   |
+| ----------------------- | ---------------------- |
+| [Mobiledet](#mobiledet) | 默认模型               |
+| [YOLOv9](#yolov9)       | 比默认模型更准确但更慢 |
 
-#### SSDLite MobileNet v2
+#### Mobiledet
 
 容器中提供了位于`/edgetpu_model.tflite`的 TensorFlow Lite 模型，默认情况下此检测器类型使用该模型。要提供自己的模型，将文件绑定挂载到容器中，并通过`model.path`提供路径。
 
 #### YOLOv9
 
-支持为 TensorFlow Lite 编译并正确量化的[YOLOv9](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite)模型，但默认不包含。要提供自己的模型，将文件绑定挂载到容器中，并通过`model.path`提供路径。注意模型可能需要自定义标签文件（例如，为上面链接的模型[使用这个 17 标签文件](https://raw.githubusercontent.com/dbro/frigate-detector-edgetpu-yolo9/refs/heads/main/labels-coco17.txt)）。
+[YOLOv9](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite) 支持经 TensorFlow Lite 编译且完成合理量化的模型，但该模型**不包含在默认配置中**。如需使用自定义模型，请按以下步骤操作：[下载模型文件](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite)，将文件挂载至容器内，并通过 `model.path` 配置项指定模型路径。请注意，上述链接中的模型需搭配**自定义标签文件**使用（例如，可采用 17个 COCO 数据集类别的[labelmap文件](https://raw.githubusercontent.com/dbro/frigate-detector-edgetpu-yolo9/refs/heads/main/labels-coco17.txt)，该文件仅包含 17 个 COCO 数据集类别）。
 
 ##### YOLOv9 设置和配置
 
@@ -175,7 +175,7 @@ model:
   labelmap_path: /config/labels-coco17.txt
 ```
 
-注意标签图使用了完整 COCO 标签集的一个子集，仅包含 17 个对象。
+需要注意的是，受 Coral 硬件性能限制，该标签映射文件仅采用了完整 COCO 标签集的一个子集，**仅包含 17 个目标类别**。
 
 ---
 
@@ -617,11 +617,9 @@ ONNX 是一种用于构建机器学习模型的开放格式，Frigate 支持在 
 如果使用了适合你 GPU 的正确构建版本，GPU 将被自动检测并使用。
 
 - **AMD**
-
   - 在`-rocm`版 Frigate 镜像中，ROCm 会被自动检测并与 ONNX 检测器一起使用。
 
 - **Intel**
-
   - 在标准 Frigate 镜像中，OpenVINO 会被自动检测并与 ONNX 检测器一起使用。
 
 - **NVIDIA**

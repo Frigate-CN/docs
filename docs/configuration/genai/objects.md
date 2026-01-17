@@ -1,6 +1,6 @@
 ---
 id: genai_objects
-title: Object Descriptions
+title: 目标描述
 ---
 
 生成式 AI 可根据你追踪目标的缩略图自动生成描述性文本，这有助于在 Frigate 中实现[语义搜索](../configuration/semantic_search.md)，为追踪目标提供更丰富的上下文信息。你可以在 Frigate 用户界面的“浏览”页面中，通过点击追踪目标的缩略图来查看这些描述。
@@ -53,12 +53,13 @@ genai:
   enabled: True
   provider: ollama
   base_url: http://localhost:11434
-  model: llava
+  model: qwen3-vl:8b-instruct
 objects:
-  prompt: "分析来自{camera}安全摄像头的这些图像中的{label}。重点关注{label}的动作、行为和潜在意图，而不仅仅是描述其外观。"
-  object_prompts:
-    person: "请查看该监控画面中的主要人物。他们在做什么，他们的行为可能暗示什么意图(例如，接近门、离开区域、站立不动)？不要描述周围环境或静态细节。"
-    car: "观察这些图像中的主要车辆。重点关注其移动、方向或目的(例如，停车、接近、绕行)。如果是送货车辆，请提及公司名称。"
+  genai:
+    prompt: "分析来自{camera}安全摄像头的这些图像中的{label}。重点关注{label}的动作、行为和潜在意图，而不仅仅是描述其外观。"
+    object_prompts:
+      person: "请查看该监控画面中的主要人物。他们在做什么，他们的行为可能暗示什么意图(例如，接近门、离开区域、站立不动)？不要描述周围环境或静态细节。"
+      car: "观察这些图像中的主要车辆。重点关注其移动、方向或目的(例如，停车、接近、绕行)。如果是送货车辆，请提及公司名称。"
 ```
 
 提示词也可以在摄像头级别单独设置并覆盖，以便为模型提供关于你特定摄像头的更详细提示。

@@ -16,6 +16,7 @@ title: 核查总结
 ```
 - `title` (string): 一个简洁、直接的标题，描述目的或整体动作（例如：人正在倒垃圾、张三正在遛狗）。
 - `scene` (string): 关于序列中从开始到结束发生的事情的叙述性描述，包括场景、检测到的目标及其可观察的动作。
+- `shortSummary`（string）：用于生成场景的简短摘要，内容限制为两句话，适用于消息通知场景，是场景描述（scene）内容的精简版本。
 - `confidence` (float): 分析的0-1置信度。当目标/动作清晰可见且上下文明确时，置信度更高。
 - `other_concerns` (list): 可能需要额外调查的用户定义关注点列表。
 - `potential_threat_level` (integer): 0、1或2，如下定义。
@@ -37,8 +38,7 @@ title: 核查总结
 ```yaml
 review:
   genai:
-    alerts: true # 这里设置只有警报类核查项才会触发
-    activity_context_prompt: | # 自定义为中文的 prompt
+    activity_context_prompt: |
       所有的回答必须使用中文，其中包括object名称
       ### 正常活动指标（0级）
       - 任何时间任何区域内的已知/verified人员
@@ -114,8 +114,19 @@ review:
 review:
   genai:
     enabled: true
-    additional_concerns: # [!code +++]
-      - 有动物在花园里 # [!code +++]
+    additional_concerns: # [!code ++]
+      - 有动物在花园里 # [!code ++]
+```
+
+### 首选语言
+
+默认情况下，事件回顾摘要的生成语言为英语。你可以通过设置 `preferred_language` 选项，将 Frigate 配置为使用你偏好的语言生成摘要：
+
+```yaml
+review:
+  genai:
+    enabled: true
+    preferred_language: 简体中文 # [!code ++]
 ```
 
 ## 核查报告

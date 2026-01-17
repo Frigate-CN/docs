@@ -84,10 +84,6 @@ export const sidebar = [
             link: "/configuration/semantic_search",
           },
           {
-            text: '生成式AI',
-            link: "/configuration/genai",
-          },
-          {
             text: '<i class="fa-solid fa-face-smile"></i>人脸识别',
             link: "/configuration/face_recognition",
           },
@@ -259,6 +255,7 @@ export const sidebar = [
       { text: "GPU", link: "/troubleshooting/gpu" },
       { text: "EdgeTPU", link: "/troubleshooting/edgetpu" },
       { text: "内存分析", link: "/troubleshooting/memory" },
+      { text: "检测故障排查", link: "/troubleshooting/dummy-camera" },
     ],
   },
   {

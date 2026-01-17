@@ -45,7 +45,7 @@ const teekConfig = defineTeekConfig({
   ],
   footerInfo: {
     topMessage: [
-      "本网站使用的 © Frigate 及相关商标（包括但不限于Logo）均为 <strong>Frigate, LLC</strong> 所有，并已获得其授权非商用使用许可。",
+      "本网站使用的 © Frigate 及相关商标（包括但不限于Logo）均为 <strong>Frigate, Inc</strong> 所有，并已获得其授权非商用使用许可。",
       "本站为非官方的中文社区，非 Frigate 官方网站，不代表 Frigate 官方立场。",
     ],
     bottomMessage: [

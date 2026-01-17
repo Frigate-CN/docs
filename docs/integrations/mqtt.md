@@ -35,12 +35,12 @@ title: MQTT
     "camera": "front_door",
     "frame_time": 1607123961.837752,
     "snapshot": {
-        "frame_time": 1607123965.975463,
-        "box": [415, 489, 528, 700],
-        "area": 12728,
-        "region": [260, 446, 660, 846],
-        "score": 0.77546,
-        "attributes": [],
+      "frame_time": 1607123965.975463,
+      "box": [415, 489, 528, 700],
+      "area": 12728,
+      "region": [260, 446, 660, 846],
+      "score": 0.77546,
+      "attributes": []
     },
     "label": "person",
     "sub_label": null,
@@ -76,12 +76,12 @@ title: MQTT
     "camera": "front_door",
     "frame_time": 1607123962.082975,
     "snapshot": {
-        "frame_time": 1607123965.975463,
-        "box": [415, 489, 528, 700],
-        "area": 12728,
-        "region": [260, 446, 660, 846],
-        "score": 0.77546,
-        "attributes": [],
+      "frame_time": 1607123965.975463,
+      "box": [415, 489, 528, 700],
+      "area": 12728,
+      "region": [260, 446, 660, 846],
+      "score": 0.77546,
+      "attributes": []
     },
     "label": "person",
     "sub_label": ["John Smith", 0.79],
@@ -200,6 +200,12 @@ title: MQTT
 通知当前状态的主题。发布值为`ON`和`OFF`。
 
 ## Frigate摄像头主题
+
+### `frigate/<camera_name>/status/<role>`
+发布每个已启用功能（audio 音频、detect 检测、record 录像）的当前健康状态。可用取值包括：
+- `online`: Stream is running and being processed
+- `offline`: Stream is offline and is being restarted
+- `disabled`: Camera is currently disabled
 
 ### `frigate/<camera_name>/<object_name>`
 
@@ -329,12 +335,12 @@ title: MQTT
 
 向摄像头发送PTZ命令的主题。
 
-| 命令                   | 描述                                                                                  |
-| ---------------------- | ----------------------------------------------------------------------------------------- |
-| `preset_<preset_name>` | 发送命令移动到名为`<preset_name>`的预设位置                                             |
-| `MOVE_<dir>`           | 发送命令持续向`<dir>`方向移动，可能的值为[UP, DOWN, LEFT, RIGHT]                        |
-| `ZOOM_<dir>`           | 发送命令持续进行`<dir>`方向的缩放，可能的值为[IN, OUT]                                  |
-| `STOP`                 | 发送停止移动命令                                                                        |
+| 命令                   | 描述                                                             |
+| ---------------------- | ---------------------------------------------------------------- |
+| `preset_<preset_name>` | 发送命令移动到名为`<preset_name>`的预设位置                      |
+| `MOVE_<dir>`           | 发送命令持续向`<dir>`方向移动，可能的值为[UP, DOWN, LEFT, RIGHT] |
+| `ZOOM_<dir>`           | 发送命令持续进行`<dir>`方向的缩放，可能的值为[IN, OUT]           |
+| `STOP`                 | 发送停止移动命令                                                 |
 
 ### `frigate/<camera_name>/ptz_autotracker/set`
 
@@ -378,11 +384,11 @@ title: MQTT
 
 _注意：从`CONTINUOUS`切换到`MOTION | OBJECTS`值时，摄像头从视图中移除最多需要30秒。_
 
-| 命令         | 描述                                                        |
-| ------------ | ----------------------------------------------------------------- |
-| `CONTINUOUS` | 始终包含                                                    |
-| `MOTION`     | 在最近30秒内检测到运动时显示                               |
-| `OBJECTS`    | 在最近30秒内有活动追踪目标时显示                           |
+| 命令         | 描述                             |
+| ------------ | -------------------------------- |
+| `CONTINUOUS` | 始终包含                         |
+| `MOTION`     | 在最近30秒内检测到运动时显示     |
+| `OBJECTS`    | 在最近30秒内有活动追踪目标时显示 |
 
 ### `frigate/<camera_name>/birdseye_mode/state`
 

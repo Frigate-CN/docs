@@ -167,8 +167,8 @@ Frigate 与配置了以下选项的新款 Reolink 摄像头配合使用效果更
 :::tip
 
 Reolink 最新款摄像头支持通过 go2rtc 和其他应用程序实现双向音频功能。需要注意的是，为了保证稳定性，仍需使用 HTTP-FLV 流，同时可以额外添加一个 RTSP 流，该流将仅用于双向音频。
-注意：RTSP 流不能以 ffmpeg:开头，因为 go2rtc 需要直接处理该流以实现双向音频功能。
-请确保已在摄像头的高级网络设置中启用了 HTTP。如需在 Frigate 中使用双向通话功能，请参考[实时预览文档](/configuration/live#two-way-talk)。
+注意：RTSP 流不能以 `ffmpeg:`开头，因为 go2rtc 需要直接处理该流以实现双向音频功能。
+请确保已在摄像头的高级网络设置中启用了 HTTP。如需在 Frigate 中使用双向通话功能，请参考[实时预览文档](../configuration/live.md#two-way-talk)。
 
 :::
 

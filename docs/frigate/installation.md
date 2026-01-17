@@ -229,43 +229,36 @@ devices:
 
 最后，配置[硬件物体/目标检测](/configuration/object_detectors#hailo-8)以完成设置。
 
-### MemryX MX3
 
-The MemryX MX3 Accelerator is available in the M.2 2280 form factor (like an NVMe SSD), and supports a variety of configurations:
+### MemryX MX3 加速卡
+MemryX MX3 加速卡采用 **M.2 2280 规格**（与NVMe固态硬盘尺寸一致），支持以下设备配置：
+- x86 架构（英特尔/超威）台式机/主机
+- 树莓派 5
+- 香橙派 5 Plus/Max
+- 多盘位 M.2 PCIe 扩展板
 
-- x86 (Intel/AMD) PCs
-- Raspberry Pi 5
-- Orange Pi 5 Plus/Max
-- Multi-M.2 PCIe carrier cards
+#### 配置说明
+#### 驱动安装
+如需为你的设备完成 MX3 硬件初始化配置，请参考 →【硬件安装指南】(https://developer.memryx.com/get_started/hardware_setup.html)。
 
-#### Configuration
+完成硬件安装后，按以下步骤安装适配的驱动及运行环境：
+1. 复制或下载【安装脚本】(https://github.com/blakeblackshear/frigate/blob/dev/docker/memryx/user_installation.sh)
+2. 执行命令赋予脚本执行权限：`sudo chmod +x user_installation.sh`
+3. 运行脚本：`./user_installation.sh`
+4. **重启电脑**，完成驱动的最终安装生效。
 
-#### Installation
+#### Frigate 部署配置
+首先按常规方式安装 Frigate 即可，推荐镜像：`ghcr.io/blakeblackshear/frigate:stable`
 
-To get started with MX3 hardware setup for your system, refer to the [Hardware Setup Guide](https://developer.memryx.com/get_started/hardware_setup.html).
-
-Then follow these steps for installing the correct driver/runtime configuration:
-
-1. Copy or download [this script](https://github.com/blakeblackshear/frigate/blob/dev/docker/memryx/user_installation.sh).
-2. Ensure it has execution permissions with `sudo chmod +x user_installation.sh`
-3. Run the script with `./user_installation.sh`
-4. **Restart your computer** to complete driver installation.
-
-#### Setup
-
-To set up Frigate, follow the default installation instructions, for example: `ghcr.io/blakeblackshear/frigate:stable`
-
-Next, grant Docker permissions to access your hardware by adding the following lines to your `docker-compose.yml` file:
-
+接下来，为了让 Docker 容器获得硬件访问权限，需要在你的 `docker-compose.yml` 文件中添加以下配置：
 ```yaml
 devices:
   - /dev/memx0
 ```
 
-During configuration, you must run Docker in privileged mode and ensure the container can access the max-manager.
+配置期间，**必须以特权模式运行 Docker 容器**，并确保容器能够访问 max-manager 服务。
 
-In your `docker-compose.yml`, also add:
-
+同时在 `docker-compose.yml` 中补充添加以下配置项：
 ```yaml
 privileged: true
 
@@ -273,8 +266,7 @@ volumes:
   - /run/mxa_manager:/run/mxa_manager
 ```
 
-If you can't use Docker Compose, you can run the container with something similar to this:
-
+如果你的环境无法使用 Docker Compose，也可以直接执行以下 `docker run` 命令启动容器（配置等效）：
 ```bash
   docker run -d \
     --name frigate-memx \
@@ -296,9 +288,8 @@ If you can't use Docker Compose, you can run the container with something simila
     ghcr.io/blakeblackshear/frigate:stable
 ```
 
-#### Configuration
-
-Finally, configure [hardware object detection](/configuration/object_detectors#memryx-mx3) to complete the setup.
+#### 最终配置
+最后，参考[硬件目标检测](../configuration/object_detectors.md#memryx-mx3) ，完成相关参数配置，即可完成全部部署流程。
 
 ### Rockchip 平台 {#rockchip-platform}
 
@@ -353,18 +344,16 @@ volumes:
 
 接下来，你应该配置[硬件物体/目标检测](/configuration/object_detectors#rockchip平台)和[硬件视频处理](/configuration/hardware_acceleration_video#rockchip平台)。
 
-### Synaptics
+### 昇锐（Synaptics）
+- 型号：SL1680
 
-- SL1680
+#### 部署配置
+请遵循 Frigate 的标准安装流程，但需使用**后缀带 `-synaptics`** 的专属 Docker 镜像，例如：`ghcr.io/blakeblackshear/frigate:stable-synaptics`。
 
-#### Setup
+接下来，需要为 Docker 容器授予硬件访问权限：
+- 配置过程中，**必须以特权模式运行 Docker**，避免因权限不足导致各类异常。操作方式为在 `docker-compose.yml` 文件中添加 `privileged: true` 配置项，或在 `docker run` 命令中加入 `--privileged` 参数。
 
-Follow Frigate's default installation instructions, but use a docker image with `-synaptics` suffix for example `ghcr.io/blakeblackshear/frigate:stable-synaptics`.
-
-Next, you need to grant docker permissions to access your hardware:
-
-- During the configuration process, you should run docker in privileged mode to avoid any errors due to insufficient permissions. To do so, add `privileged: true` to your `docker-compose.yml` file or the `--privileged` flag to your docker run command.
-
+在 `docker-compose.yml` 中添加如下设备映射配置：
 ```yaml
 devices:
   - /dev/synap
@@ -372,17 +361,15 @@ devices:
   - /dev/video1
 ```
 
-or add these options to your `docker run` command:
-
+或者，在 `docker run` 命令中追加以下参数：
 ```
 --device /dev/synap \
 --device /dev/video0 \
 --device /dev/video1
 ```
 
-#### Configuration
-
-Next, you should configure [hardware object detection](/configuration/object_detectors#synaptics) and [hardware video processing](/configuration/hardware_acceleration_video#synaptics).
+#### 功能配置
+完成上述步骤后，需分别配置 **[硬件目标检测](../configuration/object_detectors.md#synaptics)** 与 **[硬件视频处理](../configuration/hardware_acceleration_video.md#synaptics)** 模块，以启用对应的加速能力。
 
 ## Docker
 

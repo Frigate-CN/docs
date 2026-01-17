@@ -267,7 +267,7 @@ ffmpeg:
   retry_interval: 10
   # 可选：在HEVC（H.265）录制流上设置标签以提高与Apple播放器的兼容性（默认值：如下所示）
   apple_compatibility: false
-  # Optional: Set the index of the GPU to use for hardware acceleration. (default: shown below)
+  # 可选：设置用于硬件加速的显卡序号（默认值：如下所示）
   gpu: 0
 
 # 可选：检测配置
@@ -288,8 +288,8 @@ detect:
   max_disappeared: 25
   # 可选：静止对象追踪配置
   stationary:
-    # Optional: Stationary classifier that uses visual characteristics to determine if an object
-    # is stationary even if the box changes enough to be considered motion (default: shown below).
+    # 可选：静态目标分类器 —— 该分类器利用视觉特征判定目标是否处于静止状态，
+    # 即便目标检测框的变化幅度达到了判定为运动的阈值，依然可精准识别静态目标（默认值：如下所示）
     classifier: True
     # 可选：确认静止对象的频率（默认值：与阈值相同）
     # 当设置为1时，每帧都会运行物体/目标检测来确认对象是否仍然存在。
@@ -335,32 +335,32 @@ objects:
   # 注意：此蒙版与下面的对象类型特定蒙版组合使用
   mask:
     0.000,0.000,0.781,0.000,0.781,0.278,0.000,0.278
-    # Optional: Configuration for AI generated tracked object descriptions
+  # 可选：大模型的目标识别描述配置
   genai:
-    # Optional: Enable AI object description generation (default: shown below)
+    # 可选：启用大模型目标描述生成功能（默认值：如下所示）
     enabled: False
-    # Optional: Use the object snapshot instead of thumbnails for description generation (default: shown below)
+    # 可选：使用目标抓拍图而非缩略图来生成描述（默认值：如下所示）
     use_snapshot: False
-    # Optional: The default prompt for generating descriptions. Can use replacement
-    # variables like "label", "sub_label", "camera" to make more dynamic. (default: shown below)
-    prompt: 'Describe the {label} in the sequence of images with as much detail as possible. Do not describe the background.'
-    # Optional: Object specific prompts to customize description results
-    # Format: {label}: {prompt}
+    # 可选：用于生成描述的默认提示词。可使用
+    # {label}、{sub_label}、{camera} 等替换变量，实现更动态的描述效果（默认值：如下所示）
+    prompt: '尽可能详细地描述图像序列中的{label}。请勿描述背景内容。'
+    # 可选：针对特定目标的自定义提示词，用于定制描述结果
+    # 格式：{目标标签}: {自定义提示词}
     object_prompts:
-      person: 'My special person prompt.'
-    # Optional: objects to generate descriptions for (default: all objects that are tracked)
+      person: '我的人物专属自定义提示词。'
+    # 可选：需要生成描述的目标类型（默认值：所有被识别追踪的目标）
     objects:
       - person
       - cat
-    # Optional: Restrict generation to objects that entered any of the listed zones (default: none, all zones qualify)
+    # 可选：仅对进入下列指定区域的目标生成描述（默认值：空列表，即所有区域均适用）
     required_zones: []
-    # Optional: What triggers to use to send frames for a tracked object to generative AI (default: shown below)
+    # 可选：将被识别目标的图像帧发送至生成式大模型的触发条件（默认值：如下所示）
     send_triggers:
-      # Once the object is no longer tracked
+      # 当目标结束追踪时触发
       tracked_object_end: True
-      # Optional: After X many significant updates are received (default: shown below)
+      # 可选：在接收到 X 次重要更新后触发（默认值：如下所示）
       after_significant_updates: None
-    # Optional: Save thumbnails sent to generative AI for review/debugging purposes (default: shown below)
+    # 可选：保存发送至生成式大模型的缩略图，用于后续查看或调试（默认值：如下所示）
     debug_save_thumbnails: False
   # 可选：减少特定对象类型误报的过滤器
   filters:
@@ -394,7 +394,7 @@ review:
     labels:
       - car # 汽车
       - person # 人
-    # Time to cutoff alerts after no alert-causing activity has occurred (default: shown below)
+    # 在无告警触发行为发生后，告警的持续截止时长（默认值：如下所示）
     cutoff_time: 40
     # 可选：对象被标记为警报所需的区域（默认值：无）
     # 注意：当在全局设置必需区域时，此区域必须存在于所有摄像头中，
@@ -402,27 +402,26 @@ review:
     #      应该在摄像头级别配置。
     required_zones:
       - driveway # 车道
-  # Optional: GenAI Review Summary Configuration
+  # 可选：大模型事件核查总结配置
   genai:
-    # Optional: Enable the GenAI review summary feature (default: shown below)
+    # 可选：启用大模型事件核查总结功能（默认值：如下所示）
     enabled: False
-    # Optional: Enable GenAI review summaries for alerts (default: shown below)
+    # 可选：为告警事件启用大模型核查总结（默认值：如下所示）
     alerts: True
-    # Optional: Enable GenAI review summaries for detections (default: shown below)
+    # 可选：为检测事件启用大模型核查总结（默认值：如下所示）
     detections: False
-    # Optional: Activity Context Prompt to give context to the GenAI what activity is and is not suspicious.
-    # It is important to be direct and detailed. See documentation for the default prompt structure.
-    activity_context_prompt: """Define what is and is not suspicious
-"""
-    # Optional: Image source for GenAI (default: preview)
-    # Options: "preview" (uses cached preview frames at ~180p) or "recordings" (extracts frames from recordings at 480p)
-    # Using "recordings" provides better image quality but uses more tokens per image.
-    # Frame count is automatically calculated based on context window size, aspect ratio, and image source (capped at 20 frames).
+    # 可选：行为场景提示词，用于告知大模型哪些行为属于可疑行为、哪些不属于。
+    # 提示词务必做到表述直接且内容详尽。默认提示词模板可查阅官方文档。
+    activity_context_prompt: """定义可疑与非可疑行为范畴"""
+    # 可选：大模型的图像来源（默认值：preview）
+    # 可选值："preview"（使用缓存的预览帧，分辨率约 180p）或 "recordings"（从录像中提取帧，分辨率 480p）
+    # 选择 "recordings" 可获得更高的图像质量，但每张图像会占用更多的 tokens 额度。
+    # 提取的帧数会根据上下文窗口大小、画面宽高比及图像来源自动计算（上限为 20 帧）。
     image_source: preview
-    # Optional: Additional concerns that the GenAI should make note of (default: None)
+    # 可选：大模型需要重点关注的额外事项（默认值：无）
     additional_concerns:
-      - Animals in the garden
-    # Optional: Preferred response language (default: English)
+      - 花园内出现动物
+    # 可选：摘要的首选生成语言（默认值：英语）
     preferred_language: English
   # 可选：检测配置
   detections:
@@ -488,7 +487,7 @@ notifications:
   # 可选：启用通知服务（默认值：如下所示）
   enabled: False
   # 可选：推送服务要联系的电子邮件
-  # 注意：这是使用通知功能所必需的
+  # 注意：这是使用通知功能所必需的，并不是通知会发送到该邮件，而是Google服务出现问题时会告知该邮箱
   email: 'admin@example.com'
   # 可选：通知的冷却时间（秒）（默认值：如下所示）
   cooldown: 0
@@ -504,14 +503,13 @@ record:
   expire_interval: 60
   # 可选：在启动时及每日一次（默认设置如下）与硬盘进行录像数据库的双向同步。
   sync_recordings: False
-  # 可选：录制保留设置
-  # Optional: Continuous retention settings
+  # 可选：录制持续保留设置
   continuous:
-    # Optional: Number of days to retain recordings regardless of tracked objects or motion (default: shown below)
-    # NOTE: This should be set to 0 and retention should be defined in alerts and detections section below
-    #       if you only want to retain recordings of alerts and detections.
+    # 可选：录像文件的强制保留天数（不受识别目标或运动检测触发条件限制，默认值：如下所示）
+    # 注意：若你仅希望保留由告警和检测事件触发生成的录像文件，需将本参数设置为 0，
+    # 并在下方的告警与检测配置段中定义对应的保留规则。
     days: 0
-  # Optional: Motion retention settings
+  # 可选: 画面变动保留设置
   motion:
     days: 0
     # 可选：保留模式。可用选项有：all、motion和active_objects
@@ -614,8 +612,8 @@ semantic_search:
   # 可选：设置用于嵌入的模型大小（默认值：如下所示）
   # 注意：小型模型在CPU上运行，大型模型在GPU上运行
   model_size: 'small'
-  # Optional: Target a specific device to run the model (default: shown below)
-  # NOTE: See https://onnxruntime.ai/docs/execution-providers/ for more information
+  # 可选：指定运行模型的目标设备（默认值：如下所示）
+  # 注意：更多信息请参阅文档：https://onnxruntime.ai/docs/execution-providers/
   device: None
 
 # 可选：人脸识别功能配置
@@ -640,8 +638,8 @@ face_recognition:
   blur_confidence_filter: True
   # 可选：设置人脸识别的模型大小（默认值：如下所示）
   model_size: small
-  # Optional: Target a specific device to run the model (default: shown below)
-  # NOTE: See https://onnxruntime.ai/docs/execution-providers/ for more information
+  # 可选：指定运行模型的目标设备（默认值：如下所示）
+  # 注意：更多信息请参阅文档：https://onnxruntime.ai/docs/execution-providers/
   device: None
 
 # 可选：车牌识别功能配置
@@ -672,7 +670,7 @@ lpr:
   enhancement: 0
   # 可选：保存车牌图像到/media/frigate/clips/lpr用于调试目的（默认值：如下所示）
   debug_save_plates: False
-  # Optional: List of regex replacement rules to normalize detected plates (default: shown below)
+  # 可选: 用于标准化识别到的车牌信息的正则表达式替换规则列表（默认值：如下所示）
   replace_rules: {}
 
 # 可选：AI大模型生成的追踪目标描述配置
@@ -688,60 +686,63 @@ genai:
   api_key: '{FRIGATE_GENAI_API_KEY}'
   # Required: The model to use with the provider.
   model: gemini-1.5-flash
-  # Optional additional args to pass to the GenAI Provider (default: None)
+  # 可选的附加参数，用于传入大模型服务提供方（默认值：无）
   provider_options:
     keep_alive: -1
+  # 可选：推理调用时传入的参数选项（默认值：{}）
+  runtime_options:
+    temperature: 0.7
 
 
-# Optional: Configuration for audio transcription
-# NOTE: only the enabled option can be overridden at the camera level
+# 可选：音频转写功能配置
+# 注意：仅 enabled 选项可在摄像头层级进行重写配置
 audio_transcription:
-  # Optional: Enable live and speech event audio transcription (default: shown below)
+  # 可选：启用实时音频转写及语音事件音频转写（默认值：如下所示）
   enabled: False
-  # Optional: The device to run the models on for live transcription. (default: shown below)
+  # 可选：用于运行实时转写模型的计算设备（默认值：如下所示）
   device: CPU
-  # Optional: Set the model size used for live transcription. (default: shown below)
+  # 可选：设置实时转写使用的模型尺寸（默认值：如下所示）
   model_size: small
-  # Optional: Set the language used for transcription translation. (default: shown below)
-  # List of language codes: https://github.com/openai/whisper/blob/main/whisper/tokenizer.py#L10
+  # 可选：设置音频转写的目标语言（默认值：如下所示）
+  # 语言代码清单可参考：https://github.com/openai/whisper/blob/main/whisper/tokenizer.py#L10
   language: en
 
-# Optional: Configuration for classification models
+# 可选：分类模型功能配置
 classification:
-  # Optional: Configuration for bird classification
+  # 可选：鸟类识别分类功能配置
   bird:
-    # Optional: Enable bird classification (default: shown below)
+    # 可选：启用鸟类识别分类（默认值：如下所示）
     enabled: False
-    # Optional: Minimum classification score required to be considered a match (default: shown below)
+    # 可选：判定为匹配结果所需的最低分类置信度阈值（默认值：如下所示）
     threshold: 0.9
   custom:
-    # Required: name of the classification model
+    # 必填项：分类模型的名称
     model_name:
-      # Optional: Enable running the model (default: shown below)
+      # 可选：启用该模型运行（默认值：如下所示）
       enabled: True
-      # Optional: Name of classification model (default: shown below)
+      # 可选：分类模型的名称（默认值：如下所示）
       name: None
-      # Optional: Classification score threshold to change the state (default: shown below)
+      # 可选：触发状态变更所需的分类置信度阈值（默认值：如下所示）
       threshold: 0.8
-      # Optional: Number of classification attempts to save in the recent classifications tab (default: shown below)
-      # NOTE: Defaults to 200 for object classification and 100 for state classification if not specified
+      # 可选：在“近期分类记录”标签页中保存的分类尝试次数（默认值：如下所示）
+      # 注意：若未明确指定，目标分类默认保存 200 条记录，状态分类默认保存 100 条记录
       save_attempts: None
-      # Optional: Object classification configuration
+      # 可选：目标分类功能配置
       object_config:
-        # Required: Object types to classify
+        # 必填项：需要进行分类的目标类型
         objects: [dog]
-        # Optional: Type of classification that is applied (default: shown below)
+        # 可选：采用的分类类型（默认值：如下所示）
         classification_type: sub_label
-      # Optional: State classification configuration
+      # 可选：状态分类功能配置
       state_config:
-        # Required: Cameras to run classification on
+        # 必填项：需要运行分类功能的摄像头列表
         cameras:
           camera_name:
-            # Required: Crop of image frame on this camera to run classification on
+            # 必填项：该摄像头画面中用于运行分类功能的图像裁剪区域
             crop: [0, 180, 220, 400]
-        # Optional: If classification should be run when motion is detected in the crop (default: shown below)
+        # 可选：是否在裁剪区域检测到移动物体时运行分类（默认值：如下所示）
         motion: False
-        # Optional: Interval to run classification on in seconds (default: shown below)
+        # 可选：分类功能的运行时间间隔（单位：秒，默认值：如下所示）
         interval: None
 
 # 可选：重新串流配置
