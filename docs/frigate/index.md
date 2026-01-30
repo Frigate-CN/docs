@@ -26,6 +26,9 @@ slug: /
 
 欢迎加入[QQ 群](https://qm.qq.com/q/9TKCsqbgdO)，一起吹水和讨论
 
+关注我们的`微信服务号`，获取更新动态，以及我们将会在未来提供微信通知功能。
+![微信公众号](/assets/wx-qrcode.jpg)
+
 ## 截图
 
 ![Live View](/img/live-view.png)
