@@ -1,6 +1,6 @@
 ---
 id: genai_objects
-title: 目标描述
+title: 目标描述 <Badge type="tip" text="0.16.0 和 以上版本" />
 ---
 
 生成式 AI 可根据你追踪目标的缩略图自动生成描述性文本，这有助于在 Frigate 中实现[语义搜索](../configuration/semantic_search.md)，为追踪目标提供更丰富的上下文信息。你可以在 Frigate 用户界面的“浏览”页面中，通过点击追踪目标的缩略图来查看这些描述。

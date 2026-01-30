@@ -1,6 +1,6 @@
 ---
 id: genai
-title: 生成式 AI <Badge type="tip" text="0.16.0 和 以上版本" />
+title: 生成式 AI
 ---
 
 ## 配置
