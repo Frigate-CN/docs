@@ -17,15 +17,15 @@ title: 生成式 AI <Badge type="tip" text="0.16.0 和 以上版本" />
 
 :::
 
-[Ollama](https://ollama.com/)允许你自托管大型语言模型并保持所有内容在本地运行。它在[llama.cpp](https://github.com/ggerganov/llama.cpp)上提供了一个很好的 API。强烈建议在配备 Nvidia 显卡的机器或 Apple silicon Mac 上托管此服务器以获得最佳性能。
+[Ollama](https://ollama.com/)允许你自托管大型语言模型并保持所有内容在本地运行。强烈建议在配备 Nvidia 独立显卡的机器或 Apple silicon Mac 上托管此服务以获得最佳性能。
 
 大多数 7b 参数的 4-bit 视觉模型都能在 8GB 显存中运行。也有可用的[Docker 容器](https://hub.docker.com/r/ollama/ollama)。
 
-并行请求也有一些注意事项。你需要设置`OLLAMA_NUM_PARALLEL=1`并选择适合你硬件和偏好的`OLLAMA_MAX_QUEUE`和`OLLAMA_MAX_LOADED_MODELS`值。请参阅[Ollama 文档](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-does-ollama-handle-concurrent-requests)。
+并行请求也有一些注意事项。你需要设置`OLLAMA_NUM_PARALLEL=1`并选择适合你硬件和偏好的`OLLAMA_MAX_QUEUE`和`OLLAMA_MAX_LOADED_MODELS`值。请参阅[Ollama 文档（英文）](https://docs.ollama.com/faq#how-does-ollama-handle-concurrent-requests)。
 
 ### 模型类型：指令型与思考型
 
-大多数视觉-语言模型都以**指令型**的形式提供，这类模型经过微调，能够遵循指令并针对提示词生成简洁的回复。不过，部分模型（例如部分通义千问视觉模型或迷你GPT变体）同时提供**指令型**与**思考型**两个版本。
+大多数视觉-语言模型都以**指令型**的形式提供，这类模型经过微调，能够遵循指令并针对提示词生成简洁的回复。不过，部分模型（例如部分通义千问视觉模型或迷你 GPT 变体）同时提供**指令型**与**思考型**两个版本。
 
 - **指令型模型**：**强烈建议**在 Frigate 中使用此类模型。这类模型可生成直接、相关且具备实用价值的描述内容，最契合 Frigate 对目标物体及事件摘要的使用场景需求。
 - **思考型模型**：这类模型经过微调后，输出内容更偏向自由格式、开放式且带有推测性质，通常不够简洁，也无法生成 Frigate 所需的实用性摘要。因此，Frigate **不建议也不支持**使用思考型模型。
@@ -71,16 +71,12 @@ Ollama 同样支持[云端模型](https://ollama.com/cloud)。在此模式下，
 genai:
   provider: ollama
   base_url: http://localhost:11434
-  model: minicpm-v:8b
-  provider_options: # 也可以进行定义其他 Ollama 客户端选项。
-    keep_alive: -1
-    options:
-      num_ctx: 8192 # 确保上下文与使用 Ollama 的其他服务相匹配。
+  model: qwen3-vl:4b
 ```
 
 ## Google Gemini
 
-Google Gemini 有一个免费等级，允许每分钟[15 次查询](https://ai.google.dev/pricing)到 API，这对于标准 Frigate 使用来说已经足够。
+Google Gemini API 提供了[免费套餐](https://ai.google.dev/pricing)，但该套餐的配额限制**可能无法满足** Frigate 的常规使用需求。请根据你的部署场景选择合适的计费套餐。
 
 ### 支持的模型
 
@@ -101,12 +97,22 @@ Google Gemini 有一个免费等级，允许每分钟[15 次查询](https://ai.g
 genai:
   provider: gemini
   api_key: "{FRIGATE_GEMINI_API_KEY}"
-  model: gemini-2.0-flash
+  model: gemini-2.5-flash
 ```
 
 :::note
 
-如需使用其他兼容 Gemini 的 API ENDPOINT，请将环境变量`GEMINI_BASE_URL`设置为你所用服务商的 API 地址。
+若需使用其他兼容`Gemini`的 API 接口，可在`provider_options`中通过`base_url`键配置对应服务商的 API 地址，示例如下：
+
+```
+genai:
+  provider: gemini
+  ...
+  provider_options:
+    base_url: https://...
+```
+
+该配置还支持其他 HTTP 相关参数，可参考 [python-genai 官方文档](https://github.com/googleapis/python-genai)。
 
 :::
 
@@ -117,7 +123,9 @@ OpenAI 没有为其 API 提供免费等级。随着 gpt-4o 的发布，价格已
 如果你打算使用中国大陆的各个 AI 提供商，他们大部分都兼容 OpenAI API 接口。
 
 :::warning
+
 请注意，如果你的摄像头位于公共领域（例如过道）等会检测过多物体/目标的地方，过多的物体/目标可能会很快耗尽你的资源包。请**务必不要开启**后付费模式！
+
 :::
 
 ### 支持的模型

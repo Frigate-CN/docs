@@ -76,7 +76,6 @@ review:
     preferred_language: 简体中文
 ```
 
-
 ### 画面来源
 
 默认情况下，核查总结使用预览画面（缓存的预览帧），这些画面分辨率较低但每张画面使用的 token 更少。
@@ -131,10 +130,10 @@ review:
 
 ## 核查报告
 
-除了个别核查项目总结外，生成式 AI 还提供了请求给定时间段报告的能力。例如，你可以在度假时获取任何可疑活动或可能需要核查的其他关注点的每日报告。
+除生成单个回顾项的总结以外，大模型还可针对指定时间段内、所有摄像头标记为可疑的核查项，汇总生成一份统一报告（例如：你外出度假期间，每日可疑行为的汇总摘要）。
 
 ### 以编程方式请求报告
 
-核查报告可以通过[API](/integrations/api#review-summarization)请求，方法是将 POST 请求发送到`/api/review/summarize/start/{start_ts}/end/{end_ts}`，其中`start_ts`和`end_ts`是 Unix 时间戳。
+核查报告可以通过[API](/integrations/api/generate-review-summary-review-summarize-start-start-ts-end-end-ts-post)请求，方法是将 POST 请求发送到`/api/review/summarize/start/{start_ts}/end/{end_ts}`，其中`start_ts`和`end_ts`是 Unix 时间戳。
 
 对于 Home Assistant 用户，有一个内置服务（`frigate.review_summarize`），可以轻松请求作为自动化或脚本一部分的核查报告。这允许你根据你的特定需求自动生成每日总结、度假报告或自定义时间段报告。

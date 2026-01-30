@@ -144,9 +144,9 @@ OpenVINO 检测器类型支持在以下硬件平台上运行：
 - 通过 CPU 运行的 x86 和 Arm64 架构主机（通常不建议此方式）
 
 :::note
-Intel NPU 部署的实际效果根据社区反馈称[较为有限（英文社区讨论）](<(https://github.com/blakeblackshear/frigate/discussions/13248#discussioncomment-12347357)>)，尽管官方目前尚未提供支持。
 
-测试数据显示，NPU 的处理性能仅与核显相当，甚至在某些场景下甚至表现更差。
+Frigate 0.17 还暂未官方支持 Intel B-series (Battlemage)显卡，不过已有用户提供了为该系列显卡[重新编译 Frigate 镜像（英文）](https://github.com/blakeblackshear/frigate/discussions/21257)的操作步骤。
+
 :::
 
 更多详细信息请参阅 [检测器文档](/configuration/object_detectors#openvino检测器)
@@ -163,6 +163,7 @@ Intel NPU 部署的实际效果根据社区反馈称[较为有限（英文社区
 | Intel N100     | ~ 15 ms              | s-320: 30 ms                                      | 320: ~ 25 ms              |                       | 只能运行一个检测器实例 |
 | Intel N150     | ~ 15 ms              | t-320: 16 ms s-320: 24 ms                         |                           |                       |                        |
 | Intel Iris XE  | ~ 10 ms              | s-320: 12 ms s-640: 30 ms                         | 320: ~ 18 ms 640: ~ 50 ms |                       |                        |
+| Intel NPU      | ~ 6 ms               | s-320: 11 ms s-640: 30 ms                         | 320: ~ 14 ms 640: ~ 34 ms | 320-n: 40 ms          |                        |
 | Intel Arc A310 | ~ 5 ms               | t-320: 7 ms t-640: 11 ms s-320: 8 ms s-640: 15 ms | 320: ~ 8 ms 640: ~ 14 ms  |                       |                        |
 | Intel Arc A380 | ~ 6 ms               |                                                   | 320: ~ 10 ms 640: ~ 22 ms | 336: 20 ms 448: 27 ms |                        |
 | Intel Arc A750 | ~ 4 ms               |                                                   | 320: ~ 8 ms               |                       |
