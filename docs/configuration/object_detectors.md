@@ -400,6 +400,7 @@ model:
 detectors:
   ov: # [!code ++]
     type: openvino # [!code ++]
+    device: CPU
 
 model: # [!code ++]
   model_type: dfine # [!code ++]
@@ -407,7 +408,7 @@ model: # [!code ++]
   height: 640 # [!code ++]
   input_tensor: nchw # [!code ++]
   input_dtype: float # [!code ++]
-  path: /config/model_cache/dfine_s_obj2coco.onnx # [!code ++]
+  path: /config/model_cache/dfine-s.onnx # [!code ++]
   labelmap_path: /labelmap/coco-80.txt # [!code ++]
 ```
 
