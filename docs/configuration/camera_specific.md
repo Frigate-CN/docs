@@ -67,7 +67,7 @@ ffmpeg:
 
 ## 仅支持 UDP 的摄像头
 
-如果您的摄像头不支持 RTSP 的 TCP 连接，可以使用 UDP。
+如果你的摄像头不支持 RTSP 的 TCP 连接，可以使用 UDP。
 
 ```yaml
 ffmpeg:
@@ -100,7 +100,7 @@ cameras:
         record: preset-record-generic-audio-aac
 
       inputs:
-        - path: rtsp://用户名:密码@摄像头IP/H264/ch1/main/av_stream # <----- 根据您的摄像头更新
+        - path: rtsp://用户名:密码@摄像头IP/H264/ch1/main/av_stream # <----- 根据你的摄像头更新
           roles:
             - detect
             - record

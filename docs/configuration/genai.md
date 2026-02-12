@@ -5,13 +5,13 @@ title: 生成式AI <Badge type="tip" text="0.16.0 和 以上版本" />
 
 生成式 AI 可用于根据追踪目标的缩略图自动生成描述性文本。这有助于 Frigate 中的[语义搜索](/configuration/semantic_search)，为追踪目标提供更多上下文信息。描述可通过 Frigate 界面中的**浏览**页面访问，点击追踪目标的缩略图即可查看。
 
-描述请求会在追踪目标生命周期结束时自动发送给您的 AI 提供商，也可以选择在帧发生显著变化后提前发送，例如用于更实时的通知场景。描述也可以通过 Frigate 界面手动重新生成。请注意，如果您在追踪目标结束前手动输入描述，该描述将被生成的响应覆盖。
+描述请求会在追踪目标生命周期结束时自动发送给你的 AI 提供商，也可以选择在帧发生显著变化后提前发送，例如用于更实时的通知场景。描述也可以通过 Frigate 界面手动重新生成。请注意，如果你在追踪目标结束前手动输入描述，该描述将被生成的响应覆盖。
 
 ## 配置
 
 生成式 AI 可以为所有摄像头启用，或仅为特定摄像头启用。即使某个摄像头的生成式 AI 功能已禁用，你仍然可以通过 HTTP API 手动为事件生成描述。目前有 3 种原生提供商可与 Frigate 集成。支持 OpenAI 标准 API 的其他提供商也可使用。请参阅下面的 OpenAI 部分。
 
-要使用生成式 AI，您必须在 Frigate 配置的全局层级定义一个提供商。如果您选择的提供商需要 API 密钥，可以直接将其粘贴在配置中，或存储在环境变量中(以`FRIGATE_`为前缀)。
+要使用生成式 AI，你必须在 Frigate 配置的全局层级定义一个提供商。如果你选择的提供商需要 API 密钥，可以直接将其粘贴在配置中，或存储在环境变量中(以`FRIGATE_`为前缀)。
 
 ```yaml
 genai:
@@ -34,9 +34,9 @@ cameras:
         enabled: False # <- 为 indoor_camera 摄像头禁用生成式AI功能
 ```
 
-默认情况下，系统会为所有追踪到的物体和所有划定区域生成描述文本。但您也可以通过指定`objects`和`required_zones`参数，选择仅为特定追踪物体或区域生成描述。
+默认情况下，系统会为所有追踪到的物体和所有划定区域生成描述文本。但你也可以通过指定`objects`和`required_zones`参数，选择仅为特定追踪物体或区域生成描述。
 
-此外，您还可以选择使用快照生成描述（需先启用快照功能），只需将`use_snapshot`设置为`True`即可。默认情况下该选项为`False`，此时系统会将从`detect`视频流中采集的未压缩图像（覆盖物体整个生命周期）发送至 AI 模型进行处理。当物体追踪生命周期结束时，系统仅会保存一张经过压缩裁剪的缩略图作为该追踪物体的存档。
+此外，你还可以选择使用快照生成描述（需先启用快照功能），只需将`use_snapshot`设置为`True`即可。默认情况下该选项为`False`，此时系统会将从`detect`视频流中采集的未压缩图像（覆盖物体整个生命周期）发送至 AI 模型进行处理。当物体追踪生命周期结束时，系统仅会保存一张经过压缩裁剪的缩略图作为该追踪物体的存档。
 
 在需要**重新生成**追踪物体描述时，使用快照功能可能更为合适——因为相较于最终保存的压缩缩略图，快照能为 AI 模型提供质量更高的图像（尽管 AI 通常会对图像进行降采样处理）。但需注意，使用快照也存在局限性：由于仅向 AI 服务提供商发送单张图像，这将影响大模型对物体运动轨迹或方向的判断能力。
 
@@ -50,19 +50,19 @@ cameras:
 
 :::
 
-[Ollama](https://ollama.com/)允许您自托管大型语言模型并保持所有内容在本地运行。它在[llama.cpp](https://github.com/ggerganov/llama.cpp)上提供了一个很好的 API。强烈建议在配备 Nvidia 显卡的机器或 Apple silicon Mac 上托管此服务器以获得最佳性能。
+[Ollama](https://ollama.com/)允许你自托管大型语言模型并保持所有内容在本地运行。它在[llama.cpp](https://github.com/ggerganov/llama.cpp)上提供了一个很好的 API。强烈建议在配备 Nvidia 显卡的机器或 Apple silicon Mac 上托管此服务器以获得最佳性能。
 
 大多数 7b 参数的 4 位视觉模型都能在 8GB 显存中运行。也有可用的[Docker 容器](https://hub.docker.com/r/ollama/ollama)。
 
-并行请求也有一些注意事项。您需要设置`OLLAMA_NUM_PARALLEL=1`并选择适合您硬件和偏好的`OLLAMA_MAX_QUEUE`和`OLLAMA_MAX_LOADED_MODELS`值。请参阅[Ollama 文档](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-does-ollama-handle-concurrent-requests)。
+并行请求也有一些注意事项。你需要设置`OLLAMA_NUM_PARALLEL=1`并选择适合你硬件和偏好的`OLLAMA_MAX_QUEUE`和`OLLAMA_MAX_LOADED_MODELS`值。请参阅[Ollama 文档](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-does-ollama-handle-concurrent-requests)。
 
 ### 支持的模型
 
-您必须使用支持视觉的图生文模型。当前模型变体可在[其模型库](https://ollama.com/library)中找到。在撰写本文时，这包括`llava`、`llava-llama3`、`llava-phi3`和`moondream`。请注意，Frigate 不会自动下载您在配置中指定的模型，您必须先将模型下载到您的 Ollama 本地实例，例如在 Ollama 服务器/Docker 容器上运行`ollama pull llava:7b`。请注意，Frigate 配置中指定的模型必须与下载的模型标签匹配。
+你必须使用支持视觉的图生文模型。当前模型变体可在[其模型库](https://ollama.com/library)中找到。在撰写本文时，这包括`llava`、`llava-llama3`、`llava-phi3`和`moondream`。请注意，Frigate 不会自动下载你在配置中指定的模型，你必须先将模型下载到你的 Ollama 本地实例，例如在 Ollama 服务器/Docker 容器上运行`ollama pull llava:7b`。请注意，Frigate 配置中指定的模型必须与下载的模型标签匹配。
 
 :::note
 
-您应至少有 8GB 可用 RAM(或在 GPU 上运行时为显存)来运行 7B 模型，16GB 运行 13B 模型，32GB 运行 33B 模型。
+你应至少有 8GB 可用 RAM(或在 GPU 上运行时为显存)来运行 7B 模型，16GB 运行 13B 模型，32GB 运行 33B 模型。
 
 :::
 
@@ -81,16 +81,16 @@ Google Gemini 有一个免费等级，允许每分钟[15 次查询](https://ai.g
 
 ### 支持的模型
 
-您必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://ai.google.dev/gemini-api/docs/models/gemini)中找到。
+你必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://ai.google.dev/gemini-api/docs/models/gemini)中找到。
 
 ### 获取 API 密钥
 
-要开始使用 Gemini，您必须首先从[Google AI Studio](https://aistudio.google.com)获取 API 密钥。
+要开始使用 Gemini，你必须首先从[Google AI Studio](https://aistudio.google.com)获取 API 密钥。
 
 1. 接受服务条款
 2. 从右侧导航栏点击"获取 API 密钥"
 3. 点击"在新项目中创建 API 密钥"
-4. 复制 API 密钥用于您的配置
+4. 复制 API 密钥用于你的配置
 
 ### 配置
 
@@ -103,33 +103,33 @@ genai:
 
 :::note
 
-如需使用其他兼容 Gemini 的 API ENDPOINT，请将环境变量`GEMINI_BASE_URL`设置为您所用服务商的 API 地址。
+如需使用其他兼容 Gemini 的 API ENDPOINT，请将环境变量`GEMINI_BASE_URL`设置为你所用服务商的 API 地址。
 
 :::
 
 ## OpenAI
 
-OpenAI 没有为其 API 提供免费等级。随着 gpt-4o 的发布，价格已经降低，如果您选择此路线，每次生成应该只需几分钱。
+OpenAI 没有为其 API 提供免费等级。随着 gpt-4o 的发布，价格已经降低，如果你选择此路线，每次生成应该只需几分钱。
 
 如果你打算使用中国大陆的各个 AI 提供商，他们大部分都兼容 OpenAI API 接口。
 
 :::warning
-请注意，如果您的摄像头位于公共领域（例如过道）等会检测过多物体/目标的地方，过多的物体/目标可能会很快耗尽您的资源包。请**务必不要开启**后付费模式！
+请注意，如果你的摄像头位于公共领域（例如过道）等会检测过多物体/目标的地方，过多的物体/目标可能会很快耗尽你的资源包。请**务必不要开启**后付费模式！
 :::
 
 ### 支持的模型
 
-您必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://platform.openai.com/docs/models)中找到。
+你必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://platform.openai.com/docs/models)中找到。
 
 :::note
 
-如果您选择国内兼容 OpenAI API 的大模型提供商，请注意选择支持**图生文**的模型。例如腾讯云的`hunyuan-vision`模型。DeepSeek 官方目前未提供其图生文[`DeepSeek-VL2`](https://github.com/deepseek-ai/DeepSeek-VL2)模型的 API，但可以在第三方服务商处获取由他们部署的版本。
+如果你选择国内兼容 OpenAI API 的大模型提供商，请注意选择支持**图生文**的模型。例如腾讯云的`hunyuan-vision`模型。DeepSeek 官方目前未提供其图生文[`DeepSeek-VL2`](https://github.com/deepseek-ai/DeepSeek-VL2)模型的 API，但可以在第三方服务商处获取由他们部署的版本。
 
 :::
 
 ### 获取 API 密钥
 
-要开始使用 OpenAI，您必须首先[创建 API 密钥](https://platform.openai.com/api-keys)并[配置计费](https://platform.openai.com/settings/organization/billing/overview)。
+要开始使用 OpenAI，你必须首先[创建 API 密钥](https://platform.openai.com/api-keys)并[配置计费](https://platform.openai.com/settings/organization/billing/overview)。
 
 ### 配置
 
@@ -142,7 +142,7 @@ genai:
 
 :::note
 
-要使用兼容 OpenAI API 的其他服务商（例如阿里云和腾讯云等国内云厂商），需要设置**环境变量** `OPENAI_BASE_URL` 为您的服务商的 API endpoint。
+要使用兼容 OpenAI API 的其他服务商（例如阿里云和腾讯云等国内云厂商），需要设置**环境变量** `OPENAI_BASE_URL` 为你的服务商的 API endpoint。
 
 例如腾讯云请设置为https://api.hunyuan.cloud.tencent.com/v1
 :::
@@ -153,11 +153,11 @@ genai:
 
 ### 支持的模型
 
-您必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models)中找到。
+你必须使用支持视觉的图生文模型。当前模型变体可在[其文档](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models)中找到。
 
 ### 创建资源并获取 API 密钥
 
-要开始使用 Azure OpenAI，您必须首先[创建资源](https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)。你需要您的 API 密钥、模型名称和资源 URL，其中必须包含`api-version`参数(参见下面的示例)。
+要开始使用 Azure OpenAI，你必须首先[创建资源](https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)。你需要你的 API 密钥、模型名称和资源 URL，其中必须包含`api-version`参数(参见下面的示例)。
 
 ### 配置
 
@@ -172,13 +172,13 @@ genai:
 
 ## 使用方法和最佳实践
 
-Frigate 的缩略图搜索擅长识别追踪目标的特定细节 - 例如，使用"图像标题"方法查找"穿黄色背心的人"、"在草坪上奔跑的白狗"或"住宅街道上的红色汽车"。为了进一步增强这一点，Frigate 的默认提示设计为询问您的 AI 提供商有关物体/目标行为背后的意图，而不仅仅是描述其外观。
+Frigate 的缩略图搜索擅长识别追踪目标的特定细节 - 例如，使用"图像标题"方法查找"穿黄色背心的人"、"在草坪上奔跑的白狗"或"住宅街道上的红色汽车"。为了进一步增强这一点，Frigate 的默认提示设计为询问你的 AI 提供商有关物体/目标行为背后的意图，而不仅仅是描述其外观。
 
-虽然生成检测物品/目标的简单描述很有用，但理解意图提供了更深层次的洞察。Frigate 的默认提示不仅识别场景中的"什么"，还旨在推断"为什么"它可能在那里或"什么"它可能会做下一步。描述告诉您发生了什么，但意图提供了上下文。例如，一个人走向门可能看起来像访客，但如果他们在下班后快速移动，您可以推断潜在的闯入企图。检测到一个人在夜间在门附近徘徊可以比简单地注意到"一个人站在门旁"更快触发警报，帮助您根据情况上下文做出响应。
+虽然生成检测物品/目标的简单描述很有用，但理解意图提供了更深层次的洞察。Frigate 的默认提示不仅识别场景中的"什么"，还旨在推断"为什么"它可能在那里或"什么"它可能会做下一步。描述告诉你发生了什么，但意图提供了上下文。例如，一个人走向门可能看起来像访客，但如果他们在下班后快速移动，你可以推断潜在的闯入企图。检测到一个人在夜间在门附近徘徊可以比简单地注意到"一个人站在门旁"更快触发警报，帮助你根据情况上下文做出响应。
 
 ### 使用生成式 AI 进行通知
 
-Frigate 提供了一个[MQTT 主题](/integrations/mqtt)，`frigate/tracked_object_update`，当您的 AI 提供商返回追踪目标的描述时，它会更新包含`event_id`和`description`的 JSON 有效负载。此描述可直接用于通知，例如发送警报到您的手机或进行音频公告。如果需要来自追踪目标的其他详细信息，您可以使用[HTTP API](/integrations/api/event-events-event-id-get)查询`event_id`，例如：`http://frigate_ip:5000/api/events/<event_id>`。
+Frigate 提供了一个[MQTT 主题](/integrations/mqtt)，`frigate/tracked_object_update`，当你的 AI 提供商返回追踪目标的描述时，它会更新包含`event_id`和`description`的 JSON 有效负载。此描述可直接用于通知，例如发送警报到你的手机或进行音频公告。如果需要来自追踪目标的其他详细信息，你可以使用[HTTP API](/integrations/api/event-events-event-id-get)查询`event_id`，例如：`http://frigate_ip:5000/api/events/<event_id>`。
 
 如果希望在物体/目标停止被追踪之前获得通知，可以配置`after_significant_updates`的附加发送触发器。
 
@@ -191,7 +191,7 @@ genai:
 
 ## 自定义提示词
 
-Frigate 将来自追踪目标的多帧图像与提示一起发送给您的生成式 AI 提供商，要求其生成描述。默认提示如下：
+Frigate 将来自追踪目标的多帧图像与提示一起发送给你的生成式 AI 提供商，要求其生成描述。默认提示如下：
 
 ```
 请分析以下监控摄像头画面中的 “{label}” 元素，如果可以，请尽可能描述 “{label}” 的动作、以及它接下来可能会做什么，而不是描述其外观或周围环境。请注意引号内的名称可能为英文，请输出时将其翻译为中文。
@@ -203,7 +203,7 @@ Frigate 将来自追踪目标的多帧图像与提示一起发送给您的生成
 
 :::
 
-您也可以在配置中定义自定义提示词。
+你也可以在配置中定义自定义提示词。
 
 ```yaml
 genai:
@@ -240,7 +240,7 @@ cameras:
 
 ### 尝试不同的提示
 
-许多提供商还为其模型提供公开的聊天界面。从 Frigate 下载几个不同的缩略图或快照，并在他们的聊天页面中尝试新内容，然后再更新 Frigate 中的提示以获得您喜欢的描述。
+许多提供商还为其模型提供公开的聊天界面。从 Frigate 下载几个不同的缩略图或快照，并在他们的聊天页面中尝试新内容，然后再更新 Frigate 中的提示以获得你喜欢的描述。
 
 海外：
 

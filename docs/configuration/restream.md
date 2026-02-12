@@ -5,13 +5,13 @@ title: 转流功能
 
 ## RTSP 转流 {#rtsp}
 
-Frigate 可以将您的视频流重新以 RTSP 协议流式转发传输，供其他应用程序（如 Home Assistant）使用，地址为`rtsp://<frigate_host>:8554/<camera_name>`。必须开放转发容器内`8554`端口。[这样您就可以同时使用一个视频流进行 Frigate 检测和 Home Assistant 实时查看，而无需与摄像头建立两个独立连接](#reduce-connections-to-camera)。视频流将直接从原始视频流复制，避免重新编码。此流不包含 Frigate 的任何标注。
+Frigate 可以将你的视频流重新以 RTSP 协议流式转发传输，供其他应用程序（如 Home Assistant）使用，地址为`rtsp://<frigate_host>:8554/<camera_name>`。必须开放转发容器内`8554`端口。[这样你就可以同时使用一个视频流进行 Frigate 检测和 Home Assistant 实时查看，而无需与摄像头建立两个独立连接](#reduce-connections-to-camera)。视频流将直接从原始视频流复制，避免重新编码。此流不包含 Frigate 的任何标注。
 
 Frigate 使用[go2rtc](https://github.com/AlexxIT/go2rtc/tree/v1.9.10)提供转流和 MSE/WebRTC 功能。go2rtc 配置位于配置文件的`go2rtc`部分，更多高级配置和功能请参阅[go2rtc 文档](https://github.com/AlexxIT/go2rtc/tree/v1.9.10#configuration)。
 
 :::note
 
-您可以通过`/api/go2rtc/streams`访问 go2rtc 流信息，这对调试很有帮助，也能提供有关摄像头流的有用信息。
+你可以通过`/api/go2rtc/streams`访问 go2rtc 流信息，这对调试很有帮助，也能提供有关摄像头流的有用信息。
 
 :::
 

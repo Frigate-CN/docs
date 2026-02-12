@@ -78,7 +78,7 @@ increase(frigate_camera_events[1h])
 
 ## Grafana仪表板
 
-您可以使用这些指标创建Grafana仪表板来监控Frigate实例，建议监控以下内容：
+你可以使用这些指标创建Grafana仪表板来监控Frigate实例，建议监控以下内容：
 
 - CPU、内存和GPU使用率趋势
 - 摄像头帧率和检测频率  

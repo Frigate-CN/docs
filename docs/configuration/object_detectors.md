@@ -728,7 +728,7 @@ model:
 
 #### YOLOx
 
-[YOLOx](https://github.com/Megvii-BaseDetection/YOLOX)模型受支持，但默认不包含。有关下载 YOLOx 模型用于 Frigate 的更多信息，请参阅[模型部分](#下载yolo模型)。
+[YOLOx](https://github.com/Megvii-BaseDetection/YOLOX)模型受支持，但默认不包含。有关下载 YOLOx 模型用于 Frigate 的更多信息，请参阅[模型部分](#downloading-yolo-models)。
 
 将下载的 onnx 模型放入配置文件夹后，可以使用以下配置：
 
@@ -1430,7 +1430,7 @@ Frigate 受限于协议等版权限制，不会自带某些模型，请自行下
 
 ### 下载 D-FINE 模型
 
-您可以通过运行以下命令将 D-FINE 模型导出为 ONNX 格式。请将整段命令复制粘贴到终端执行，只需修改第一行中的`MODEL_SIZE=s`参数，将其调整为`s`、`m`或`l`尺寸。
+你可以通过运行以下命令将 D-FINE 模型导出为 ONNX 格式。请将整段命令复制粘贴到终端执行，只需修改第一行中的`MODEL_SIZE=s`参数，将其调整为`s`、`m`或`l`尺寸。
 
 ```sh
 docker build . --build-arg MODEL_SIZE=s --output . -f- <<'EOF'

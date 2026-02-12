@@ -3,35 +3,35 @@ id: homekit
 title: HomeKit
 ---
 
-Frigate cameras can be integrated with Apple HomeKit through go2rtc. This allows you to view your camera streams directly in the Apple Home app on your iOS, iPadOS, macOS, and tvOS devices.
+Frigate 摄像机可以通过 go2rtc 集成到 Apple HomeKit 中。这允许你直接在 iOS、iPadOS、macOS 和 tvOS 设备上的 Apple Home 应用中查看你的摄像机视频流。
 
-## Overview
+## 概述
 
-HomeKit integration is handled entirely through go2rtc, which is embedded in Frigate. go2rtc provides the necessary HomeKit Accessory Protocol (HAP) server to expose your cameras to HomeKit.
+HomeKit 集成完全通过 go2rtc 处理，go2rtc 内嵌在 Frigate 中。go2rtc 提供必要的 HomeKit 配件协议（HAP）服务器，将你的摄像机暴露给 HomeKit。
 
-## Setup
+## 设置
 
-All HomeKit configuration and pairing should be done through the **go2rtc WebUI**.
+所有 HomeKit 配置和配对都应通过 **go2rtc WebUI** 完成。
 
-### Accessing the go2rtc WebUI
+### 访问 go2rtc WebUI
 
-The go2rtc WebUI is available at:
+go2rtc WebUI 可通过以下地址访问：
 
 ```
 http://<frigate_host>:1984
 ```
 
-Replace `<frigate_host>` with the IP address or hostname of your Frigate server.
+将 `<frigate_host>` 替换为 Frigate 服务器的 IP 地址或主机名。需要注意的是，你必须要在容器上打开端口 1984 才能访问 go2rtc WebUI。
 
-### Pairing Cameras
+### 配对摄像机
 
-1. Navigate to the go2rtc WebUI at `http://<frigate_host>:1984`
-2. Use the `add` section to add a new camera to HomeKit
-3. Follow the on-screen instructions to generate pairing codes for your cameras
+1. 导航到位于 `http://<frigate_host>:1984` 的 go2rtc WebUI
+2. 使用 `add` 部分将新摄像机添加到 HomeKit
+3. 按照屏幕上的指示为你的摄像机生成配对码
 
-## Requirements
+## 要求
 
-- Frigate must be accessible on your local network using host network_mode
-- Your iOS device must be on the same network as Frigate
-- Port 1984 must be accessible for the go2rtc WebUI
-- For detailed go2rtc configuration options, refer to the [go2rtc documentation](https://github.com/AlexxIT/go2rtc)
+- Frigate 必须使用主机网络模式在你的本地网络上可访问
+- 你的 iOS 设备必须与 Frigate 位于同一网络上
+- 端口 1984 必须可访问才能使用 go2rtc WebUI
+- 有关详细的 go2rtc 配置选项，请参阅 [go2rtc 文档](https://github.com/AlexxIT/go2rtc)

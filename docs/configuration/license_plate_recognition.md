@@ -158,6 +158,7 @@ lpr:
 ```yaml
 lpr:
   enabled: True
+  format: ^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1,2}$ # 适配中国大陆地区车牌的正则 [!code ++]
   min_area: 1500 # 忽略面积小于1500像素的车牌
   min_plate_length: 4 # 仅识别4个或更多字符的车牌
   known_plates:
@@ -176,15 +177,15 @@ lpr:
   enabled: True
   min_area: 4000 # 仅对较大车牌运行识别(4000像素代表图像中约63×63像素的正方形)
   recognition_threshold: 0.85
-  format: ^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1,2}$ # 适配中国大陆地区车牌的正则
+  format: ^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1,2}$ # 适配中国大陆地区车牌的正则 [!code ++]
   match_distance: 1 # 允许车牌匹配中一个字符的变化
-  replace_rules:
-    - pattern: '[·]' # 移除噪声符号
-      replacement: ''
-    - pattern: I   # 将 'I' 替换为 '1'
-      replacement: '1'
-    - pattern: "O"
-      replacement: "0"
+  replace_rules: # [!code ++]
+    - pattern: '[·]' # 移除噪声符号 [!code ++]
+      replacement: '' # [!code ++]
+    - pattern: I   # 将 'I' 替换为 '1' # [!code ++]
+      replacement: '1' # [!code ++]
+    - pattern: "O" # [!code ++]
+      replacement: "0" # [!code ++]
   known_plates:
     老婆的车:
       - "京AC1234"

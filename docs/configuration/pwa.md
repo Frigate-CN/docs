@@ -25,4 +25,4 @@ Frigate支持作为[渐进式网页应用(PWA)](https://web.dev/explore/progress
 
 
 ## 使用
-完成设置后，Frigate 应用可以在任何能访问 Frigate 服务的地方使用。这意味着您可以根据需求，将其设置为仅本地访问、仅 VPN 访问，或完全开放访问。
+完成设置后，Frigate 应用可以在任何能访问 Frigate 服务的地方使用。这意味着你可以根据需求，将其设置为仅本地访问、仅 VPN 访问，或完全开放访问。

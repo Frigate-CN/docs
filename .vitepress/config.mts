@@ -100,7 +100,7 @@ export default defineConfig(({ mode }) => {
         {
           name: "description",
           content:
-            "Frigate 是一款基于实时 AI 目标检测技术的开源网络录像机（NVR）。所有视频分析都在您本地设备上完成，摄像头画面全程不会上传到云端，数据安全有保障。",
+            "Frigate 是一款基于实时 AI 目标检测技术的开源网络录像机（NVR）。所有视频分析都在你本地设备上完成，摄像头画面全程不会上传到云端，数据安全有保障。",
         },
       ],
       ["meta", { property: "og:title", content: "Frigate 中文文档" }],
@@ -109,7 +109,7 @@ export default defineConfig(({ mode }) => {
         {
           property: "og:description",
           content:
-            "Frigate 是一款基于实时 AI 目标检测技术的开源网络录像机（NVR）。所有视频分析都在您本地设备上完成，摄像头画面全程不会上传到云端，数据安全有保障。",
+            "Frigate 是一款基于实时 AI 目标检测技术的开源网络录像机（NVR）。所有视频分析都在你本地设备上完成，摄像头画面全程不会上传到云端，数据安全有保障。",
         },
       ],
       [
@@ -163,7 +163,7 @@ export default defineConfig(({ mode }) => {
     lang: "zh-CN",
     title: "Frigate中文文档",
     description:
-      "Frigate 是一款基于实时 AI 目标检测技术的开源网络录像机（NVR）。所有视频分析都在您本地设备上完成，摄像头画面全程不会上传到云端，数据安全有保障。",
+      "Frigate 是一款基于实时 AI 目标检测技术的开源网络录像机（NVR）。所有视频分析都在你本地设备上完成，摄像头画面全程不会上传到云端，数据安全有保障。",
     locales: {
       root: {
         label: "简体中文",

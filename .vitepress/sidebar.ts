@@ -233,7 +233,7 @@ export const sidebar = [
         link: "https://apidoc.frigate-cn.video/",
       },
       { text: "MQTT", link: "/integrations/mqtt" },
-      { text: "MQTT", link: "/integrations/homekit" },
+      { text: "Homekit", link: "/integrations/homekit" },
       { text: "指标", link: "/configuration/metrics" },
       { text: "第三方扩展", link: "/integrations/third_party_extensions" },
     ],
