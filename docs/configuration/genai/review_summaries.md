@@ -132,7 +132,7 @@ review:
 
 除生成单个回顾项的总结以外，大模型还可针对指定时间段内、所有摄像头标记为可疑的核查项，汇总生成一份统一报告（例如：你外出度假期间，每日可疑行为的汇总摘要）。
 
-### 以编程方式请求报告
+### 以代码的方式请求报告
 
 核查报告可以通过[API](/integrations/api/generate-review-summary-review-summarize-start-start-ts-end-end-ts-post)请求，方法是将 POST 请求发送到`/api/review/summarize/start/{start_ts}/end/{end_ts}`，其中`start_ts`和`end_ts`是 Unix 时间戳。
 
