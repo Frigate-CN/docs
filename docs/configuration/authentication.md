@@ -29,6 +29,12 @@ auth:
   reset_admin_password: true
 ```
 
+## 密码说明
+
+设置并妥善管理高强度密码非常重要。Frigate 要求密码长度**至少 12 位字符**。
+有关密码标准的说明，请参考 [NIST SP 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html)。
+如需了解如何设置真正安全的密码，可阅读这篇[文章（英文）](https://medium.com/peerio/how-to-build-a-billion-dollar-password-3d92568d9277)。
+
 ## 登录失败速率限制 {#login-failure-rate-limiting}
 
 为了限制暴力破解攻击的风险，登录失败时可以触发使用速率限制。这是通过 SlowApi 实现的，有效值的字符串表示法可在[文档](https://limits.readthedocs.io/en/stable/quickstart.html#examples)中找到。
@@ -160,7 +166,10 @@ proxy:
 - 如果代理传递的权限组 Header 中包含 camera-viewer，该用户将被分配 viewer 权限组。
 - 如果代理传递的权限组 Header 中包含 operators，该用户将被分配 operator 自定义权限组。
 - 如果没有匹配的映射，Frigate 将回退到配置的 default_role（若存在）。
-- 如果未定义 role_map，Frigate 会假定权限组 Header 直接包含 admin、viewer 或一个自定义权限组名称。
+- 如果未定义 `role_map`，Frigate 会假定权限组 Header 直接包含 admin、viewer 或一个自定义权限组名称。
+
+**关于权限匹配规则的说明：**
+管理员权限优先：如果 `admin` 权限规则匹配成功，Frigate 会直接将会话判定为 `admin` 身份，避免用户同时属于多个用户组（例如同时属于 `admin` 和 `viewer` 组）时出现权限意外降级的情况。
 
 ### 端口注意事项 {#port-considerations}
 

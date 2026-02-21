@@ -182,7 +182,7 @@ Frigate 能够使用支持 12.x 系列 CUDA 库的 NVIDIA GPU。
 
 #### 兼容性参考资料
 
-[NVIDIA TensorRT 支持矩阵](https://docs.nvidia.com/deeplearning/tensorrt/archives/tensorrt-841/support-matrix/index.html)
+[NVIDIA TensorRT 支持矩阵](https://docs.nvidia.com/deeplearning/tensorrt-rtx/latest/getting-started/support-matrix.html)
 
 [NVIDIA CUDA 兼容性](https://docs.nvidia.com/deploy/cuda-compatibility/index.html)
 
