@@ -7,7 +7,7 @@
   },
   "scripts": {
     "docs:dev": "vitepress dev --host 0.0.0.0",
-    "docs:build": "vitepress build",
+    "docs:build": "git fetch --depth=10000 && vitepress build",
     "docs:preview": "vitepress preview"
   },
   "dependencies": {

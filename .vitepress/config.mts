@@ -5,6 +5,17 @@ import { vitepressPluginLegend } from "vitepress-plugin-legend";
 
 const teekConfig = defineTeekConfig({
   teekHome: false,
+  lastUpdated: true,
+  articleAnalyze: {
+    showAuthor: false,
+    dateUTC: true,
+    showCreateDate: false,
+    showUpdateDate: true
+  },
+  articleUpdate: {
+    enabled: true,
+    limit: 5
+  },
   markdown: {
     config: (md) => {
       md.use(vitepressPluginLegend);
