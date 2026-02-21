@@ -6,7 +6,6 @@ import ResponsiveGrid from "./ResponsiveGrid.vue";
 import StreamAI from "./StreamAI.vue";
 import Question from "./Question.vue";
 import { initComponent } from 'vitepress-plugin-legend/component';
-import 'vitepress-plugin-legend/dist/index.css';
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
 export default {

@@ -13,8 +13,10 @@ const teekConfig = defineTeekConfig({
     showUpdateDate: true
   },
   articleUpdate: {
-    enabled: true,
-    limit: 5
+    enabled: false,
+  },
+  articleBanner: {
+    showCategory: false,
   },
   markdown: {
     config: (md) => {
