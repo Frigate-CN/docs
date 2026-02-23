@@ -170,19 +170,34 @@
         </p>
         <div class="checkbox-grid">
           <div class="checkbox-group">
-            <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' }">
-              <input type="checkbox" v-model="hardware.usbCoral" @change="generateConfig" :disabled="deviceType === 'apple-silicon'" />
-              <span>USB Coral (TPU)</span>
-            </label>
+             <TkPopover placement="top">
+              <template #default>
+                <div class="vp-doc">如果你有使用 Google Coral USB版TPU，请启用此选项。</div>
+              </template>
+              <template #reference>
+                <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics'}">
+                  <input type="checkbox" v-model="hardware.usbCoral" @change="generateConfig" :disabled="deviceType === 'apple-silicon'" />
+                  <span>USB Coral (TPU)</span>
+                </label>
+              </template>
+            </TkPopover>
           </div>
           <div class="checkbox-group">
-            <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' }">
-              <input type="checkbox" v-model="hardware.pcieCoral" @change="generateConfig" :disabled="deviceType === 'apple-silicon'" />
-              <span>PCIe Coral (TPU)</span>
-            </label>
+            <TkPopover placement="top">
+              <template #default>
+                <div class="vp-doc">如果你有使用 Google Coral PCIE/M.2版TPU，请启用此选项。注意，还需额外<a href="https://github.com/jnicolson/gasket-builder" target="_blank">安装驱动</a>才能正常使用。</div>
+              </template>
+              <template #reference>
+                <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics'}">
+                <input type="checkbox" v-model="hardware.pcieCoral" @change="generateConfig" :disabled="deviceType === 'apple-silicon'" />
+                <span>PCIe Coral (TPU)</span>
+              </label>
+              </template>
+            </TkPopover>
+            
           </div>
           <div class="checkbox-group">
-            <label class="checkbox-label" :class="{ disabled: deviceType === 'stable-tensorrt-jp6' || deviceType === 'apple-silicon' }">
+            <label class="checkbox-label" :class="{ disabled: deviceType === 'stable-tensorrt-jp6' || deviceType === 'apple-silicon' || deviceType === 'stable-synaptics'}">
               <input type="checkbox" v-model="hardware.gpu" @change="generateConfig" :disabled="deviceType === 'stable-tensorrt-jp6' || deviceType === 'apple-silicon'" />
               <span>GPU 加速（/dev/dri）</span>
             </label>
@@ -193,12 +208,27 @@
               <span>Intel NPU (/dev/accel)</span>
             </label>
           </div>
+          <div class="checkbox-group">
+            <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics' }">
+              <input type="checkbox" v-model="hardware.hailo" @change="generateConfig" :disabled="deviceType === 'apple-silicon'" />
+              <span>Hailo NPU (/dev/memx0)</span>
+            </label>
+          </div>
         </div>
       </div>
 
       <div class="form-section">
         <h4>端口配置</h4>
         <div class="checkbox-group">
+          <TkVpContainer type="danger" v-if="ports.enable5000">
+            <template #title>危险</template>
+            <p>你开启了 5000 端口暴露，这代表任何人可以直接访问你的 Frigate，不需要任何许可。在你拥有公网 IP （尤其是 IPv6）或者没有正确配置防火墙的情况下，这可能导致严重的安全风险，包括但不限于：<strong>未经授权的访问</strong>、<strong>隐私数据泄露</strong>、被攻击者利用进行进一步攻击等。请确保你了解相关风险，并且在必要时采取适当的安全措施（如配置防火墙规则、使用 VPN 等）来保护你的系统安全。</p>
+            <p>如果你确定要开启此选项，请勾选下方的复选框，并确保你已经采取了必要的安全措施来保护你的系统。</p>
+            <label class="checkbox-label">
+              <input type="checkbox" v-model="ports.enable5000Checked" @change="generateConfig" />
+              <span>我已知晓风险，并确认开启 5000 端口</span>
+            </label>
+          </TkVpContainer>
           <TkPopover content="⚠️ 警告！该端口应仅用于内网环境，并且配置防火墙禁止外部访问。如果你不知道如何配置防护，请不要开启该端口！" placement="top">
             <template #reference>
               <label class="checkbox-label">
@@ -243,7 +273,7 @@
           <div class="form-group">
             <TkPopover placement="top">
               <template #default>
-                <div class="vp-doc">SHM大小，请参阅 <a href='installation#calculating-required-shm-size'>计算所需的共享内存大小（shm-size）</a>的计算结果来配置</div>
+                <div class="vp-doc">SHM大小，请参阅 <a href='installation#calculating-required-shm-size'>计算所需的共享内存大小（shm-size）</a>的计算结果来配置，单位为mb</div>
               </template>
               <template #reference>
                 <label for="shmSize">共享内存（SHM）:</label>
@@ -303,7 +333,7 @@ import {
   transformerNotationFocus,
   transformerNotationHighlight
 } from '@shikijs/transformers'
-import { TkPopover } from "vitepress-theme-teek";
+import { TkPopover, TkVpContainer } from "vitepress-theme-teek";
 
 
 // 创建与 VitePress 相同的高亮器
@@ -337,11 +367,13 @@ const hardware = ref({
   pcieCoral: false,
   raspberryPi: false,
   gpu: false,
-  intelNpu: false
+  intelNpu: false,
+  hailo: false
 })
 
 const ports = ref({
-  enable5000: false
+  enable5000: false,
+  enable5000Checked: false
 })
 
 // NVIDIA GPU 专用配置
@@ -443,6 +475,11 @@ function generateConfig() {
     devices.push('      - /dev/accel:/dev/accel # Intel NPU')
   }
 
+  if (hardware.value.hailo) {
+    devices.push('      - /dev/memx0 # Hailo NPU')
+    volumes.push('      - /run/mxa_manager:/run/mxa_manager # Hailo 管理器')
+  }
+
   // RockChip 专用设备配置
   if (imageTag.value === 'stable-rk') {
     devices.push('      - /dev/dma_heap # RockChip DMA 堆')
@@ -501,7 +538,7 @@ ${hasDeviceId ? `              device_ids: ['${nvidiaGpuDeviceId.value.replace(/
 `
   }
 
-  const portsConfig = ports.value.enable5000
+  const portsConfig = ports.value.enable5000 && ports.value.enable5000Checked
     ? '- "5000:5000" # 用于内部无鉴权验证的访问。谨慎暴露。\n      '
     : ''
 
@@ -575,6 +612,7 @@ function selectDevice(tag: string) {
   hardware.value.usbCoral = false
   hardware.value.pcieCoral = false
   hardware.value.intelNpu = false
+  hardware.value.hailo = false
 
   switch (tag) {
     case 'apple-silicon':
@@ -830,9 +868,7 @@ onMounted(async () => {
   font-size: 2rem;
   margin-bottom: 0.5rem;
   height: 40px;
-  width: auto;
-  min-width: 40px;
-  max-width: 80px;
+  width: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -840,7 +876,7 @@ onMounted(async () => {
 
 .device-icon-nvidia {
   background-image: url('/assets/nvidia.png');
-  background-size: contain;
+  background-size: 100% 120%;
   background-repeat: no-repeat;
   background-position: center;
   font-size: 0;
@@ -855,11 +891,20 @@ onMounted(async () => {
 }
 
 .device-icon-intel {
-  background-image: url('/assets/intel-header-logo-homepage.svg');
-  background-size: contain;
+  background-size: 90% 90%;
   background-repeat: no-repeat;
   background-position: center;
   font-size: 0;
+}
+
+/* 浅色模式使用黑色 Intel 图标 */
+html:not(.dark) .device-icon-intel {
+  background-image: url('/assets/intel-header-logo.svg');
+}
+
+/* 深色模式使用白色 Intel 图标 */
+html.dark .device-icon-intel {
+  background-image: url('/assets/intel-header-logo-homepage.svg');
 }
 
 .device-icon-synaptics {
@@ -872,10 +917,20 @@ onMounted(async () => {
 
 .device-icon-amd {
   background-image: url('/assets/AMD_E_Wh_RGB.png');
-  background-size: 400% 100%;
+  background-size: 363% 95%;
   background-repeat: no-repeat;
   background-position: right center;
   font-size: 0;
+}
+
+/* 浅色模式使用黑色 AMD 图标 */
+html:not(.dark) .device-icon-amd {
+  background-image: url('/assets/AMD_E_Blk_RGB.png');
+}
+
+/* 深色模式使用白色 AMD 图标 */
+html.dark .device-icon-amd {
+  background-image: url('/assets/AMD_E_Wh_RGB.png');
 }
 
 .device-name {
