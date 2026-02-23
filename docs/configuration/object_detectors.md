@@ -474,7 +474,7 @@ model: # [!code ++]
 
 注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
 
-## <i class="fa-brands fa-apple"></i> Apple Silicon 检测器
+## <i class="fa-brands fa-apple"></i> Apple Silicon 检测器 {#apple-silicon-detector}
 
 Apple Silicon 中的 NPU 无法从容器内访问，因此必须先设置[Apple Silicon 检测器客户端](https://cnb.cool/frigate-cn/apple-silicon-detector)。
 建议使用带有`-standard-arm64`后缀的 Frigate docker 镜像，例如`ghcr.io/blakeblackshear/frigate:stable-standard-arm64`。

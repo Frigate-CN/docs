@@ -77,20 +77,7 @@ Frigate 使用共享内存(shm)处理视频帧。Docker 默认提供的 shm-size
 
 注意：Frigate 容器日志也会占用最多 40MB 的 shm，计算时需计入。
 
-各摄像头最低共享内存需求计算公式（基于检测分辨率）：
-
-```console
-# 单摄像头基础计算模板（不含日志），替换<width>和<height>
-$ python -c 'print("{:.2f}MB".format((<width> * <height> * 1.5 * 20 + 270480) / 1048576))'
-
-# 1280x720分辨率示例（含日志）
-$ python -c 'print("{:.2f}MB".format((1280 * 720 * 1.5 * 20 + 270480) / 1048576 + 40))'
-66.63MB
-
-# 8个1280x720摄像头示例（含日志）
-$ python -c 'print("{:.2f}MB".format(((1280 * 720 * 1.5 * 20 + 270480) / 1048576) * 8 + 40))'
-253MB
-```
+<ShmCalculator />
 
 Home Assistant 插件无法单独设置容器共享内存。但由于 Home Assistant Supervisor 默认分配总内存的 50%给`/dev/shm`（例如 8GB 内存机器可分配约 4GB），通常无需额外配置。
 
@@ -454,6 +441,8 @@ devices:
 如果你不理解上述内容，请直接删除 5000 端口的内容
 
 :::
+
+<DockerComposeGenerator />
 
 ```yaml
 services:
