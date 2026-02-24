@@ -1420,6 +1420,29 @@ model:
   input_pixel_format: rgb/bgr # 查看 model.json 以确定在这里放置哪个
 ```
 
+## AXERA 算力卡
+
+### 配置
+
+要配置 AXERA 算力卡，请使用以下示例配置：
+```yaml
+detectors:
+  axengine:
+    type: axengine
+```
+### 支持的模型
+#### yolov9-tiny
+使用以下推荐配置
+```yaml
+model:
+  path: frigate-yolov9-tiny
+  model_type: yolo-generic
+  width: 320
+  height: 320
+  tensor_format: bgr
+  labelmap_path: /labelmap/coco-80.txt
+```
+
 # 模型
 
 Frigate 受限于协议等版权限制，不会自带某些模型，请自行下载相关模型并引用。

@@ -81,6 +81,14 @@ semantic_search:
   model_size: large
 ```
 
+若使用 AXERA 算力卡，请使用如下配置：
+```yaml
+semantic_search:
+  enabled: True
+  model: ax_jinav2
+  model_size: large
+```
+
 对于大多数用户，特别是母语为英语的人，V1 模型仍然是推荐选择。
 
 :::note

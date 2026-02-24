@@ -430,6 +430,52 @@ devices:
 
 完成上述步骤后，需分别配置 **[硬件目标检测](../configuration/object_detectors.md#synaptics)** 与 **[硬件视频处理](../configuration/hardware_acceleration_video.md#synaptics)** 模块，以启用对应的加速能力。
 
+### AXERA 算力卡
+
+AXERA 算力卡采用 M.2 外形尺寸，支持以下设备配置：
+- x86 架构（Intel/AMD）台式机/主机
+- 树莓派 5
+- 香橙派 5 Plus
+- 多盘位 M.2 PCIe 扩展板
+
+#### 安装
+
+使用 AXERA 算力卡需要安装 AXCL 驱动程序。我们提供了一个便捷的 Linux 脚本来完成此安装。请按照以下步骤进行操作：
+
+```bash
+wget https://github.com/ivanshi1108/assets/releases/download/v0.17/user_installation.sh
+sudo chmod +x user_installation.sh
+./user_installation.sh
+```
+
+#### 设置
+
+按照 Frigate 的默认安装说明进行操作，但使用带有`-axcl`后缀的 docker 镜像，例如`docker.cnb.cool/frigate-cn/frigate:stable-axcl`。
+
+接下来，通过在 `docker-compose.yml` 文件中添加以下几行，授予 Docker 访问硬件的权限并挂载 axcl 相关目录：
+
+```yaml
+devices:
+- /dev/axcl_host
+- /dev/ax_mmb_dev
+- /dev/msg_userdev
+volumes:
+- /usr/bin/axcl:/usr/bin/axcl
+- /usr/lib/axcl:/usr/lib/axcl
+```
+
+如果您使用 `docker run` 命令，请将此选项添加到您的命令中：
+```
+--device /dev/axcl_host
+--device /dev/ax_mmb_dev
+--device /dev/msg_userdev
+--volume /usr/bin/axcl:/usr/bin/axcl
+--volume /usr/lib/axcl:/usr/lib/axcl
+```
+#### 配置
+
+接下来，您应该配置[硬件物体/目标检测](/configuration/object_detectors#axera平台)。
+
 ## Docker
 
 推荐使用 Docker Compose 进行安装。
