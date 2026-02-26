@@ -5,19 +5,7 @@
       <p class="description">根据你的硬件配置和需求自动生成 Frigate 的 Docker Compose 配置</p>
 
       <div class="form-section">
-        <h4>镜像配置</h4>
-        <div class="radio-group">
-          <label class="radio-label">
-            <input type="radio" value="cnb" v-model="imageSource" @change="generateConfig" />
-            <span>使用国内镜像源加速（推荐）</span>
-          </label>
-        </div>
-        <div class="radio-group">
-          <label class="radio-label">
-            <input type="radio" value="official" v-model="imageSource" @change="generateConfig" />
-            <span>使用官方镜像</span>
-          </label>
-        </div>
+        <h4>设备类型</h4>
         <div class="form-group">
           <label>选择设备类型:</label>
           <div class="device-grid">
@@ -29,6 +17,15 @@
               <div class="device-icon device-icon-intel"></div>
               <div class="device-name">Intel GPU</div>
               <div class="device-desc">Intel 核显/独显</div>
+            </div>
+            <div
+              class="device-card"
+              :class="{ active: imageTag === 'stable-axcl' }"
+              @click="selectDevice('stable-axcl')"
+            >
+              <div class="device-icon device-icon-axcl"></div>
+              <div class="device-name">爱芯AXERA</div>
+              <div class="device-desc">AXERA 算力卡</div>
             </div>
             <div
               class="device-card"
@@ -93,7 +90,7 @@
               <div class="device-name">昇锐</div>
               <div class="device-desc">Synaptics NPU</div>
             </div>
-                        <div
+            <div
               class="device-card"
               :class="{ active: deviceType === 'stable' }"
               @click="selectDevice('stable')"
@@ -103,11 +100,12 @@
               <div class="device-desc">通用 PC/服务器</div>
             </div>
           </div>
-          <p class="help-text" v-if="deviceType === 'stable-tensorrt'">使用 NVIDIA GPU 时会自动配置 GPU 部署参数（deploy.resources）。</p>
+          <p class="help-text" v-if="deviceType === 'stable-tensorrt'">⚠️ 需要安装 <a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker" target="_blank">NVIDIA Container Toolkit</a> 才能正常运行。<br>使用 NVIDIA GPU 时会自动配置 GPU 部署参数（deploy.resources）。</p>
           <p class="help-text" v-else-if="deviceType === 'stable-tensorrt-jp6'">NVIDIA Jetson 设备会自动配置 runtime: nvidia。</p>
           <p class="help-text" v-else-if="deviceType === 'stable-rocm'">AMD GPU 会自动配置 LIBVA_DRIVER_NAME 环境变量和 /dev/dri 设备映射。</p>
           <p class="help-text" v-else-if="deviceType === 'stable-rk'">瑞芯微设备会自动配置 /dev/dri 设备映射。</p>
           <p class="help-text" v-else-if="deviceType === 'stable-synaptics'">昇锐设备会自动配置 /dev/synap 和视频设备。</p>
+          <p class="help-text" v-else-if="deviceType === 'stable-axcl'">⚠️ 需先参阅文档安装 <a href="#axera">AXERA 驱动</a> 后再进行 Frigate 安装。 <br>⚠️ 爱芯AXERA 设备暂时仅支持国内镜像源加速。</p>
           <p class="help-text" v-else-if="deviceType === 'apple-silicon'">⚠️ Apple Silicon（M 系列处理器）需要额外安装使用<a href="../configuration/object_detectors#apple-silicon-detector" target="_blank">外部检测器</a>。</p>
           <p class="help-text" v-else-if="deviceType === 'raspberry-pi'">树莓派会自动配置 Video11 设备并使用 arm64 镜像。</p>
           <p class="help-text" v-else-if="deviceType === 'intel-gpu'">Intel GPU 会自动配置 /dev/dri 设备映射。</p>
@@ -121,12 +119,13 @@
               id="gpuCount"
               v-model="nvidiaGpuCount"
               type="text"
-              placeholder="1"
+              placeholder="1 或 all"
               @input="handleGpuCountInput"
             />
+            <p class="help-text">输入数字（如 1、2、3）或 "all" 表示使用所有 GPU</p>
           </div>
-          <div class="form-group">
-            <label for="gpuDeviceId">GPU 设备 ID (多个 GPU 时使用，逗号分隔):</label>
+          <div class="form-group" v-if="nvidiaGpuCount !== 'all'">
+            <label for="gpuDeviceId">GPU 设备 ID (必填，逗号分隔):</label>
             <input
               id="gpuDeviceId"
               v-model="nvidiaGpuDeviceId"
@@ -134,9 +133,26 @@
               placeholder="0"
               @input="generateConfig"
             />
-            <p class="help-text">如果只有一个 GPU，留空即可。多个 GPU 时输入如: 0,1,2</p>
+            <p class="help-text">单个 GPU 输入: 0，多个 GPU 输入: 0,1,2</p>
           </div>
         </div>
+      </div>
+
+      <div class="form-section">
+        <h4>镜像配置</h4>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" value="cnb" v-model="imageSource" @change="generateConfig" :disabled="imageTag === 'stable-axcl'" />
+            <span>使用国内镜像源加速（推荐）</span>
+          </label>
+        </div>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" value="official" v-model="imageSource" @change="generateConfig" :disabled="imageTag === 'stable-axcl'" />
+            <span>使用官方镜像</span>
+          </label>
+        </div>
+        <p class="help-text" v-if="imageTag === 'stable-axcl'">爱芯AXERA 设备仅支持国内镜像源加速，已自动选择。</p>
       </div>
 
       <div class="form-section">
@@ -175,8 +191,8 @@
                 <div class="vp-doc">如果你有使用 Google Coral USB版TPU，请启用此选项。</div>
               </template>
               <template #reference>
-                <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics'}">
-                  <input type="checkbox" v-model="hardware.usbCoral" @change="generateConfig" :disabled="deviceType === 'apple-silicon'" />
+                <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics' || imageTag === 'stable-axcl'}">
+                  <input type="checkbox" v-model="hardware.usbCoral" @change="generateConfig" :disabled="deviceType === 'apple-silicon' || imageTag === 'stable-axcl'" />
                   <span>USB Coral (TPU)</span>
                 </label>
               </template>
@@ -188,8 +204,8 @@
                 <div class="vp-doc">如果你有使用 Google Coral PCIE/M.2版TPU，请启用此选项。注意，还需额外<a href="https://github.com/jnicolson/gasket-builder" target="_blank">安装驱动</a>才能正常使用。</div>
               </template>
               <template #reference>
-                <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics'}">
-                <input type="checkbox" v-model="hardware.pcieCoral" @change="generateConfig" :disabled="deviceType === 'apple-silicon'" />
+                <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics' || imageTag === 'stable-axcl'}">
+                <input type="checkbox" v-model="hardware.pcieCoral" @change="generateConfig" :disabled="deviceType === 'apple-silicon' || imageTag === 'stable-axcl'" />
                 <span>PCIe Coral (TPU)</span>
               </label>
               </template>
@@ -209,8 +225,8 @@
             </label>
           </div>
           <div class="checkbox-group">
-            <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics' }">
-              <input type="checkbox" v-model="hardware.hailo" @change="generateConfig" :disabled="deviceType === 'apple-silicon'" />
+            <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics' || imageTag === 'stable-axcl' }">
+              <input type="checkbox" v-model="hardware.hailo" @change="generateConfig" :disabled="deviceType === 'apple-silicon' || imageTag === 'stable-axcl'" />
               <span>Hailo NPU (/dev/memx0)</span>
             </label>
           </div>
@@ -495,6 +511,15 @@ function generateConfig() {
     devices.push('      - /dev/video1 # 视频设备 1')
   }
 
+  // AXERA 专用设备配置
+  if (imageTag.value === 'stable-axcl') {
+    devices.push('      - /dev/axcl_host # AXCLA 算力卡设备')
+    devices.push('      - /dev/ax_mmb_dev # AXCLA MMB 设备')
+    devices.push('      - /dev/msg_userdev # AXCLA 消息设备')
+    volumes.push('      - /usr/bin/axcl:/usr/bin/axcl # AXCLA 二进制文件')
+    volumes.push('      - /usr/lib/axcl:/usr/lib/axcl # AXCLA 库文件')
+  }
+
   const devicesSection = devices.length > 0
     ? `    devices:\n${devices.join('\n')}\n`
     : ''
@@ -505,16 +530,44 @@ function generateConfig() {
   let extraHostsConfig = ''
   let securityOptConfig = ''
   if (imageTag.value === 'stable-tensorrt') {
+    const isAll = nvidiaGpuCount.value.toLowerCase() === 'all'
     const hasDeviceId = nvidiaGpuDeviceId.value && nvidiaGpuDeviceId.value.trim() !== ''
     const gpuCountValue = nvidiaGpuCount.value || '1'
-    deployConfig = `    deploy:
+
+    if (isAll) {
+      // 使用所有 GPU
+      deployConfig = `    deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-${hasDeviceId ? `              device_ids: ['${nvidiaGpuDeviceId.value.replace(/,/g, "', '")}'] # 仅在使用多个 GPU 时需要\n` : ''}              count: ${gpuCountValue} # GPU 数量
+              count: all # 使用所有 GPU
               capabilities: [gpu]
 `
+    } else {
+      // 使用指定数量的 GPU，必须提供设备 ID
+      if (hasDeviceId) {
+        deployConfig = `    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['${nvidiaGpuDeviceId.value.replace(/,/g, "', '")}'] # GPU 设备 ID 列表
+              count: ${gpuCountValue} # GPU 数量
+              capabilities: [gpu]
+`
+      } else {
+        // 未提供设备 ID，使用默认配置
+        deployConfig = `    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: ${gpuCountValue} # GPU 数量
+              capabilities: [gpu]
+`
+      }
+    }
   } else if (imageTag.value === 'stable-tensorrt-jp6') {
     // Jetson 需要使用 runtime: nvidia
     runtimeConfig = `    runtime: nvidia
@@ -644,6 +697,11 @@ function selectDevice(tag: string) {
       // Synaptics 使用 stable-synaptics 镜像
       imageTag.value = tag
       break
+    case 'stable-axcl':
+      // AXERA 使用 stable-axcl 镜像，强制使用国内镜像源
+      imageTag.value = tag
+      imageSource.value = 'cnb'
+      break
     case 'stable':
       // 标准版本
       imageTag.value = 'stable'
@@ -699,10 +757,19 @@ function handleShmSizeInput(event: Event) {
   generateConfig()
 }
 
-// 处理 GPU 数量输入，只允许输入数字
+// 处理 GPU 数量输入，允许输入数字或 "all"
 function handleGpuCountInput(event: Event) {
   const target = event.target as HTMLInputElement
-  let value = target.value
+  let value = target.value.trim().toLowerCase()
+
+  // 检查是否为 "all"
+  if (value === 'all') {
+    nvidiaGpuCount.value = 'all'
+    // 如果使用 "all"，清空设备 ID
+    nvidiaGpuDeviceId.value = ''
+    generateConfig()
+    return
+  }
 
   // 只保留数字
   const filtered = value.replace(/[^0-9]/g, '')
@@ -915,9 +982,17 @@ html.dark .device-icon-intel {
   font-size: 0;
 }
 
+.device-icon-axcl {
+  background-image: url('/assets/axera.png');
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
+  background-position: left center;
+  font-size: 0;
+}
+
 .device-icon-amd {
   background-image: url('/assets/AMD_E_Wh_RGB.png');
-  background-size: 363% 95%;
+  background-size: 365% 95%;
   background-repeat: no-repeat;
   background-position: right center;
   font-size: 0;

@@ -45,23 +45,9 @@ Frigate 会使用以下端口，根据实际需要对以下端口进行映射。
 | `8554` | 提供未加密的实时视频流转发服务（默认无需认证）。可通过配置文件中 go2rtc 模块启用认证功能。                                         |
 | `8555` | 提供双向通话支持的 WebRTC 连接服务。                                                                                               |
 
-#### 常见 Docker Compose 存储配置 {#common-docker-compose-storage-configurations}
+### Docker Compose 配置生成 {#docker-compose-generator}
 
-写入本地硬盘或外部 USB 驱动器：
-
-```yaml
-services:
-  frigate:
-    ...
-    volumes:
-      - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
-      - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
-      - type: tmpfs # 可选：将使用1GB内存作为缓存文件，减少SSD/SD卡损耗
-        target: /tmp/cache
-        tmpfs:
-          size: 1000000000
-    ...
-```
+<DockerComposeGenerator />
 
 :::warning
 
@@ -397,7 +383,7 @@ volumes:
 
 接下来，你应该配置[硬件物体/目标检测](/configuration/object_detectors#rockchip平台)和[硬件视频处理](/configuration/hardware_acceleration_video#rockchip平台)。
 
-### 昇锐（Synaptics）
+### 昇锐（Synaptics） {#synaptics}
 
 - 型号：SL1680
 
@@ -430,9 +416,10 @@ devices:
 
 完成上述步骤后，需分别配置 **[硬件目标检测](../configuration/object_detectors.md#synaptics)** 与 **[硬件视频处理](../configuration/hardware_acceleration_video.md#synaptics)** 模块，以启用对应的加速能力。
 
-### AXERA 算力卡
+### AXERA 算力卡 {#axera}
 
 AXERA 算力卡采用 M.2 外形尺寸，支持以下设备配置：
+
 - x86 架构（Intel/AMD）台式机/主机
 - 树莓派 5
 - 香橙派 5 Plus
@@ -456,15 +443,16 @@ sudo chmod +x user_installation.sh
 
 ```yaml
 devices:
-- /dev/axcl_host
-- /dev/ax_mmb_dev
-- /dev/msg_userdev
+  - /dev/axcl_host
+  - /dev/ax_mmb_dev
+  - /dev/msg_userdev
 volumes:
-- /usr/bin/axcl:/usr/bin/axcl
-- /usr/lib/axcl:/usr/lib/axcl
+  - /usr/bin/axcl:/usr/bin/axcl
+  - /usr/lib/axcl:/usr/lib/axcl
 ```
 
 如果您使用 `docker run` 命令，请将此选项添加到您的命令中：
+
 ```
 --device /dev/axcl_host
 --device /dev/ax_mmb_dev
@@ -472,23 +460,16 @@ volumes:
 --volume /usr/bin/axcl:/usr/bin/axcl
 --volume /usr/lib/axcl:/usr/lib/axcl
 ```
+
 #### 配置
 
-接下来，您应该配置[硬件物体/目标检测](/configuration/object_detectors#axera平台)。
+接下来，您应该配置[硬件物体/目标检测](../configuration/object_detectors.md#axera)。
 
 ## Docker
 
 推荐使用 Docker Compose 进行安装。
 
-:::danger
-
-需要注意，如果没有必要需求，请尽量不要暴露 5000 端口！并且使用复杂密码，避免你的数据泄露！
-如果实在需要使用到 5000 端口，请务必配置好服务器的防火墙，尤其需要注意 IPv6 的情况。
-如果你不理解上述内容，请直接删除 5000 端口的内容
-
-:::
-
-<DockerComposeGenerator />
+你可以点击使用上方的 <a href="#docker-compose-generator">Docker Compose 生成器</a>来生成适用于你的配置。
 
 ```yaml
 services:
@@ -498,7 +479,7 @@ services:
     restart: unless-stopped
     stop_grace_period: 30s # 为各服务提供足够的关闭时间
     image: docker.cnb.cool/frigate-cn/frigate:stable # 此处为国内镜像源地址，原地址为 ghcr.io/blakeblackshear/frigate:stable
-    shm_size: "512mb" # 根据上述计算结果为你的摄像头更新此值
+    shm_size: '512mb' # 根据上述计算结果为你的摄像头更新此值
     devices:
       # 以下内容根据你的实际情况进行删改。例如你不用Coral，就将Coral的设备映射给删除
       - /dev/bus/usb:/dev/bus/usb # 用于USB Coral，其他版本需要修改
@@ -515,16 +496,16 @@ services:
         tmpfs:
           size: 1000000000
     ports:
-      - "8971:8971"
+      - '8971:8971'
       # - "5000:5000" # 用于内部无鉴权验证的访问。谨慎暴露。
-      - "8554:8554" # RTSP视频流
-      - "8555:8555/tcp" # 基于TCP的WebRTC
-      - "8555:8555/udp" # 基于UDP的WebRTC
+      - '8554:8554' # RTSP视频流
+      - '8555:8555/tcp' # 基于TCP的WebRTC
+      - '8555:8555/udp' # 基于UDP的WebRTC
     environment:
-      FRIGATE_RTSP_PASSWORD: "password" # rtsp的密码，请修改"password"为你期望的密码
-      TZ: "Asia/Shanghai" # 设置为中国+8时区 [!code highlight]
-      HF_ENDPOINT: "https://huggingface.mirror.frigate-cn.video" # 由我们提供的Huggingface国内镜像源，提供Frigate需要用到的部分模型加速下载 [!code highlight]
-      GITHUB_ENDPOINT: "https://github.mirror.frigate-cn.video" # 由我们提供的GitHub国内镜像源，提供Frigate需要用到的部分模型加速下载 [!code highlight]
+      FRIGATE_RTSP_PASSWORD: 'password' # rtsp的密码，请修改"password"为你期望的密码
+      TZ: 'Asia/Shanghai' # 设置为中国+8时区 [!code highlight]
+      HF_ENDPOINT: 'https://huggingface.mirror.frigate-cn.video' # 由我们提供的Huggingface国内镜像源，提供Frigate需要用到的部分模型加速下载 [!code highlight]
+      GITHUB_ENDPOINT: 'https://github.mirror.frigate-cn.video' # 由我们提供的GitHub国内镜像源，提供Frigate需要用到的部分模型加速下载 [!code highlight]
 ```
 
 如果你无法使用 Docker Compose，可以使用类似以下命令运行容器：
@@ -776,26 +757,27 @@ macOS 上的 Docker 容器可通过 [Docker Desktop](https://docs.docker.com/des
 若要让 Frigate 调用苹果芯片的神经引擎/处理单元（NPU），主机必须运行 [Apple Silicon Detector](../configuration/object_detectors.md#apple-silicon-detector)（需在 Docker 外部的主机环境中运行）。
 
 #### Docker Compose 配置示例
+
 ```yaml
 services:
   frigate:
     container_name: frigate
     image: docker.cnb.cool/frigate-cn/frigate:stable-standard-arm64 # 需要使用standard-arm64的镜像
     restart: unless-stopped
-    shm_size: "512mb" # 根据上文的计算结果，按你的摄像头数量调整
+    shm_size: '512mb' # 根据上文的计算结果，按你的摄像头数量调整
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
       - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
     ports:
-      - "8971:8971"
+      - '8971:8971'
       # 在 macOS 上暴露端口时，映射到主机的其他端口（如 5001 或其他无冲突端口）
       # - "5001:5000" # 内部未认证访问，需谨慎暴露
-      - "8554:8554" # RTSP 视频流
+      - '8554:8554' # RTSP 视频流
     extra_hosts: # [!code highlight]
       # 此项配置至关重要
       # 允许 Frigate 通过 Apple Silicon Detector 访问苹果芯片的 NPU
-      - "host.docker.internal:host-gateway" # 访问 NPU 检测器的必要配置 [!code highlight]
+      - 'host.docker.internal:host-gateway' # 访问 NPU 检测器的必要配置 [!code highlight]
     environment:
-      - FRIGATE_RTSP_PASSWORD: "password"
+      - FRIGATE_RTSP_PASSWORD: 'password'
 ```

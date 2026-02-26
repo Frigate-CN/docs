@@ -106,7 +106,7 @@ detectors:
 detectors:
   coral:
     type: edgetpu
-    device: ""
+    device: ''
 ```
 
 ### 单个 PCIE/M.2 Coral
@@ -155,7 +155,7 @@ detectors:
 
 #### YOLOv9
 
-[YOLOv9](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite) 支持经 TensorFlow Lite 编译且完成合理量化的模型，但该模型**不包含在默认配置中**。如需使用自定义模型，请按以下步骤操作：[下载模型文件](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite)，将文件挂载至容器内，并通过 `model.path` 配置项指定模型路径。请注意，上述链接中的模型需搭配**自定义标签文件**使用（例如，可采用 17个 COCO 数据集类别的[labelmap文件](https://raw.githubusercontent.com/dbro/frigate-detector-edgetpu-yolo9/refs/heads/main/labels-coco17.txt)，该文件仅包含 17 个 COCO 数据集类别）。
+[YOLOv9](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite) 支持经 TensorFlow Lite 编译且完成合理量化的模型，但该模型**不包含在默认配置中**。如需使用自定义模型，请按以下步骤操作：[下载模型文件](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite)，将文件挂载至容器内，并通过 `model.path` 配置项指定模型路径。请注意，上述链接中的模型需搭配**自定义标签文件**使用（例如，可采用 17 个 COCO 数据集类别的[labelmap 文件](https://raw.githubusercontent.com/dbro/frigate-detector-edgetpu-yolo9/refs/heads/main/labels-coco17.txt)，该文件仅包含 17 个 COCO 数据集类别）。
 
 ##### YOLOv9 设置和配置
 
@@ -349,7 +349,7 @@ model:
 
 [YOLO-NAS](https://github.com/Deci-AI/super-gradients/blob/master/YOLONAS.md)模型受支持，但默认不包含。
 
-有关下载 YOLO-NAS 模型用于 Frigate 的更多信息，请参阅[下载YOLO-NAS模型](#downloading-yolo-nas-model)。
+有关下载 YOLO-NAS 模型用于 Frigate 的更多信息，请参阅[下载 YOLO-NAS 模型](#downloading-yolo-nas-model)。
 
 :::warning
 
@@ -381,7 +381,7 @@ model:
 
 YOLOv3、YOLOv4、YOLOv7 和 [YOLOv9](https://github.com/WongKinYiu/yolov9)模型受支持，但默认不包含。
 
-有关下载 YOLO 模型用于 Frigate 的更多信息，请参阅[下载YOLO模型](#downloading-yolo-models)。
+有关下载 YOLO 模型用于 Frigate 的更多信息，请参阅[下载 YOLO 模型](#downloading-yolo-models)。
 
 :::tip
 
@@ -503,7 +503,7 @@ detectors:
 
 YOLOv3、YOLOv4、YOLOv7 和 [YOLOv9](https://github.com/WongKinYiu/yolov9)模型受支持，但默认不包含。
 
-有关下载 YOLO 模型用于 Frigate 的更多信息，请参阅[下载YOLO模型](#downloading-yolo-models)。
+有关下载 YOLO 模型用于 Frigate 的更多信息，请参阅[下载 YOLO 模型](#downloading-yolo-models)。
 
 :::tip
 
@@ -627,9 +627,11 @@ ONNX 是一种用于构建机器学习模型的开放格式，Frigate 支持在 
 如果使用了适合你 GPU 的正确构建版本，GPU 将被自动检测并使用。
 
 - **AMD**
+
   - 在`-rocm`版 Frigate 镜像中，ROCm 会被自动检测并与 ONNX 检测器一起使用。
 
 - **Intel**
+
   - 在标准 Frigate 镜像中，OpenVINO 会被自动检测并与 ONNX 检测器一起使用。
 
 - **NVIDIA**
@@ -668,7 +670,7 @@ detectors:
 
 [YOLO-NAS](https://github.com/Deci-AI/super-gradients/blob/master/YOLONAS.md)模型受支持，但默认不包含。
 
-有关下载 YOLO-NAS 模型用于 Frigate 的更多信息，请参阅[下载YOLO-NAS模型](#downloading-yolo-nas-model)。
+有关下载 YOLO-NAS 模型用于 Frigate 的更多信息，请参阅[下载 YOLO-NAS 模型](#downloading-yolo-nas-model)。
 
 将下载的 onnx 模型放入配置文件夹后，可以使用以下配置：
 
@@ -691,7 +693,7 @@ model:
 
 YOLOv3、YOLOv4、YOLOv7 和 [YOLOv9](https://github.com/WongKinYiu/yolov9)模型受支持，但默认不包含。
 
-有关下载 YOLO 模型用于 Frigate 的更多信息，请参阅[下载YOLO模型](#downloading-yolo-models)。
+有关下载 YOLO 模型用于 Frigate 的更多信息，请参阅[下载 YOLO 模型](#downloading-yolo-models)。
 
 :::tip
 
@@ -816,7 +818,7 @@ detectors:
     num_threads: 3
 
 model:
-  path: "/custom_model.tflite"
+  path: '/custom_model.tflite'
 ```
 
 使用 CPU 检测器时，可以为每个摄像头添加一个 CPU 检测器。添加比摄像头数量更多的检测器不会提高性能。
@@ -1298,10 +1300,10 @@ model: # required
 以下是需要根据你的 onnx 模型进行调整的配置文件范例：
 
 ```yaml
-soc: ["rk3562", "rk3566", "rk3568", "rk3576", "rk3588"]
+soc: ['rk3562', 'rk3566', 'rk3568', 'rk3576', 'rk3588']
 quantization: false
 
-output_name: "{input_basename}"
+output_name: '{input_basename}'
 
 config:
   mean_values: [[0, 0, 0]]
@@ -1337,7 +1339,7 @@ degirum_detector:
   image: degirum/aiserver:latest
   privileged: true
   ports:
-    - "8778:8778"
+    - '8778:8778'
 ```
 
 只要相关运行时和驱动程序在你的机器上正确安装，所有支持的硬件都会在你的 AI 服务器主机上自动找到。如果你有任何问题，请参阅[DeGirum 文档站点](https://docs.degirum.com/pysdk/runtimes-and-drivers)。
@@ -1379,7 +1381,7 @@ model:
 ```yaml
 degirum_detector:
   type: degirum
-  location: "@local" # 用于访问 AI Hub 设备和模型
+  location: '@local' # 用于访问 AI Hub 设备和模型
   zoo: degirum/public # DeGirum 的公共模型库。库名称应为 "workspace/zoo_name" 格式。degirum/public 对所有人开放，所以如果你不知道从哪里开始，请随意使用。
   token: dg_example_token # 用于 AI Hub 的身份验证。通过 [AI Hub](https://hub.degirum.com) 主页的"tokens"部分获取此令牌。如果你从公共库拉取模型并使用 @local 或本地 DeGirum AI 服务器在你的本地硬件上运行推理，则可以留空
 ```
@@ -1405,7 +1407,7 @@ model:
 ```yaml
 degirum_detector:
   type: degirum
-  location: "@cloud" # 用于访问 AI Hub 设备和模型
+  location: '@cloud' # 用于访问 AI Hub 设备和模型
   zoo: degirum/public # DeGirum 的公共模型库。库名称应为 "workspace/zoo_name" 格式。degirum/public 对所有人开放，所以如果你不知道从哪里开始，请随意使用。
   token: dg_example_token # 用于 AI Hub 的身份验证。通过 (AI Hub)[https://hub.degirum.com) 主页的"tokens"部分获取此令牌
 ```
@@ -1420,19 +1422,24 @@ model:
   input_pixel_format: rgb/bgr # 查看 model.json 以确定在这里放置哪个
 ```
 
-## AXERA 算力卡
+## AXERA 算力卡 {#axera}
 
 ### 配置
 
 要配置 AXERA 算力卡，请使用以下示例配置：
+
 ```yaml
 detectors:
   axengine:
     type: axengine
 ```
+
 ### 支持的模型
+
 #### yolov9-tiny
+
 使用以下推荐配置
+
 ```yaml
 model:
   path: frigate-yolov9-tiny
