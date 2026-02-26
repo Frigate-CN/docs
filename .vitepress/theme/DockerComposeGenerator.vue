@@ -131,9 +131,11 @@
               v-model="nvidiaGpuDeviceId"
               type="text"
               placeholder="0"
-              @input="generateConfig"
+              @input="handleGpuDeviceIdInput"
+              :class="{ error: gpuDeviceIdError }"
             />
-            <p class="help-text">单个 GPU 输入: 0，多个 GPU 输入: 0,1,2</p>
+            <p class="help-text" v-if="gpuDeviceIdError">⚠️ 当 GPU 数量为数字时，必须输入 GPU 设备 ID</p>
+            <p class="help-text" v-else>单个 GPU 输入: 0，多个 GPU 输入: 0,1,2</p>
           </div>
         </div>
       </div>
@@ -393,12 +395,13 @@ const ports = ref({
 })
 
 // NVIDIA GPU 专用配置
-const nvidiaGpuCount = ref<string>('1')
+const nvidiaGpuCount = ref<string>('all')
 const nvidiaGpuDeviceId = ref<string>('')
 
 const copied = ref<boolean>(false)
 
 const shmSizeError = ref<boolean>(false)
+const gpuDeviceIdError = ref<boolean>(false)
 const shmSizeInput = ref<HTMLInputElement | null>(null)
 
 const generatedConfig = ref<string>('')
@@ -762,25 +765,49 @@ function handleGpuCountInput(event: Event) {
   const target = event.target as HTMLInputElement
   let value = target.value.trim().toLowerCase()
 
-  // 检查是否为 "all"
-  if (value === 'all') {
-    nvidiaGpuCount.value = 'all'
+  // 检查是否是 "all" 的一部分（允许输入过程中）
+  if (value === 'all' || value === 'a' || value === 'al' || value === 'all'.substring(0, value.length)) {
+    nvidiaGpuCount.value = value
     // 如果使用 "all"，清空设备 ID
-    nvidiaGpuDeviceId.value = ''
+    if (value === 'all') {
+      nvidiaGpuDeviceId.value = ''
+    }
     generateConfig()
     return
   }
 
-  // 只保留数字
-  const filtered = value.replace(/[^0-9]/g, '')
-
-  // 如果过滤后的值有效（至少有一个数字）
-  if (filtered === '') {
-    nvidiaGpuCount.value = ''
-  } else {
+  // 如果是纯数字
+  if (/^[0-9]+$/.test(value)) {
     // 确保至少为 1
-    const numValue = parseInt(filtered, 10)
+    const numValue = parseInt(value, 10)
     nvidiaGpuCount.value = numValue >= 1 ? numValue.toString() : '1'
+    // 如果设备 ID 为空，显示错误
+    if (!nvidiaGpuDeviceId.value) {
+      gpuDeviceIdError.value = true
+    } else {
+      gpuDeviceIdError.value = false
+    }
+    generateConfig()
+  } else if (value === '') {
+    // 空值
+    nvidiaGpuCount.value = ''
+    gpuDeviceIdError.value = false
+    generateConfig()
+  }
+  // 其他情况（非法输入）不做处理，让用户继续输入
+}
+
+// 处理 GPU 设备 ID 输入
+function handleGpuDeviceIdInput(event: Event) {
+  const target = event.target as HTMLInputElement
+  const value = target.value.trim()
+  nvidiaGpuDeviceId.value = value
+
+  // 如果 GPU 数量不是 "all" 且设备 ID 为空，则显示错误
+  if (nvidiaGpuCount.value !== 'all' && !value) {
+    gpuDeviceIdError.value = true
+  } else {
+    gpuDeviceIdError.value = false
   }
 
   generateConfig()
