@@ -104,12 +104,13 @@ mkdir storage config && touch docker-compose.yml
 
 :::note
 
-这个`docker-compose.yml`文件只是 amd64 设备的入门文件。你需要根据[安装文档](/frigate/installation#docker)中的详细说明来自定义它以适应你的设置。
+这个`docker-compose.yml`文件只是 amd64 设备的基本配置文件。你需要**根据你的实际硬件**情况然后参考[安装文档](/frigate/installation#docker)中的详细说明来配置合适的硬件加速，也可以使用 [Docker Compose 生成工具](/frigate/installation#docker-compose-generator)来生成你对应硬件的配置。
 
 :::
 `docker-compose.yml`
 
 ```yaml
+# 这只是一个示例，建议使用上面的提示的生成工具来生成对应的 Compose 配置
 services:
   frigate:
     container_name: frigate
@@ -320,6 +321,6 @@ cameras:
 
 1. [配置 go2rtc](configuring_go2rtc.md) - 额外的实时查看选项和 RTSP 中继
 2. [区域](../configuration/zones.md)
-3. [回顾](../configuration/review.md)
+3. [视频回放](../configuration/review.md)
 4. [遮罩](../configuration/masks.md)
 5. [Home Assistant 集成](/integrations/home-assistant.md) - 与 Home Assistant 集成

@@ -96,14 +96,14 @@ export const sidebar = [
             link: "/configuration/bird_classification",
           },
           {
-            text: "自定义分类",
+            text: '<i class="fa-solid fa-tag"></i>自定义分类',
             items: [
               {
-                text: "状态分类",
+                text: '<i class="fa-solid fa-door-open"></i>状态分类',
                 link: "/configuration/custom_classification/state_classification",
               },
               {
-                text: "目标分类",
+                text: '<i class="fa-solid fa-shield-cat"></i>目标分类',
                 link: "/configuration/custom_classification/object_classification",
               },
             ],
@@ -188,7 +188,7 @@ export const sidebar = [
             link: "/configuration/zones",
           },
           {
-            text: '<i class="fa-solid fa-person-circle-check"></i>物体/目标',
+            text: '<i class="fa-solid fa-person-circle-check"></i>支持的物体/目标',
             link: "/configuration/objects",
           },
           {

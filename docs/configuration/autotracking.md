@@ -43,53 +43,53 @@ Frigate 自动追踪功能需要 PTZ 摄像头支持视野内相对移动(符合
 cameras:
   ptzcamera:
     ...
-    onvif:
+    onvif: # [!code ++]
       # 必填: 摄像头主机地址
       # 注意: 默认使用HTTP协议；如需HTTPS需明确指定，如："https://0.0.0.0"
-      host: 0.0.0.0
+      host: 0.0.0.0 # [!code ++]
       # 可选: ONVIF端口(默认如下)
-      port: 8000
+      port: 8000 # [!code ++]
       # 可选: 登录用户名
       # 注意: 部分设备需要管理员权限访问ONVIF
-      user: admin
+      user: admin # [!code ++]
       # 可选: 登录密码
-      password: admin
+      password: admin # [!code ++]
       # 可选: 跳过ONVIF服务器的TLS验证(默认如下)
-      tls_insecure: False
+      tls_insecure: False # [!code ++]
       # 可选: PTZ摄像头自动追踪功能
       # 通过移动PTZ摄像头将移动目标保持在画面中央
-      autotracking:
+      autotracking: # [!code ++]
         # 可选: 启用/禁用目标自动追踪(默认如下)
-        enabled: False
+        enabled: False # [!code ++]
         # 可选: 启动时校准摄像头(默认如下)
         # 校准会分步移动PTZ并测量移动时间
         # 结果用于帮助估算摄像头移动后追踪目标的位置
         # 校准完成后Frigate会自动更新配置文件
         # 添加摄像头的"movement_weights"参数，之后应将calibrate_on_startup设为False
-        calibrate_on_startup: False
+        calibrate_on_startup: False # [!code ++]
         # 可选: 自动追踪时的变焦模式(默认如下)
         # 可用选项: disabled, absolute, relative
         #   disabled - 仅平移/倾斜，不变焦
         #   absolute - 使用绝对变焦(多数PTZ摄像头支持)
         #   relative - 使用相对变焦(非所有PTZ支持，但可实现同步平移/倾斜/变焦)
-        zooming: disabled
+        zooming: disabled # [!code ++]
         # 可选: 改变自动追踪目标变焦行为的参数(默认如下)
         # 较低值会在追踪目标周围保留更多场景
         # 较高值会更大程度放大追踪目标，但可能更快丢失追踪
         # 值应在0.1到0.75之间
-        zoom_factor: 0.3
+        zoom_factor: 0.3 # [!code ++]
         # 可选: 要追踪的目标列表(来自labelmap.txt)(默认如下)
-        track:
-          - person
+        track: # [!code ++]
+          - person # [!code ++]
         # 必填: 当目标进入以下任一区域时开始自动追踪
-        required_zones:
-          - zone_name
+        required_zones: # [!code ++]
+          - zone_name # [!code ++]
         # 必填: 追踪结束后返回的ONVIF预设位置名称(默认如下)
-        return_preset: home
+        return_preset: home # [!code ++]
         # 可选: 返回预设位置前的延迟秒数(默认如下)
-        timeout: 10
+        timeout: 10 # [!code ++]
         # 可选: 摄像头校准自动生成的值，请勿手动修改(默认如下)
-        movement_weights: []
+        movement_weights: [] 
 ```
 
 ## 校准流程

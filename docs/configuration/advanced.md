@@ -182,9 +182,9 @@ services:
       - FRIGATE_BASE_PATH=/frigate
 ```
 
-## 自定义依赖
+## 自定义依赖 {#custom-dependencies}
 
-### 自定义 FFmpeg
+### 自定义 FFmpeg {#custom-ffmpeg-build}
 
 将静态编译的`ffmpeg`和`ffprobe`放入`/config/custom-ffmpeg/bin`：
 
@@ -198,22 +198,28 @@ ffmpeg:
 
 3. 重启 Frigate
 
-### 自定义 go2rtc 版本
+### 自定义 go2rtc 版本 {#custom-go2rtc-version}
 
 Frigate 目前内置的 go2rtc 版本为 `v1.9.10`，在某些特定情况下，你可能希望运行不同版本的 go2rtc。
 
 操作步骤如下：
 
-1. 下载 go2rtc 到`/config`目录
-2. 重命名为`go2rtc`
-3. 添加执行权限
+1. 下载你系统对应的 [go2rtc](https://github.com/AlexxIT/go2rtc/releases) 的二进制文件到`/config`目录
+2. 文件重命名为`go2rtc`
+3. 添加执行权限（在文件目录下执行`chmod +x ./go2rtc`）
 4. 重启 Frigate
 
-## 配置文件验证
+## 配置文件验证 {#validating-your-configyml-file-updates}
 
-更新配置时可通过以下方式验证：
+Frigate 启动时会检查配置文件是否合法；若不合法，进程会直接退出。为减少更新配置时的中断，你有三种方式：
 
-### 通过 API 验证
+- 通过内置校验的网页编辑配置
+- 使用配置 API
+- 或通过 Frigate Docker 容器在命令行中进行验证
+
+### 通过 API 验证 {#via-api}
+
+Frigate 可通过 `/api/config/save` 接口接收 JSON 格式的新配置文件。通过此方式更新配置时，Frigate 会在保存前先验证配置的有效性；若配置无效，接口将返回 400 状态码。
 
 ```bash
 curl -X POST http://frigate_host:5000/api/config/save -d @config.json
@@ -225,11 +231,13 @@ curl -X POST http://frigate_host:5000/api/config/save -d @config.json
 yq -o=json '.' config.yaml | curl -X POST 'http://frigate_host:5000/api/config/save?save_option=saveonly' --data-binary @-
 ```
 
-### 命令行验证
+### 命令行验证 {#via-command-line}
 
 ```bash
-docker run -v $(pwd)/config.yml:/config/config.yml \
-  --entrypoint python3 \
-  ghcr.io/blakeblackshear/frigate:stable \
-  -u -m frigate --validate-config
+docker run                                \
+  -v $(pwd)/config.yml:/config/config.yml \
+  --entrypoint python3                    \
+  docker.cnb.cool/frigate-cn/frigate:stable  \
+  -u -m frigate                           \
+  --validate-config
 ```

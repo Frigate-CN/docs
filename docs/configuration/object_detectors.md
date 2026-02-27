@@ -15,6 +15,7 @@ Frigate 支持多种不同类型的检测器，可在不同硬件上运行：
 - [Hailo](#hailo-8)：Hailo8 和 Hailo8L AI 加速模块提供 m.2 接口和树莓派 HAT，兼容多种设备。
 - [MemryX](#memryx-mx3)<Badge text="社区支持" type="warning" />：MX3 加速模块提供 m.2 接口版本，为各种平台提供广泛的兼容性。
 - [DeGirum](#degirum)<Badge text="社区支持" type="warning" />：用于在云端或本地使用硬件设备的服务。硬件和模型在[其网站](https://hub.degirum.com)上提供。
+- [AXERA](#axera)<Badge text="社区支持" type="warning" />：高效的边缘计算模块。
 
 <i><img src="/assets/AMD_E_Wh_RGB.png" class="logo-icon-16"></i> **AMD**
 
@@ -106,7 +107,7 @@ detectors:
 detectors:
   coral:
     type: edgetpu
-    device: ''
+    device: ""
 ```
 
 ### 单个 PCIE/M.2 Coral
@@ -154,6 +155,7 @@ detectors:
 容器中提供了位于`/edgetpu_model.tflite`的 TensorFlow Lite 模型，默认情况下此检测器类型使用该模型。要提供自己的模型，将文件绑定挂载到容器中，并通过`model.path`提供路径。
 
 #### YOLOv9
+
 支持为 TensorFlow Lite 编译并已正确量化的 YOLOv9 模型，但默认不包含这些模型。有关下载适用于 Google Coral 的模型，请参阅[说明文档](#yolov9-for-google-coral-support)。
 
 :::tip
@@ -482,11 +484,11 @@ model: # [!code ++]
 ## <i class="fa-brands fa-apple"></i> Apple Silicon 检测器 {#apple-silicon-detector}
 
 Apple Silicon 中的 NPU 无法从容器内访问，因此必须先设置[Apple Silicon 检测器客户端](https://cnb.cool/frigate-cn/apple-silicon-detector)。
-建议使用带有`-standard-arm64`后缀的 Frigate docker 镜像，例如`ghcr.io/blakeblackshear/frigate:stable-standard-arm64`。
+建议使用带有`-standard-arm64`后缀的 Frigate docker 镜像，例如`docker.cnb.cool/frigate-cn/frigate:stable-standard-arm64`。
 
 ### 设置 {#setup-2}
 
-1. 设置[Apple Silicon 检测器客户端](https://cnb.cool/frigate-cn/apple-silicon-detector)并运行客户端
+1. 下载并配置安装[Apple Silicon 检测器客户端](https://cnb.cool/frigate-cn/apple-silicon-detector/-/releases)。
 2. 在 Frigate 中配置检测器并启动 Frigate
 
 ### 配置
@@ -541,6 +543,12 @@ model:
 ### 设置 {#setup}
 
 AMD GPU 的支持通过[ONNX 检测器](#ONNX)提供。要使用 AMD GPU 进行物体/目标检测，请使用带有`-rocm`后缀的 Frigate docker 镜像，例如`docker.cnb.cool/frigate-cn/frigate:stable-rocm`。
+
+:::warning
+
+由于 ROCm 相关库的更新，将不再支持较老版本的核显（APU）。
+
+:::
 
 ### Docker GPU 访问设置 {#docker-settings-for-gpu-access}
 
@@ -632,16 +640,14 @@ ONNX 是一种用于构建机器学习模型的开放格式，Frigate 支持在 
 如果使用了适合你 GPU 的正确构建版本，GPU 将被自动检测并使用。
 
 - **AMD**
-
   - 在`-rocm`版 Frigate 镜像中，ROCm 会被自动检测并与 ONNX 检测器一起使用。
 
 - **Intel**
-
   - 在标准 Frigate 镜像中，OpenVINO 会被自动检测并与 ONNX 检测器一起使用。
 
 - **NVIDIA**
   - 在`-tensorrt`版 Frigate 镜像中，NVIDIA GPU 会被自动检测并与 ONNX 检测器一起使用。
-  - 在`-tensorrt-jp(4/5)`版 Frigate 镜像中，Jetson 设备会被自动检测并与 ONNX 检测器一起使用。
+  - 在`-tensorrt-jp6`版 Frigate 镜像中，Jetson 设备会被自动检测并与 ONNX 检测器一起使用。
 
 :::
 
@@ -823,7 +829,7 @@ detectors:
     num_threads: 3
 
 model:
-  path: '/custom_model.tflite'
+  path: "/custom_model.tflite"
 ```
 
 使用 CPU 检测器时，可以为每个摄像头添加一个 CPU 检测器。添加比摄像头数量更多的检测器不会提高性能。
@@ -1305,10 +1311,10 @@ model: # required
 以下是需要根据你的 onnx 模型进行调整的配置文件范例：
 
 ```yaml
-soc: ['rk3562', 'rk3566', 'rk3568', 'rk3576', 'rk3588']
+soc: ["rk3562", "rk3566", "rk3568", "rk3576", "rk3588"]
 quantization: false
 
-output_name: '{input_basename}'
+output_name: "{input_basename}"
 
 config:
   mean_values: [[0, 0, 0]]
@@ -1344,7 +1350,7 @@ degirum_detector:
   image: degirum/aiserver:latest
   privileged: true
   ports:
-    - '8778:8778'
+    - "8778:8778"
 ```
 
 只要相关运行时和驱动程序在你的机器上正确安装，所有支持的硬件都会在你的 AI 服务器主机上自动找到。如果你有任何问题，请参阅[DeGirum 文档站点](https://docs.degirum.com/pysdk/runtimes-and-drivers)。
@@ -1386,7 +1392,7 @@ model:
 ```yaml
 degirum_detector:
   type: degirum
-  location: '@local' # 用于访问 AI Hub 设备和模型
+  location: "@local" # 用于访问 AI Hub 设备和模型
   zoo: degirum/public # DeGirum 的公共模型库。库名称应为 "workspace/zoo_name" 格式。degirum/public 对所有人开放，所以如果你不知道从哪里开始，请随意使用。
   token: dg_example_token # 用于 AI Hub 的身份验证。通过 [AI Hub](https://hub.degirum.com) 主页的"tokens"部分获取此令牌。如果你从公共库拉取模型并使用 @local 或本地 DeGirum AI 服务器在你的本地硬件上运行推理，则可以留空
 ```
@@ -1412,7 +1418,7 @@ model:
 ```yaml
 degirum_detector:
   type: degirum
-  location: '@cloud' # 用于访问 AI Hub 设备和模型
+  location: "@cloud" # 用于访问 AI Hub 设备和模型
   zoo: degirum/public # DeGirum 的公共模型库。库名称应为 "workspace/zoo_name" 格式。degirum/public 对所有人开放，所以如果你不知道从哪里开始，请随意使用。
   token: dg_example_token # 用于 AI Hub 的身份验证。通过 (AI Hub)[https://hub.degirum.com) 主页的"tokens"部分获取此令牌
 ```
@@ -1447,13 +1453,15 @@ detectors:
 
 ```yaml
 model:
-  path: frigate-yolov9-tiny
+  path: frigate-yolov9-tiny  # 将会自动下载已经量化好的yolov9模型
   model_type: yolo-generic
   width: 320
   height: 320
   tensor_format: bgr
   labelmap_path: /labelmap/coco-80.txt
 ```
+
+---
 
 # 模型
 
@@ -1549,7 +1557,6 @@ python3 yolo_to_onnx.py -m yolov7-320
 #### Google Coral 支持的 YOLOv9 {#yolov9-for-google-coral-support}
 
 [下载该模型](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite)文件后，将文件绑定挂载到容器中，并通过 `model.path` 配置项指定该文件的路径。请注意，该链接中的模型需要配套使用一个 17 标签的 [labelmap 文件](https://raw.githubusercontent.com/dbro/frigate-detector-edgetpu-yolo9/refs/heads/main/labels-coco17.txt)，该文件仅包含 17 个 COCO 类别。
-
 
 #### YOLOv9
 
