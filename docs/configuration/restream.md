@@ -3,36 +3,42 @@ id: restream
 title: 转流功能
 ---
 
-## RTSP转流 {#rtsp}
+## RTSP 转流 {#rtsp}
 
-Frigate可以将您的视频流重新以RTSP协议流式转发传输，供其他应用程序（如Home Assistant）使用，地址为`rtsp://<frigate_host>:8554/<camera_name>`。必须开放转发容器内`8554`端口。[这样您就可以同时使用一个视频流进行Frigate检测和Home Assistant实时查看，而无需与摄像头建立两个独立连接](#reduce-connections-to-camera)。视频流将直接从原始视频流复制，避免重新编码。此流不包含Frigate的任何标注。
+Frigate 可以将你的视频流重新以 RTSP 协议流式转发传输，供其他应用程序（如 Home Assistant）使用，地址为`rtsp://<frigate_host>:8554/<camera_name>`。必须开放转发容器内`8554`端口。[这样你就可以同时使用一个视频流进行 Frigate 检测和 Home Assistant 实时查看，而无需与摄像头建立两个独立连接](#reduce-connections-to-camera)。视频流将直接从原始视频流复制，避免重新编码。此流不包含 Frigate 的任何标注。
 
-Frigate使用[go2rtc](https://github.com/AlexxIT/go2rtc/tree/v1.9.9)提供转流和MSE/WebRTC功能。go2rtc配置位于配置文件的`go2rtc`部分，更多高级配置和功能请参阅[go2rtc文档](https://github.com/AlexxIT/go2rtc/tree/v1.9.9#configuration)。
+Frigate 使用[go2rtc](https://github.com/AlexxIT/go2rtc/tree/v1.9.10)提供转流和 MSE/WebRTC 功能。go2rtc 配置位于配置文件的`go2rtc`部分，更多高级配置和功能请参阅[go2rtc 文档](https://github.com/AlexxIT/go2rtc/tree/v1.9.10#configuration)。
 
 :::note
 
-您可以通过`/api/go2rtc/streams`访问go2rtc流信息，这对调试很有帮助，也能提供有关摄像头流的有用信息。
+你可以通过`/api/go2rtc/streams`访问 go2rtc 流信息，这对调试很有帮助，也能提供有关摄像头流的有用信息。
 
 :::
 
 ### 鸟瞰图转流 {#birdseye-restream}
 
-鸟瞰图RTSP转流可通过`rtsp://<frigate_host>:8554/birdseye`访问。启用鸟瞰图转流将使鸟瞰图24/7运行，这可能会略微增加CPU使用率。
+鸟瞰图 RTSP 转流可通过`rtsp://<frigate_host>:8554/birdseye`访问。启用鸟瞰图转流将使鸟瞰图 24/7 运行，这可能会略微增加 CPU 使用率。
 
 ```yaml
 birdseye:
   restream: True
 ```
 
+:::tip
+
+To improve connection speed when using Birdseye via restream you can enable a small idle heartbeat by setting `birdseye.idle_heartbeat_fps` to a low value (e.g. `1–2`). This makes Frigate periodically push the last frame even when no motion is detected, reducing initial connection latency.
+
+:::
+
 ### 使用认证保护转流 {#securing-restream-with-authentication}
 
-go2rtc转流可以通过设置RTSP的用户名/密码认证进行保护。例如：
+go2rtc 转流可以通过设置 RTSP 的用户名/密码认证进行保护。例如：
 
 ```yaml
 go2rtc: # [!code focus]
   rtsp: # [!code ++] [!code focus]
-    username: "admin" # [!code ++] [!code focus]
-    password: "pass" # [!code ++] [!code focus]
+    username: 'admin' # [!code ++] [!code focus]
+    password: 'pass' # [!code ++] [!code focus]
   streams: ...
 ```
 
@@ -44,7 +50,7 @@ go2rtc: # [!code focus]
 
 ## 减少摄像头连接数 <Badge text="强烈建议使用" type="warning"/> {#reduce-connections-to-camera}
 
-某些摄像头仅支持一个视频流（即只能有一个设备可以访问摄像头）连接，亦或者你希望减少与摄像头不必要的连接数，RTSP转流功能能很好的解决你的问题。
+某些摄像头仅支持一个视频流（即只能有一个设备可以访问摄像头）连接，亦或者你希望减少与摄像头不必要的连接数，RTSP 转流功能能很好的解决你的问题。
 
 ### 单流配置 {#with-single-stream}
 
@@ -55,10 +61,10 @@ go2rtc: # [!code ++][!code focus]
   streams: # [!code ++][!code focus]
     name_your_rtsp_cam: # <- 你的RTSP流名称，修改为你自己希望的摄像头名称，只支持英文数字下划线和连接符 [!code ++][!code focus]
       - rtsp://192.168.1.5:554/live0 # <- 摄像头原本的RTSP流示例，支持视频和AAC音频的流 [!code ++][!code focus]
-      - "ffmpeg:name_your_rtsp_cam#audio=opus" # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本 [!code ++][!code focus]
+      - 'ffmpeg:name_your_rtsp_cam#audio=opus' # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本 [!code ++][!code focus]
     name_your_http_cam: # <- 其他类型的视频流，例如http，该名称为示例，请自行修改 [!code ++][!code focus]
       - http://192.168.50.155/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=user&password=password # <- 摄像头原本的HTTP视频流示例，支持视频和AAC音频的流 [!code ++][!code focus]
-      - "ffmpeg:name_your_http_cam#audio=opus" # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本 [!code ++][!code focus]
+      - 'ffmpeg:name_your_http_cam#audio=opus' # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本 [!code ++][!code focus]
 
 cameras: # [!code highlight] [!code focus]
   name_your_rtsp_cam: # <- 摄像头名称和go2rtc上的视频流名称尽可能一致 [!code highlight] [!code focus]
@@ -94,16 +100,16 @@ go2rtc: # [!code ++][!code focus]
   streams: # [!code ++][!code focus]
     name_your_rtsp_cam: # <- 你的RTSP流名称，修改为你自己希望的摄像头名称，只支持英文数字下划线和连接符 [!code ++][!code focus]
       - rtsp://192.168.1.5:554/live0 # <- 支持视频和AAC音频的流。仅适用于RTSP流，HTTP必须使用ffmpeg [!code ++][!code focus]
-      - "ffmpeg:name_your_rtsp_cam#audio=opus" # <- 将音频转码为opus的流副本 [!code ++][!code focus]
+      - 'ffmpeg:name_your_rtsp_cam#audio=opus' # <- 将音频转码为opus的流副本 [!code ++][!code focus]
     name_your_rtsp_cam_sub: # <- 你的RTSP流名称，添加_sub代表这是子流，只要你能区分开，此处不强求名称。修改为你自己希望的摄像头名称，只支持英文数字下划线和连接符 [!code ++][!code focus]
       - rtsp://192.168.1.5:554/substream # <- 支持视频和AAC音频的流。仅适用于RTSP流，HTTP必须使用ffmpeg [!code ++][!code focus]
-      - "ffmpeg:name_your_rtsp_cam_sub#audio=opus" # <- 将音频转码为opus的流副本 [!code ++][!code focus]
+      - 'ffmpeg:name_your_rtsp_cam_sub#audio=opus' # <- 将音频转码为opus的流副本 [!code ++][!code focus]
     name_your_http_cam: # [!code ++][!code focus]
       - http://192.168.50.155/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=user&password=password # <- 支持视频和AAC音频的流。仅适用于RTSP流，HTTP必须使用ffmpeg [!code ++][!code focus]
-      - "ffmpeg:name_your_http_cam#audio=opus" # <- 将音频转码为opus的流副本 [!code ++][!code focus]
+      - 'ffmpeg:name_your_http_cam#audio=opus' # <- 将音频转码为opus的流副本 [!code ++][!code focus]
     name_your_http_cam_sub: # [!code ++][!code focus]
       - http://192.168.50.155/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=user&password=password # <- 支持视频和AAC音频的流。仅适用于RTSP流，HTTP必须使用ffmpeg [!code ++][!code focus]
-      - "ffmpeg:name_your_http_cam_sub#audio=opus" # <- 将音频转码为opus的流副本 [!code ++][!code focus]
+      - 'ffmpeg:name_your_http_cam_sub#audio=opus' # <- 将音频转码为opus的流副本 [!code ++][!code focus]
 
 cameras: # [!code highlight] [!code focus]
   name_your_rtsp_cam: # <- 摄像头名称和go2rtc上的视频流名称尽可能一致 [!code highlight] [!code focus]
@@ -138,7 +144,7 @@ cameras: # [!code highlight] [!code focus]
 
 ## 处理复杂密码（例如带特殊符号） {#handling-complex-passwords}
 
-如果你的摄像头密码里有特殊符号，需要对**密码**进行URL编码才能正常识别。可以使用[urlencoder.org](https://urlencoder.org)进行编码。
+如果你的摄像头密码里有特殊符号，需要对**密码**进行 URL 编码才能正常识别。可以使用[urlencoder.org](https://urlencoder.org)进行编码。
 
 :::warning
 注意，只需要对用户名或者密码进行编码！不要把地址直接复制过去进行编码！
@@ -157,16 +163,63 @@ go2rtc:
 ```yaml
 go2rtc:
   streams:
-    my_camera: rtsp://username:$%40foo%25@192.168.1.100  # <- 经过url编码后，会将@符号转换为%40，%符号转为%25 # [!code ++] [!code focus]
+    my_camera: rtsp://username:$%40foo%25@192.168.1.100 # <- 经过url编码后，会将@符号转换为%40，%符号转为%25 # [!code ++] [!code focus]
 ```
 
 更多信息请参阅[此评论](https://github.com/AlexxIT/go2rtc/issues/1217#issuecomment-2242296489)。
 
+
+## 避免 go2rtc 阻塞双向语音功能 {#two-way-talk-restream}
+
+对于支持双向语音的摄像头，当 go2rtc 连接到其 RTSP 流时，会自动建立一条音频输出反向通道。该反向通道会占用摄像头的音频输出资源，从而阻塞双向语音功能，导致 Frigate 及其他应用均无法使用该功能。
+
+要解决此问题，你需要配置两个独立的流实例：
+1.  第一个流实例添加 `#backchannel=0` 参数，用于 Frigate 的实时查看、录像和检测功能（此参数可阻止 go2rtc 建立会造成阻塞的反向通道）
+2.  第二个流实例不添加 `#backchannel=0` 参数，专门用于双向语音功能（可供 Frigate 的 WebRTC 查看器或其他应用使用）
+
+配置示例如下：
+```yaml
+go2rtc:
+  streams:
+    front_door:
+      - rtsp://user:password@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2#backchannel=0
+    front_door_twoway:
+      - rtsp://user:password@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
+```
+
+本配置的作用说明：
+- `front_door` 流用于 Frigate 的实时查看、录像和检测。`#backchannel=0` 参数可阻止 go2rtc 建立音频输出反向通道，避免占用双向语音的资源。
+- `front_door_twoway` 流用于双向语音功能。当启用双向语音后，该流可被 Frigate 的 WebRTC 查看器调用，也能供其他需要访问摄像头音频输出通道的应用（如 Home Assistant 高级摄像头卡片）使用。
+
+## 安全限制：受管控的流源 {#security-restricted-stream-sources}
+
+出于安全考量，`echo:`、`expr:` 以及 `exec:` 这三类流源在 go2rtc 中默认处于禁用状态。这类流源支持执行任意系统命令，若配置不当，会带来严重的安全风险。
+
+如果你的配置中尝试使用了上述流源，相关的流会被自动移除，同时日志中会输出对应的错误信息。
+
+若需启用这类流源，你必须设置环境变量 `GO2RTC_ALLOW_ARBITRARY_EXEC=true`。该配置可在 Docker Compose 文件或容器的环境变量中进行设置：
+```yaml
+environment:
+  - GO2RTC_ALLOW_ARBITRARY_EXEC=true
+```
+
+:::warning
+
+启用任意命令执行类流源后，攻击者可通过 go2rtc 的流配置执行任意系统命令。**请务必在充分理解其安全风险，且完全信任所有配置来源的前提下，再开启该功能。**
+
+:::
+
 ## 高级转流配置 {#advanced-restream-configurations}
 
-go2rtc中的[exec](https://github.com/AlexxIT/go2rtc/tree/v1.9.9#source-exec)源可用于自定义ffmpeg命令。示例如下：
+go2rtc 中的[exec](https://github.com/AlexxIT/go2rtc/tree/v1.9.10#source-exec)源可用于自定义 ffmpeg 命令。示例如下：
 
-注意：output需要使用两个花括号传递，如<code v-pre>{{output}}</code>
+:::warning
+
+出于安全考量，`exec:`、`echo:` 及 `expr:` 这三类流源默认处于禁用状态。若需使用它们，你必须将环境变量 `GO2RTC_ALLOW_ARBITRARY_EXEC` 设置为 `true`。更多详情请参阅 [安全限制：受管控的流源](#security-restricted-stream-sources)。
+
+:::
+
+注意：output 需要使用两个花括号传递，如<code v-pre>{{output}}</code>
 
 ```yaml
 go2rtc:

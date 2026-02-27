@@ -202,7 +202,7 @@ npm run lint
 ```
 
 - 添加单元测试并确保它们通过。你需要尽可能的增加测试覆盖率。这将有助于确保功能在未来不会意外损坏。
-- 如果在运行测试时遇到"TypeError: Cannot read properties of undefined (reading 'context')"之类的错误消息，这可能是由于vitest中的这些问题(https://github.com/vitest-dev/vitest/issues/1910, https://github.com/vitest-dev/vitest/issues/1652)，但我还没能解决它们。
+- 如果在运行测试时遇到`"TypeError: Cannot read properties of undefined (reading 'context')"`之类的错误消息，这可能是由于vitest中的这些问题(https://github.com/vitest-dev/vitest/issues/1910, https://github.com/vitest-dev/vitest/issues/1652) 导致的，但我还没能解决它们。
 
 ```console
 npm run test

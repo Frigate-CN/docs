@@ -1,79 +1,77 @@
 @media (min-width: 640px) {
-    
-    .image-src {
-        max-width: 300px !important;
-        max-height: 300px !important;
-    }
+  .image-src {
+    max-width: 300px !important;
+    max-height: 300px !important;
+  }
 
-    .image-container {
-        transform: translate(40px,20px) !important;
-    }
+  .image-container {
+    transform: translate(40px, 20px) !important;
+  }
 }
 
 @media (min-width: 960px) {
-    .image-src {
-        max-width: 600px !important;
-        max-height: 600px !important;
-    }
+  .image-src {
+    max-width: 600px !important;
+    max-height: 600px !important;
+  }
 
-    .image-container {
-        transform: translate(40px,20px) !important;
-    }
+  .image-container {
+    transform: translate(40px, 20px) !important;
+  }
 }
 
-
 :root {
-    --tk-home-max-width: 1300px;
+  --tk-home-max-width: 1300px;
 }
 
 .VPHomeHero .logo {
-    background-image: url(/img/logo.svg);
-    background-size: contain;
-    height: 2em;
-    width: 2em;
+  background-image: url(/img/logo.svg);
+  background-size: contain;
+  height: 2em;
+  width: 2em;
 }
 
 .dark .VPHomeHero .logo {
-    background-image: url(/img/logo-dark.svg);
-    background-size: contain;
-    height: 2em;
-    width: 2em;
+  background-image: url(/img/logo-dark.svg);
+  background-size: contain;
+  height: 2em;
+  width: 2em;
 }
 
 .tk-footer-info .eo-logo {
-    background-image: url(/assets/eo.png);
-    background-size: contain;
-    margin-top: 5px;
-    height: 16px;
-    width: 108px;
-    display: inline-block;
-    vertical-align: sub;
+  background-image: url(/assets/eo.png);
+  background-size: contain;
+  margin-top: 5px;
+  height: 16px;
+  width: 108px;
+  display: inline-block;
+  vertical-align: sub;
 }
 
 .dark .tk-footer-info .eo-logo {
-    background-image: url(/assets/eo-dark.png);
-    background-size: contain;
-    margin-top: 5px;
-    height: 16px;
-    width: 108px;
-    display: inline-block;
-    vertical-align: sub;
+  background-image: url(/assets/eo-dark.png);
+  background-size: contain;
+  margin-top: 5px;
+  height: 16px;
+  width: 108px;
+  display: inline-block;
+  vertical-align: sub;
 }
 
 .VPHero {
-    background-color: aliceblue;
+  background-color: aliceblue;
 }
 
 .dark .VPHero {
-    background-color: #1e1e1e;
+  background-color: #1e1e1e;
 }
 
 .dark .VPNavBarMenuGroup .text svg {
-    fill: var(--vp-c-text-1);
+  fill: var(--vp-c-text-1);
 }
 
 .VPSidebarItem i {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 /* 适配MarkdownIt渲染的内容 */
@@ -106,12 +104,20 @@
 }
 
 /* 标题和列表样式 */
-.message-content h1, .message-content h2, .message-content h3 {
+.message-content h1,
+.message-content h2,
+.message-content h3 {
   margin: 0.8rem 0 0.4rem;
   font-weight: 600;
 }
 
-.message-content ul, .message-content ol {
+.message-content ul,
+.message-content ol {
   padding-left: 1.5rem;
   margin: 0.5rem 0;
+}
+
+.logo-icon-16 {
+  width: 16px;
+  display: inline;
 }

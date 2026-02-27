@@ -42,10 +42,10 @@ go2rtc:
   streams:
     rtsp_cam: # <- RTSP流
       - rtsp://192.168.1.5:554/live0 # <- 支持视频和AAC音频的流
-      - 'ffmpeg:rtsp_cam#audio=opus' # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
+      - "ffmpeg:rtsp_cam#audio=opus" # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
     http_cam: # <- HTTP流
       - http://192.168.50.155/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=user&password=password # <- 支持视频和AAC音频的流
-      - 'ffmpeg:http_cam#audio=opus' # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
+      - "ffmpeg:http_cam#audio=opus" # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
 ```
 
 如果摄像头不支持 AAC 音频或实时监控页面有问题，尝试直接转码为 AAC 音频：
@@ -54,8 +54,8 @@ go2rtc:
 go2rtc:
   streams:
     rtsp_cam: # <- RTSP流
-      - 'ffmpeg:rtsp://192.168.1.5:554/live0#video=copy#audio=aac' # <- 复制视频流并将音频转码为AAC
-      - 'ffmpeg:rtsp_cam#audio=opus' # <- 提供WebRTC支持
+      - "ffmpeg:rtsp://192.168.1.5:554/live0#video=copy#audio=aac" # <- 复制视频流并将音频转码为AAC
+      - "ffmpeg:rtsp_cam#audio=opus" # <- 提供WebRTC支持
 ```
 
 如果摄像头没有音频且实时监控页面有问题，应让 go2rtc 仅发送视频：
@@ -88,7 +88,7 @@ go2rtc:
   streams:
     test_cam: # [!code highlight]
       - rtsp://192.168.1.5:554/live_main # <- 支持视频和AAC音频的流
-      - 'ffmpeg:test_cam#audio=opus' # <- 将音频转码为opus以支持webrtc的流副本
+      - "ffmpeg:test_cam#audio=opus" # <- 将音频转码为opus以支持webrtc的流副本
     test_cam_sub:
       - rtsp://192.168.1.5:554/live_sub # <- 支持视频和AAC音频的流
     test_cam_another_sub:
@@ -174,13 +174,17 @@ services:
 
 ### 双向通话 {#two-way-talk}
 
-对于支持双向通话的设备，可以配置 Frigate 从 Web UI 的摄像头实时监控页面中使用该功能。你应该：
+对于支持双向通话的设备，可以配置 Frigate 从 Web 页面的摄像头实时监控页面中使用该功能。你应该：
 
 - 设置 go2rtc 与[WebRTC](#webrtc-extra-configuration)。
 - 确保通过 https 访问 Frigate(可能需要[打开端口 8971](/frigate/installation/#端口))。
 - 对于 Home Assistant Frigate 卡片，[按照文档](http://card.camera/#/usage/2-way-audio)获取正确的源。
 
 要使用 Reolink 门铃的双向通话，应使用[推荐的 Reolink 配置](/configuration/camera_specific#reolink-cameras)
+
+请查看 [go2rtc 代码库](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#two-way-audio) 中支持双向通话的摄像头列表，来确定你摄像头兼容性。对于属于 `ONVIF Profile T` 类别的摄像头，你可以使用 [ONVIF 合规产品数据库](https://www.onvif.org/conformant-products/) 的功能列表来检查是否存在 `AudioOutput`（音频输出）功能。支持 `ONVIF Profile T` 的摄像头**通常**也支持该功能，但由于支持情况不一致，即使明确列出此功能的摄像头也可能无法正常工作。如果数据库中没有你的摄像头，建议不要购买该摄像头，或咨询制造商的客服以了解该功能是否可用。
+
+为防止 go2rtc 阻止其他应用程序访问你摄像头的双向音频，你必须将流配置为 `#backchannel=0`。请参阅重流文档中的 [防止 go2rtc 阻止双向音频](../configuration/restream.md#two-way-talk-restream)。
 
 ### 摄像头组仪表板上的视频流选项
 
@@ -211,6 +215,42 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
 
 注意，通过配置文件禁用的摄像头(`enabled: False`)会移除页面上该摄像头所有相关内容，包括历史录像访问。要保留访问权限同时禁用摄像头，请在配置中保持启用状态，并在页面上或使用 MQTT 临时禁用它。
 
+### 实时播放器错误消息
+
+当你的浏览器在播放摄像头流时遇到问题，它会向浏览器控制台记录简短的错误消息。这些消息指示客户端/浏览器端的播放、编解码器或网络问题，而不是 Frigate 服务器端的问题。以下是可能看到的常见消息以及可以尝试解决的简单操作。
+
+- **startup**
+
+  - 含义：播放器初始化或连接到实时流失败（网络或启动错误）。
+  - 解决方法：重新加载实时视图或点击*重置*。验证`go2rtc`正在运行且摄像头流可达。尝试从实时监控页面 下拉菜单切换到不同的流（如果可用）或使用不同的浏览器。
+
+  - 播放器代码可能显示的控制台消息：
+
+    - `Error opening MediaSource.`
+    - `Browser reported a network error.`
+    - `Max error count ${errorCount} exceeded.`（数值会有所不同）
+
+- **mse-decode**
+
+  - 含义：浏览器在尝试播放流时报告了解码错误，这通常是编解码器不兼容或帧损坏的结果。
+  - 解决方法：检查浏览器控制台以了解支持和协商的编解码器。确保你的摄像头/转流正在使用 H.264 视频和 AAC 音频（这些是最兼容的）。如果你的摄像头使用非标准音频编解码器，配置`go2rtc`将流转码为 AAC。尝试另一个浏览器（某些浏览器对 MSE/编解码器支持更严格），对于 iPhone，确保你使用的是 iOS 17.1 或更新版本。
+
+  - 播放器代码可能显示的控制台消息：
+
+    - `Safari cannot open MediaSource.`
+    - `Safari reported InvalidStateError.`
+    - `Safari reported decoding errors.`
+
+- **stalled**
+
+  - 含义：播放已停滞，因为播放器落后实时太多（扩展缓冲或没有数据到达）。
+  - 解决方法：这通常表明浏览器难以同时解码太多高分辨率流。尝试选择较低带宽的流（子流），减少打开的实时流数量，改善网络连接，或降低摄像头分辨率。同时检查摄像头的关键帧（I 帧）间隔 — 较短的间隔使播放启动和恢复更快。你也可以尝试在 Frigate 设置的 UI 面板中增加超时值。
+
+  - 播放器代码可能显示的控制台消息：
+
+    - `Buffer time (10 seconds) exceeded, browser may not be playing media correctly.`
+    - `Media playback has stalled after <n> seconds due to insufficient buffering or a network interruption.`（秒数会有所不同）
+
 ## 实时监控页面常见问题
 
 1. **为什么我的实时监控页面中没有声音？**
@@ -225,9 +265,27 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
 
    配置 go2rtc 后，实时监控页面最初尝试使用更清晰、流畅的视频流技术 (MSE) 加载和播放流。而 加载超时、达到流缓冲的低带宽条件 或 视频流解码错误 将导致 Frigate 切换到分配`detect`功能的视频流，并使用 jsmpeg 格式进行传输。这就是页面标记为“低带宽模式”的原因。在实时仪表板上，当配置智能视频流且活动停止时，模式会自动重置。详情页面没有自动重置机制，但可以使用右上角设置中的**重置**选项强制重新加载流。
 
-   如果使用连续视频流或在仪表板上同时加载多个高分辨率流，浏览器可能在超时前难以开始正常播放。Frigate 始终优先尽可能快地显示实时流，即使是较低质量的 jsmpeg 流。可以使用"重置"链接/按钮尝试再次加载高分辨率流。
+   导致回退到低带宽模式（jsmpeg）的流播放错误（例如，连接失败、编解码器问题或缓冲超时）会记录到浏览器控制台以便于调试。这些错误可能包括：
 
-   如果 Frigate 仍然回退到低带宽模式，可能需要根据[上述建议](#摄像头设置建议)调整摄像头设置。
+   - 网络问题（例如，MSE 或 WebRTC 网络连接问题）。
+   - 不支持的编解码器或流格式（例如，WebRTC 中的 H.265，在某些浏览器中不受支持）。
+   - 缓冲超时或低带宽条件导致回退到 jsmpeg。
+   - 浏览器兼容性问题（例如，iOS Safari 对 MSE 的限制）。
+
+   查看浏览器控制台日志：
+
+   1. 在浏览器中打开 Frigate 实时视图。
+   2. 打开浏览器的开发工具（F12 或右键 > 检查 > 控制台选项卡）。
+   3. 重现错误（例如，加载有问题的流或模拟网络问题）。
+   4. 查找以摄像头名称为前缀的消息。
+
+   这些日志有助于识别问题是特定于播放器（MSE vs WebRTC）还是与摄像头配置相关（例如，go2rtc 流、编解码器）。如果你看到频繁错误：
+
+   - 验证你的摄像头 H.264/AAC 设置（参见[Frigate 的摄像头设置建议](#camera_settings_recommendations)）。
+   - 检查 go2rtc 配置的转码（例如，音频转码为 AAC/OPUS）。
+   - 通过页面的下拉菜单测试不同的流（如果配置了`live -> streams`）。
+   - 对于 WebRTC 特定问题，确保端口 8555 已转发且候选项已设置（参见(WebRTC 额外配置)(#webrtc-extra-configuration)）。
+   - 如果你的摄像头以高分辨率流式传输，你的浏览器可能难以在缓冲超时发生前加载所有流。Frigate 优先尽快显示真正的实时视图。如果经常发生回退，请更改你的实时视图设置以使用较低带宽的子流。
 
 3. **我的摄像头似乎没有在实时仪表板上实时播放。为什么？**
 
@@ -243,7 +301,7 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
 
    此静态图像从配置中`detect`角色定义的流中提取。当检测到活动时，`detect`流的图像立即开始以约 5 帧/秒的速度更新，以便你可以看到活动，直到实时播放器加载并开始播放。这通常只需要一两秒钟。如果实时播放器超时、缓冲或有视频流错误，则加载 jsmpeg 播放器并从`detect`角色播放仅视频流。当活动结束时，销毁播放器并显示静态图像，直到再次检测到活动，然后重复此过程。
 
-   智能视频流依赖于正确调整摄像头的画面变动`threshold`和`contour_area`配置值。使用 UI 设置中的画面变动调谐器实时调整这些值。
+   智能视频流依赖于正确调整摄像头的画面变动`threshold`和`contour_area`配置值。使用页面设置中的画面变动调谐器实时调整这些值。
 
    Frigate 默认并推荐使用此设置，因为它能显著节省网络带宽，特别是使用高分辨率摄像头的情况下。
 
@@ -254,3 +312,38 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
 7. **我的摄像头画面出现大量花屏以及失真 ​​**
 
 部分摄像头硬件不支持高分辨率视频流的多路连接，可能导致这种画面问题。这种情况建议使用`go2rtc`对高分辨率视频流做[转流](restream.md)处理，专门用于实时监控画面和录像存储。
+
+8. **为什么我的摄像头流在实时仪表板上会切换宽高比？**
+
+   你的摄像头可能在仪表板上改变宽高比，是因为 Frigate 不同功能将使用不同的视频流。使用 go2rtc 和智能视频流时，当没有活动时，Frigate 显示来自`detect`视频流的静态图像，在检测到画面变动时再切换到实时视频流。如果你的检测流和实时监控视频流使用不同的宽高比，摄像头画面大小则会发生变化。
+
+   为防止这种情况，使`detect`流与 go2rtc 实时流的宽高比匹配（分辨率不需要匹配，只需宽高比匹配）。你可以调整摄像头的输出分辨率，或在配置的`detect`部分将`width`和`height`值设置为匹配的宽高比分辨率。
+
+   示例：两个流的分辨率
+
+   - 不匹配（可能导致仪表板上的宽高比切换）：
+
+     - 实时/go2rtc 流：1920x1080 (16:9)
+     - 检测流：640x352 (~1.82:1, 不是 16:9)
+
+   - 匹配（防止切换）：
+     - 实时/go2rtc 流：1920x1080 (16:9)
+     - 检测流：640x360 (16:9)
+
+   你可以在摄像头配置中更新检测设置以匹配 go2rtc 实时流的宽高比。例如：
+
+   ```yaml
+   cameras:
+     front_door:
+       detect:
+         width: 640
+         height: 360
+       ffmpeg:
+         inputs:
+           - path: rtsp://127.0.0.1:8554/front_door # 用于录制和实时监控的主视频流 1920x1080
+             roles:
+               - record
+           - path: rtsp://127.0.0.1:8554/front_door_sub # 用于检测的子视频流 640x352
+             roles:
+               - detect
+   ```

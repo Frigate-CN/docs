@@ -45,23 +45,9 @@ Frigate 会使用以下端口，根据实际需要对以下端口进行映射。
 | `8554` | 提供未加密的实时视频流转发服务（默认无需认证）。可通过配置文件中 go2rtc 模块启用认证功能。                                         |
 | `8555` | 提供双向通话支持的 WebRTC 连接服务。                                                                                               |
 
-#### 常见 Docker Compose 存储配置 {#common-docker-compose-storage-configurations}
+### Docker Compose 配置生成 {#docker-compose-generator}
 
-写入本地硬盘或外部 USB 驱动器：
-
-```yaml
-services:
-  frigate:
-    ...
-    volumes:
-      - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
-      - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
-      - type: tmpfs # 可选：将使用1GB内存作为缓存文件，减少SSD/SD卡损耗
-        target: /tmp/cache
-        tmpfs:
-          size: 1000000000
-    ...
-```
+<DockerComposeGenerator />
 
 :::warning
 
@@ -77,20 +63,7 @@ Frigate 使用共享内存(shm)处理视频帧。Docker 默认提供的 shm-size
 
 注意：Frigate 容器日志也会占用最多 40MB 的 shm，计算时需计入。
 
-各摄像头最低共享内存需求计算公式（基于检测分辨率）：
-
-```console
-# 单摄像头基础计算模板（不含日志），替换<width>和<height>
-$ python -c 'print("{:.2f}MB".format((<width> * <height> * 1.5 * 20 + 270480) / 1048576))'
-
-# 1280x720分辨率示例（含日志）
-$ python -c 'print("{:.2f}MB".format((1280 * 720 * 1.5 * 20 + 270480) / 1048576 + 40))'
-66.63MB
-
-# 8个1280x720摄像头示例（含日志）
-$ python -c 'print("{:.2f}MB".format(((1280 * 720 * 1.5 * 20 + 270480) / 1048576) * 8 + 40))'
-253MB
-```
+<ShmCalculator />
 
 Home Assistant 插件无法单独设置容器共享内存。但由于 Home Assistant Supervisor 默认分配总内存的 50%给`/dev/shm`（例如 8GB 内存机器可分配约 4GB），通常无需额外配置。
 
@@ -112,19 +85,23 @@ Hailo-8 和 Hailo-8L AI 加速器提供 M.2 和树莓派 HAT 两种规格。M.2 
 
 :::warning
 
-对于使用搭载旧版本内核的 树莓派 5 用户，安装 Hailo 驱动的过程相对简单，但该驱动与 Frigate 不兼容。你**必须**按照此指南中的安装步骤来安装正确版本的驱动，并且**必须**按照第 1 步所述禁用内置的内核驱动程序。
+在树莓派`Bookworm`系统版本中，内核内置的 Hailo 驱动版本较旧，与 Frigate 不兼容。你**必须**按照下方的安装步骤安装适配的驱动版本，且必须按步骤 1 的说明禁用内核内置驱动。
+
+在树莓派`Trixie`系统版本中，内核已不再预装 Hailo 驱动。该驱动通过 DKMS 方式安装，因此不存在下文所述的驱动冲突问题，你只需直接运行安装脚本即可。
 
 :::
 
-1. **禁用内置 Hailo 驱动程序（仅限 树莓派）**:
+1. **禁用内置 Hailo 驱动程序（仅限 树莓派`Bookworm`系统版本）**:
 
    :::note
 
-   如果你没有使用 树莓派，请跳过此步骤，直接进入第 2 步的软件相关操作。
+   如果你的设备不是搭载`Bookworm`版本系统的树莓派，请跳过此步骤，直接进入步骤 2。
+
+   以及，如果你的树莓派使用的是`Trixie`系统，也同样跳过此步骤，直接进入步骤 2。
 
    :::
 
-   如果你使用的是 树莓派，则需要将内置的内核级 Hailo 驱动列入黑名单，以防止冲突。首先，请检查该驱动是否当前已加载：
+   首先，检查驱动当前是否已加载：
 
    ```bash
    lsmod | grep hailo
@@ -133,19 +110,40 @@ Hailo-8 和 Hailo-8L AI 加速器提供 M.2 和树莓派 HAT 两种规格。M.2 
    如果显示 `hailo_pci`，则将其卸载：
 
    ```bash
-   sudo rmmod hailo_pci
+   sudo modprobe -r hailo_pci
    ```
 
-   现在将该驱动加入黑名单，以防止它在系统启动时自动加载：
+   接下来找到内核内置驱动文件并修改其名称，使其无法被加载。
+   重命名操作可保留原驱动文件，便于后续需要时恢复。
+
+   首先，查找当前已安装的内核模块：
 
    ```bash
-   echo "blacklist hailo_pci" | sudo tee /etc/modprobe.d/blacklist-hailo_pci.conf
+   modinfo -n hailo_pci
    ```
 
-   更新 initramfs 以确保黑名单设置生效：
+   可能会输出的内容示例：
+
+   ```
+   /lib/modules/6.6.31+rpt-rpi-2712/kernel/drivers/media/pci/hailo/hailo_pci.ko.xz
+   ```
+
+   将输出的模块路径保存至变量（请不要复制文档上方给出的实例）：
 
    ```bash
-   sudo update-initramfs -u
+   BUILTIN=$(modinfo -n hailo_pci)
+   ```
+
+   接着通过追加后缀`.bak`来重命名该模块：
+
+   ```bash
+   sudo mv "$BUILTIN" "${BUILTIN}.bak"
+   ```
+
+   现在刷新内核模块映射表，让系统识别到上述修改：
+
+   ```bash
+   sudo depmod -a
    ```
 
    重启你的树莓派：
@@ -160,7 +158,7 @@ Hailo-8 和 Hailo-8L AI 加速器提供 M.2 和树莓派 HAT 两种规格。M.2 
    lsmod | grep hailo
    ```
 
-   此命令应返回无结果。若仍显示 `hailo_pci`，则表明黑名单未生效，你可能需要检查通过 apt 安装的其他 Hailo 相关软件包是否加载了该驱动。
+   此命令应返回无结果。
 
 2. **运行安装脚本**:
 
@@ -212,6 +210,38 @@ Hailo-8 和 Hailo-8L AI 加速器提供 M.2 和树莓派 HAT 两种规格。M.2 
    lsmod | grep hailo_pci
    ```
 
+   验证驱动版本：
+
+   ```bash
+   cat /sys/module/hailo_pci/version
+   ```
+
+   验证固件是否安装正确：
+
+   ```bash
+   ls -l /lib/firmware/hailo/hailo8_fw.bin
+   ```
+
+   **可选操作：修复 PCIe 描述符页大小错误**
+
+   若你遇到以下错误：
+
+   ```
+   [HailoRT] [error] CHECK failed - max_desc_page_size given 16384 is bigger than hw max desc page size 4096
+   ```
+
+   创建配置文件以强制设置正确的描述符页大小：
+
+   ```bash
+   echo 'options hailo_pci force_desc_page_size=4096' | sudo tee /etc/modprobe.d/hailo_pci.conf
+   ```
+
+   然后重启设备：
+
+   ```bash
+   sudo reboot
+   ```
+
 #### 设置 {#setup}
 
 按照默认安装说明设置 Frigate，例如：`docker.cnb.cool/frigate-cn/frigate:stable`
@@ -229,6 +259,77 @@ devices:
 
 最后，配置[硬件物体/目标检测](/configuration/object_detectors#hailo-8)以完成设置。
 
+### MemryX MX3 加速卡
+
+MemryX MX3 加速卡采用 **M.2 2280 规格**（与 NVMe 固态硬盘尺寸一致），支持以下设备配置：
+
+- x86 架构（英特尔/超威）台式机/主机
+- 树莓派 5
+- 香橙派 5 Plus/Max
+- 多盘位 M.2 PCIe 扩展板
+
+#### 配置说明
+
+#### 驱动安装
+
+如需为你的设备完成 MX3 硬件初始化配置，请参考 →【硬件安装指南】(https://developer.memryx.com/get_started/hardware_setup.html)。
+
+完成硬件安装后，按以下步骤安装适配的驱动及运行环境：
+
+1. 复制或下载【安装脚本】(https://github.com/blakeblackshear/frigate/blob/dev/docker/memryx/user_installation.sh)
+2. 执行命令赋予脚本执行权限：`sudo chmod +x user_installation.sh`
+3. 运行脚本：`./user_installation.sh`
+4. **重启电脑**，完成驱动的最终安装生效。
+
+#### Frigate 部署配置
+
+首先按常规方式安装 Frigate 即可，推荐镜像：`ghcr.io/blakeblackshear/frigate:stable`
+
+接下来，为了让 Docker 容器获得硬件访问权限，需要在你的 `docker-compose.yml` 文件中添加以下配置：
+
+```yaml
+devices:
+  - /dev/memx0
+```
+
+配置期间，**必须以特权模式运行 Docker 容器**，并确保容器能够访问 max-manager 服务。
+
+同时在 `docker-compose.yml` 中补充添加以下配置项：
+
+```yaml
+privileged: true
+
+volumes:
+  - /run/mxa_manager:/run/mxa_manager
+```
+
+如果你的环境无法使用 Docker Compose，也可以直接执行以下 `docker run` 命令启动容器（配置等效）：
+
+```bash
+  docker run -d \
+    --name frigate-memx \
+    --restart=unless-stopped \
+    --mount type=tmpfs,target=/tmp/cache,tmpfs-size=1000000000 \
+    --shm-size=256m \
+    -v /path/to/your/storage:/media/frigate \
+    -v /path/to/your/config:/config \
+    -v /etc/localtime:/etc/localtime:ro \
+    -v /run/mxa_manager:/run/mxa_manager \
+    -e FRIGATE_RTSP_PASSWORD='password' \
+    --privileged=true \
+    -p 8971:8971 \
+    -p 8554:8554 \
+    -p 5000:5000 \
+    -p 8555:8555/tcp \
+    -p 8555:8555/udp \
+    --device /dev/memx0 \
+    ghcr.io/blakeblackshear/frigate:stable
+```
+
+#### 最终配置
+
+最后，参考[硬件目标检测](../configuration/object_detectors.md#memryx-mx3) ，完成相关参数配置，即可完成全部部署流程。
+
 ### Rockchip 平台 {#rockchip-platform}
 
 确保使用带有 Rockchip BSP 内核 5.10 或 6.1 以及必要驱动程序（特别是 rkvdec2 和 rknpu）的 Linux 发行版。要检查是否满足要求，请输入以下命令：
@@ -244,7 +345,7 @@ RKNPU driver: v0.9.2 # 或更高版本
 
 如果你的开发板受支持，我推荐使用[Armbian](https://www.armbian.com/download/?arch=aarch64)。
 
-#### 设置 {#setup-1}
+#### 设置 {#setup-5}
 
 按照 Frigate 的默认安装说明进行操作，但使用带有`-rk`后缀的 docker 镜像，例如`docker.cnb.cool/frigate-cn/frigate:stable-rk`。
 
@@ -278,21 +379,97 @@ volumes:
 --volume /sys/:/sys/:ro
 ```
 
-#### 配置 {#configuration-1}
+#### 配置 {#configuration-5}
 
 接下来，你应该配置[硬件物体/目标检测](/configuration/object_detectors#rockchip平台)和[硬件视频处理](/configuration/hardware_acceleration_video#rockchip平台)。
+
+### 昇锐（Synaptics） {#synaptics}
+
+- 型号：SL1680
+
+#### 部署配置
+
+请遵循 Frigate 的标准安装流程，但需使用**后缀带 `-synaptics`** 的专属 Docker 镜像，例如：`ghcr.io/blakeblackshear/frigate:stable-synaptics`。
+
+接下来，需要为 Docker 容器授予硬件访问权限：
+
+- 配置过程中，**必须以特权模式运行 Docker**，避免因权限不足导致各类异常。操作方式为在 `docker-compose.yml` 文件中添加 `privileged: true` 配置项，或在 `docker run` 命令中加入 `--privileged` 参数。
+
+在 `docker-compose.yml` 中添加如下设备映射配置：
+
+```yaml
+devices:
+  - /dev/synap
+  - /dev/video0
+  - /dev/video1
+```
+
+或者，在 `docker run` 命令中追加以下参数：
+
+```
+--device /dev/synap \
+--device /dev/video0 \
+--device /dev/video1
+```
+
+#### 功能配置
+
+完成上述步骤后，需分别配置 **[硬件目标检测](../configuration/object_detectors.md#synaptics)** 与 **[硬件视频处理](../configuration/hardware_acceleration_video.md#synaptics)** 模块，以启用对应的加速能力。
+
+### AXERA 算力卡 {#axera}
+
+AXERA 算力卡采用 M.2 外形尺寸，支持以下设备配置：
+
+- x86 架构（Intel/AMD）台式机/主机
+- 树莓派 5
+- 香橙派 5 Plus
+- 多盘位 M.2 PCIe 扩展板
+
+#### 安装
+
+使用 AXERA 算力卡需要安装 AXCL 驱动程序。我们提供了一个便捷的 Linux 脚本来完成此安装。请按照以下步骤进行操作：
+
+```bash
+wget https://github.com/ivanshi1108/assets/releases/download/v0.17/user_installation.sh
+sudo chmod +x user_installation.sh
+./user_installation.sh
+```
+
+#### 设置
+
+按照 Frigate 的默认安装说明进行操作，但使用带有`-axcl`后缀的 docker 镜像，例如`docker.cnb.cool/frigate-cn/frigate:stable-axcl`。
+
+接下来，通过在 `docker-compose.yml` 文件中添加以下几行，授予 Docker 访问硬件的权限并挂载 axcl 相关目录：
+
+```yaml
+devices:
+  - /dev/axcl_host
+  - /dev/ax_mmb_dev
+  - /dev/msg_userdev
+volumes:
+  - /usr/bin/axcl:/usr/bin/axcl
+  - /usr/lib/axcl:/usr/lib/axcl
+```
+
+如果您使用 `docker run` 命令，请将此选项添加到您的命令中：
+
+```
+--device /dev/axcl_host
+--device /dev/ax_mmb_dev
+--device /dev/msg_userdev
+--volume /usr/bin/axcl:/usr/bin/axcl
+--volume /usr/lib/axcl:/usr/lib/axcl
+```
+
+#### 配置
+
+接下来，您应该配置[硬件物体/目标检测](../configuration/object_detectors.md#axera)。
 
 ## Docker
 
 推荐使用 Docker Compose 进行安装。
 
-:::danger
-
-需要注意，如果没有必要需求，请尽量不要暴露 5000 端口！并且使用复杂密码，避免你的数据泄露！
-如果实在需要使用到 5000 端口，请务必配置好服务器的防火墙，尤其需要注意 IPv6 的情况。
-如果你不理解上述内容，请直接删除 5000 端口的内容
-
-:::
+你可以点击使用上方的 <a href="#docker-compose-generator">Docker Compose 生成器</a>来生成适用于你的配置。
 
 ```yaml
 services:
@@ -308,12 +485,13 @@ services:
       - /dev/bus/usb:/dev/bus/usb # 用于USB Coral，其他版本需要修改
       - /dev/apex_0:/dev/apex_0 # 用于PCIe Coral，请按照此处的驱动说明操作 https://github.com/jnicolson/gasket-builder
       - /dev/video11:/dev/video11 # 用于树莓派4B
-      - /dev/dri/renderD128:/dev/dri/renderD128 # 用于Intel硬件加速，需要根据你的硬件更新
+      - /dev/dri/renderD128:/dev/dri/renderD128 # 用于AMD/Intel GPU硬件加速，需要根据你的硬件更新
+      - /dev/accel:/dev/accel # Intel NPU
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
       - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
-      - type: tmpfs # 可选：将使用1GB内存作为缓存文件，减少SSD/SD卡损耗
+      - type: tmpfs # 必选：将使用1GB内存作为缓存文件
         target: /tmp/cache
         tmpfs:
           size: 1000000000
@@ -437,6 +615,8 @@ Home Assistant OS 用户可以通过插件仓库进行安装。
 
 - 与宿主机实现强隔离
 - 支持实时迁移等高级功能（这些功能在直接使用容器时无法实现）
+
+Ensure that ballooning is **disabled**, especially if you are passing through a GPU to the VM.
 
 :::warning
 
@@ -563,3 +743,41 @@ docker run \
 ```
 
 登录 QNAP，打开 Container Station。Frigate docker 容器应该在"概览"下列出并正在运行。点击 Frigate docker，然后点击详情页顶部显示的 URL 访问 Frigate Web 界面。
+
+## macOS - 苹果芯片（Apple Silicon）
+
+:::warning 注意
+macOS 系统会将 5000 端口用于 Airplay 接收器服务。若你希望在 Frigate 中暴露 5000 端口，以供本地应用和 API 访问，则需将该端口映射到主机的其他端口（例如 5001 端口）。
+
+即便已在 Docker 中正确暴露 5000 端口，若未在主机上重新映射该端口，仍会导致 5000 端口上的 WebUI 和所有 API 端点无法访问。
+:::
+
+macOS 上的 Docker 容器可通过 [Docker Desktop](https://docs.docker.com/desktop/setup/install/mac-install/) 或 [OrbStack](https://orbstack.dev)（原生 Swift 应用）进行编排。两者的推理速度差异微乎其微，但 OrbStack 作为原生 Swift 应用，在 CPU 占用、功耗和容器启动时间方面表现更优。
+
+若要让 Frigate 调用苹果芯片的神经引擎/处理单元（NPU），主机必须运行 [Apple Silicon Detector](../configuration/object_detectors.md#apple-silicon-detector)（需在 Docker 外部的主机环境中运行）。
+
+#### Docker Compose 配置示例
+
+```yaml
+services:
+  frigate:
+    container_name: frigate
+    image: docker.cnb.cool/frigate-cn/frigate:stable-standard-arm64 # 需要使用standard-arm64的镜像
+    restart: unless-stopped
+    shm_size: '512mb' # 根据上文的计算结果，按你的摄像头数量调整
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
+      - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
+    ports:
+      - '8971:8971'
+      # 在 macOS 上暴露端口时，映射到主机的其他端口（如 5001 或其他无冲突端口）
+      # - "5001:5000" # 内部未认证访问，需谨慎暴露
+      - '8554:8554' # RTSP 视频流
+    extra_hosts: # [!code highlight]
+      # 此项配置至关重要
+      # 允许 Frigate 通过 Apple Silicon Detector 访问苹果芯片的 NPU
+      - 'host.docker.internal:host-gateway' # 访问 NPU 检测器的必要配置 [!code highlight]
+    environment:
+      - FRIGATE_RTSP_PASSWORD: 'password'
+```
