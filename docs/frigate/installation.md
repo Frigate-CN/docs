@@ -506,6 +506,7 @@ services:
       TZ: 'Asia/Shanghai' # 设置为中国+8时区 [!code highlight]
       HF_ENDPOINT: 'https://huggingface.mirror.frigate-cn.video' # 由我们提供的Huggingface国内镜像源，提供Frigate需要用到的部分模型加速下载 [!code highlight]
       GITHUB_ENDPOINT: 'https://github.mirror.frigate-cn.video' # 由我们提供的GitHub国内镜像源，提供Frigate需要用到的部分模型加速下载 [!code highlight]
+      TF_KERAS_MOBILENET_V2_WEIGHTS_URL: https://cnb.cool/frigate-cn/mirrors/storage.googleapis/-/git/raw/main/tensorflow/keras-applications/mobilenet_v2/mobilenet_v2_weights_tf_dim_ordering_tf_kernels_0.35_224_no_top.h5 # 分类模型需要的权重文件 [!code highlight]
 ```
 
 如果你无法使用 Docker Compose，可以使用类似以下命令运行容器：
