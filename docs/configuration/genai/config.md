@@ -1,19 +1,19 @@
 ---
 id: genai
-title: 生成式 AI
+title: 配置生成式 AI 服务
 ---
 
 ## 配置
 
-生成式 AI 可以为所有摄像头启用，或仅为特定摄像头启用。即使某个摄像头的生成式 AI 功能已禁用，你仍然可以通过 HTTP API 手动为事件生成描述。目前有 3 种原生提供商可与 Frigate 集成。支持 OpenAI 标准 API 的其他提供商也可使用。请参阅下面的 OpenAI 部分。
+可以在全局配置中设置生成式 AI 服务提供商，能够让需要使用大模型的功能（例如[核查总结](review_summaries.md)和[目标描述](objects.md)）调用。目前有 3 种原生提供商可与 Frigate 集成。支持 OpenAI 标准 API 的其他服务提供商也可使用；请参阅下面的 OpenAI 部分。
 
-要使用生成式 AI，你必须在 Frigate 配置的全局层级定义一个提供商。如果你选择的提供商需要 API 密钥，可以直接将其粘贴在配置中，或存储在环境变量中(以`FRIGATE_`为前缀)。
+要使用生成式 AI，你必须在 Frigate 配置的全局层级定义一个提供商。如果你选择的提供商需要 API 密钥，可以直接将其粘贴在配置中，或存储在环境变量中（必须以`FRIGATE_`为开头前缀，例如：`FRIGATE_GENAI_TOKEN`，然后在配置文件中使用`{FRIGATE_GENAI_TOKEN}`来使用）。
 
 ## Ollama
 
 :::warning
 
-不建议在 CPU 上使用 Ollama，高推理时间会使生成式 AI 变得很不实用。
+不建议在 CPU 上使用 Ollama，非常高的推理时间会使生成式 AI 变得很不实用。
 
 :::
 
@@ -37,11 +37,12 @@ title: 生成式 AI
 
 ### 支持的模型
 
-你必须为 Frigate 使用一个具备视觉能力的模型。当前可用的模型变体可以在他们的[模型库](https://ollama.com/library)中找到。需要注意的是，Frigate 不会自动下载你在配置中指定的模型，Ollama 会尝试下载该模型，但下载过程可能超过超时时间，因此建议你在 Ollama 服务器或 Docker 容器中提前通过运行 ollama pull your_model 来拉取模型。同时请注意，Frigate 配置中指定的模型必须与你实际下载的模型标签（tag）相匹配。
+你必须为 Frigate 使用一个具备视觉能力的模型。当前可用的模型变体可以在他们的[模型库](https://ollama.com/library)中找到。需要注意的是，Frigate 不会自动下载你在配置中指定的模型，Ollama 会尝试下载该模型，但下载过程可能超过超时时间，因此建议你在 Ollama 服务器或 Docker 容器中提前通过运行 `ollama pull <your_model>` 来拉取模型（`<your_model>`替换为模型名称）。同时请注意，Frigate 配置中指定的模型必须与你实际下载的模型标签（tag）相匹配。
 
 :::info
 每个模型都提供多种参数规模（如 3b、4b、8b 等）。参数规模越大，模型处理复杂任务和理解情境的能力越强，但同时需要更多的内存和计算资源。建议你尝试多个模型并进行实验，以找出表现最佳的模型。
 :::
+
 :::tip
 如果你想为 Frigate 和 HomeAssistant 使用同一个模型，该模型需要同时支持视觉能力和工具调用功能。qwen3-VL 在 Ollama 中能够同时支持视觉和工具调用。
 :::
