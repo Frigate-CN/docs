@@ -51,11 +51,12 @@ title: Frigate+
 
 一旦你[请求了第一个模型](../plus/first_model.md)并获得了自己的模型ID，就可以使用特殊的模型路径。Frigate+模型不需要配置其他信息，因为它会自动从Frigate+获取剩余的配置。
 
-你可以在Frigate UI的设置页面的Frigate+面板中选择新模型，或在配置中手动设置根级别的模型：
+你可以在Frigate UI的设置页面的 Frigate+ 面板中选择新模型，或在配置中手动设置根级别的模型：
 
 ```yaml
+detectors: ... # 需要配置检测器，文档中省略了这部分
 model:
-  path: plus://<your_model_id>
+  path: plus://<your_model_id> # <your_model_id>为你的模型ID
 ```
 
 :::note
@@ -66,11 +67,11 @@ model:
 
 模型会下载到`/config/model_cache`文件夹中，并且只在需要时才下载。
 
-如果需要，你可以覆盖Frigate+模型的标签映射。不建议这样做，因为如果标签在Frigate+中不可用，重命名标签会导致提交到Frigate+的功能失效。
+如果需要，你可以覆盖Frigate+模型的标签映射。不建议这样做，因为如果标签在 Frigate+ 中不可用，重命名标签会导致提交到 Frigate+ 的功能失效。
 
 ```yaml
 model:
-  path: plus://<your_model_id>
+  path: plus://<your_model_id> # <your_model_id>为你的模型ID
   labelmap:
     3: animal
     4: animal

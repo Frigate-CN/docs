@@ -49,7 +49,7 @@ Frigate 支持多种不同类型的检测器，可在不同硬件上运行：
 
 **测试用途**
 
-- [CPU 检测器(不推荐实际使用)](#cpu检测器不推荐使用)：使用 CPU 运行 tflite 模型，不推荐使用，在大多数情况下使用 OpenVINO CPU 模式可获得更好效果。
+- [CPU 检测器(不推荐实际使用)](#cpu-detector-not-recommended)：使用 CPU 运行 tflite 模型，不推荐使用，在大多数情况下使用 OpenVINO CPU 模式可获得更好效果。
 
 :::
 
@@ -63,7 +63,7 @@ Frigate 支持多种不同类型的检测器，可在不同硬件上运行：
 
 # 官方支持的检测器
 
-Frigate 提供以下内置检测器类型：`cpu`、`edgetpu`、`hailo8l`、`memryx`、`onnx`、`openvino`、`rknn`和`tensorrt`。默认情况下，Frigate 会使用单个 CPU 检测器。其他检测器可能需要额外配置，如下所述。使用多个检测器时，它们会在专用进程中运行，但会从所有摄像头的公共检测请求队列中获取任务。
+Frigate 官方提供了数种支持的检测器类型。默认情况下，Frigate 会使用单个 CPU 检测器。其他检测器可能需要额外配置，如下所述。使用多个检测器时，它们会在专用进程中运行，但会从所有摄像头的公共检测请求队列中获取任务。
 
 ## Edge TPU 检测器 {#edge-tpu-detector}
 
@@ -154,8 +154,13 @@ detectors:
 容器中提供了位于`/edgetpu_model.tflite`的 TensorFlow Lite 模型，默认情况下此检测器类型使用该模型。要提供自己的模型，将文件绑定挂载到容器中，并通过`model.path`提供路径。
 
 #### YOLOv9
+支持为 TensorFlow Lite 编译并已正确量化的 YOLOv9 模型，但默认不包含这些模型。有关下载适用于 Google Coral 的模型，请参阅[说明文档](#yolov9-for-google-coral-support)。
 
-[YOLOv9](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite) 支持经 TensorFlow Lite 编译且完成合理量化的模型，但该模型**不包含在默认配置中**。如需使用自定义模型，请按以下步骤操作：[下载模型文件](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite)，将文件挂载至容器内，并通过 `model.path` 配置项指定模型路径。请注意，上述链接中的模型需搭配**自定义标签文件**使用（例如，可采用 17 个 COCO 数据集类别的[labelmap 文件](https://raw.githubusercontent.com/dbro/frigate-detector-edgetpu-yolo9/refs/heads/main/labels-coco17.txt)，该文件仅包含 17 个 COCO 数据集类别）。
+:::tip
+
+**Frigate+** 用户说明：请按照[操作指引](../integrations/plus.md#use-models)，在配置文件中设置模型 ID。
+
+:::
 
 ##### YOLOv9 设置和配置
 
@@ -794,7 +799,7 @@ model:
 
 注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
 
-## CPU 检测器(不推荐使用)
+## CPU 检测器(不推荐使用) {#cpu-detector-not-recommended}
 
 CPU 检测器类型运行 TensorFlow Lite 模型，使用 CPU 进行处理而不使用硬件加速。建议使用硬件加速的检测器类型以获得更好的性能。要配置基于 CPU 的检测器，请将`"type"`属性设置为`"cpu"`。
 
@@ -1466,7 +1471,7 @@ Frigate 受限于协议等版权限制，不会自带某些模型，请自行下
 docker build . --build-arg MODEL_SIZE=s --output . -f- <<'EOF'
 FROM python:3.11 AS build
 RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
-COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.10.4 /uv /bin/
 WORKDIR /dfine
 RUN git clone https://github.com/Peterande/D-FINE.git .
 RUN uv pip install --system -r requirements.txt
@@ -1498,7 +1503,7 @@ EOF
 docker build . --build-arg MODEL_SIZE=Nano --rm --output . -f- <<'EOF'
 FROM python:3.11 AS build
 RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
-COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.10.4 /uv /bin/
 WORKDIR /rfdetr
 RUN uv pip install --system rfdetr[onnxexport] torch==2.8.0 onnx==1.19.1 onnxscript
 ARG MODEL_SIZE
@@ -1541,6 +1546,11 @@ cd tensorrt_demos/yolo
 python3 yolo_to_onnx.py -m yolov7-320
 ```
 
+#### Google Coral 支持的 YOLOv9 {#yolov9-for-google-coral-support}
+
+[下载该模型](https://github.com/dbro/frigate-detector-edgetpu-yolo9/releases/download/v1.0/yolov9-s-relu6-best_320_int8_edgetpu.tflite)文件后，将文件绑定挂载到容器中，并通过 `model.path` 配置项指定该文件的路径。请注意，该链接中的模型需要配套使用一个 17 标签的 [labelmap 文件](https://raw.githubusercontent.com/dbro/frigate-detector-edgetpu-yolo9/refs/heads/main/labels-coco17.txt)，该文件仅包含 17 个 COCO 类别。
+
+
 #### YOLOv9
 
 你可以使用以下命令将 YOLOv9 模型导出为 ONNX 格式。请根据需要修改第一行中的`MODEL_SIZE=t`和`IMG_SIZE=320`参数（模型大小`MODEL_SIZE`的值可替换为`t`, `s`, `m`, `c`, 以及 `e`等（从小到大排序） [模型尺寸](https://github.com/WongKinYiu/yolov9#performance)，图像大小`IMG_SIZE`可替换为`320` 或 `640`），然后将整段命令复制粘贴到安装了 Docker 的 Linux 系统中 或 运行 Frigate 的服务器终端执行（注意，**不是** Frigate 的容器终端里！）。
@@ -1560,12 +1570,12 @@ docker build . --build-arg MODEL_SIZE=t --build-arg IMG_SIZE=320 --output . -f- 
 FROM docker.cnb.cool/frigate-cn/mirrors/docker-image/python:3.11 AS build
 RUN rm -rf /etc/apt/sources.list
 ADD https://cnb.cool/frigate-cn/frigate-cn/-/git/raw/main/scripts/sources.list /etc/apt/sources.list
-RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
-COPY --from=ghcr.nju.edu.cn/astral-sh/uv:0.8.0 /uv /bin/
+RUN apt-get update && apt-get install --no-install-recommends -y cmake libgl1 && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.nju.edu.cn/astral-sh/uv:0.10.4 /uv /bin/
 WORKDIR /yolov9
 ADD https://cnb.cool/frigate-cn/mirrors/wongkinyiu/yolov9.git .
 RUN uv pip install -i https://mirrors.ustc.edu.cn/pypi/simple --system -r requirements.txt
-RUN uv pip install -i https://mirrors.ustc.edu.cn/pypi/simple --system onnx==1.18.0 onnxruntime onnx-simplifier>=0.4.1 onnxscript
+RUN uv pip install -i https://mirrors.ustc.edu.cn/pypi/simple --system onnx==1.18.0 onnxruntime onnx-simplifier==0.4.* onnxscript
 ARG MODEL_SIZE
 ARG IMG_SIZE
 ADD https://cnb.cool/frigate-cn/mirrors/wongkinyiu/yolov9/-/releases/download/v0.1/yolov9-${MODEL_SIZE}-converted.pt yolov9-${MODEL_SIZE}.pt
@@ -1581,12 +1591,12 @@ EOF
 ```sh [原版命令]
 docker build . --build-arg MODEL_SIZE=t --build-arg IMG_SIZE=320 --output . -f- <<'EOF'
 FROM python:3.11 AS build
-RUN apt-get update && apt-get install --no-install-recommends -y libgl1 && rm -rf /var/lib/apt/lists/*
-COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
+RUN apt-get update && apt-get install --no-install-recommends -y cmake libgl1 && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/astral-sh/uv:0.10.4 /uv /bin/
 WORKDIR /yolov9
 ADD https://github.com/WongKinYiu/yolov9.git .
 RUN uv pip install --system -r requirements.txt
-RUN uv pip install --system onnx==1.18.0 onnxruntime onnx-simplifier>=0.4.1 onnxscript
+RUN uv pip install --system onnx==1.18.0 onnxruntime onnx-simplifier==0.4.* onnxscript
 ARG MODEL_SIZE
 ARG IMG_SIZE
 ADD https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-${MODEL_SIZE}-converted.pt yolov9-${MODEL_SIZE}.pt

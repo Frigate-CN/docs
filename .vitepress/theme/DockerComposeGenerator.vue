@@ -636,7 +636,7 @@ ${runtimeConfig}${devicesSection}${deployConfig}${extraHostsConfig}${securityOpt
       - /etc/localtime:/etc/localtime:ro
       - ${configPathValue}:/config # "${configPathValue}"为你宿主机上希望存放配置文件的路径
       - ${mediaPathValue}:/media/frigate # "${mediaPathValue}"为你宿主机上希望存放监控录像文件的路径
-      - type: tmpfs # 必选：将使用1GB内存作为缓存文件
+      - type: tmpfs # 使用 1GB 内存作为录制片段存储的临时存储
         target: /tmp/cache
         tmpfs:
           size: 1000000000

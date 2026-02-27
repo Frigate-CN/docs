@@ -238,7 +238,7 @@ birdseye:
     scaling_factor: 2.0
     # 可选：一次最多显示的摄像头数量，显示最近的摄像头（默认值：显示所有摄像头）
     max_cameras: 1
-  # Optional: Frames-per-second to re-send the last composed Birdseye frame when idle (no motion or active updates). (default: shown below)
+  # 可选：空闲时（无运动或活动更新）重新发送最后合成的鸟瞰图帧的帧率（默认值：如下所示）
   idle_heartbeat_fps: 0.0
 # 可选：ffmpeg配置
 # 关于预设的更多信息请访问 https://docs.frigate.video/configuration/ffmpeg_presets
@@ -684,7 +684,7 @@ genai:
   base_url: http://localhost:11434
   # 当使用gemini或openai时必需
   api_key: '{FRIGATE_GENAI_API_KEY}'
-  # Required: The model to use with the provider.
+  # 必需：与提供者配合使用的模型
   model: gemini-1.5-flash
   # 可选的附加参数，用于传入大模型服务提供方（默认值：无）
   provider_options:
@@ -844,7 +844,7 @@ cameras:
       # 注意：这必须与任何摄像头名称不同，但可以与其他摄像头上的
       #      另一个区域名称相匹配。
       front_steps: # 前台阶
-        # Optional: A friendly name or descriptive text for the zones
+        # 可选：区域的友好名称或描述性文本
         friendly_name: ""
         # 必需：定义区域多边形的x,y坐标列表。
         # 注意：区域内的存在仅基于目标边界框的底部中心进行评估。
@@ -953,25 +953,25 @@ cameras:
       # 默认情况下摄像头按字母顺序排序。
       order: 0
 
-    # Optional: Configuration for triggers to automate actions based on semantic search results.
+    # 可选：基于语义搜索结果自动化操作的触发器配置
     triggers:
-      # Required: Unique identifier for the trigger (generated automatically from friendly_name if not specified).
+      # 必需：触发器的唯一标识符（如果未指定，则从 friendly_name 自动生成）
       trigger_name:
-        # Required: Enable or disable the trigger. (default: shown below)
+        # 必需：启用或禁用触发器（默认值：如下所示）
         enabled: true
-        # Optional: A friendly name or descriptive text for the trigger
+        # 可选：触发器的友好名称或描述性文本
         friendly_name: Unique name or descriptive text
-        # Type of trigger, either `thumbnail` for image-based matching or `description` for text-based matching. (default: none)
+        # 触发器类型，`thumbnail` 用于基于图像的匹配，`description` 用于基于文本的匹配（默认值：无）
         type: thumbnail
-        # Reference data for matching, either an event ID for `thumbnail` or a text string for `description`. (default: none)
+        # 用于匹配的参考数据，`thumbnail` 使用事件 ID，`description` 使用文本字符串（默认值：无）
         data: 1751565549.853251-b69j73
-        # Similarity threshold for triggering. (default: shown below)
+        # 触发相似度阈值（默认值：如下所示）
         threshold: 0.8
-        # List of actions to perform when the trigger fires. (default: none)
-        # Available options:
-        # - `notification` (send a webpush notification)
-        # - `sub_label` (add trigger friendly name as a sub label to the triggering tracked object)
-        # - `attribute` (add trigger's name and similarity score as a data attribute to the triggering tracked object)
+        # 触发器触发时执行的操作列表（默认值：无）
+        # 可用选项：
+        # - `notification`（发送 webpush 通知）
+        # - `sub_label`（将触发器的友好名称作为子标签添加到触发的追踪对象）
+        # - `attribute`（将触发器的名称和相似度分数作为数据属性添加到触发的追踪对象）
         actions:
           - notification
 

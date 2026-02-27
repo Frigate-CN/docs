@@ -491,7 +491,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /path/to/your/config:/config # "/path/to/your/config"为你宿主机上希望存放配置文件的路径，例如 /home/frigate/config
       - /path/to/your/storage:/media/frigate # "/path/to/your/storage"为你宿主机上希望存放监控录像文件的路径 /home/frigate/video
-      - type: tmpfs # 必选：将使用1GB内存作为缓存文件
+      - type: tmpfs # 使用 1GB 内存作为录制片段存储的临时存储
         target: /tmp/cache
         tmpfs:
           size: 1000000000

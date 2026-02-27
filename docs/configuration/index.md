@@ -109,15 +109,16 @@ detectors:
 
 record:
   enabled: True
-  retain:
+  motion:
     days: 7
-    mode: motion
   alerts:
     retain:
       days: 30
+      mode: motion
   detections:
     retain:
       days: 30
+      mode: motion
 
 snapshots:
   enabled: True
@@ -165,15 +166,16 @@ detectors:
 
 record:
   enabled: True
-  retain:
+  motion:
     days: 7
-    mode: motion
   alerts:
     retain:
       days: 30
+      mode: motion
   detections:
     retain:
       days: 30
+      mode: motion
 
 snapshots:
   enabled: True
@@ -231,15 +233,16 @@ model:
 
 record:
   enabled: True
-  retain:
+  motion:
     days: 7
-    mode: motion
   alerts:
     retain:
       days: 30
+      mode: motion
   detections:
     retain:
       days: 30
+      mode: motion
 
 snapshots:
   enabled: True

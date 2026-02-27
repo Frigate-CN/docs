@@ -119,7 +119,7 @@ services:
     volumes:
       - ./config:/config
       - ./storage:/media/frigate
-      - type: tmpfs # 可选：1GB内存，减少SSD/SD卡损耗
+      - type: tmpfs # 使用 1GB 内存作为录制片段存储的临时存储
         target: /tmp/cache
         tmpfs:
           size: 1000000000
