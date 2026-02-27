@@ -7,7 +7,7 @@ title: 语义搜索 <Badge type="tip" text="0.15.0 和 以上版本" />
 
 语义搜索功能需要依赖外部下载的模型文件。相关模型托管在 HuggingFace 上。
 
-如果你在中国大陆地区，请参考[通过 Docker 安装](../frigate/installation.md#docker)的教程，在`environment`中配置`HF_ENDPOINT`环境变量，否则功能可能无法正常使用。
+如果你在中国大陆地区，请参考[通过 Docker 安装](/frigate/installation.md#docker)的教程，在`environment`中配置`HF_ENDPOINT`环境变量，否则功能可能无法正常使用。
 
 :::
 

@@ -1,7 +1,15 @@
 ---
 id: state_classification
-title: 状态分类
+title: 状态分类 <Badge type="tip" text="0.17.0 和 以上版本" />
 ---
+
+:::tip
+
+状态分类功能需要依赖外部下载的模型权重文件。相关模型托管在 Google 上。
+
+如果你在中国大陆地区，请参考[通过 Docker 安装](/frigate/installation.md#docker)的教程，在`environment`中配置`TF_KERAS_MOBILENET_V2_WEIGHTS_URL`环境变量，否则功能可能无法正常使用。
+
+:::
 
 状态分类功能允许你在摄像头画面的固定区域内训练一个自定义的 MobileNetV2 分类模型，以确定该区域的当前状态。该模型可配置为按计划运行和/或当该区域检测到画面变动时运行。能够在`frigate/<camera_name>/classification/<model_name>` MQTT主题、官方 Home Assistant `Frigate 集成` 的 传感器中查看分类结果。
 

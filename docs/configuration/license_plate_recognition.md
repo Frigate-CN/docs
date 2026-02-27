@@ -7,7 +7,7 @@ title: 车牌识别(LPR) <Badge type="tip" text="0.16.0 和 以上版本" />
 
 车牌识别功能需要依赖外部下载的模型文件。相关模型托管在 Github 上。
 
-如果你在中国大陆地区，请参考[通过 Docker 安装](../frigate/installation.md#docker)的教程，在`environment`中配置`GITHUB_ENDPOINT`环境变量，否则功能可能无法正常使用。
+如果你在中国大陆地区，请参考[通过 Docker 安装](/frigate/installation.md#docker)的教程，在`environment`中配置`GITHUB_ENDPOINT`环境变量，否则功能可能无法正常使用。
 
 :::
 

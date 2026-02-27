@@ -12,19 +12,24 @@ title: 常见问题解答
 ```yaml
 HF_ENDPOINT: "https://huggingface.mirror.frigate-cn.video"
 GITHUB_ENDPOINT: "https://github.mirror.frigate-cn.video"
+TF_KERAS_MOBILENET_V2_WEIGHTS_URL: "https://cnb.cool/frigate-cn/mirrors/storage.googleapis/-/git/raw/main/tensorflow/keras-applications/mobilenet_v2/mobilenet_v2_weights_tf_dim_ordering_tf_kernels_0.35_224_no_top.h5"
 ```
 
-详细可见文档里的[Docker容器安装教程](../frigate/installation.md#docker)
+详细可见文档里的[Docker容器安装教程](/frigate/installation.md#docker)
 
 
 ### 为什么我页面打不开，提示400 Bad Request
 
 如果提示为`The plain HTTP request was sent to HTTPS port`，则说明目前 Frigate 开启了 `TLS` 验证，但你目前使用`http`协议进行访问。
 
-你需要改为使用`https`协议进行访问，亦或者[关闭 `TLS` 验证](../configuration/tls.md#禁用tls)。
+你需要修改地址中的`http`为`https`协议后进行访问，亦或者[关闭 TLS 验证](../configuration/tls.md#禁用tls)（不推荐）。
+
+:::tip
+注意，双向通话等功能必须要 `https` 协议才能正常工作。
+:::
 
 
-### Fatal Python error: Bus error （Python致命错误： Bus error）
+### Fatal Python error: Bus error （Python致命错误： Bus error） {#fatal-python-error-bus-error}
 
 此错误是由于共享内存(shm-size)设置过小导致的。请根据[此指南](../frigate/installation.md#calculating-required-shm-size)调整shm-size大小。
 
