@@ -57,7 +57,7 @@ detectors:
   # 必需：检测器名称
   detector_name:
     # 必需：检测器类型
-    # Frigate提供多种类型，详见 https://docs.frigate.video/configuration/object_detectors（默认值：如下所示）
+    # Frigate提供多种类型，详见 https://docs.frigate.video/configuration/object_detectors （默认值：如下所示）
     # 也可以插入其他类型的检测器。
     # 检测器可能需要额外的配置。
     # 更多信息请参考检测器配置页面。
