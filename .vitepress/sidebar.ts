@@ -113,15 +113,15 @@ export const sidebar = [
             items: [
               {
                 text: "配置生成式 AI",
-                link: "/configuration/genai/config",
+                link: "/configuration/genai/genai_config",
               },
               {
                 text: "核查总结",
-                link: "/configuration/genai/review_summaries",
+                link: "/configuration/genai/genai_review",
               },
               {
                 text: "目标描述",
-                link: "/configuration/genai/objects",
+                link: "/configuration/genai/genai_objects",
               },
             ],
           },
