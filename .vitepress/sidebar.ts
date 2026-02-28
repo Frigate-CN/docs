@@ -59,7 +59,7 @@ export const sidebar = [
           },
           {
             text: "Go2RTC 配置参考",
-            link: "https://github.com/AlexxIT/go2rtc/tree/v1.9.9#configuration",
+            link: "https://github.com/AlexxIT/go2rtc/tree/v1.9.10#configuration",
           },
         ],
       },

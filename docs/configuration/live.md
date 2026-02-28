@@ -42,10 +42,10 @@ go2rtc:
   streams:
     rtsp_cam: # <- RTSP流
       - rtsp://192.168.1.5:554/live0 # <- 支持视频和AAC音频的流
-      - "ffmpeg:rtsp_cam#audio=opus" # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
+      - 'ffmpeg:rtsp_cam#audio=opus' # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
     http_cam: # <- HTTP流
       - http://192.168.50.155/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=user&password=password # <- 支持视频和AAC音频的流
-      - "ffmpeg:http_cam#audio=opus" # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
+      - 'ffmpeg:http_cam#audio=opus' # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
 ```
 
 如果摄像头不支持 AAC 音频或实时监控页面有问题，尝试直接转码为 AAC 音频：
@@ -54,8 +54,8 @@ go2rtc:
 go2rtc:
   streams:
     rtsp_cam: # <- RTSP流
-      - "ffmpeg:rtsp://192.168.1.5:554/live0#video=copy#audio=aac" # <- 复制视频流并将音频转码为AAC
-      - "ffmpeg:rtsp_cam#audio=opus" # <- 提供WebRTC支持
+      - 'ffmpeg:rtsp://192.168.1.5:554/live0#video=copy#audio=aac' # <- 复制视频流并将音频转码为AAC
+      - 'ffmpeg:rtsp_cam#audio=opus' # <- 提供WebRTC支持
 ```
 
 如果摄像头没有音频且实时监控页面有问题，应让 go2rtc 仅发送视频：
@@ -88,7 +88,7 @@ go2rtc:
   streams:
     test_cam: # [!code highlight]
       - rtsp://192.168.1.5:554/live_main # <- 支持视频和AAC音频的流
-      - "ffmpeg:test_cam#audio=opus" # <- 将音频转码为opus以支持webrtc的流副本
+      - 'ffmpeg:test_cam#audio=opus' # <- 将音频转码为opus以支持webrtc的流副本
     test_cam_sub:
       - rtsp://192.168.1.5:554/live_sub # <- 支持视频和AAC音频的流
     test_cam_another_sub:
@@ -170,7 +170,7 @@ services:
 
 :::
 
-有关更多信息，请参阅[go2rtc WebRTC 文档](https://github.com/AlexxIT/go2rtc/tree/v1.8.3#module-webrtc)。
+有关更多信息，请参阅[go2rtc WebRTC 文档](https://github.com/AlexxIT/go2rtc/tree/v1.9.10#module-webrtc)。
 
 ### 双向通话 {#two-way-talk}
 
@@ -220,34 +220,28 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
 当你的浏览器在播放摄像头流时遇到问题，它会向浏览器控制台记录简短的错误消息。这些消息指示客户端/浏览器端的播放、编解码器或网络问题，而不是 Frigate 服务器端的问题。以下是可能看到的常见消息以及可以尝试解决的简单操作。
 
 - **startup**
-
   - 含义：播放器初始化或连接到实时流失败（网络或启动错误）。
   - 解决方法：重新加载实时视图或点击*重置*。验证`go2rtc`正在运行且摄像头流可达。尝试从实时监控页面 下拉菜单切换到不同的流（如果可用）或使用不同的浏览器。
 
   - 播放器代码可能显示的控制台消息：
-
     - `Error opening MediaSource.`
     - `Browser reported a network error.`
     - `Max error count ${errorCount} exceeded.`（数值会有所不同）
 
 - **mse-decode**
-
   - 含义：浏览器在尝试播放流时报告了解码错误，这通常是编解码器不兼容或帧损坏的结果。
   - 解决方法：检查浏览器控制台以了解支持和协商的编解码器。确保你的摄像头/转流正在使用 H.264 视频和 AAC 音频（这些是最兼容的）。如果你的摄像头使用非标准音频编解码器，配置`go2rtc`将流转码为 AAC。尝试另一个浏览器（某些浏览器对 MSE/编解码器支持更严格），对于 iPhone，确保你使用的是 iOS 17.1 或更新版本。
 
   - 播放器代码可能显示的控制台消息：
-
     - `Safari cannot open MediaSource.`
     - `Safari reported InvalidStateError.`
     - `Safari reported decoding errors.`
 
 - **stalled**
-
   - 含义：播放已停滞，因为播放器落后实时太多（扩展缓冲或没有数据到达）。
   - 解决方法：这通常表明浏览器难以同时解码太多高分辨率流。尝试选择较低带宽的流（子流），减少打开的实时流数量，改善网络连接，或降低摄像头分辨率。同时检查摄像头的关键帧（I 帧）间隔 — 较短的间隔使播放启动和恢复更快。你也可以尝试在 Frigate 设置的 UI 面板中增加超时值。
 
   - 播放器代码可能显示的控制台消息：
-
     - `Buffer time (10 seconds) exceeded, browser may not be playing media correctly.`
     - `Media playback has stalled after <n> seconds due to insufficient buffering or a network interruption.`（秒数会有所不同）
 
@@ -266,21 +260,18 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
    配置 go2rtc 后，实时监控页面最初尝试使用更清晰、流畅的视频流技术 (MSE) 加载和播放流。而 加载超时、达到流缓冲的低带宽条件 或 视频流解码错误 将导致 Frigate 切换到分配`detect`功能的视频流，并使用 jsmpeg 格式进行传输。这就是页面标记为“低带宽模式”的原因。在实时仪表板上，当配置智能视频流且活动停止时，模式会自动重置。详情页面没有自动重置机制，但可以使用右上角设置中的**重置**选项强制重新加载流。
 
    导致回退到低带宽模式（jsmpeg）的流播放错误（例如，连接失败、编解码器问题或缓冲超时）会记录到浏览器控制台以便于调试。这些错误可能包括：
-
    - 网络问题（例如，MSE 或 WebRTC 网络连接问题）。
    - 不支持的编解码器或流格式（例如，WebRTC 中的 H.265，在某些浏览器中不受支持）。
    - 缓冲超时或低带宽条件导致回退到 jsmpeg。
    - 浏览器兼容性问题（例如，iOS Safari 对 MSE 的限制）。
 
    查看浏览器控制台日志：
-
    1. 在浏览器中打开 Frigate 实时视图。
    2. 打开浏览器的开发工具（F12 或右键 > 检查 > 控制台选项卡）。
    3. 重现错误（例如，加载有问题的流或模拟网络问题）。
    4. 查找以摄像头名称为前缀的消息。
 
    这些日志有助于识别问题是特定于播放器（MSE vs WebRTC）还是与摄像头配置相关（例如，go2rtc 流、编解码器）。如果你看到频繁错误：
-
    - 验证你的摄像头 H.264/AAC 设置（参见[Frigate 的摄像头设置建议](#camera_settings_recommendations)）。
    - 检查 go2rtc 配置的转码（例如，音频转码为 AAC/OPUS）。
    - 通过页面的下拉菜单测试不同的流（如果配置了`live -> streams`）。
@@ -320,9 +311,7 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
    为防止这种情况，使`detect`流与 go2rtc 实时流的宽高比匹配（分辨率不需要匹配，只需宽高比匹配）。你可以调整摄像头的输出分辨率，或在配置的`detect`部分将`width`和`height`值设置为匹配的宽高比分辨率。
 
    示例：两个流的分辨率
-
    - 不匹配（可能导致仪表板上的宽高比切换）：
-
      - 实时/go2rtc 流：1920x1080 (16:9)
      - 检测流：640x352 (~1.82:1, 不是 16:9)
 
