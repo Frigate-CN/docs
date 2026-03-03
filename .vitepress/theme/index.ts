@@ -7,6 +7,8 @@ import StreamAI from "./StreamAI.vue";
 import Question from "./Question.vue";
 import ShmCalculator from "./ShmCalculator.vue";
 import DockerComposeGenerator from "./DockerComposeGenerator.vue";
+import DetailsCollapse from "./DetailsCollapse.vue";
+import InfoIcon from "./InfoIcon.vue";
 import { initComponent } from 'vitepress-plugin-legend/component';
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
@@ -27,6 +29,8 @@ export default {
     app.component('Question', Question) // 全局注册组件
     app.component('ShmCalculator', ShmCalculator)
     app.component('DockerComposeGenerator', DockerComposeGenerator)
+    app.component('DetailsCollapse', DetailsCollapse)
+    app.component('InfoIcon', InfoIcon)
   },
   extends: Teek,
   Layout: CustomLayout,

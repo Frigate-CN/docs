@@ -4,6 +4,10 @@ export const sidebar = [
     items: [
       { text: '<i class="fa-solid fa-indent"></i>介绍', link: "/frigate/" },
       {
+        text: '<i class="fa-solid fa-rocket"></i>快速开始',
+        link: "/frigate/quick-start",
+      },
+      {
         text: '<i class="fa-solid fa-server"></i>推荐硬件',
         link: "/frigate/hardware",
       },

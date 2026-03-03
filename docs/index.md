@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: 立即入门
-      link: /frigate
+      link: /frigate/quick-start
     - theme: alt
       text: 查看源码
       link: https://github.com/blakeblackshear/frigate/
@@ -59,7 +59,7 @@ hero:
 ::: navCard 3
 ```yaml
 - name: unRAID
-  desc: unRAID是一个可玩性超高的NAS系统，基于Slackware Linux开发。
+  desc: unRAID是一个可玩性超高的 NAS 系统，基于 Slackware Linux 开发。
   link: /frigate/installation#unraid
   img: https://cdn.craft.cloud/481d40bf-939a-4dc1-918d-b4d4b48b7c04/builds/9f9c5d25-f717-4e21-a124-9a76217b3dd0/artifacts/static/favicon/favicon.ico
   badge: 应用商店安装
@@ -71,14 +71,14 @@ hero:
 #  badge: 应用商店安装
 #  badgeType: tip
   
-- name: 群辉DSM
-  desc: 群辉是全球知名的NAS方案提供商，其DSM系统是使用最广泛的NAS系统。
+- name: 群辉 DSM
+  desc: 群辉是全球知名的 NAS 方案提供商，其 DSM 系统是使用最广泛的 NAS 系统。
   link: /frigate/installation.html#synology-nas-on-dsm-7
   img: https://fileres.synology.com/images/common/favicon/syno/favicon.ico
   badge: 通过容器安装
   badgeType: tip
 
-- name: 威联通QNAP NAS
+- name: 威联通 QNAP NAS
   desc: QNAP 专注于储存、网络及智能影音产品创新
   link: /frigate/installation.html#qnap-nas
   img: https://www.qnap.com.cn/i/images/favicon/favicon.png

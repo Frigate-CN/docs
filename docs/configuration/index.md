@@ -78,7 +78,7 @@ genai:
   api_key: '{FRIGATE_GENAI_API_KEY}'
 ```
 
-## 常见配置示例
+## 常见配置示例 {#common-configuration-examples}
 
 以下是一些常见的入门配置示例。有关所有配置值的详细信息，请参阅[参考配置](./reference.md)。
 

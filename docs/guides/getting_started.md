@@ -149,8 +149,8 @@ cameras: # [!code ++]
     ffmpeg: # [!code ++]
       inputs: # [!code ++]
         - path: rtsp://10.0.10.10:554/rtsp # <----- 你想用于检测的视频流地址 [!code ++]
-          roles: # [!code ++]
-            - detect # [!code ++]
+          roles: # [!code ++] 设置这个流的功能，包含record（录制）、audio（音频）和detect（检测）
+            - detect # [!code ++] 此处只给这个视频流开启检测（detect）功能
 ```
 
 ### 步骤 2：启动 Frigate
@@ -167,20 +167,24 @@ cameras: # [!code ++]
 
 这里是一个使用[预设](../configuration/ffmpeg_presets.md)配置硬件加速的示例，适用于大多数带核显的 Intel 处理器：
 
-`docker-compose.yml`（修改后，你需要运行`docker compose up -d`来应用更改）
+如果你在使用 Docker Compose 配置生成器的时候勾选了 GPU 加速，则**不需要**参考下方配置添加核显的映射。
+<DetailsCollapse title="添加核显的映射">
 
-```yaml
+`docker-compose.yml` （修改后，你需要运行`docker compose up -d`来应用更改）
+
+```yaml [docker-compose.yml]
 services:
   frigate:
-    ...
+    ... # 此处省略
     devices: # [!code highlight]
       - /dev/dri/renderD128:/dev/dri/renderD128 # 用于intel硬件加速，需要根据你的实际硬件添加 [!code ++]
-    ...
+    ... # 此处省略
 ```
+</DetailsCollapse>
 
 `config.yml`
 
-```yaml
+```yaml [config.yml]
 mqtt: ... # 省略号为文档省略部分，不代表后面没内容
 
 ffmpeg: # [!code ++]
@@ -190,7 +194,7 @@ cameras:
   name_of_your_camera:
     ffmpeg:
       inputs: ... # 省略号为文档省略部分，不代表后面没内容
-      hwaccel_args: preset-vaapi # 此处为针对单个摄像头使用特定硬件加速参数，不遵循全局设定。 [!code ++]
+      hwaccel_args: preset-vaapi # 此处为可选针对单个摄像头使用特定硬件加速参数，不遵循全局设定。 [!code ++]
     detect: ... # 省略号为文档省略部分，不代表后面没内容
 ```
 
@@ -202,7 +206,45 @@ cameras:
 
 ### 步骤 4：配置检测器
 
-默认情况下，Frigate 将使用单个 CPU 检测器。如果你有 USB Coral，你需要在配置中添加检测器部分。
+默认情况下，Frigate 将使用单个 CPU 检测器。
+
+一般来说，核显即可满足绝大部分用户的需求。Intel 核显用户可以参考以下配置。
+
+<DetailsCollapse title="Intel 核显配置目标检测">
+
+```yaml
+mqtt: ... # 省略号为文档省略部分，不代表后面没内容
+
+detectors: # 下面将添加 OpenVino 检测器，根据你实际的硬件情况去调整
+  ov: # [!code ++]
+    type: openvino # [!code ++]
+    device: GPU # [!code ++]
+
+# 下方将使用 Openvino 默认的 ssdlite_mobilenet_v2 模型
+# 如果需要精度更高的模型，可参考文档 https://docs.frigate-cn.video/configuration/object_detectors#yolov9-2
+# 下载精度更高的 YOLOv9模型
+# 更换模型后需要注意修改下方配置
+model: 
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  path: /openvino-model/ssdlite_mobilenet_v2.xml
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+
+cameras:
+  name_of_your_camera: # <------ 此处为摄像头名称
+    ffmpeg: ... # 省略号为文档省略部分，不代表后面没内容
+    detect: # [!code ++]
+      enabled: True # <---- 开启检测 [!code ++]
+      ... # 省略号为文档省略部分，不代表后面没内容
+```
+</DetailsCollapse>
+
+
+如果你有 USB Coral，你需要在配置中添加检测器部分。
+
+<DetailsCollapse title="添加 USB Coral">
 
 `docker-compose.yml`（修改后，你需要运行`docker compose up -d`来应用更改）
 
@@ -232,9 +274,11 @@ cameras:
       ... # 省略号为文档省略部分，不代表后面没内容
 ```
 
+</DetailsCollapse>
+
 更多关于可用检测器的详细信息可以在[这里](../configuration/object_detectors.md)找到。
 
-重启 Frigate，你应该就能开始看到`person`的检测结果。如果你想追踪其他目标/物体，需要根据[配置文件参考](../configuration/reference.md)添加（请在页面下搜索`检测的目标/物体配置`）。
+重启 Frigate，你应该就能开始看到人（`person`）的检测结果。如果你想追踪其他目标/物体，可以阅读[检测的目标/物体配置](/configuration/objects)添加其他追踪的目标/物体。
 
 ### 步骤 5：设置画面变动遮罩
 
@@ -242,7 +286,7 @@ cameras:
 
 :::warning
 
-注意，画面变动遮罩**不应用于**标记你不想检测物品/目标的区域或减少误报。它们不会改变发送到物体/目标检测的图像，所以你仍然可以在有画面变动遮罩的区域获得追踪目标、警报和检测。这些只是防止这些区域的运动启动物体/目标检测。
+注意，画面变动遮罩**不应用于**标记你不想检测物品/目标的区域或减少误报。它们不会改变发送到物体/目标检测的画面，所以你仍然可以在有画面变动遮罩的区域检测到追踪目标、触发警报和检测。这些只是**防止这些区域的画面变动**触发物体/目标检测。
 
 :::
 
@@ -264,9 +308,9 @@ cameras:
         - path: rtsp://10.0.10.10:554/rtsp
           roles:
             - detect
-    motion: # 请直接在设置页面中添加遮罩，这里只是范例 [!code ++]
-      mask: # [!code ++]
-        - 0,461,3,0,1919,0,1919,843,1699,492,1344,458,1346,336,973,317,869,375,866,432 # [!code ++]
+    motion: # 请直接在设置页面中添加遮罩，这里只是范例 [!code ++] [!code focus]
+      mask: # [!code ++] [!code focus]
+        - 0,461,3,0,1919,0,1919,843,1699,492,1344,458,1346,336,973,317,869,375,866,432 # [!code ++] [!code focus]
 ```
 
 ### 步骤 6：启用录制
@@ -287,16 +331,27 @@ cameras:
         - path: rtsp://10.0.10.10:554/rtsp
           roles:
             - detect
-        - path: rtsp://10.0.10.10:554/high_res_stream # <----- 可以给录制设置独立的流 # [!code highlight]
+        - path: rtsp://10.0.10.10:554/high_res_stream # <----- 可以给录制设置单独的更清晰的流 # [!code highlight]
           roles: # [!code highlight]
             - record # 需要像这样给流配置record功能才能录制 [!code ++]
     detect: ... # 省略号为文档省略部分，不代表后面没内容
-    record: # <----- 启用录制 [!code ++]
-      enabled: True # [!code ++]
+    record: #  [!code ++] 录制配置
+      enabled: True # [!code ++] <----- 必须启用录制功能才能录制
     motion: ... # 省略号为文档省略部分，不代表后面没内容
 ```
 
-如果你的检测和录制没有单独的流，你只需要在第一个输入的功能列表中添加 record 功能。
+如果你的检测和录制没有单独的流，你只需要在第一个输入的功能列表中添加 `record` 功能：
+
+```yaml
+cameras:
+  name_of_your_camera:
+    ffmpeg:
+      inputs:
+        - path: rtsp://10.0.10.10:554/rtsp
+          roles:
+            - detect
+            - record # [!code ++] 给视频流增加录制功能
+```
 
 :::note
 
@@ -306,7 +361,7 @@ cameras:
 
 :::
 
-默认情况下，Frigate 会保留所有追踪目标的视频 10 天。完整的录制选项可以在[这里](../configuration/reference.md)找到。
+默认情况下，Frigate 会保留所有追踪目标的视频 10 天。完整的录制选项可以在[这里](/configuration/record)找到。
 
 ### 步骤 7：完整配置
 
@@ -319,8 +374,10 @@ cameras:
 
 现在你已经有了一个可工作的安装，你可以使用以下文档了解其他功能：
 
-1. [配置 go2rtc](configuring_go2rtc.md) - 额外的实时查看选项和 RTSP 中继
-2. [区域](../configuration/zones.md)
+1. [配置 go2rtc](configuring_go2rtc.md) - 更流畅的实时监控与 RTSP 中继功能
+2. [区域](../configuration/zones.md) - 按区域控制警报等级
 3. [视频回放](../configuration/review.md)
-4. [遮罩](../configuration/masks.md)
+4. [遮罩](../configuration/masks.md) - 避免特定场景的误报
 5. [Home Assistant 集成](/integrations/home-assistant.md) - 与 Home Assistant 集成
+6. [人脸识别](../configuration/face_recognition.md) - 识别出家庭成员
+7. [车牌识别](../configuration/license_plate_recognition.md) - 识别出自家车辆

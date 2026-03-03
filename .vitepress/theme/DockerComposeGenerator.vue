@@ -240,7 +240,7 @@
         <div class="checkbox-group">
           <TkVpContainer type="danger" v-if="ports.enable5000">
             <template #title>危险</template>
-            <p>你开启了 5000 端口暴露，这代表任何人可以直接访问你的 Frigate，不需要任何许可。在你拥有公网 IP （尤其是 IPv6）或者没有正确配置防火墙的情况下，这可能导致严重的安全风险，包括但不限于：<strong>未经授权的访问</strong>、<strong>隐私数据泄露</strong>、被攻击者利用进行进一步攻击等。请确保你了解相关风险，并且在必要时采取适当的安全措施（如配置防火墙规则、使用 VPN 等）来保护你的系统安全。</p>
+            <p>你开启了 5000 端口暴露，这代表任何人可以直接访问你的 Frigate，不需要任何许可。在你拥有公网 IP （尤其是 IPv6）或者没有正确配置防火墙的情况下，这可能导致严重的安全风险，包括但不限于：<strong>未经授权的访问</strong>、<strong>隐私数据泄露</strong>、被攻击者利用进行进一步攻击等；即使你没有公开过你的机器地址，全球依然有很多爬虫能够自动发现你的实例。请确保你了解相关风险，并且在必要时采取适当的安全措施（如配置防火墙规则、使用 VPN 等）来保护你的系统安全。</p>
             <p>如果你确定要开启此选项，请勾选下方的复选框，并确保你已经采取了必要的安全措施来保护你的系统。</p>
             <label class="checkbox-label">
               <input type="checkbox" v-model="ports.enable5000Checked" @change="generateConfig" />

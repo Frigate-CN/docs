@@ -320,9 +320,9 @@ services:
 ```bash
 docker run -d \
   --name frigate \
-  ...
+  ... # 省略号为文档省略部分，不代表后面没内容
   --device /dev/video11 \
-  ghcr.io/blakeblackshear/frigate:stable
+  docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
 在树莓派 4B 上，`/dev/video11` 是正确的设备路径。你可以运行以下命令，查找带有 `H264` 标识的设备来确认：
