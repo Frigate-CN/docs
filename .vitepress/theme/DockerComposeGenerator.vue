@@ -265,7 +265,7 @@
         <h4>其他配置</h4>
         <div class="form-grid">
           <div class="form-group">
-            <TkPopover content="能够在配置文件中使用 {FRIGATE_RTSP_PASSWORD} 变量来引用该密码，避免密码泄露" placement="top">
+            <TkPopover placement="top">
               <template #reference>
                 <label for="rtspPassword">RTSP 密码：</label> 
                 <input
@@ -275,6 +275,10 @@
                   placeholder="password"
                   @input="generateConfig"
                 />
+              </template>
+              <template #default>
+                <p>能够在配置文件中使用 {FRIGATE_RTSP_PASSWORD} 变量来引用该密码，可以给摄像头视频流使用，避免密码泄露。</p>
+                <p>注意，这不是 Frigate 的登录密码。</p>
               </template>
             </TkPopover>
           </div>
