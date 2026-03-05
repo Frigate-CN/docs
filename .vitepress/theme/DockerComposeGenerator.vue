@@ -166,8 +166,10 @@
             v-model="configPath"
             type="text"
             placeholder="/home/frigate/config"
-            @input="generateConfig"
+            @input="handleConfigPathInput"
+            :class="{ error: configPathError }"
           />
+          <p class="help-text" v-if="configPathError">⚠️ 路径包含非法字符，仅允许字母、数字、下划线、连字符、斜杠和点</p>
         </div>
         <div class="form-group">
           <label for="mediaPath">录制文件目录：</label>
@@ -176,8 +178,10 @@
             v-model="mediaPath"
             type="text"
             placeholder="/home/frigate/video"
-            @input="generateConfig"
+            @input="handleMediaPathInput"
+            :class="{ error: mediaPathError }"
           />
+          <p class="help-text" v-if="mediaPathError">⚠️ 路径包含非法字符，仅允许字母、数字、下划线、连字符、斜杠和点</p>
         </div>
       </div>
 
@@ -229,7 +233,13 @@
           <div class="checkbox-group">
             <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics' || imageTag === 'stable-axcl' }">
               <input type="checkbox" v-model="hardware.hailo" @change="generateConfig" :disabled="deviceType === 'apple-silicon' || imageTag === 'stable-axcl'" />
-              <span>Hailo NPU (/dev/memx0)</span>
+              <span>Hailo NPU (/dev/hailo0)</span>
+            </label>
+          </div>
+          <div class="checkbox-group">
+            <label class="checkbox-label" :class="{ disabled: deviceType === 'apple-silicon' || deviceType === 'stable-synaptics' || imageTag === 'stable-axcl' }">
+              <input type="checkbox" v-model="hardware.memryx" @change="generateConfig" :disabled="deviceType === 'apple-silicon' || imageTag === 'stable-axcl'" />
+              <span>MemryX MX3 (/dev/memx0)</span>
             </label>
           </div>
         </div>
@@ -322,6 +332,15 @@
             <span v-else>已复制!</span>
           </button>
         </div>
+        <TkVpContainer type="tip" v-if="!configPath || !mediaPath">
+          <template #title>提示</template>
+          <p v-if="!configPath">你未指定配置文件保存目录，请确定是否需要修改。</p>
+          <p v-if="!mediaPath">你未指定录制文件保存目录，请确定是否需要修改。</p>
+        </TkVpContainer>
+        <TkVpContainer type="warning" v-if="deviceType === 'stable' && !hardware.usbCoral && !hardware.pcieCoral && !hardware.gpu && !hardware.intelNpu && !hardware.hailo && !hardware.memryx">
+          <template #title>警告</template>
+          <p>你还没有选择任何硬件加速，请确认是否有支持的硬件可以使用。</p>
+        </TkVpContainer>
         <!-- 直接使用 TkCodeBlockToggle 组件 -->
         <div class="vp-doc">
           <div class="language-yaml">
@@ -375,8 +394,8 @@ async function getHighlighter() {
   return highlighter
 }
 
-const configPath = ref<string>('/home/frigate/config')
-const mediaPath = ref<string>('/home/frigate/video')
+const configPath = ref<string>('')
+const mediaPath = ref<string>('')
 const rtspPassword = ref<string>('password')
 const timezone = ref<string>('')
 const shmSize = ref<string>('512mb')
@@ -390,7 +409,8 @@ const hardware = ref({
   raspberryPi: false,
   gpu: false,
   intelNpu: false,
-  hailo: false
+  hailo: false,
+  memryx: false
 })
 
 const ports = ref({
@@ -406,6 +426,8 @@ const copied = ref<boolean>(false)
 
 const shmSizeError = ref<boolean>(false)
 const gpuDeviceIdError = ref<boolean>(false)
+const configPathError = ref<boolean>(false)
+const mediaPathError = ref<boolean>(false)
 const shmSizeInput = ref<HTMLInputElement | null>(null)
 
 const generatedConfig = ref<string>('')
@@ -469,14 +491,6 @@ function generateConfig() {
   const devices: string[] = []
   const volumes: string[] = []
 
-  // 如果选择了 rockchip 镜像，自动启用 /dev/dri
-  if (imageTag.value === 'stable-rk') {
-    hardware.value.gpu = true
-    if (!hardware.value.gpu) {
-      gpuDevicePath.value = '/dev/dri/renderD128'
-    }
-  }
-
   if (hardware.value.usbCoral) {
     devices.push('      - /dev/bus/usb:/dev/bus/usb # 用于USB Coral，其他版本需要修改')
   }
@@ -499,8 +513,12 @@ function generateConfig() {
   }
 
   if (hardware.value.hailo) {
-    devices.push('      - /dev/memx0 # Hailo NPU')
-    volumes.push('      - /run/mxa_manager:/run/mxa_manager # Hailo 管理器')
+    devices.push('      - /dev/hailo0 # Hailo NPU')
+  }
+
+  if (hardware.value.memryx) {
+    devices.push('      - /dev/memx0 # MemryX MX3 NPU')
+    volumes.push('      - /run/mxa_manager:/run/mxa_manager # MemryX 管理器')
   }
 
   // RockChip 专用设备配置
@@ -674,6 +692,7 @@ function selectDevice(tag: string) {
   hardware.value.pcieCoral = false
   hardware.value.intelNpu = false
   hardware.value.hailo = false
+  hardware.value.memryx = false
 
   switch (tag) {
     case 'apple-silicon':
@@ -691,13 +710,20 @@ function selectDevice(tag: string) {
       hardware.value.gpu = true
       break
     case 'stable-tensorrt':
-    case 'stable-tensorrt-jp6':
       // NVIDIA GPU 不需要在 devices 中添加配置
       imageTag.value = tag
       break
+    case 'stable-tensorrt-jp6':
+      // NVIDIA Jetson 不需要在 devices 中添加配置
+      imageTag.value = tag
+      break
     case 'stable-rocm':
+      // AMD GPU 需要启用 GPU 加速
+      imageTag.value = tag
+      hardware.value.gpu = true
+      break
     case 'stable-rk':
-      // AMD GPU 和 RockChip 需要启用 GPU 加速
+      // RockChip 需要启用 GPU 加速
       imageTag.value = tag
       hardware.value.gpu = true
       break
@@ -813,6 +839,64 @@ function handleGpuDeviceIdInput(event: Event) {
     gpuDeviceIdError.value = true
   } else {
     gpuDeviceIdError.value = false
+  }
+
+  generateConfig()
+}
+
+// 处理配置路径输入，只允许合法的路径字符
+function handleConfigPathInput(event: Event) {
+  const target = event.target as HTMLInputElement
+  let value = target.value
+
+  // 只允许合法的路径字符：字母、数字、下划线、连字符、斜杠、点
+  const filtered = value.replace(/[^a-zA-Z0-9_\-/./]/g, '')
+
+  // 检查是否有非法字符
+  const hasInvalidChars = filtered.length < value.length
+
+  if (filtered === '') {
+    // 空值，清空 configPath，清除错误状态
+    configPath.value = ''
+    configPathError.value = false
+  } else if (!hasInvalidChars) {
+    // 没有非法字符，更新 configPath，清除错误状态
+    configPath.value = filtered
+    configPathError.value = false
+  } else {
+    // 有非法字符，设置错误状态并还原输入
+    configPathError.value = true
+    target.value = filtered
+    configPath.value = filtered
+  }
+
+  generateConfig()
+}
+
+// 处理媒体路径输入，只允许合法的路径字符
+function handleMediaPathInput(event: Event) {
+  const target = event.target as HTMLInputElement
+  let value = target.value
+
+  // 只允许合法的路径字符：字母、数字、下划线、连字符、斜杠、点
+  const filtered = value.replace(/[^a-zA-Z0-9_\-/./]/g, '')
+
+  // 检查是否有非法字符
+  const hasInvalidChars = filtered.length < value.length
+
+  if (filtered === '') {
+    // 空值，清空 mediaPath，清除错误状态
+    mediaPath.value = ''
+    mediaPathError.value = false
+  } else if (!hasInvalidChars) {
+    // 没有非法字符，更新 mediaPath，清除错误状态
+    mediaPath.value = filtered
+    mediaPathError.value = false
+  } else {
+    // 有非法字符，设置错误状态并还原输入
+    mediaPathError.value = true
+    target.value = filtered
+    mediaPath.value = filtered
   }
 
   generateConfig()
