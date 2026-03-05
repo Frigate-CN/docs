@@ -155,6 +155,11 @@
           </label>
         </div>
         <p class="help-text" v-if="imageTag === 'stable-axcl'">爱芯AXERA 设备仅支持国内镜像源加速，已自动选择。</p>
+        <TkVpContainer v-else-if="imageSource === 'official'" type="warning">
+          <template #title>警告</template>
+          <p>将不使用镜像源加速功能。这可能会对一些需要下载额外模型文件的功能产生影响，导致功能不可用。</p>
+          <p>中国大陆地区用户强烈建议使用国内镜像源加速。</p>
+        </TkVpContainer>
       </div>
 
       <div class="form-section">
@@ -252,15 +257,15 @@
             <template #title>危险</template>
             <p>你开启了 5000 端口暴露，这代表任何人可以直接访问你的 Frigate，不需要任何许可。在你拥有公网 IP （尤其是 IPv6）或者没有正确配置防火墙的情况下，这可能导致严重的安全风险，包括但不限于：<strong>未经授权的访问</strong>、<strong>隐私数据泄露</strong>、被攻击者利用进行进一步攻击等；即使你没有公开过你的机器地址，全球依然有很多爬虫能够自动发现你的实例。请确保你了解相关风险，并且在必要时采取适当的安全措施（如配置防火墙规则、使用 VPN 等）来保护你的系统安全。</p>
             <p>如果你确定要开启此选项，请勾选下方的复选框，并确保你已经采取了必要的安全措施来保护你的系统。</p>
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="ports.enable5000Checked" @change="generateConfig" />
-              <span>我已知晓风险，并确认开启 5000 端口</span>
+            <label class="checkbox-label" :class="{ disabled: ports.cooldownRemaining > 0 }">
+              <input type="checkbox" v-model="ports.enable5000Checked" @change="generateConfig" :disabled="ports.cooldownRemaining > 0" />
+              <span>我已知晓风险，并确认开启 5000 端口 <span v-if="ports.cooldownRemaining > 0">({{ ports.cooldownRemaining }}s)</span></span>
             </label>
           </TkVpContainer>
           <TkPopover content="⚠️ 警告！该端口应仅用于内网环境，并且配置防火墙禁止外部访问。如果你不知道如何配置防护，请不要开启该端口！" placement="top">
             <template #reference>
               <label class="checkbox-label">
-                <input type="checkbox" v-model="ports.enable5000" @change="generateConfig" />
+                <input type="checkbox" v-model="ports.enable5000" @change="handleEnable5000Change" />
                 <span>启用 5000 端口（无鉴权访问）</span>
                 <span class="warning">
                   <button>⚠️ 谨慎暴露</button>
@@ -365,7 +370,7 @@
 </style>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, watch, onMounted, nextTick, onUnmounted } from 'vue'
 import { createHighlighter } from 'shiki'
 import {
   transformerMetaHighlight,
@@ -415,8 +420,12 @@ const hardware = ref({
 
 const ports = ref({
   enable5000: false,
-  enable5000Checked: false
+  enable5000Checked: false,
+  cooldownRemaining: 0
 })
+
+// 端口5000确认倒计时计时器
+let cooldownTimer: number | null = null
 
 // NVIDIA GPU 专用配置
 const nvidiaGpuCount = ref<string>('all')
@@ -905,8 +914,49 @@ function handleMediaPathInput(event: Event) {
 // 初始化生成配置
 generateConfig()
 
-// 初始化生成配置
-generateConfig()
+// 监听端口5000开启状态，启动倒计时
+watch(() => ports.value.enable5000, (newValue) => {
+  if (newValue) {
+    // 开启5000端口时，重置确认状态并开始倒计时
+    ports.value.enable5000Checked = false
+    ports.value.cooldownRemaining = 10 // 10秒倒计时
+    startCooldown()
+  } else {
+    // 关闭5000端口时，停止倒计时并重置状态
+    stopCooldown()
+    ports.value.cooldownRemaining = 0
+  }
+})
+
+// 启动倒计时
+function startCooldown() {
+  stopCooldown() // 先清除已有的计时器
+  cooldownTimer = window.setInterval(() => {
+    if (ports.value.cooldownRemaining > 0) {
+      ports.value.cooldownRemaining--
+    } else {
+      stopCooldown()
+    }
+  }, 1000)
+}
+
+// 停止倒计时
+function stopCooldown() {
+  if (cooldownTimer !== null) {
+    clearInterval(cooldownTimer)
+    cooldownTimer = null
+  }
+}
+
+// 处理5000端口开关变化
+function handleEnable5000Change() {
+  generateConfig()
+}
+
+// 组件卸载时清除计时器
+onUnmounted(() => {
+  stopCooldown()
+})
 
 // 监听配置变化并更新高亮
 watch(generatedConfig, async () => {
