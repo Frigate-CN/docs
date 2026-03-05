@@ -267,12 +267,11 @@ devices:
 
 最后，配置[硬件物体/目标检测](/configuration/object_detectors#hailo-8)以完成设置。
 
-
 ### MemryX MX3 加速卡
 
 MemryX MX3 加速卡采用 **M.2 2280 规格**（与 NVMe 固态硬盘尺寸一致），支持以下设备配置：
 
-- x86 架构（英特尔/超威）台式机/主机
+- x86 架构（Intel/AMD）台式机/主机
 - 树莓派 5
 - 香橙派 5 Plus/Max
 - 多盘位 M.2 PCIe 扩展板
@@ -314,6 +313,8 @@ volumes:
 
 如果你的环境无法使用 Docker Compose，也可以直接执行以下 `docker run` 命令启动容器（配置等效）：
 
+<DetailsCollapse title="MemryX MX3 参考 Docker run 命令">
+
 ```bash
   docker run -d \
     --name frigate-memx \
@@ -334,6 +335,8 @@ volumes:
     --device /dev/memx0 \
     ghcr.io/blakeblackshear/frigate:stable
 ```
+
+</DetailsCollapse>
 
 #### 最终配置
 
