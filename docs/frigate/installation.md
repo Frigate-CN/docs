@@ -629,7 +629,7 @@ Home Assistant OS 用户可以通过插件仓库进行安装。
 - 与宿主机实现强隔离
 - 支持实时迁移等高级功能（这些功能在直接使用容器时无法实现）
 
-Ensure that ballooning is **disabled**, especially if you are passing through a GPU to the VM.
+请确保 ballooning **已关闭**，尤其是在将 GPU 直通给虚拟机时。
 
 :::warning
 
