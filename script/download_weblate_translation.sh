@@ -9,8 +9,8 @@ DOWNLOAD_URL="https://hosted.weblate.org/api/translations/frigate-nvr/objects/zh
 
 # 检查环境变量
 if [ -z "$VITE_WEBLATE_TOKEN" ]; then
-    echo "错误: 环境变量 VITE_WEBLATE_TOKEN 未设置"
-    exit 1
+    echo "错误: 环境变量 VITE_WEBLATE_TOKEN 未设置，可能会影响“检测目标/物体”的正常访问。"
+    exit 0
 fi
 
 # 创建输出目录（如果不存在）
