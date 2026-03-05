@@ -7,6 +7,7 @@ const question2 = ref(false);
 const question3 = ref(false);
 const question4 = ref(false);
 const question5 = ref(false);
+const question6 = ref(false);
 </script>
 
 <template>
@@ -55,9 +56,9 @@ const question5 = ref(false);
     </TkTransitionCollapse>
   </div>
   <div class="question-item">
-    <button class="question-btn" @click="question5 = !question5">Frigate 安全吗？</button>
+    <button class="question-btn" @click="question6 = !question6">Frigate 安全吗？</button>
     <TkTransitionCollapse>
-      <div v-show="question5" class="question-answer">
+      <div v-show="question6" class="question-answer">
         Frigate 是一个开源项目，我们的代码完全公开透明，任何人都可以查看和审计我们的代码。我们也非常重视用户的隐私和数据安全，我们不会主动收集用户的任何个人信息或视频数据。
         <br>需要注意的是，我们无法阻止用户的<strong>不当的配置造成的安全风险</strong>，请你务必了解每一个设置项的作用，尤其是不要开启容器的无鉴权端口（默认为5000）！如果觉得输入密码麻烦，请使用浏览器自带的密码管理功能保存密码。
       </div>
