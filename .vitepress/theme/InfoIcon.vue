@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { TkPopover } from 'vitepress-theme-teek';
 interface Props {
   href?: string;
@@ -8,13 +9,38 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   text: '点击查看详情',
 });
+
+// 检测是否为触摸屏设备
+const isTouchDevice = ref(false);
+
+if (typeof window !== 'undefined') {
+  isTouchDevice.value = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+}
+
+// 记录提示框是否已打开
+const popoverOpen = ref(false);
+
+// 处理链接点击事件
+function handleLinkClick(event: MouseEvent) {
+  if (isTouchDevice.value && !popoverOpen.value) {
+    // 第一次点击，阻止跳转，让提示框弹出
+    event.preventDefault();
+    popoverOpen.value = true;
+  }
+  // 第二次点击或非触摸设备，正常跳转
+}
+
+// 处理提示框关闭事件
+function handlePopoverClose() {
+  popoverOpen.value = false;
+}
 </script>
 
 <template>
-  <TkPopover placement="top-start" class="info-icon-wrapper">
+  <TkPopover placement="top-start" class="info-icon-wrapper" @update:modelValue="handlePopoverClose">
     <template #reference>
       <span v-if="href" class="info-icon">
-        <a :href="href" target="_blank" class="info-icon__circle">?</a>
+        <a :href="href" target="_blank" class="info-icon__circle" @click="handleLinkClick">?</a>
       </span>
       <span v-else class="info-icon">
         <span class="info-icon__circle">?</span>
