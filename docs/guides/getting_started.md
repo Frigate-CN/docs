@@ -163,7 +163,7 @@ cameras: # [!code ++]
 
 ### 步骤 3：配置硬件加速（推荐）
 
-现在你已经有了一个工作正常的摄像头配置，你需要设置硬件加速以最小化解码视频流所需的 CPU。查看[硬件加速](../configuration/hardware_acceleration_video.md)配置参考，了解适用于你的硬件的示例。
+现在你已经有了一个工作正常的摄像头配置，你需要设置硬件加速以**减少解码视频流所需的 CPU**。查看[硬件加速](../configuration/hardware_acceleration_video.md)配置参考，了解适用于你的硬件的示例。
 
 这里是一个使用[预设](../configuration/ffmpeg_presets.md)配置硬件加速的示例，适用于大多数带核显的 Intel 处理器：
 
@@ -180,6 +180,7 @@ services:
       - /dev/dri/renderD128:/dev/dri/renderD128 # 用于intel硬件加速，需要根据你的实际硬件添加 [!code ++]
     ... # 此处省略
 ```
+
 </DetailsCollapse>
 
 `config.yml`
@@ -224,7 +225,7 @@ detectors: # 下面将添加 OpenVino 检测器，根据你实际的硬件情况
 # 如果需要精度更高的模型，可参考文档 https://docs.frigate-cn.video/configuration/object_detectors#yolov9-2
 # 下载精度更高的 YOLOv9模型
 # 更换模型后需要注意修改下方配置
-model: 
+model:
   width: 300
   height: 300
   input_tensor: nhwc
@@ -239,8 +240,8 @@ cameras:
       enabled: True # <---- 开启检测 [!code ++]
       ... # 省略号为文档省略部分，不代表后面没内容
 ```
-</DetailsCollapse>
 
+</DetailsCollapse>
 
 如果你有 USB Coral，你需要在配置中添加检测器部分。
 

@@ -7,7 +7,7 @@
       </div>
       <div class="block-content">
         <h1 class="underline">本地智能识别，大幅降低误报</h1>
-        <p>传统安防设备依赖简单移动侦测，调校复杂且误报率高。Frigate采用本地AI目标检测技术，无需依赖云端，普通硬件也能精准识别人员、车辆等目标，有效减少误报。你的监控数据全程本地处理，隐私更安全。</p>
+        <p>传统安防设备依赖简单移动侦测，调校复杂且误报率高。Frigate 采用本地 AI 目标检测技术，无需依赖云端，普通硬件也能精准识别人员、车辆等目标，有效减少误报。你的监控数据全程本地处理，隐私更安全。</p>
       </div>
     </div>
     <div class="block-item">
@@ -16,7 +16,7 @@
       </div>
       <div class="block-content">
         <h1 class="underline">别让影子和风干扰识别</h1>
-        <p>Frigate通过本地AI智能分析，自动过滤摄像头因阴影变化和风吹草动产生的误报，让你专注于真正重要的目标检测。搭载AI加速器时，系统每秒可处理100+个目标检测，精准识别人员、车辆等关键目标，确保监控视频的每一帧都得到有效分析，重要画面一帧不漏。</p>
+        <p>Frigate 通过本地 AI 智能分析，自动过滤摄像头因阴影变化和风吹草动产生的误报，让你专注于真正重要的目标检测。搭载 AI 加速器时，系统每秒可处理 100+ 个目标检测，精准识别人员、车辆等关键目标，确保监控视频的每一帧都得到有效分析，重要画面一帧不漏。</p>
       </div>
     </div>
     <div class="block-item">
@@ -25,7 +25,7 @@
       </div>
       <div class="block-content">
         <h1 class="underline">利用区域功能精准微调事件与警报</h1>
-        <p>Frigate可实时追踪物体，并能精准判断人员开始走上你家门阶的确切时刻，或是车辆驶入你私家车位的具体时间。基于精确位置信息优化你的通知设置。</p>
+        <p>Frigate 可实时追踪物体，并能精准判断人员开始走上你家门阶的确切时刻，或是车辆驶入你私家车位的具体时间。基于精确位置信息优化你的通知设置。</p>
       </div>
     </div>
     <div class="block-item">
@@ -33,8 +33,8 @@
         <img src="/assets/hass-opt.png" alt="Preview">
       </div>
       <div class="block-content">
-        <h1 class="underline">与Home Assistant及其他自动化平台集成</h1>
-        <p>通过将目标检测功能集成至Home Assistant、OpenHab、Node-RED或任何支持MQTT的平台，为你的家赋予"智慧之眼"。Frigate不仅深度对接Home Assistant媒体浏览器，提供低延迟摄像头实体，还能开放实时传感器与开关接口——让你随心所欲地构建自动化场景与通知系统。</p>
+        <h1 class="underline">与 Home Assistant 及其他自动化平台集成</h1>
+        <p>通过将目标检测功能集成至 Home Assistant、OpenHab、Node-RED 或任何支持 MQTT 的平台，为你的家赋予"智慧之眼"。Frigate 不仅深度对接 Home Assistant 媒体浏览器，提供低延迟摄像头实体，还能开放实时传感器与开关接口——让你随心所欲地构建自动化场景与通知系统。</p>
       </div>
     </div>
   </div>
