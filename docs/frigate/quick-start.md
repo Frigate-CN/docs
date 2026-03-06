@@ -16,7 +16,7 @@ title: 快速开始
 ### 必要准备
 
 - [ ] **运行环境**：支持 Docker 的操作系统（Linux、macOS，不推荐 Windows）
-- [ ] **摄像头**：支持 RTSP 协议的网络摄像头 <InfoIcon href="/frigate/installation#摄像头" text="点击了解支持哪些摄像头"/>
+- [ ] **摄像头**：支持 RTSP 协议的网络摄像头 <InfoIcon href="/frigate/hardware#摄像头" text="点击了解支持哪些摄像头"/>
 
 ### 推荐配置
 
