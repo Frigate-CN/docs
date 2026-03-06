@@ -48,9 +48,15 @@ go2rtc: # [!code focus]
 
 :::
 
-## 减少摄像头连接数 <Badge text="强烈建议使用" type="warning"/> {#reduce-connections-to-camera}
+## 减少摄像头连接数 {#reduce-connections-to-camera}
 
 某些摄像头仅支持一个视频流（即只能有一个设备可以访问摄像头）连接，亦或者你希望减少与摄像头不必要的连接数，RTSP 转流功能能很好的解决你的问题。
+
+:::tip
+
+转流功能会导致 `go2rtc` 服务一直运行，会略微增加 CPU 使用率（大约一个摄像头在 1-3% 左右），但能有效减少与摄像头的连接数，降低网络流量。请根据自己实际需求选择。
+
+:::
 
 ### 单流配置 {#with-single-stream}
 
