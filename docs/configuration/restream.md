@@ -26,7 +26,8 @@ birdseye:
 
 :::tip
 
-To improve connection speed when using Birdseye via restream you can enable a small idle heartbeat by setting `birdseye.idle_heartbeat_fps` to a low value (e.g. `1–2`). This makes Frigate periodically push the last frame even when no motion is detected, reducing initial connection latency.
+在通过 **restream** 使用鸟瞰图时，为提升连接速度，可以将 `birdseye.idle_heartbeat_fps` 设置为一个较小的值（例如 `1–2`）来启用轻量的空闲心跳。
+这会让 Frigate 在未检测到移动时，仍定期推送最后一帧画面，从而**减少初次连接的延迟**。
 
 :::
 
