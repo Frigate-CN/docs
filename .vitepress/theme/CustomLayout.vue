@@ -13,7 +13,7 @@ const showAiChat = ref(false)
     <template #teek-right-bottom-after>
       <div>
         <button
-          class="tk-right-bottom-button__button feedback-button"
+          class="tk-right-bottom-button__button ai-ask-button"
           @click="showAiChat = true"
         >
           问AI
@@ -56,6 +56,21 @@ const showAiChat = ref(false)
 </template>
 
 <style scoped>
+.ai-ask-button {
+  background: var(--tk-el-color-success);
+  height: 4em;
+  color: var(--tk-bg-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ai-ask-button:hover {
+  background: var(--tk-el-color-success-light-5);
+}
+
 .feedback-button {
   background: var(--tk-theme-color);
   height: 4em;

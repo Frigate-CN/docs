@@ -29,7 +29,7 @@ const teekConfig = defineTeekConfig({
   themeEnhance: {
     spotlight: {
       defaultValue: true,
-      defaultStyle: "aside",
+      defaultStyle: "under",
     },
     layoutSwitch: {
       defaultMode: "sidebarWidthAdjustableOnly",
