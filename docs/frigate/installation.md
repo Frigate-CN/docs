@@ -794,3 +794,7 @@ services:
     environment:
       - FRIGATE_RTSP_PASSWORD: 'password'
 ```
+
+#### 飞牛OS 安装
+
+我们提供了一个飞牛 OS 的应用版本，你可以直接在飞牛应用商店搜索“Frigate”即可直接按步骤进行安装。

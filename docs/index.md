@@ -55,7 +55,7 @@ hero:
   <p>我们支持多种系统，看看有没有适合你的！</p>
 </div>
 
-::: navCard 3
+::: navCard 4
 
 ```yaml
 - name: unRAID
@@ -65,11 +65,12 @@ hero:
   badge: 应用商店安装
   badgeType: tip
 
-#- name: 飞牛 fnOS
-#  desc: 飞牛fnOS是基于 Debian 开发的 NAS 系统，支持 Docker。
-#  img: https://www.fnnas.com/favicon.ico
-#  badge: 应用商店安装
-#  badgeType: tip
+- name: 飞牛 fnOS
+  desc: 飞牛fnOS是基于 Debian 开发的 NAS 系统，支持 Docker。
+  link: /frigate/installation#飞牛os-安装
+  img: https://www.fnnas.com/favicon.ico
+  badge: 应用商店安装
+  badgeType: tip
 
 - name: 群辉 DSM
   desc: 群辉是全球知名的 NAS 方案提供商，其 DSM 系统是使用最广泛的 NAS 系统。
