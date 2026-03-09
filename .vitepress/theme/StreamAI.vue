@@ -107,13 +107,112 @@
 </template>
 
 <script setup>
-// 推荐问题点击后直接发送
-function handleRecommendedClick(q) {
-  if (isLoading.value) return;
-  userInput.value = q;
-  sendMessage();
+import { ref, onUnmounted, onMounted, computed, nextTick, watch } from 'vue';
+import DOMPurify from 'dompurify';
+import MarkdownIt from "markdown-it";
+import { createHighlighter } from 'shiki';
+
+const emit = defineEmits(['close']);
+
+// 创建 Shiki highlighter（与 VitePress 使用相同配置）
+let highlighter = null;
+let highlighterPromise = null;
+
+async function getHighlighter() {
+  if (!highlighter) {
+    if (!highlighterPromise) {
+      highlighterPromise = createHighlighter({
+        themes: ['github-light', 'github-dark'],
+        langs: ['javascript', 'typescript', 'python', 'bash', 'shell', 'yaml', 'json', 'html', 'css', 'vue', 'tsx', 'jsx', 'diff', 'markdown']
+      });
+    }
+    highlighter = await highlighterPromise;
+  }
+  return highlighter;
 }
-import { ref, onUnmounted, onMounted, computed, nextTick } from 'vue';
+
+// 预加载 highlighter
+getHighlighter().catch(console.error);
+
+// 缓存高亮结果以提高性能
+const highlightCache = new Map();
+
+// 创建一个带 Shiki 高亮的 MarkdownIt 实例
+const md = MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  highlight: function(str, lang) {
+    // 先返回基本的 HTML，后续会通过异步处理来增强高亮
+    if (!lang) {
+      return `<pre class="shiki"><code data-lang="">${md.utils.escapeHtml(str)}</code></pre>`;
+    }
+    return `<pre class="shiki"><code data-lang="${md.utils.escapeHtml(lang)}">${md.utils.escapeHtml(str)}</code></pre>`;
+  }
+});
+
+// 异步处理代码高亮的函数
+async function applyShikiHighlighting(html) {
+  try {
+    const h = await getHighlighter();
+    const isDark = document.documentElement.classList.contains('dark');
+    const theme = isDark ? 'github-dark' : 'github-light';
+    const loadedLanguages = h.getLoadedLanguages();
+
+    // 使用正则表达式匹配代码块
+    const codeBlockRegex = /<pre class="shiki"><code data-lang="([^"]*)">(.*?)<\/code><\/pre>/gs;
+
+    let processedHtml = html;
+    const replacements = [];
+    let match;
+
+    // 收集所有匹配项
+    while ((match = codeBlockRegex.exec(html)) !== null) {
+      const [fullMatch, lang, escapedCode] = match;
+      replacements.push({ fullMatch, lang, escapedCode });
+    }
+
+    // 处理每个匹配
+    for (const { fullMatch, lang, escapedCode } of replacements) {
+      const cacheKey = `${lang}:${escapedCode}`;
+
+      // 检查缓存
+      if (highlightCache.has(cacheKey)) {
+        processedHtml = processedHtml.replace(fullMatch, highlightCache.get(cacheKey));
+        continue;
+      }
+
+      // 使用 Shiki 高亮
+      try {
+        const normalizedLang = lang.toLowerCase();
+        if (normalizedLang && loadedLanguages.includes(normalizedLang)) {
+          const code = decodeHtml(escapedCode);
+          const highlighted = h.codeToHtml(code, {
+            lang: normalizedLang,
+            theme
+          });
+          highlightCache.set(cacheKey, highlighted);
+          processedHtml = processedHtml.replace(fullMatch, highlighted);
+        }
+      } catch (e) {
+        console.warn('Failed to highlight code:', e);
+      }
+    }
+
+    return processedHtml;
+  } catch (error) {
+    console.warn('Shiki highlighting error:', error);
+    return html;
+  }
+}
+
+// 解码 HTML 实体
+function decodeHtml(html) {
+  const textArea = document.createElement('textarea');
+  textArea.innerHTML = html;
+  return textArea.value;
+}
+
 // 推荐问题常量
 const recommendedQuestions = [
   '是否支持小米摄像头？',
@@ -140,33 +239,12 @@ function getRandomQuestions(arr, n) {
 
 const displayedQuestions = ref(getRandomQuestions(recommendedQuestions, 4));
 
-// 每次弹窗打开时刷新推荐问题
-onMounted(() => {
-  displayedQuestions.value = getRandomQuestions(recommendedQuestions, 4);
-  attachScrollListener();
-});
-const emit = defineEmits(['close']);
-import DOMPurify from 'dompurify';
-import MarkdownIt from "markdown-it";
-import hljs from 'highlight.js';
-
-const md = MarkdownIt({ 
-  html: true, 
-  linkify: true,
-  typographer: true,
-  highlight: function(str, lang) {
-      // 如果指定了语言且hljs支持该语言
-      if (lang && hljs.getLanguage(lang)) {
-        try {
-          // 高亮代码并添加自定义类名
-          return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang }).value}</code></pre>`;
-        } catch (__) {}
-      }
-      
-      // 未指定语言或不支持的语言，使用自动检测
-      return `<pre class="hljs"><code>${hljs.highlightAuto(str).value}</code></pre>`;
-    }
-});
+// 推荐问题点击后直接发送
+function handleRecommendedClick(q) {
+  if (isLoading.value) return;
+  userInput.value = q;
+  sendMessage();
+}
 
 // 状态管理
 const userInput = ref('');
@@ -266,11 +344,22 @@ let followAttempts = 0;
 const maxFollowAttempts = 12; // 重试次数，约 12*80ms ~ 1s
 
 // 实时将当前Markdown内容转换为HTML
-const currentHtmlContent = computed(() => {
-  if (!md || !currentContent.value) return '';
-  // 使用Vitepress的MarkdownIt解析，并用DOMPurify净化
-  return DOMPurify.sanitize(md.render(currentContent.value));
-});
+const currentHtmlContent = ref('');
+
+// 监听 currentContent 变化，异步应用 Shiki 高亮
+watch(currentContent, async (newContent) => {
+  if (!md || !newContent) {
+    currentHtmlContent.value = '';
+    return;
+  }
+
+  // 先渲染基本 HTML
+  const basicHtml = md.render(newContent);
+  const sanitized = DOMPurify.sanitize(basicHtml);
+
+  // 应用 Shiki 高亮
+  currentHtmlContent.value = await applyShikiHighlighting(sanitized);
+}, { immediate: true });
 
 // 清理连接
 // 清理连接与事件监听
@@ -281,6 +370,7 @@ onUnmounted(() => {
 });
 
 onMounted(() => {
+  displayedQuestions.value = getRandomQuestions(recommendedQuestions, 4);
   attachScrollListener();
 });
 
@@ -897,5 +987,60 @@ html.resizing, body.resizing {
 .recommended-question:hover {
   background: #2563eb;
   color: #fff;
+}
+
+/* Markdown 表格样式 */
+.message-content :deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.message-content :deep(th),
+.message-content :deep(td) {
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid #e5e7eb;
+}
+
+.message-content :deep(th) {
+  background-color: #f9fafb;
+  font-weight: 600;
+  font-size: 13px;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.message-content :deep(tr:nth-child(even)) {
+  background-color: #f9fafb;
+}
+
+.message-content :deep(tr:hover) {
+  background-color: #f3f4f6;
+}
+
+/* 暗色模式下的表格样式 */
+.dark .message-content :deep(table) {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.dark .message-content :deep(th),
+.dark .message-content :deep(td) {
+  border-color: #4b5563;
+}
+
+.dark .message-content :deep(th) {
+  background-color: #374151;
+  border-bottom-color: #6b7280;
+}
+
+.dark .message-content :deep(tr:nth-child(even)) {
+  background-color: #374151;
+}
+
+.dark .message-content :deep(tr:hover) {
+  background-color: #4b5563;
 }
 </style>
