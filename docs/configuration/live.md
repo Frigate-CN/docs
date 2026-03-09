@@ -336,3 +336,33 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
              roles:
                - detect
    ```
+
+9. **为什么我在配置 go2rtc 后摄像头的实时监控详情页面不能正常显示画面，为白屏**
+  
+  一些家用级或者冷门的摄像头品牌可能会在视频配置文件中部分参数比较激进（如I帧和B帧），导致实时监控无法正确获取到关键帧从而显示画面。
+  
+  如果无法通过调整摄像头参数解决该问题，可以尝试对视频流进行重新编码。
+
+  :::tip
+  注意，这会增加额外的编码工作，导致额外的性能消耗；如果实在无法避免，建议**不要给摄像头配置转流**服务（也就是不要给 Frigate 的 cameras 使用 go2rtc 转流出来的视频流），这样 go2rtc **只会在使用实时监控时**才进行转码工作。
+  :::
+
+  ```yaml
+  go2rtc:
+    streams:
+      front_door:
+        - ffmpeg:rtsp://192.168.1.10:554/stream1#video=h264#hardware#audio=copy # 视频流地址后面加上#video=h264#hardware，强制进行转码 [!code ++]
+  cameras:
+    front_door:
+      detect:
+        width: 640
+        height: 360
+      ffmpeg:
+        inputs:
+          - path: rtsp://192.168.1.10:554/stream1 # 尽可能不要使用转流，仅使用摄像头原本的视频流地址 [!code warning]
+            roles:
+              - record
+          - path: rtsp://192.168.1.10:554/stream2 # 尽可能不要使用转流，仅使用摄像头原本的视频流地址 [!code warning]
+            roles:
+              - detect
+   ```
