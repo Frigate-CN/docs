@@ -15,7 +15,7 @@ main:
   push:
     - stages:
       - name: build knowledge base
-        image: docker.cnb.cool/johannli/knowledge-base
+        image: cnbcool/knowledge-base
         settings:
           include: "docs/**/**.md"
           chunk_size: 3000
