@@ -95,7 +95,7 @@ Contributions are welcome! Follow these steps:
 
 This documentation is licensed under the MIT License. See [LICENSE](./LICENSE) file for details.
 
-Copyright © 2024 Frigate CN
+Copyright © 2026 Frigate CN
 
 ## Support
 
