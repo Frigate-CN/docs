@@ -255,11 +255,19 @@ export const sidebar = [
     text: '<i class="fa-solid fa-circle-question"></i>常见问题',
     items: [
       { text: "常见问题问答", link: "/troubleshooting/faqs" },
-      { text: "录制", link: "/troubleshooting/recordings" },
-      { text: "GPU", link: "/troubleshooting/gpu" },
-      { text: "EdgeTPU", link: "/troubleshooting/edgetpu" },
-      { text: "内存分析", link: "/troubleshooting/memory" },
-      { text: "检测故障排查", link: "/troubleshooting/dummy-camera" },
+      { text: "录制问题", link: "/troubleshooting/recordings" },
+      { text: "目标检测排查", link: "/troubleshooting/dummy-camera" },
+      { text: "硬件故障排查", items: [
+        { text: "GPU", link: "/troubleshooting/gpu" },
+        { text: "EdgeTPU", link: "/troubleshooting/edgetpu" },
+      ]},
+      {
+        text: "性能问题排查",
+        items: [
+          { text: "CPU 占用过高", link: "/troubleshooting/cpu" },
+          { text: "内存分析", link: "/troubleshooting/memory" },
+        ],
+      },
     ],
   },
   {
