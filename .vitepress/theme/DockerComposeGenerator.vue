@@ -664,7 +664,7 @@ function generateConfig() {
     image: ${imageAddress}
     shm_size: "${shmSizeValue}" # 根据上述计算结果为你的摄像头更新此值
 ${runtimeConfig}${devicesSection}${deployConfig}${extraHostsConfig}${securityOptConfig}    volumes:
-      - /etc/localtime:/etc/localtime:ro
+      - /etc/localtime:/etc/localtime:ro # 同步宿主机时间
       - ${configPathValue}:/config # "${configPathValue}"为你宿主机上希望存放配置文件的路径
       - ${mediaPathValue}:/media/frigate # "${mediaPathValue}"为你宿主机上希望存放监控录像文件的路径
       - type: tmpfs # 使用 1GB 内存作为录制片段存储的临时存储
@@ -672,12 +672,12 @@ ${runtimeConfig}${devicesSection}${deployConfig}${extraHostsConfig}${securityOpt
         tmpfs:
           size: 1000000000
 ${volumes.length > 0 ? volumes.join('\n') + '\n' : ''}    ports:
-      - "8971:8971"
+      - "8971:8971" # Frigate 服务默认端口，默认为https
       ${portsConfig}- "8554:8554" # RTSP视频流
       - "8555:8555/tcp" # 基于TCP的WebRTC
       - "8555:8555/udp" # 基于UDP的WebRTC
     environment:
-      FRIGATE_RTSP_PASSWORD: "${rtspPassword.value}" # rtsp的密码，请修改"password"为你期望的密码
+      FRIGATE_RTSP_PASSWORD: "${rtspPassword.value}" # rtsp的密码，请修改为你期望的密码
       TZ: "${timezoneValue}" # 设置为中国+8时区 [!code highlight]
 ${envConfig}`
 }
@@ -756,7 +756,9 @@ function selectDevice(tag: string) {
 
 async function copyConfig() {
   try {
-    await navigator.clipboard.writeText(generatedConfig.value)
+    // 移除 Shiki 特殊高亮语法，如 [!code highlight], [!code ++], [!code --] 等
+    const cleanConfig = generatedConfig.value.replace(/\s*\[!code[^\]]*\]/g, '')
+    await navigator.clipboard.writeText(cleanConfig)
     copied.value = true
     setTimeout(() => {
       copied.value = false
