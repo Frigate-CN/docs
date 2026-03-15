@@ -229,7 +229,7 @@ export default defineConfig(({ mode }) => {
           disableQueryPersistence: false, // 允许查询持久化
           miniSearch: {
             options: {
-              extractField: (document, fieldName) => {
+              extractField: (document: { [x: string]: any; content: any; }, fieldName: string) => {
                 // 自定义字段提取逻辑
                 if (fieldName === "content") {
                   return document.content;
@@ -272,8 +272,7 @@ export default defineConfig(({ mode }) => {
             { text: "简体中文", link: "/" },
             {
               text: "English",
-              link: "https://docs.frigate.video/",
-              target: "_blank",
+              component: "LanguageSwitch",
             },
           ],
         },

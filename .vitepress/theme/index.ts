@@ -9,6 +9,7 @@ import ShmCalculator from "./ShmCalculator.vue";
 import DockerComposeGenerator from "./DockerComposeGenerator.vue";
 import DetailsCollapse from "./DetailsCollapse.vue";
 import InfoIcon from "./InfoIcon.vue";
+import LanguageSwitch from "./LanguageSwitch.vue";
 import { initComponent } from 'vitepress-plugin-legend/component';
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
@@ -31,6 +32,7 @@ export default {
     app.component('DockerComposeGenerator', DockerComposeGenerator)
     app.component('DetailsCollapse', DetailsCollapse)
     app.component('InfoIcon', InfoIcon)
+    app.component('LanguageSwitch', LanguageSwitch)
   },
   extends: Teek,
   Layout: CustomLayout,
