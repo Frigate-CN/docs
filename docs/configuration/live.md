@@ -27,11 +27,11 @@ Frigate 智能地使用三种不同的视频流技术在仪表板和单摄像头
 
 如果使用 go2rtc，应在摄像头固件中调整以下设置以获得最佳实时监控页面体验：
 
-- 视频编解码器：**H.264** - 提供与所有实时监控页面技术和浏览器最兼容的视频编解码器。避免使用任何"智能编解码器"或"+"编解码器，如**H.264+**或**H.265+**以及**Smart H.265**等，这些非标准编解码器会移除关键帧(见下文)。
+- 视频编解码器：**H.264** - 提供与所有实时监控页面技术和浏览器最兼容的视频编解码器。避免使用任何"智能编解码器"或"+"编解码器，如 **H.264+** 或 **H.265+** 以及 **Smart H.265** 等，这些非标准编解码器会移除关键帧(见下文)。
 - 音频编解码器：**AAC** - 提供与所有支持音频的实时监控页面技术和浏览器最兼容的音频编解码器。
 - I 帧间隔（也叫关键帧间隔、帧间空间或 GOP 长度）：匹配摄像头的帧率，或选择"1x"(对于 Reolink 摄像头的帧间空间)。例如，如果你的流输出 20fps，I 帧间隔应为 20（或 Reolink 上的 1x）。高于帧率的值会导致流开始播放时间更长。有关关键帧的更多信息，请参阅[此页面](https://gardinal.net/understanding-the-keyframe-interval/)。对于多数用户而言这可能不是什么问题，但需注意：若你同时将视频流用于`record`（录制）功能，1 倍关键帧间隔（i-frame interval）会导致更高的存储空间占用
 
-摄像头的默认视频和音频编解码器可能不总是与你的浏览器兼容，这就是为什么建议将它们设置为`H.264`和`AAC`。有关编解码器支持信息，请参阅[go2rtc 文档](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#codecs-madness)。
+摄像头的默认视频和音频编解码器可能不总是与你的浏览器兼容，这就是为什么建议将它们设置为`H.264`和`AAC`。有关编解码器支持信息，请参阅 [go2rtc 文档](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#codecs-madness)。
 
 ### 音频支持
 
@@ -42,10 +42,10 @@ go2rtc:
   streams:
     rtsp_cam: # <- RTSP流
       - rtsp://192.168.1.5:554/live0 # <- 支持视频和AAC音频的流
-      - 'ffmpeg:rtsp_cam#audio=opus' # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
+      - 'ffmpeg:rtsp_cam#audio=opus' # <- 同时保留AAC音频的情况下同时增加一个额外转码的opus音频
     http_cam: # <- HTTP流
       - http://192.168.50.155/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=user&password=password # <- 支持视频和AAC音频的流
-      - 'ffmpeg:http_cam#audio=opus' # <- 将音频转码为缺失编解码器(通常是opus)的视频流副本
+      - 'ffmpeg:http_cam#audio=opus' # <- 同时保留AAC音频的情况下同时增加一个额外转码的opus音频
 ```
 
 如果摄像头不支持 AAC 音频或实时监控页面有问题，尝试直接转码为 AAC 音频：
@@ -54,8 +54,8 @@ go2rtc:
 go2rtc:
   streams:
     rtsp_cam: # <- RTSP流
-      - 'ffmpeg:rtsp://192.168.1.5:554/live0#video=copy#audio=aac' # <- 复制视频流并将音频转码为AAC
-      - 'ffmpeg:rtsp_cam#audio=opus' # <- 提供WebRTC支持
+      - 'ffmpeg:rtsp://192.168.1.5:554/live0#video=copy#audio=aac' # <- 复制视频流并直接将音频转码为AAC
+      - 'ffmpeg:rtsp_cam#audio=opus' # <- 提供WebRTC支持，增加一个额外转码的opus音频
 ```
 
 如果摄像头没有音频且实时监控页面有问题，应让 go2rtc 仅发送视频：

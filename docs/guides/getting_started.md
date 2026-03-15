@@ -129,7 +129,22 @@ services:
       - '8554:8554' # RTSP 视频流
 ```
 
-现在你应该可以在包含`docker-compose.yml`的文件夹中运行`docker compose up -d`来启动 Frigate。在启动时，系统会创建一个管理员用户和密码，并在日志中输出。你可以通过运行`docker logs frigate`来查看。现在应该可以通过`https://server_ip:8971`访问 Frigate，你可以使用`admin`用户登录并使用内置的配置编辑器完成配置。
+现在你应该可以在包含`docker-compose.yml`的文件夹中运行`docker compose up -d`来启动 Frigate。在启动时，系统会创建一个管理员用户和密码，并在日志中输出。你可以通过运行`docker logs frigate`来查看。
+
+日志的格式类似于以下内容：
+
+```bash
+********************************************************
+********************************************************
+***    Auth is enabled, but no users exist.          ***
+***    Created a default user:                       ***
+***    User: admin                                   ***
+***    Password: 这里是密码                           ***
+********************************************************
+********************************************************
+```
+
+现在应该可以通过`https://server_ip:8971`访问 Frigate，你可以使用`admin`用户登录并使用内置的配置编辑器完成配置。
 
 ## 配置 Frigate {#configuring-frigate}
 

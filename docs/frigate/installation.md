@@ -463,7 +463,7 @@ volumes:
   - /usr/lib/axcl:/usr/lib/axcl
 ```
 
-如果您使用 `docker run` 命令，请将此选项添加到您的命令中：
+如果你使用 `docker run` 命令，请将此选项添加到你的命令中：
 
 ```
 --device /dev/axcl_host
@@ -475,7 +475,7 @@ volumes:
 
 #### 配置
 
-接下来，您应该配置[硬件物体/目标检测](../configuration/object_detectors.md#axera)。
+接下来，你应该配置[硬件物体/目标检测](../configuration/object_detectors.md#axera)。
 
 ## Docker {#docker}
 
