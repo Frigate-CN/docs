@@ -252,7 +252,7 @@ ffmpeg: # [!code highlight]
 
 :::note
 
-受 Docker 功能限制（相关说明见链接：https://github.com/NVIDIA/nvidia-docker/issues/179#issuecomment-645579458），在容器内执行 `nvidia-smi` 命令时，**不会显示 `ffmpeg` 进程**。
+受 Docker 功能限制（相关说明见链接：https://github.com/NVIDIA/nvidia-docker/issues/179#issuecomment-645579458 ），在容器内执行 `nvidia-smi` 命令时，**不会显示 `ffmpeg` 进程**。
 
 :::
 
