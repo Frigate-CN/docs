@@ -512,12 +512,6 @@ record:
   # 可选: 画面变动保留设置
   motion:
     days: 0
-    # 可选：保留模式。可用选项有：all、motion和active_objects
-    #   all - 保存所有录制片段，无论是否有活动
-    #   motion - 保存所有检测到运动的录制片段
-    #   active_objects - 保存所有有活动/移动目标的录制片段
-    # 注意：此模式仅在上面days设置大于0时适用
-    mode: all
   # 可选：录制导出设置
   export:
     # 可选：延时摄影输出参数（默认值：如下所示）。
