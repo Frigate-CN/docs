@@ -286,7 +286,7 @@ model:
   input_pixel_format: rgb
   input_dtype: int
   model_type: yolo-generic
-  labelmap_path: /labelmap/coco-80.txt
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
   # 可选：指定本地模型路径
   # path: /config/model_cache/hailo/custom_model.hef
   #
@@ -396,8 +396,8 @@ model:
   height: 320 # <--- 应与notebook中设置的尺寸匹配
   input_tensor: nchw
   input_pixel_format: bgr
-  path: /config/yolo_nas_s.onnx
-  labelmap_path: /labelmap/coco-80.txt
+  path: /config/yolo_nas_s.onnx # 此处为你模型文件在容器下的路径，不是宿主机下的路径
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
 ```
 
 注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
@@ -440,8 +440,8 @@ model:
   height: 320 # <--- 应与模型导出时设置的imgsize匹配
   input_tensor: nchw
   input_dtype: float
-  path: /config/model_cache/yolo.onnx
-  labelmap_path: /labelmap/coco-80.txt
+  path: /config/model_cache/yolo.onnx # 此处为你模型文件在容器下的路径，不是宿主机下的路径
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
 ```
 
 注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
@@ -505,8 +505,8 @@ model: # [!code ++]
   height: 640 # [!code ++]
   input_tensor: nchw # [!code ++]
   input_dtype: float # [!code ++]
-  path: /config/model_cache/dfine-s.onnx # [!code ++]
-  labelmap_path: /labelmap/coco-80.txt # [!code ++]
+  path: /config/model_cache/dfine-s.onnx # 此处为你模型文件在容器下的路径，不是宿主机下的路径 [!code ++]
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改 [!code ++]
 ```
 
 注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
@@ -566,8 +566,8 @@ model:
   height: 320 # <--- 应与模型导出时设置的imgsize匹配
   input_tensor: nchw
   input_dtype: float
-  path: /config/model_cache/yolo.onnx
-  labelmap_path: /labelmap/coco-80.txt
+  path: /config/model_cache/yolo.onnx # 此处为你模型文件在容器下的路径，不是宿主机下的路径
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
 ```
 
 ## AMD/ROCm GPU 检测器 {#amdrocm-gpu-detector}
@@ -732,8 +732,8 @@ model:
   height: 320 # <--- 应与notebook中设置的尺寸匹配
   input_pixel_format: bgr
   input_tensor: nchw
-  path: /config/yolo_nas_s.onnx
-  labelmap_path: /labelmap/coco-80.txt
+  path: /config/yolo_nas_s.onnx # 此处为你模型文件在容器下的路径，不是宿主机下的路径
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
 ```
 
 </DetailsCollapse>
@@ -773,8 +773,8 @@ model:
   height: 320 # <--- 应与模型导出时设置的imgsize匹配
   input_tensor: nchw
   input_dtype: float
-  path: /config/model_cache/yolo.onnx
-  labelmap_path: /labelmap/coco-80.txt
+  path: /config/model_cache/yolo.onnx # 此处为你模型文件在容器下的路径，不是宿主机下的路径
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
 ```
 
 注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
@@ -800,8 +800,8 @@ model:
   height: 416 # <--- 应与模型导出时设置的imgsize匹配
   input_tensor: nchw
   input_dtype: float_denorm
-  path: /config/model_cache/yolox_tiny.onnx
-  labelmap_path: /labelmap/coco-80.txt
+  path: /config/model_cache/yolox_tiny.onnx # 此处为你模型文件在容器下的路径，不是宿主机下的路径
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
 ```
 
 注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
@@ -827,7 +827,7 @@ model:
   height: 320
   input_tensor: nchw
   input_dtype: float
-  path: /config/model_cache/rfdetr.onnx
+  path: /config/model_cache/rfdetr.onnx # 此处为你模型文件在容器下的路径，不是宿主机下的路径
 ```
 
 </DetailsCollapse>
@@ -851,8 +851,8 @@ model:
   height: 640
   input_tensor: nchw
   input_dtype: float
-  path: /config/model_cache/dfine_m_obj2coco.onnx
-  labelmap_path: /labelmap/coco-80.txt
+  path: /config/model_cache/dfine_m_obj2coco.onnx # 此处为你模型文件在容器下的路径，不是宿主机下的路径
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
 ```
 
 注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
@@ -1008,7 +1008,7 @@ model:
   height: 320 # （可以设置为 640 以获得更高分辨率）
   input_tensor: nchw
   input_dtype: float
-  labelmap_path: /labelmap/coco-80.txt
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
   # 可选：模型通常通过运行时获取，因此除非你想使用自定义或本地模型，否则可以省略 'path'。
   # path: /config/yolov9.zip
   # .zip 文件必须包含：
@@ -1035,7 +1035,7 @@ model:
   height: 640
   input_tensor: nchw
   input_dtype: float_denorm
-  labelmap_path: /labelmap/coco-80.txt
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
   # 可选：模型通常通过运行时获取，因此除非你想使用自定义或本地模型，否则可以省略 'path'。
   # path: /config/yolox.zip
   # .zip 文件必须包含：
@@ -1062,7 +1062,7 @@ model:
   height: 320
   input_tensor: nchw
   input_dtype: float
-  labelmap_path: /labelmap/coco-80.txt
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
   # 可选：模型通常通过运行时获取，因此除非你想使用自定义或本地模型，否则可以省略 'path'。
   # path: /config/ssdlite_mobilenet.zip
   # .zip 文件必须包含：
@@ -1180,7 +1180,7 @@ detectors:
 
 model:
   path: /config/model_cache/tensorrt/yolov7-320.trt
-  labelmap_path: /labelmap/coco-80.txt
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
   input_tensor: nchw
   input_pixel_format: rgb
   width: 320 # 必须与所选模型匹配，例如 yolov7-320 对应 320，yolov4-416 对应 416
@@ -1354,7 +1354,7 @@ model: # required
   width: 416
   height: 416
   input_tensor: nhwc
-  labelmap_path: /labelmap/coco-80.txt
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
 ```
 
 ### 将自定义 onnx 模型转换为 rknn 格式 {converting-your-own-onnx-model-to-rknn-format}
@@ -1515,7 +1515,7 @@ model:
   width: 320
   height: 320
   tensor_format: bgr
-  labelmap_path: /labelmap/coco-80.txt
+  labelmap_path: /labelmap/coco-80.txt # 除非模型有提供额外的labelmap，一般不需要修改
 ```
 
 ---
