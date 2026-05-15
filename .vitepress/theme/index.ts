@@ -1,5 +1,6 @@
 import Teek from "vitepress-theme-teek";
 import "vitepress-theme-teek/index.css";
+import "docs-ai-helper/style.css";
 import './custom.css'
 import CustomLayout from "./CustomLayout.vue";
 import ResponsiveGrid from "./ResponsiveGrid.vue";
