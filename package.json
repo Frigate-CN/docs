@@ -17,6 +17,7 @@
     "@fortawesome/free-regular-svg-icons": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/vue-fontawesome": "^3.2.0",
+    "@rollup/rollup-linux-x64-gnu": "^4.60.4",
     "docs-ai-helper": "^0.2.0",
     "vitepress-plugin-legend": "^2.0.0",
     "vue-demi": "^0.14.10",
