@@ -44,13 +44,21 @@ go2rtc:
 
 ### 环境变量
 
-此配置项适用于无法直接修改容器环境的情况（如 Home Assistant OS）。
+此配置项适用于无法直接修改容器环境的情况（如 Home Assistant OS）。Docker 用户应在 `docker run` 命令（`-e FRIGATE_MQTT_PASSWORD=secret`）或 `docker-compose.yml` 文件（`environment:` 部分）中设置环境变量。注意，此处设置的值以明文形式存储在配置文件中，因此如果目的是保护凭据安全，请改用 Docker 环境变量或 Docker secrets。
+
+以 `FRIGATE_` 为前缀的变量可以在支持环境变量替换的配置字段（如 MQTT 主机和凭据、摄像头流 URL、ONVIF 主机和凭据）中使用 `{FRIGATE_VARIABLE_NAME}` 语法引用。
 
 示例：
 
 ```yaml
 environment_vars:
-  变量名: 变量值
+  FRIGATE_MQTT_USER: my_mqtt_user
+  FRIGATE_MQTT_PASSWORD: my_mqtt_password
+
+mqtt:
+  host: "{FRIGATE_MQTT_HOST}"
+  user: "{FRIGATE_MQTT_USER}"
+  password: "{FRIGATE_MQTT_PASSWORD}"
 ```
 
 ### TensorFlow 线程配置

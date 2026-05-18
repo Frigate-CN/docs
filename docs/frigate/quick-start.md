@@ -52,10 +52,10 @@ title: 快速开始
   badgeType: tip
 
 - name: Home Assistant OS
-  desc: 已使用 Home Assistant OS 的用户，通过插件快速安装
-  link: /frigate/installation#home-assistant-add-on
+  desc: 已使用 Home Assistant OS 的用户，通过 App 快速安装
+  link: /frigate/installation#home-assistant-app
   img: https://www.home-assistant.io/images/favicon.ico
-  badge: 插件安装
+  badge: App 安装
   badgeType: info
 
 - name: 群晖 DSM

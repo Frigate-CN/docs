@@ -42,3 +42,7 @@ title: 第三方扩展
 ## [Scrypted - Frigate 桥接插件](https://github.com/apocaliss92/scrypted-frigate-bridge)
 
 [Scrypted - Frigate 桥接插件](https://github.com/apocaliss92/scrypted-frigate-bridge)是一款可将 Frigate 的检测结果、移动侦测数据、视频片段接入 Scrypted 的插件，同时还提供模板，用于导出 Frigate 上的转播配置。
+
+## [Strix](https://github.com/eduard256/Strix)
+
+[Strix](https://github.com/eduard256/Strix) 可自动发现 IP 摄像头的可用流 URL，并生成可直接使用的 Frigate 配置。它会针对你的摄像头测试数千种 URL 模式，支持不支持 RTSP 或 ONVIF 的摄像头。涵盖 3.6K+ 品牌的 67K+ 摄像头型号。

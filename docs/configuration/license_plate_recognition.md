@@ -25,7 +25,7 @@ Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到
 
 ## 模型要求
 
-- 如果你的**目标/物体检测模型**（例如收费的 **Frigate+** 模型或者其他自己训练的模型）支持检测车牌（`license_plate`），则应该在[追踪标签列表](../plus/index.md#label-attributes)中添加`license_plate`标签；可以是全局设置或针对特定摄像头设置。这将提高车牌识别模型的准确性和性能。
+- 如果你的**目标/物体检测模型**（例如收费的 **Frigate+** 模型或者其他自己训练的模型）支持检测车牌（`license_plate`），则应该在[追踪标签列表](/plus/index#label-attributes)中添加`license_plate`标签；可以是全局设置或针对特定摄像头设置。这将提高车牌识别模型的准确性和性能。
 
 - 如果你的模型不支持检测车牌（`license_plate`），依然可以可运行车牌识别。这个情况 Frigate 将**自动下载并使用**额外的轻量级 YOLOv9 车牌检测模型，可配置在 CPU 或 GPU 上运行。这种情况下，**不要**在追踪目标列表（`objects.track`）中定义`license_plate`，否则功能无法正常使用。
 
@@ -43,7 +43,7 @@ Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到
 
 ## 最低系统要求
 
-车牌识别功能通过在你的系统本地运行 AI 模型实现。其中 `YOLOv9` 车牌检测模型和 `OCR` 识别模型（[PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)）均为轻量化设计，可根据你的系统配置选择在 `CPU` 或 `GPU` 上运行。该功能至少需要 `4GB` 内存支持。
+车牌识别功能通过在你的系统本地运行 AI 模型实现。其中 `YOLOv9` 车牌检测模型和 `OCR` 识别模型（[PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)）均为轻量化设计，可根据你的系统配置选择在 `CPU` 或 `GPU` 上运行。该功能至少需要 `4GB` 内存支持，且 CPU 需支持 AVX + AVX2 指令集。
 
 ## 配置
 

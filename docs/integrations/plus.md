@@ -19,11 +19,11 @@ title: Frigate+
 
 ### 设置API密钥
 
-在Frigate中，你可以使用名为`PLUS_API_KEY`的环境变量或docker密钥来启用浏览页面上的`Frigate+`按钮。Home Assistant插件用户可以在设置 > 插件 > Frigate > 配置 > 选项下设置（确保切换"显示未使用的可选配置选项"开关）。
+在Frigate中，你可以使用名为`PLUS_API_KEY`的环境变量或docker密钥来启用浏览页面上的`Frigate+`按钮。Home Assistant App 用户可以在设置 > Apps > Frigate > 配置 > 选项下设置（确保切换"显示未使用的可选配置选项"开关）。
 
 :::warning
 
-你不能使用Frigate配置文件中的`environment_vars`部分来设置此环境变量。它必须在docker配置或Home Assistant插件配置中定义为环境变量。
+你不能使用Frigate配置文件中的`environment_vars`部分来设置此环境变量。它必须在docker配置或Home Assistant App 配置中定义为环境变量。
 
 :::
 

@@ -120,7 +120,7 @@ cameras:
 WebRTC 通过在端口`8555`上创建 TCP 或 UDP 连接工作。但是，它需要额外配置：
 
 - 对于外部访问(通过互联网)，设置路由器将端口`8555`(TCP 和 UDP)转发到 Frigate 设备的端口`8555`。
-- 对于局域网/本地访问，除非通过 HA 插件运行，否则还需要在 go2rtc 配置中设置 WebRTC 候选列表。例如，如果`192.168.1.10`是运行 Frigate 设备的本地 IP：
+- 对于局域网/本地访问，除非通过 HA App 运行，否则还需要在 go2rtc 配置中设置 WebRTC 候选列表。例如，如果`192.168.1.10`是运行 Frigate 设备的本地 IP：
 
   ```yaml title="config.yml"
   go2rtc:
@@ -137,9 +137,9 @@ WebRTC 通过在端口`8555`上创建 TCP 或 UDP 连接工作。但是，它需
 
 :::tip
 
-如果 Frigate 已作为 Home Assistant 插件安装，可能不需要此额外配置，因为 Frigate 使用 Supervisor 的 API 生成 WebRTC 候选。
+如果 Frigate 已作为 Home Assistant App 安装，可能不需要此额外配置，因为 Frigate 使用 Supervisor 的 API 生成 WebRTC 候选。
 
-但是，如果出现问题，建议手动定义候选。如果 Frigate 插件未能生成有效候选，你应该这样做。如果发生错误，你将在初始化期间的插件日志页面中看到类似以下的警告：
+但是，如果出现问题，建议手动定义候选。如果 Frigate App 未能生成有效候选，你应该这样做。如果发生错误，你将在初始化期间的 App 日志页面中看到类似以下的警告：
 
 ```log
 [WARN] Failed to get IP address from supervisor

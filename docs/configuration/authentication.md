@@ -107,7 +107,7 @@ Frigate 按以下顺序查找 JWT 令牌密钥：
 
 1. 名为 `FRIGATE_JWT_SECRET` 的环境变量
 2. 名为 FRIGATE_JWT_SECRET 的文件，位于由环境变量`CREDENTIALS_DIRECTORY`指定的目录中（默认为 Docker Secrets 目录：/run/secrets/）。
-3. Home Assistant 插件选项中的 `jwt_secret` 选项
+3. Home Assistant App 选项中的 `jwt_secret` 选项
 4. 配置目录中的 `.jwt_secret` 文件
 
 如果在启动时未找到密钥，Frigate 会生成一个并将其存储在配置目录中的 `.jwt_secret` 文件中。

@@ -893,6 +893,8 @@ cameras:
     onvif:
       # 必需：要连接的摄像头主机
       # 注意：默认使用HTTP；如果指定scheme也支持HTTPS，例如："https://0.0.0.0"
+      # 注意：ONVIF 用户名和密码可以通过环境变量或 docker secrets 指定，
+      #       但必须以 'FRIGATE_' 开头。例如：host: '{FRIGATE_ONVIF_USERNAME}'
       host: 0.0.0.0
       # 可选：设备的ONVIF端口（默认值：如下所示）
       port: 8000

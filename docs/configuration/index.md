@@ -3,7 +3,7 @@ id: index
 title: Frigate 配置
 ---
 
-对于 Home Assistant 插件安装，配置文件应该位于`/addon_configs/<addon_directory>/config.yml`，其中`<addon_directory`是特定于你正在运行的 Frigate 插件变体的。请参见[此处](#accessing-add-on-config-dir)的目录列表。
+对于 Home Assistant App 安装，配置文件应该位于`/addon_configs/<addon_directory>/config.yml`，其中`<addon_directory>`是特定于你正在运行的 Frigate App 变体的。请参见[此处](#accessing-app-config-dir)的目录列表。
 
 对于所有其他类型的安装，配置文件应该映射到容器内的`/config/config.yml`。
 
@@ -25,11 +25,11 @@ cameras:
             - detect
 ```
 
-## 访问 Home Assistant 插件配置目录 {#accessing-add-on-config-dir}
+## 访问 Home Assistant App 配置目录 {#accessing-app-config-dir}
 
-当通过 HA 插件运行 Frigate 时，Frigate 的`/config`目录被映射到主机上的`/addon_configs/<addon_directory>`，其中`<addon_directory>`是特定于你正在运行的 Frigate 插件变体的。
+当通过 HA App 运行 Frigate 时，Frigate 的`/config`目录被映射到主机上的`/addon_configs/<addon_directory>`，其中`<addon_directory>`是特定于你正在运行的 Frigate App 变体的。
 
-| 插件变体                | 配置目录                                  |
+| App 变体                  | 配置目录                                  |
 | ----------------------- | ----------------------------------------- |
 | Frigate                 | `/addon_configs/ccab4aaf_frigate`         |
 | Frigate (完全访问)      | `/addon_configs/ccab4aaf_frigate-fa`      |
@@ -38,11 +38,11 @@ cameras:
 
 **当你在文档中看到`/config`时，它指的是这个目录。**
 
-例如，如果你正在运行标准插件变体并使用[VS Code 插件](https://github.com/hassio-addons/addon-vscode)浏览文件，你可以点击*文件* > *打开文件夹...*并导航到`/addon_configs/ccab4aaf_frigate`来访问 Frigate 的`/config`目录并编辑`config.yaml`文件。你也可以使用 Frigate UI 中内置的文件编辑器来编辑配置文件。
+例如，如果你正在运行标准 App 变体并使用[VS Code App](https://github.com/hassio-addons/addon-vscode)浏览文件，你可以点击*文件* > *打开文件夹...*并导航到`/addon_configs/ccab4aaf_frigate`来访问 Frigate 的`/config`目录并编辑`config.yaml`文件。你也可以使用 Frigate UI 中内置的文件编辑器来编辑配置文件。
 
 ## VS Code 配置模式
 
-VS Code 支持 JSON 模式来自动验证配置文件。你可以通过在配置文件开头添加`# yaml-language-server: $schema=http://frigate_host:5000/api/config/schema.json`来启用此功能。将`frigate_host`替换为你的 Frigate 服务器的 IP 地址或主机名。如果你同时使用 VS Code 和 Frigate 作为插件，你应该使用`ccab4aaf-frigate`。当从另一台机器上的 VS Code 访问配置时，确保暴露内部未认证端口`5000`。
+VS Code 支持 JSON 模式来自动验证配置文件。你可以通过在配置文件开头添加`# yaml-language-server: $schema=http://frigate_host:5000/api/config/schema.json`来启用此功能。将`frigate_host`替换为你的 Frigate 服务器的 IP 地址或主机名。如果你同时使用 VS Code 和 Frigate 作为 App，你应该使用`ccab4aaf-frigate`。当从另一台机器上的 VS Code 访问配置时，确保暴露内部未认证端口`5000`。
 
 ## 环境变量替换
 
@@ -50,6 +50,7 @@ Frigate 仅在[参考配置](./reference.md)中特别指出的地方支持使用
 
 ```yaml
 mqtt:
+  host: "{FRIGATE_MQTT_HOST}"
   user: '{FRIGATE_MQTT_USER}'
   password: '{FRIGATE_MQTT_PASSWORD}'
 ```
@@ -60,7 +61,7 @@ mqtt:
 
 ```yaml
 onvif:
-  host: 10.0.10.10
+  host: "192.168.1.12"
   port: 8000
   user: '{FRIGATE_RTSP_USER}'
   password: '{FRIGATE_RTSP_PASSWORD}'
@@ -82,10 +83,10 @@ genai:
 
 以下是一些常见的入门配置示例。有关所有配置值的详细信息，请参阅[参考配置](./reference.md)。
 
-### 带 USB Coral 的树莓派 Home Assistant 插件
+### 带 USB Coral 的树莓派 Home Assistant App
 
 - 单个摄像头，720p，5fps 检测流
-- MQTT 连接到 Home Assistant Mosquitto 插件
+- MQTT 连接到 Home Assistant Mosquitto App
 - 用于解码视频的硬件加速
 - USB Coral 检测器
 - 保存所有包含任何可检测运动的视频 7 天，无论是否检测到任何物体/目标

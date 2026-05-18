@@ -72,7 +72,7 @@ record:
 
 ## 存储空间不足时 Frigate 会删除旧录制吗？ {#will-frigate-delete-old-recordings-if-my-storage-runs-out}
 
-从 Frigate 0.12 开始，当剩余存储空间不足 1 小时时，系统会自动删除最早的 2 小时录制。
+当剩余存储空间不足 1 小时时，系统会自动删除最早的 1 小时录制，并在 Frigate 日志中输出提示信息。此紧急清理会优先删除最早的录制，不考虑保留策略设置，以尽快回收存储空间。
 
 ## 配置录制保留策略 {#configuring-recording-retention}
 

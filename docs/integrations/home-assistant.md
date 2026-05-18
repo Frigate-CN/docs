@@ -84,11 +84,11 @@ services:
       ...
 ```
 
-### Home Assistant插件
+### Home Assistant App
 
-如果你使用Home Assistant插件，URL应该是以下之一，具体取决于你使用的插件变体。注意，如果你使用代理插件，不应将集成指向代理URL。只需输入从网络直接访问Frigate时使用的相同URL。
+如果你使用 Home Assistant App，URL 应该是以下之一，具体取决于你使用的 App 变体。注意，如果你使用代理 App，不应将集成指向代理 URL。只需输入从网络直接访问 Frigate 时使用的相同 URL。
 
-| 插件变体                   | URL                                       |
+| App 变体                  | URL                                       |
 | -------------------------- | ----------------------------------------- |
 | Frigate                    | `http://ccab4aaf-frigate:5000`            |
 | Frigate (完全访问)         | `http://ccab4aaf-frigate-fa:5000`         |
@@ -238,6 +238,12 @@ https://HA_URL/api/frigate/notifications/<event-id>/event_preview.gif
 
 ```
 https://HA_URL/api/frigate/notifications/<review-id>/review_preview.gif
+```
+
+加载核查项目的缩略图：
+
+```
+https://HA_URL/api/frigate/notifications/<review-id>/<camera>/review_thumbnail.webp
 ```
 
 <a name="streams"></a>

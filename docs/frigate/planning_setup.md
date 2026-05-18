@@ -34,6 +34,10 @@ title: 新安装规划指南
 
 目标检测有多种硬件方案可选，具体取决于你的优先级和现有设备。一般来说大部分家庭使用 Intel 的核显即可满足。更多详情请参阅 [硬件页面](./hardware.md#detectors)。
 
+### CPU
+
+Frigate 需要 CPU 支持 AVX + AVX2 指令集。大多数现代 CPU（2011 年后）都支持 AVX 和 AVX2，但在低功耗或入门级处理器中通常缺失，特别是较老的 Intel Pentium、Celeron 和 Atom 系列芯片。具体来说，2020 年 Tiger Lake 世代之前的 Intel Celeron 和 Pentium 型号通常不支持 AVX。较老的 Intel Xeon 可能有 AVX 但可能缺少 AVX2。
+
 ### 存储方案 {#storage}
 
 存储规划是新安装的重要环节。如需精确估算存储需求，可使用如 [IP 摄像头存储计算](https://calculator.ipconfigure.com/) 等工具，根据摄像头参数确定所需硬盘空间。

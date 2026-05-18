@@ -32,7 +32,7 @@ USB coral可能需要高达900mA的电流，这对某些设备上的USB端口来
 USB coral在未初始化和初始化状态下有不同的ID。
 
 - 在VM、Proxmox lxc等环境中运行Frigate时，必须确保两个设备ID都已映射。
-- 通过Home Assistant OS运行时，可能需要运行完全访问版本的Frigate插件，并禁用_保护模式_开关以访问coral。
+- 通过Home Assistant OS运行时，可能需要运行完全访问版本的 Frigate App，并禁用_保护模式_开关以访问coral。
 
 ### Synology 716+II运行DSM 7.2.1-69057 Update 5
 

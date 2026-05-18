@@ -160,7 +160,7 @@ detectors:
 
 :::tip
 
-**Frigate+** 用户说明：请按照[操作指引](../integrations/plus.md#use-models)，在配置文件中设置模型 ID。
+**Frigate+** 用户说明：请按照[操作指引](/integrations/plus#use-models)，在配置文件中设置模型 ID。
 
 :::
 
@@ -337,7 +337,7 @@ detectors:
 | [YOLO-NAS](#yolo-nas)                 | ✅  | ✅  |                                            |
 | [MobileNet v2](#ssdlite-mobilenet-v2) | ✅  | ✅  | 快速且轻量级的模型，但准确性低于更大的模型 |
 | [YOLOX](#yolox)                       | ✅  | ?   |                                            |
-| [D-FINE](#d-fine)                     | ❌  | ❌  |                                            |
+| [D-FINE / DEIMv2](#d-fine)          | ❌  | ❌  |                                            |
 
 #### SSDLite MobileNet v2
 
@@ -479,13 +479,13 @@ model:
 
 </DetailsCollapse>
 
-#### D-FINE 模型 {#d-fine}
+#### D-FINE / DEIMv2
 
-[D-FINE](https://github.com/Peterande/D-FINE)是基于 DETR 的模型。支持导出为 ONNX 模型，Frigate 默认不包含该模型。有关下载 D-FINE 模型用于 Frigate 的更多信息，请参阅[模型部分](#下载d-fine模型)。
+[D-FINE](https://github.com/Peterande/D-FINE) 和 [DEIMv2](https://github.com/Intellindust-AI-Lab/DEIMv2) 是基于 DETR 的模型，它们共享相同的 ONNX 输入/输出格式。支持导出为 ONNX 模型，Frigate 默认不包含该模型。有关下载 [D-FINE](#下载d-fine模型) 或 [DEIMv2](#下载deimv2模型) 模型用于 Frigate 的更多信息，请参阅相关模型部分。
 
 :::warning
 
-目前 D-FINE 模型只能在 OpenVINO 的 CPU 模式下运行，GPU 目前无法编译该模型
+目前 D-FINE / DEIMv2 模型只能在 OpenVINO 的 CPU 模式下运行，GPU 目前无法编译该模型
 
 :::
 
@@ -510,6 +510,71 @@ model: # [!code ++]
 ```
 
 注意：labelmap 使用的是完整的 COCO 标签集的子集，仅包含 80 种类型的目标。
+
+</DetailsCollapse>
+
+### 下载 DEIMv2 模型
+
+[DEIMv2](https://github.com/Intellindust-AI-Lab/DEIMv2) 可以通过运行以下命令导出为 ONNX 格式。预训练权重可在 Hugging Face 上获取，提供两种骨干网络系列：
+
+- **HGNetv2**（更小/更快）：`atto`、`femto`、`pico`、`n`
+- **DINOv3**（更大/更准确）：`s`、`m`、`l`、`x`
+
+在第一行中设置 `BACKBONE` 和 `MODEL_SIZE` 以匹配你所需的变体。Hugging Face 模型名称使用大写（例如 `HGNetv2_N`、`DINOv3_S`），而配置文件使用小写（例如 `hgnetv2_n`、`dinov3_s`）。
+
+```sh
+docker build . --rm --build-arg BACKBONE=hgnetv2 --build-arg MODEL_SIZE=n --output . -f- <<'EOF'
+FROM python:3.11-slim AS build
+RUN apt-get update && apt-get install --no-install-recommends -y git libgl1 libglib2.0-0 && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/astral-sh/uv:0.8.0 /uv /bin/
+WORKDIR /deimv2
+RUN git clone https://github.com/Intellindust-AI-Lab/DEIMv2.git .
+# 先安装仅 CPU 版本的 PyTorch，避免拉取 CUDA 版本
+RUN uv pip install --no-cache --system torch torchvision --index-url https://download.pytorch.org/whl/cpu
+RUN uv pip install --no-cache --system -r requirements.txt
+RUN uv pip install --no-cache --system onnx safetensors huggingface_hub
+RUN mkdir -p output
+ARG BACKBONE
+ARG MODEL_SIZE
+# 从 Hugging Face 下载并将 safetensors 转换为 pth
+RUN python3 -c "\
+from huggingface_hub import hf_hub_download; \
+from safetensors.torch import load_file; \
+import torch; \
+backbone = '${BACKBONE}'.replace('hgnetv2','HGNetv2').replace('dinov3','DINOv3'); \
+size = '${MODEL_SIZE}'.upper(); \
+st = load_file(hf_hub_download('Intellindust/DEIMv2_' + backbone + '_' + size + '_COCO', 'model.safetensors')); \
+torch.save({'model': st}, 'output/deimv2.pth')"
+RUN sed -i "s/data = torch.rand(2/data = torch.rand(1/" tools/deployment/export_onnx.py
+# HuggingFace safetensors 省略了模型构造函数初始化的冻结常量
+RUN sed -i "s/cfg.model.load_state_dict(state)/cfg.model.load_state_dict(state, strict=False)/" tools/deployment/export_onnx.py
+RUN python3 tools/deployment/export_onnx.py -c configs/deimv2/deimv2_${BACKBONE}_${MODEL_SIZE}_coco.yml -r output/deimv2.pth
+FROM scratch
+ARG BACKBONE
+ARG MODEL_SIZE
+COPY --from=build /deimv2/output/deimv2.onnx /deimv2_${BACKBONE}_${MODEL_SIZE}.onnx
+EOF
+```
+
+<DetailsCollapse title="DEIMv2 配置">
+
+将下载的 onnx 模型放入 `config/model_cache` 文件夹后，你可以使用以下配置：
+
+```yaml
+detectors:
+  ov:
+    type: openvino
+    device: CPU
+
+model:
+  model_type: dfine
+  width: 640
+  height: 640
+  input_tensor: nchw
+  input_dtype: float
+  path: /config/model_cache/deimv2_hgnetv2_n.onnx
+  labelmap_path: /labelmap/coco-80.txt
+```
 
 </DetailsCollapse>
 
@@ -832,9 +897,9 @@ model:
 
 </DetailsCollapse>
 
-#### D-FINE
+#### D-FINE / DEIMv2
 
-[D-FINE](https://github.com/Peterande/D-FINE)是基于 DETR 的模型。支持导出的 ONNX 模型，但默认不包含。有关下载 D-FINE 模型用于 Frigate 的更多信息，请参阅[模型部分](#下载d-fine模型)。
+[D-FINE](https://github.com/Peterande/D-FINE) 和 [DEIMv2](https://github.com/Intellindust-AI-Lab/DEIMv2) 是基于 DETR 的模型，它们共享相同的 ONNX 输入/输出格式。支持导出为 ONNX 模型，但默认不包含。有关下载 D-FINE 模型用于 Frigate 的更多信息，请参阅[模型部分](#下载d-fine模型)。
 
 <DetailsCollapse title="D-FINE 模型配置">
 

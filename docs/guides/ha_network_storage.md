@@ -3,7 +3,7 @@ id: ha_network_storage
 title: Home Assistant 网络存储
 ---
 
-从Home Assistant 2023.6版本开始，插件已支持网络挂载存储。
+从Home Assistant 2023.6版本开始，App 已支持网络挂载存储。
 
 ## 为Frigate设置远程存储
 
@@ -14,7 +14,7 @@ title: Home Assistant 网络存储
 
 ### 初始设置
 
-1. 停止Frigate插件
+1. 停止 Frigate App
 
 ### 移动当前数据
 
@@ -37,4 +37,4 @@ title: Home Assistant 网络存储
 4. 填写你的特定NAS所需的其他信息
 5. 连接
 6. 如果在之前的步骤中保留了文件，将文件从`/media/frigate_tmp`移动到`/media/frigate`
-7. 启动Frigate插件
+7. 启动 Frigate App

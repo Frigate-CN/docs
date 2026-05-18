@@ -9,7 +9,7 @@ title: 入门指南
 
 如果你已经有一个安装了 Linux 和 Docker 的环境，可以直接跳转到下面的[安装 Frigate](#installing-frigate)部分。
 
-如果你已经通过 Docker 或 Home Assistant 插件安装了 Frigate，可以直接跳转到下面的[配置 Frigate](#configuring-frigate)部分。
+如果你已经通过 Docker 或 Home Assistant App 安装了 Frigate，可以直接跳转到下面的[配置 Frigate](#configuring-frigate)部分。
 
 :::
 
@@ -81,7 +81,7 @@ title: 入门指南
 
 ## 安装 Frigate {#installing-frigate}
 
-本节展示如何在 Debian 上为 Docker 安装创建最小目录结构。如果你已经通过 Home Assistant 插件或其他方式安装了 Frigate，可以继续[配置 Frigate](#configuring-frigate)部分。
+本节展示如何在 Debian 上为 Docker 安装创建最小目录结构。如果你已经通过 Home Assistant App 或其他方式安装了 Frigate，可以继续[配置 Frigate](#configuring-frigate)部分。
 
 ### 设置目录
 

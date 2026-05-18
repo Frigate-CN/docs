@@ -102,8 +102,8 @@ go2rtc:
 
 :::warning
 
-当使用 Frigate 插件时，如果要从外部访问 go2rtc 流（例如通过 VLC），你必须首先启用 RTSP Restream 端口。
-你可以在 Home Assistant 中访问 Frigate 插件配置页面，在"显示禁用端口"部分下显示隐藏选项来完成此操作。
+当使用 Frigate App 时，如果要从外部访问 go2rtc 流（例如通过 VLC），你必须首先启用 RTSP Restream 端口。
+你可以在 Home Assistant 中访问 Frigate App 配置页面，在"显示禁用端口"部分下显示隐藏选项来完成此操作。
 
 :::
 
