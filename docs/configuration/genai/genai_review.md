@@ -1,6 +1,6 @@
 ---
 id: genai_review
-title: 核查总结 <Badge type="tip" text="0.17.0 和 以上版本" />
+title: 核查总结
 ---
 
 生成式 AI 可以用于自动生成核查项目的结构化总结。这些总结将显示在 Frigate 的原生通知以及用户界面中。生成式 AI 还可以用于收集一段时间内的总结并提供报告，这对于在外出一段时间后快速了解发生的所有事件可能很有用。
@@ -9,7 +9,7 @@ title: 核查总结 <Badge type="tip" text="0.17.0 和 以上版本" />
 
 生成式 AI 核查总结也可以通过[MQTT](/integrations/mqtt/#frigatecamera_namereviewdescriptionsset)为摄像头动态切换。
 
-## 核查总结使用方法和最佳实践
+## 核查总结使用方法和最佳实践 {#review-summary-usage-and-best-practices}
 
 核查总结为每个核查项目提供结构化的 JSON 响应：
 
@@ -24,7 +24,7 @@ title: 核查总结 <Badge type="tip" text="0.17.0 和 以上版本" />
 
 这将在用户界面的多个位置显示，为每个活动提供额外的上下文，并在需要额外关注时允许查看更多详细信息。当数据可用时，Frigate 的内置通知也会自动显示标题和描述。
 
-### 定义典型活动
+### 定义典型活动 {#defining-typical-activity}
 
 每个环境甚至不同类型的摄像头对于什么被认为是可疑活动都可能有不同的参数。Frigate 允许在全局和摄像头级别定义`activity_context_prompt`，这让你可以更具体地定义什么应该被认为是正常活动。
 需要注意的是，描述不要过于具体，因为它会影响响应的输出。
@@ -76,7 +76,7 @@ review:
     preferred_language: 简体中文
 ```
 
-### 画面来源
+### 画面来源 {#image-source}
 
 默认情况下，核查总结使用预览画面（缓存的预览帧），这些画面分辨率较低但每张画面使用的 token 更少。
 如果希望更好的画面质量和更详细的分析，你可以配置 Frigate 以更高分辨率直接从录制中提取帧：
@@ -105,7 +105,7 @@ review:
 
 如果在给定时间段内没有录制可用，系统将自动回退到使用预览帧。
 
-### 附加关注点
+### 附加关注点 {#additional-concerns}
 
 除了可疑活动或直接威胁的关注外，你可能还有其他关注点，如花园中的动物或门未关。这些关注点可以配置，以便核查总结在活动需要额外核查时会注意到它们。例如：
 
@@ -117,7 +117,7 @@ review:
       - 有动物在花园里 # [!code ++]
 ```
 
-### 首选语言
+### 首选语言 {#preferred-language}
 
 默认情况下，事件回顾摘要的生成语言为英语。你可以通过设置 `preferred_language` 选项，将 Frigate 配置为使用你偏好的语言生成摘要：
 
@@ -128,11 +128,11 @@ review:
     preferred_language: 简体中文 # [!code ++]
 ```
 
-## 核查报告
+## 核查报告 {#review-reports}
 
 除生成单个回顾项的总结以外，大模型还可针对指定时间段内、所有摄像头标记为可疑的核查项，汇总生成一份统一报告（例如：你外出度假期间，每日可疑行为的汇总摘要）。
 
-### 以代码的方式请求报告
+### 以代码的方式请求报告 {#requesting-reports-programmatically}
 
 核查报告可以通过[API](/integrations/api/generate-review-summary-review-summarize-start-start-ts-end-end-ts-post)请求，方法是将 POST 请求发送到`/api/review/summarize/start/{start_ts}/end/{end_ts}`，其中`start_ts`和`end_ts`是 Unix 时间戳。
 

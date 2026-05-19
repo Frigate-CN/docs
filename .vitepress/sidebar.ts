@@ -24,6 +24,10 @@ export const sidebar = [
         link: "/frigate/updating",
       },
       {
+        text: '<i class="fa-solid fa-network-wired"></i>网络需求',
+        link: "/frigate/network_requirements",
+      },
+      {
         text: '<i class="fa-solid fa-clapperboard"></i>摄像头设置',
         link: "/frigate/camera_setup",
       },
@@ -217,6 +221,7 @@ export const sidebar = [
       {
         text: "扩展配置",
         items: [
+          { text: "配置模板", link: "/configuration/profiles" },
           { text: "认证", link: "/configuration/authentication" },
           { text: "通知", link: "/configuration/notifications" },
           { text: "FFmpeg 预设", link: "/configuration/ffmpeg_presets" },

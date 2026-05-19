@@ -4,9 +4,9 @@ title: 高级配置选项
 sidebar_label: 高级选项
 ---
 
-### 日志配置
+### 日志配置 {#logging}
 
-#### Frigate 日志设置
+#### Frigate 日志设置 {#frigate-logger}
 
 可调整日志级别用于故障排查。
 
@@ -19,7 +19,7 @@ logger:
     frigate.mqtt: error
 ```
 
-可用日志级别：`debug`, `info`, `warning`, `error`, `critical`
+可用日志级别：`debug`、`info`、`warning`、`error`、`critical`
 
 可配置模块示例：
 
@@ -28,11 +28,11 @@ logger:
 - `frigate.object_detection.base`
 - `detector.<检测器名称>`
 - `watchdog.<摄像头名称>`
-- `ffmpeg.<摄像头名称>.<功能>` 注意：所有 FFmpeg 日志均以`error`级别记录
+- `ffmpeg.<摄像头名称>.<功能>` 注意：所有 FFmpeg 日志均以 `error` 级别记录
 
-#### Go2RTC 日志设置
+#### Go2RTC 日志设置 {#go2rtc-logging}
 
-参考[go2rtc 文档](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#module-log)配置日志
+参考 [go2rtc 文档](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#module-log)配置日志
 
 ```yaml
 go2rtc:
@@ -42,13 +42,11 @@ go2rtc:
     exec: trace
 ```
 
-### 环境变量
+### `environment_vars` {#environment_vars}
 
 此配置项适用于无法直接修改容器环境的情况（如 Home Assistant OS）。Docker 用户应在 `docker run` 命令（`-e FRIGATE_MQTT_PASSWORD=secret`）或 `docker-compose.yml` 文件（`environment:` 部分）中设置环境变量。注意，此处设置的值以明文形式存储在配置文件中，因此如果目的是保护凭据安全，请改用 Docker 环境变量或 Docker secrets。
 
 以 `FRIGATE_` 为前缀的变量可以在支持环境变量替换的配置字段（如 MQTT 主机和凭据、摄像头流 URL、ONVIF 主机和凭据）中使用 `{FRIGATE_VARIABLE_NAME}` 语法引用。
-
-示例：
 
 ```yaml
 environment_vars:
@@ -61,29 +59,31 @@ mqtt:
   password: "{FRIGATE_MQTT_PASSWORD}"
 ```
 
-### TensorFlow 线程配置
+#### TensorFlow 线程配置 {#tensorflow-thread-configuration}
 
 如果在分类模型训练过程中遇到线程创建错误，可以限制 TensorFlow 的线程使用量：
 
 ```yaml
 environment_vars:
-  TF_INTRA_OP_PARALLELISM_THREADS: '2' # 单个运算内部的线程数（0 = 使用默认值）
-  TF_INTER_OP_PARALLELISM_THREADS: '2' # 不同运算之间的线程数（0 = 使用默认值）
-  TF_DATASET_THREAD_POOL_SIZE: '2' # 数据管道线程池大小（0 = 使用默认值）
+  TF_INTRA_OP_PARALLELISM_THREADS: "2" # 单个运算内部的线程数（0 = 使用默认值）
+  TF_INTER_OP_PARALLELISM_THREADS: "2" # 不同运算之间的线程数（0 = 使用默认值）
+  TF_DATASET_THREAD_POOL_SIZE: "2" # 数据管道线程池大小（0 = 使用默认值）
 ```
 
-### 数据库配置
+### `database` {#database}
 
-追踪的物体/目标信息和录像信息存储在`/config/frigate.db`的 SQLite 数据库中。若删除该数据库，录像文件将变为孤立文件需手动清理，且不会显示在 Home Assistant 的媒体浏览器中。
+追踪的目标信息和录像信息存储在 `/config/frigate.db` 的 SQLite 数据库中。若删除该数据库，录像文件将变为孤立文件需手动清理，且不会显示在 Home Assistant 的媒体浏览器中。
 
-若使用网络存储（SMB/NFS 等），启动时可能出现`database is locked`错误。可自定义数据库路径：
+若使用网络存储（SMB/NFS 等），启动时可能出现 `database is locked` 错误。可自定义数据库路径：
+
+如果使用网络存储作为媒体文件夹，数据库可能需要放在自定义位置。
 
 ```yaml
 database:
   path: /自定义路径/frigate.db
 ```
 
-### 模型配置 {#model}
+### `model` {#model}
 
 使用自定义模型时需指定宽高尺寸。
 
@@ -106,17 +106,17 @@ model:
   path: /模型路径
   width: 320
   height: 320
-  input_tensor: 'nhwc'
-  input_pixel_format: 'bgr'
+  input_tensor: "nhwc"
+  input_pixel_format: "bgr"
 ```
 
-#### 标签映射
+#### `labelmap` {#labelmap}
 
 :::warning
-自定义标签映射后需同步调整[警报标签](/configuration/review.md#限制警报的标签类型)配置
+自定义标签映射后需同步调整[警报标签](/configuration/review.md#restricting-alerts-to-specific-labels)配置
 :::
 
-可自定义标签映射，常见场景是合并易混淆的物体类型（如 car/truck）。默认已将 truck 重命名为 car。
+可自定义标签映射，常见场景是合并易混淆的目标类型（如 car/truck）。默认已将 truck 重命名为 car。你无法添加新的目标类型，但可以更改模型中已有目标的名称。
 
 ```yaml
 model:
@@ -130,47 +130,63 @@ model:
     17: animal
 ```
 
+注意，如果在标签映射中重命名了目标，还需要更新 `objects -> track` 列表。
+
 :::warning
-部分标签有特殊处理逻辑：
+部分标签有特殊处理逻辑，修改可能禁用相关功能：
 
-- `person`关联`face`和`amazon`
-- `car`关联`license_plate`, `ups`, `fedex`, `amazon`
-  :::
+- `person` 关联 `face` 和 `amazon`
+- `car` 关联 `license_plate`、`ups`、`fedex`、`amazon`
+:::
 
-## 网络配置
+## 网络配置 {#network-configuration}
 
 可通过绑定挂载 nginx.conf 文件修改内部网络配置：
 
 ```yaml
 services:
   frigate:
+    container_name: frigate
+    ...
     volumes:
+      ...
       - /自定义路径/nginx.conf:/usr/local/nginx/conf/nginx.conf
 ```
 
-### 启用 IPv6
+### 启用 IPv6 {#enabling-ipv6}
 
-默认禁用 IPv6，需修改 listen.gotmpl 文件：
+默认禁用 IPv6，可在 Frigate 配置中启用：
 
-原始配置：
-
-```
-listen 8971;
-```
-
-修改为：
-
-```
-listen [::]:8971 ipv6only=off;
+```yaml
+networking:
+  ipv6:
+    enabled: True
 ```
 
-## 基础路径
+### 监听不同端口 {#listen-on-different-ports}
 
-默认运行在根路径(`/`)，反向代理场景可能需要自定义路径前缀(如`/frigate`)。
+可以更改 Nginx 使用的监听端口。内部端口（未认证）和外部端口（已认证）可以独立更改。还可以使用 `ip:port` 格式指定 IP 地址，将端口绑定到特定接口。例如，这可用于防止内部端口暴露在容器外部。
 
-### 通过 HTTP 头设置
+```yaml
+networking:
+  listen:
+    internal: 127.0.0.1:5000
+    external: 8971
+```
 
-推荐方式是在反向代理中设置`X-Ingress-Path`头：
+:::warning
+
+此设置面向高级用户。对于大多数用例，建议更改 Docker Compose 文件的 `ports` 部分或使用 Docker `run` 的 `--publish` 选项，例如 `-p 443:8971`。更改 Frigate 的端口可能会导致某些集成失效。
+
+:::
+
+## 基础路径 {#base-path}
+
+默认情况下，Frigate 运行在根路径（`/`）。但某些设置需要让 Frigate 运行在自定义路径前缀下（例如 `/frigate`），特别是当 Frigate 位于需要基于路径路由的反向代理后面时。
+
+### 通过 HTTP 头设置基础路径 {#set-base-path-via-http-header}
+
+推荐方式是在上游反向代理中设置 `X-Ingress-Path` HTTP 头：
 
 Nginx 示例：
 
@@ -181,23 +197,32 @@ location /frigate {
 }
 ```
 
-### 通过环境变量设置
+### 通过环境变量设置基础路径 {#set-base-path-via-environment-variable}
+
+当无法通过 HTTP 头设置基础路径时，也可以通过 Docker Compose 文件中的 `FRIGATE_BASE_PATH` 环境变量设置：
 
 ```yaml
 services:
   frigate:
+    image: blakeblackshear/frigate:latest
     environment:
       - FRIGATE_BASE_PATH=/frigate
+```
+
+这可用于例如通过 Tailscale agent（https）访问 Frigate，只需将所有请求转发到基础路径（http）：
+
+```
+tailscale serve --https=443 --bg --set-path /frigate http://localhost:5000/frigate
 ```
 
 ## 自定义依赖 {#custom-dependencies}
 
 ### 自定义 FFmpeg {#custom-ffmpeg-build}
 
-将静态编译的`ffmpeg`和`ffprobe`放入`/config/custom-ffmpeg/bin`：
+将静态编译的 `ffmpeg` 和 `ffprobe` 放入 `/config/custom-ffmpeg/bin`：
 
-1. 下载 FFmpeg 并解压到`/config/custom-ffmpeg`
-2. 更新配置：
+1. 下载 FFmpeg 并解压到 `/config/custom-ffmpeg`。确认 `ffmpeg` 和 `ffprobe` 二进制文件位于 `/config/custom-ffmpeg/bin`。
+2. 更新 Frigate 配置中的 `ffmpeg.path`：
 
 ```yaml
 ffmpeg:
@@ -208,14 +233,14 @@ ffmpeg:
 
 ### 自定义 go2rtc 版本 {#custom-go2rtc-version}
 
-Frigate 目前内置的 go2rtc 版本为 `v1.9.10`，在某些特定情况下，你可能希望运行不同版本的 go2rtc。
+Frigate 目前内置的 go2rtc 版本为 `v1.9.13`，在某些特定情况下，你可能希望运行不同版本的 go2rtc。
 
 操作步骤如下：
 
-1. 下载你系统对应的 [go2rtc](https://github.com/AlexxIT/go2rtc/releases) 的二进制文件到`/config`目录
-2. 文件重命名为`go2rtc`
-3. 添加执行权限（在文件目录下执行`chmod +x ./go2rtc`）
-4. 重启 Frigate
+1. 下载你系统对应的 [go2rtc](https://github.com/AlexxIT/go2rtc/releases) 二进制文件到 `/config` 目录
+2. 将文件重命名为 `go2rtc`
+3. 添加执行权限（在文件目录下执行 `chmod +x ./go2rtc`）
+4. 重启 Frigate，自定义版本将被使用，你可以通过检查 go2rtc 日志来验证
 
 ## 配置文件验证 {#validating-your-configyml-file-updates}
 
@@ -227,19 +252,21 @@ Frigate 启动时会检查配置文件是否合法；若不合法，进程会直
 
 ### 通过 API 验证 {#via-api}
 
-Frigate 可通过 `/api/config/save` 接口接收 JSON 格式的新配置文件。通过此方式更新配置时，Frigate 会在保存前先验证配置的有效性；若配置无效，接口将返回 400 状态码。
+Frigate 可通过 `/api/config/save` 接口接收 JSON 格式的新配置文件。通过此方式更新配置时，Frigate 会在保存前先验证配置的有效性；若配置无效，接口将返回 `400` 状态码。
 
 ```bash
 curl -X POST http://frigate_host:5000/api/config/save -d @config.json
 ```
 
-或使用 yq 转换 yaml：
+或使用 [`yq`](https://github.com/mikefarah/yq) 转换 YAML：
 
 ```bash
 yq -o=json '.' config.yaml | curl -X POST 'http://frigate_host:5000/api/config/save?save_option=saveonly' --data-binary @-
 ```
 
 ### 命令行验证 {#via-command-line}
+
+你也可以使用 Docker 容器本身在命令行中验证配置。在 CI/CD 中，你可以利用返回码判断配置是否有效——Frigate 在配置无效时返回 `1`，有效时返回 `0`。
 
 ```bash
 docker run                                \
