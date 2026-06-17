@@ -53,7 +53,7 @@ $:
               ## 异常处理
               - 如官方无新变更，输出提示并终止。
               - 若基线 commit 不存在，转为全量翻译。
-            maxTurns: 100
+            maxTurns: 300
             userPrompt: |
               请更新「$target_branch」分支的翻译。
               分支映射关系：
