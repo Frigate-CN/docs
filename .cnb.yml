@@ -19,3 +19,20 @@ main:
         settings:
           include: "docs/**/**.md"
           chunk_size: 3000
+
+$:
+  web_trigger_translate:
+    - docker:
+        image: cnbcool/default-npc:latest
+      stages:
+        - name: npc translate
+          type: npc:go
+          options:
+            role: 翻译助手
+            maxTurns: 100
+            userPrompt: |
+              请更新「$target_branch」分支的翻译。
+              分支映射关系：
+              - main 分支 → 对应官方 master 分支
+              - beta 分支 → 对应官方 dev 分支
+              请根据选择的目标分支，同步对应官方分支的文档变更，并将翻译结果提交到该分支。
