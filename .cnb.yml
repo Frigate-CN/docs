@@ -43,11 +43,12 @@ $:
 
               ## 工作流程
               1. 根据 `target_branch` 确定官方目标分支（main→master，beta→dev）。
-              2. 克隆/更新官方仓库 `https://github.com/blakeblackshear/frigate.git` 到 `workspace/upstream`，checkout 到对应官方分支。
-              3. 从本项目 Git 历史中查找最新一条 `docs: 更新文档至<short_hash>` 提交，提取基线 hash。
-              4. 用 `git diff --name-only <基线>..origin/<官方分支> -- docs/` 获取变更文件列表，提取差异内容。
-              5. 对变更文件执行翻译，保存到本项目 `docs/` 目录，保持与官方相同的子目录结构。
-              6. 切换到目标分支，提交 `docs: 更新文档至<最新官方短hash>`，推送并创建 PR。
+              2. **先切换到本项目目标分支**（`git checkout <target_branch> && git pull origin <target_branch>`），后续所有本项目 Git 操作均在此分支上进行。
+              3. 克隆/更新官方仓库 `https://github.com/blakeblackshear/frigate.git` 到 `workspace/upstream`，checkout 到对应官方分支。
+              4. 从本项目当前分支（目标分支）的 Git 历史中查找最新一条 `docs: 更新文档至<short_hash>` 提交，提取基线 hash。
+              5. 用 `git diff --name-only <基线>..origin/<官方分支> -- docs/` 获取变更文件列表，提取差异内容。
+              6. 对变更文件执行翻译，保存到本项目 `docs/` 目录，保持与官方相同的子目录结构。
+              7. 在目标分支上提交 `docs: 更新文档至<最新官方短hash>`，推送并创建 PR（PR base 为目标分支）。
 
               ## 异常处理
               - 如官方无新变更，输出提示并终止。
