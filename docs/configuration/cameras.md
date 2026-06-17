@@ -43,7 +43,7 @@ cameras: # [!code highlight]
 
 :::tip
 
-如果你希望实时监控能够有声音并且画面更流畅，可以考虑配置[go2rtc](../guides/configuring_go2rtc)，并让摄像头的`path`使用 go2rtc 的[视频转流](../configuration/restream#reduce-connections-to-camera)地址。
+如果你希望实时监控能够有声音并且画面更流畅，可以考虑配置[go2rtc](../configuration/go2rtc)，并让摄像头的`path`使用 go2rtc 的[视频转流](../configuration/restream#reduce-connections-to-camera)地址。
 
 :::
 
@@ -90,6 +90,11 @@ cameras:
 ```
 
 如果 ONVIF 连接成功，PTZ 控制将在摄像头的 Web 界面中可用。
+
+如果摄像头连接成功但认证失败，两个可选字段可以帮助解决：
+
+- `tls_insecure`：跳过 TLS 证书验证并以明文（`PasswordText`）而非哈希摘要（`PasswordDigest`）发送 ONVIF 密码。部分摄像头拒绝摘要令牌，仅接受明文。这会降低连接安全性，因此仅在受信任的本地网络中启用。
+- `ignore_time_mismatch`：ONVIF 认证令牌包含时间戳，如果摄像头时钟与 Frigate 差异过大，摄像头会拒绝令牌。启用此项会使 Frigate 补偿时间偏差，使认证仍然成功。在摄像头和 Frigate 主机上运行 NTP 是推荐的修复方式；仅在"安全"环境中使用此选项，因为它会略微削弱令牌验证。
 
 :::note
 

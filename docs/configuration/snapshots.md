@@ -3,13 +3,19 @@ id: snapshots
 title: 快照功能
 ---
 
-Frigate 可以为每个检测到的对象保存快照图片到`/media/frigate/clips`目录，文件命名为`<摄像头名称>-<ID>.jpg`格式。这些快照也可以通过[API 接口](/integrations/api/event-snapshot-events-event-id-snapshot-jpg-get.api.mdx)访问。
+Frigate 可以为每个检测到的对象保存快照图片到`/media/frigate/clips`目录，文件命名为`<摄像头名称>-<ID>.jpg`格式。
 
-对于启用了 Frigate+的用户，快照可以在 Frigate+面板中查看，方便快速提交到 Frigate+服务。
+快照是捕捉追踪目标最佳时刻的单张静止图像——即 Frigate 在场景中跟随该目标时看到的最清晰帧。与连续视频的[录制](./record.md)不同，快照是每个追踪目标在追踪结束后保存的一张代表性图像。
 
-如果只想保存进入特定区域的对象的快照，请参阅[区域文档](./zones.md#restricting-snapshots-to-specific-zones)中的相关说明。
+启用快照后，Frigate 会为每个追踪目标保存一张图像到 `/media/frigate/clips`，命名为 `<camera>-<id>-clean.webp`。干净图像始终无任何标注（无时间戳、边界框或裁剪）地存储，因此你拥有原始帧的未修改副本。边界框和时间戳等标注在通过 [HTTP API](/integrations/api/event-snapshot-events-event-id-snapshot-jpg-get.api.mdx) 请求快照时按需应用——参见下文[渲染](#干净快照)。
 
-通过 MQTT 发送的快照配置可以在[配置文件](https://docs.frigate.video/configuration/)中的`cameras -> your_camera -> mqtt`部分设置。
+几点需要注意：
+
+- 快照按追踪目标保存，因此即使启用了录制，未检测到目标的摄像头也不会产生快照。
+- 快照和录制独立配置和保留——启用一个不会启用另一个。
+- 对于启用了 Frigate+的用户，快照可以在 Frigate+面板中查看，方便快速提交到 Frigate+服务。
+- 如果只想保存进入特定区域的对象的快照，请参阅[区域文档](./zones.md#restricting-snapshots-to-specific-zones)中的相关说明。
+- 通过 MQTT 发送的快照配置可以在[配置文件](https://docs.frigate.video/configuration/)中的`cameras -> your_camera -> mqtt`部分设置。
 
 ## 帧选择
 

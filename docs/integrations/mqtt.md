@@ -286,7 +286,7 @@ title: MQTT
 
 - `online`：流正在运行并被处理
 - `offline`：流处于离线状态并正在重启
-- `disabled`：摄像机当前已禁用
+- `disabled`：摄像头当前已关闭（通过 `enabled/set` 主题在运行时关闭，或通过配置文件永久禁用）。参见[摄像头状态](/configuration/live#camera-state)了解区别。
 
 ### `frigate/<camera_name>/<object_name>`
 
@@ -345,15 +345,15 @@ title: MQTT
 
 ### `frigate/<camera_name>/enabled/set`
 
-用于打开和关闭 Frigate 对摄像机的处理的主题。期望值为 `ON` 和 `OFF`。
+用于在运行时打开或关闭 Frigate 对摄像机的处理的主题。期望值为 `ON` 和 `OFF`。更改会在 Frigate 重启后保持（参见[运行时开关持久化](/configuration/live#runtime-toggle-persistence)）。要永久更改配置值，请使用 Frigate 界面的**设置 → 全局配置 → 摄像头管理**。参见[摄像头状态](/configuration/live#camera-state)了解关闭和禁用摄像头的区别。
 
 ### `frigate/<camera_name>/enabled/state`
 
-包含摄像机处理当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像机处理当前运行时状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/detect/set`
 
-用于打开和关闭摄像机目标检测的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭摄像机目标检测的主题。期望值为 `ON` 和 `OFF`。更改会在 Frigate 重启后保持（参见[运行时开关持久化](/configuration/live#runtime-toggle-persistence)）。
 
 ### `frigate/<camera_name>/detect/state`
 
@@ -361,7 +361,7 @@ title: MQTT
 
 ### `frigate/<camera_name>/audio/set`
 
-用于打开和关闭摄像机音频检测的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭摄像机音频检测的主题。期望值为 `ON` 和 `OFF`。更改会在 Frigate 重启后保持（参见[运行时开关持久化](/configuration/live#runtime-toggle-persistence)）。
 
 ### `frigate/<camera_name>/audio/state`
 
@@ -369,7 +369,7 @@ title: MQTT
 
 ### `frigate/<camera_name>/recordings/set`
 
-用于打开和关闭摄像机录像的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭摄像机录像的主题。期望值为 `ON` 和 `OFF`。更改会在 Frigate 重启后保持（参见[运行时开关持久化](/configuration/live#runtime-toggle-persistence)）。
 
 ### `frigate/<camera_name>/recordings/state`
 
@@ -377,7 +377,7 @@ title: MQTT
 
 ### `frigate/<camera_name>/snapshots/set`
 
-用于打开和关闭摄像机快照的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭摄像机快照的主题。期望值为 `ON` 和 `OFF`。更改会在 Frigate 重启后保持（参见[运行时开关持久化](/configuration/live#runtime-toggle-persistence)）。
 
 ### `frigate/<camera_name>/snapshots/state`
 

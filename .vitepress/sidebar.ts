@@ -45,10 +45,19 @@ export const sidebar = [
     text: "向导",
     items: [
       { text: "入门指南", link: "/guides/getting_started" },
-      { text: "配置 go2rtc", link: "/guides/configuring_go2rtc" },
       { text: "HA 通知", link: "/guides/ha_notifications" },
       { text: "HA 网络存储", link: "/guides/ha_network_storage" },
       { text: "反向代理", link: "/guides/reverse_proxy" },
+    ],
+  },
+  {
+    text: "使用",
+    items: [
+      { text: "实时监控", link: "/usage/live" },
+      { text: "核查", link: "/usage/review" },
+      { text: "历史记录", link: "/usage/history" },
+      { text: "浏览", link: "/usage/explore" },
+      { text: "导出", link: "/usage/exports" },
     ],
   },
   {
@@ -59,15 +68,11 @@ export const sidebar = [
         items: [
           {
             text: '<i class="fa-solid fa-gears"></i>概述',
-            link: "/configuration/",
-          },
-          {
-            text: '<i class="fa-solid fa-list"></i>完整参考',
-            link: "/configuration/reference",
+            link: "/configuration/config",
           },
           {
             text: "Go2RTC 配置参考",
-            link: "https://github.com/AlexxIT/go2rtc/tree/v1.9.10#configuration",
+            link: "https://github.com/AlexxIT/go2rtc/tree/v1.9.13#configuration",
           },
         ],
       },
@@ -224,10 +229,21 @@ export const sidebar = [
           { text: "配置模板", link: "/configuration/profiles" },
           { text: "认证", link: "/configuration/authentication" },
           { text: "通知", link: "/configuration/notifications" },
+          { text: "go2rtc", link: "/configuration/go2rtc" },
           { text: "FFmpeg 预设", link: "/configuration/ffmpeg_presets" },
           { text: "PWA", link: "/configuration/pwa" },
           { text: "TLS", link: "/configuration/tls" },
-          { text: "高级", link: "/configuration/advanced" },
+        ],
+      },
+      {
+        text: "高级配置",
+        items: [
+          { text: "系统", link: "/configuration/advanced/system" },
+          { text: "完整参考", link: "/configuration/advanced/reference" },
+          {
+            text: "Go2RTC 配置参考",
+            link: "https://github.com/AlexxIT/go2rtc/tree/v1.9.13#configuration",
+          },
         ],
       },
     ],
@@ -260,6 +276,7 @@ export const sidebar = [
     text: '<i class="fa-solid fa-circle-question"></i>常见问题',
     items: [
       { text: "常见问题问答", link: "/troubleshooting/faqs" },
+      { text: "go2rtc 问题排查", link: "/troubleshooting/go2rtc" },
       { text: "录制问题", link: "/troubleshooting/recordings" },
       { text: "目标检测排查", link: "/troubleshooting/dummy-camera" },
       { text: "硬件故障排查", items: [

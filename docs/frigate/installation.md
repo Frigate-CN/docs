@@ -567,7 +567,7 @@ App 提供以下几种版本：
 
 如果你使用 FFmpeg 硬件加速，你**可能**需要使用 _完全访问_ 版本的 App。这是因为 Frigate App 在容器中运行时对主机系统的访问受限。_完全访问_ 版本允许你禁用 _保护模式_，从而让 Frigate 完全访问主机系统。
 
-你也可以通过 [VS Code App](https://github.com/hassio-addons/addon-vscode) 或类似工具编辑 Frigate 配置文件。在这种情况下，配置文件位于 `/addon_configs/<addon_directory>/config.yml`，其中 `<addon_directory>` 取决于你运行的 Frigate App 版本。请参阅[此处](../configuration/index.md#accessing-app-config-dir)的目录列表。
+你也可以通过 [VS Code App](https://github.com/hassio-addons/addon-vscode) 或类似工具编辑 Frigate 配置文件。在这种情况下，配置文件位于 `/addon_configs/<addon_directory>/config.yml`，其中 `<addon_directory>` 取决于你运行的 Frigate App 版本。请参阅[此处](../configuration/config.md#accessing-app-config-dir)的目录列表。
 
 ## Kubernetes {#kubernetes}
 

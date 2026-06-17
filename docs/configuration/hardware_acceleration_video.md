@@ -201,7 +201,7 @@ ffmpeg: # [!code highlight]
 
 ## NVIDIA GPU {#nvidia-gpus}
 
-虽然旧的 GPU 可能也能工作，但建议使用现代的、受支持的 GPU。NVIDIA 提供了[支持的 GPU 和功能矩阵](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new)。如果你的显卡在列表中并支持 CUVID/NVDEC，它很可能可以用于 Frigate 的解码。但是，你必须使用[与 FFmpeg 兼容的驱动版本](https://github.com/FFmpeg/nv-codec-headers/blob/master/README)。旧的驱动版本可能缺少符号而无法工作，而旧的显卡不受新驱动版本支持。解决这个问题的唯一方法是[提供你自己的 FFmpeg](/configuration/advanced#custom-ffmpeg-build)，使其能与你的驱动版本一起工作，但这是不受支持的，可能效果不佳甚至完全无法工作。
+虽然旧的 GPU 可能也能工作，但建议使用现代的、受支持的 GPU。NVIDIA 提供了[支持的 GPU 和功能矩阵](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new)。如果你的显卡在列表中并支持 CUVID/NVDEC，它很可能可以用于 Frigate 的解码。但是，你必须使用[与 FFmpeg 兼容的驱动版本](https://github.com/FFmpeg/nv-codec-headers/blob/master/README)。旧的驱动版本可能缺少符号而无法工作，而旧的显卡不受新驱动版本支持。解决这个问题的唯一方法是[提供你自己的 FFmpeg](/configuration/advanced/system#custom-ffmpeg-build)，使其能与你的驱动版本一起工作，但这是不受支持的，可能效果不佳甚至完全无法工作。
 
 更完整的显卡和兼容驱动列表可在[驱动发布说明](https://download.nvidia.com/XFree86/Linux-x86_64/525.85.05/README/supportedchips.html)中找到。
 

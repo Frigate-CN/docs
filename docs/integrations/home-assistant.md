@@ -180,7 +180,7 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 
 ## 摄像头API
 
-动态禁用摄像头：
+关闭摄像头（暂停 Frigate 对流的处理；不会在 Frigate 重启后保持；参见[摄像头状态](/configuration/live#camera-state)）：
 
 ```
 action: camera.turn_off
@@ -189,7 +189,7 @@ target:
   entity_id: camera.back_deck_cam  # your Frigate camera entity ID
 ```
 
-重新启用已动态禁用的摄像头
+重新打开摄像头：
 
 
 ```
@@ -198,6 +198,12 @@ data: {}
 target:
   entity_id: camera.back_deck_cam  # your Frigate camera entity ID
 ```
+
+:::note
+
+这些操作切换 Frigate 的运行时开/关状态。要永久禁用摄像头，请在 Frigate 界面的**设置 → 摄像头管理**中将其状态设置为**禁用**。
+
+:::
 
 
 ## 通知API

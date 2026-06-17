@@ -12,7 +12,7 @@ title: 设置反向代理
 |-|-|
 |TLS|请参阅 `tls` [配置选项](../configuration/tls.md)|
 |身份验证|请参阅[身份验证](../configuration/authentication.md)文档|
-|IPv6|[启用 IPv6](../configuration/advanced.md#启用ipv6)|
+|IPv6|[启用 IPv6](../configuration/advanced/system.md#启用ipv6)|
 
 **关于 TLS 的说明**  
 使用反向代理时，TLS 会话通常在代理处终止，通过普通 HTTP 发送内部请求。如果这是所需的行为，必须首先在 Frigate 中禁用 TLS，否则你将遇到 HTTP 400 错误："The plain HTTP request was sent to HTTPS port."（普通 HTTP 请求被发送到 HTTPS 端口）。  

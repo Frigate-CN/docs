@@ -11,7 +11,7 @@ title: 推荐硬件
 
 :::tip
 
-小米摄像头可以使用第三方应用 [micam](https://github.com/miiot/micam) 或者 [使用自定义的 v1.9.14 以上版本的 `go2rtc`](/configuration/advanced.md#custom-go2rtc-version) 将 RTSP 流转发出来给 Frigate 接入。本文不提供相关工具的使用教程。
+小米摄像头可以使用第三方应用 [micam](https://github.com/miiot/micam) 或者 [使用自定义的 v1.9.14 以上版本的 `go2rtc`](/configuration/advanced/system.md#custom-go2rtc-version) 将 RTSP 流转发出来给 Frigate 接入。本文不提供相关工具的使用教程。
 
 :::
 

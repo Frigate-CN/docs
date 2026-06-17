@@ -116,4 +116,4 @@ objects:
 - EdgeTPU 模型：`/edgetpu_model.tflite`
 - 标签文件：`/labelmap.txt`
 
-如果自定义模型与默认配置不同，你还需要更新[模型配置](advanced.md#model)。
+如果自定义模型与默认配置不同，你还需要更新[模型配置](advanced/system.md#model)。

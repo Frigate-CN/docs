@@ -59,7 +59,7 @@ cameras:
 
 ### 配置音频事件
 
-内置音频模型可以检测[500 多种不同类型](https://github.com/blakeblackshear/frigate/blob/dev/audio-labelmap.txt)的音频，其中许多并不实用。默认情况下会开启`bark`(狗叫)、`fire_alarm`(火警)、`scream`(尖叫)、`speech`(说话)和`yell`(喊叫)这几种音频事件，当然你也可以根据自己的需求进行调整。
+内置音频模型可以检测[500 多种不同类型](https://github.com/blakeblackshear/frigate/blob/dev/audio-labelmap.txt)的音频，其中许多并不实用。默认情况下会开启`bark`(狗叫)、`fire_alarm`(火警)、`speech`(说话)和`yell`(喊叫)这几种音频事件，当然你也可以根据自己的需求进行调整。
 
 ```yaml
 audio:
@@ -67,10 +67,73 @@ audio:
   listen:
     - bark
     - fire_alarm
-    - scream
     - speech
     - yell
 ```
+
+### 常用音频标签
+
+标签映射表包含数百种声音类型。以下标签是大多数用户可能觉得实用的，按典型用途分组。请在 `listen` 配置中使用左列的确切标签字符串，或直接在 Frigate 界面中搜索标签。
+
+某些标签涵盖多种相关声音：`yell` 由喊叫、大叫、儿童叫喊和尖叫触发；`crying` 涵盖婴儿哭声、抽泣和呜咽；`speech` 涵盖普通交谈和对话。
+
+**安全与安防**
+
+| 标签             | 检测内容                 |
+| ---------------- | ------------------------ |
+| `yell`           | 喊叫、大叫、尖叫         |
+| `fire_alarm`     | 火灾和烟雾警报器         |
+| `smoke_detector` | 烟雾探测器蜂鸣声         |
+| `alarm`          | 通用警报声               |
+| `car_alarm`      | 汽车警报                 |
+| `siren`          | 紧急车辆和民用警报器     |
+| `glass`          | 玻璃碰撞声               |
+| `shatter`        | 玻璃破碎声               |
+| `breaking`       | 物品破裂声               |
+| `gunshot`        | 枪声                     |
+| `explosion`      | 爆炸声                   |
+
+**人与活动**
+
+| 标签         | 检测内容           |
+| ------------ | ------------------ |
+| `speech`     | 交谈和对话         |
+| `laughter`   | 笑声               |
+| `crying`     | 婴儿哭泣和抽泣     |
+| `cough`      | 咳嗽               |
+| `footsteps`  | 脚步声和行走       |
+| `knock`      | 敲门声             |
+| `doorbell`   | 门铃               |
+| `ding-dong`  | 门铃音乐           |
+
+**宠物与动物**
+
+| 标签        | 检测内容       |
+| ----------- | -------------- |
+| `bark`      | 狗叫           |
+| `dog`       | 其他狗声       |
+| `howl`      | 嚎叫           |
+| `growling`  | 咆哮           |
+| `meow`      | 猫叫           |
+| `cat`       | 其他猫声       |
+| `hiss`      | 嘶嘶声         |
+
+**车辆与车道**
+
+| 标签               | 检测内容           |
+| ------------------ | ------------------ |
+| `car`              | 经过的汽车         |
+| `honk`             | 汽车喇叭           |
+| `truck`            | 卡车               |
+| `reversing_beeps`  | 车辆倒车蜂鸣声     |
+| `motorcycle`       | 摩托车             |
+| `engine_starting`  | 引擎启动           |
+
+:::tip
+
+像 `speech` 这样经常听到的标签会生成大量事件，每个事件都可能根据你的配置保存快照和录像，因此建议从一个精简的集合开始——默认值（`bark`、`fire_alarm`、`speech`、`yell`）加上上面的一些安全标签即可满足大多数需求——然后逐步扩展。有关所有可用类型，请参阅[完整的音频标签映射表](https://github.com/blakeblackshear/frigate/blob/dev/audio-labelmap.txt)或 Frigate 界面。
+
+:::
 
 ## 音频转录
 

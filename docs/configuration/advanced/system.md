@@ -1,7 +1,6 @@
 ---
-id: advanced
-title: 高级配置选项
-sidebar_label: 高级选项
+id: system
+title: 系统
 ---
 
 ### 日志配置 {#logging}
@@ -113,7 +112,7 @@ model:
 #### `labelmap` {#labelmap}
 
 :::warning
-自定义标签映射后需同步调整[警报标签](/configuration/review.md#restricting-alerts-to-specific-labels)配置
+自定义标签映射后需同步调整[警报标签](../review.md#restricting-alerts-to-specific-labels)配置
 :::
 
 可自定义标签映射，常见场景是合并易混淆的目标类型（如 car/truck）。默认已将 truck 重命名为 car。你无法添加新的目标类型，但可以更改模型中已有目标的名称。
@@ -141,26 +140,16 @@ model:
 
 ## 网络配置 {#network-configuration}
 
-可通过绑定挂载 nginx.conf 文件修改内部网络配置：
-
-```yaml
-services:
-  frigate:
-    container_name: frigate
-    ...
-    volumes:
-      ...
-      - /自定义路径/nginx.conf:/usr/local/nginx/conf/nginx.conf
-```
+Frigate 公开了一些网络选项。IPv6 和监听端口在 `networking` 配置中设置（或从设置界面设置）；更高级的更改需要[自定义内置 Nginx 配置](#自定义-nginx-配置)。
 
 ### 启用 IPv6 {#enabling-ipv6}
 
-默认禁用 IPv6，可在 Frigate 配置中启用：
+默认情况下，Frigate 仅监听 IPv4。要同时监听 IPv6——在端口 `5000` 上，以及配置 TLS 时在 `8971` 上——在 `networking` 配置中启用：
 
 ```yaml
 networking:
   ipv6:
-    enabled: True
+    enabled: true
 ```
 
 ### 监听不同端口 {#listen-on-different-ports}
@@ -179,6 +168,20 @@ networking:
 此设置面向高级用户。对于大多数用例，建议更改 Docker Compose 文件的 `ports` 部分或使用 Docker `run` 的 `--publish` 选项，例如 `-p 443:8971`。更改 Frigate 的端口可能会导致某些集成失效。
 
 :::
+
+### 自定义 Nginx 配置
+
+更高级的内部网络配置更改可以通过将你自己的 `nginx.conf` 绑定挂载到容器中来完成：
+
+```yaml
+services:
+  frigate:
+    container_name: frigate
+    ...
+    volumes:
+      ...
+      - /自定义路径/nginx.conf:/usr/local/nginx/conf/nginx.conf
+```
 
 ## 基础路径 {#base-path}
 

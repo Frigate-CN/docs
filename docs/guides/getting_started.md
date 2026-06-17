@@ -383,17 +383,16 @@ cameras:
 
 此时你已经有了一个具有基本功能的完整配置。
 
-- 查看[常见配置示例](../configuration/index.md#common-configuration-examples)获取常见配置示例列表。
-- 查看[完整配置参考](../configuration/reference.md)获取完整的配置选项列表。
+- 查看[常见配置示例](../configuration/config.md#common-configuration-examples)获取常见配置示例列表。
+- 查看[完整配置参考](../configuration/advanced/reference.md)获取完整的配置选项列表。
 
 ### 后续步骤
 
 现在你已经有了一个可工作的安装，你可以使用以下文档了解其他功能：
 
-1. [配置 go2rtc](configuring_go2rtc.md) - 更流畅的实时监控与 RTSP 中继功能
-2. [区域](../configuration/zones.md) - 按区域控制警报等级
-3. [视频回放](../configuration/review.md)
-4. [遮罩](../configuration/masks.md) - 避免特定场景的误报
-5. [Home Assistant 集成](/integrations/home-assistant.md) - 与 Home Assistant 集成
-6. [人脸识别](../configuration/face_recognition.md) - 识别出家庭成员
-7. [车牌识别](../configuration/license_plate_recognition.md) - 识别出自家车辆
+1. [区域](../configuration/zones.md) - 按区域控制警报等级
+2. [视频回放](../configuration/review.md)
+3. [遮罩](../configuration/masks.md) - 避免特定场景的误报
+4. [Home Assistant 集成](/integrations/home-assistant.md) - 与 Home Assistant 集成
+5. [人脸识别](../configuration/face_recognition.md) - 识别出家庭成员
+6. [车牌识别](../configuration/license_plate_recognition.md) - 识别出自家车辆

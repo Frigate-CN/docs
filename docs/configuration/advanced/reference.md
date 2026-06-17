@@ -135,6 +135,13 @@ auth:
   # 注意：更改此值不会自动更新密码哈希，你
   #      需要更改每个用户的密码才能使其生效
   hash_iterations: 600000
+  # 可选：将角色映射到每个角色可访问的摄像头列表（默认值：无）
+  # 注意：空列表授予该角色访问所有摄像头的权限。此处定义的角色可被
+  #       代理头角色映射引用或分配给原生用户。
+  roles:
+    my_custom_role:
+      - front_door
+      - back_yard
 
 # 可选：模型修改
 # 注意：默认值是针对EdgeTPU检测器的。
@@ -154,6 +161,9 @@ model:
   # 必需：物体/目标检测模型输入张量格式
   # 有效值为 nhwc 或 nchw（默认值：如下所示）
   input_tensor: nhwc
+  # 可选：模型输入张量的数据类型
+  # 有效值为 float、float_denorm 或 int（默认值：如下所示）
+  input_dtype: int
   # 必需：物体/目标检测模型类型，目前仅用于OpenVINO检测器
   # 有效值为 ssd、yolox、yolonas（默认值：如下所示）
   model_type: ssd
@@ -184,11 +194,12 @@ audio:
   #  - 500 - 中等灵敏度
   #  - 1000 - 低灵敏度
   min_volume: 500
+  # 可选：用于音频检测的线程数（默认值：如下所示）
+  num_threads: 2
   # 可选：要监听的音频类型（默认值：如下所示）
   listen:
     - bark # 狗叫
     - fire_alarm # 火警
-    - scream # 尖叫
     - speech # 说话
     - yell # 喊叫
   # 可选：配置检测过滤器
@@ -244,7 +255,7 @@ birdseye:
 # 关于预设的更多信息请访问 https://docs.frigate.video/configuration/ffmpeg_presets
 ffmpeg:
   # 可选：ffmpeg二进制文件路径（默认值：如下所示）
-  # 可以设置为`7.0`或`5.0`以指定其中一个包含的版本
+  # 可以设置为`8.0`或`5.0`以指定其中一个包含的版本
   # 或者可以设置为任何包含`bin/ffmpeg`和`bin/ffprobe`的路径
   path: 'default'
   # 可选：全局ffmpeg参数（默认值：如下所示）
@@ -463,6 +474,8 @@ motion:
   #  - 30 - 中等灵敏度
   #  - 50 - 低灵敏度
   contour_area: 10
+  # 可选：用于画面变动计算的帧差分中的 Alpha 混合因子（默认值：如下所示）
+  delta_alpha: 0.2
   # 可选：在平均帧以确定背景时传递给cv2.accumulateWeighted的Alpha值（默认值：如下所示）
   # 较高的值意味着当前帧对平均值影响很大，新目标将更快地被平均到背景中。
   # 较低的值将导致移动阴影等被检测为运动的时间更长。
@@ -522,6 +535,10 @@ record:
     # -r（帧率）决定了输出视频的流畅度。
     # 所以在这种情况下参数应该是 -vf setpts=0.02*PTS -r 30。
     timelapse_args: '-vf setpts=0.04*PTS -r 30'
+    # 可选：导出的全局硬件加速设置（默认值：继承）
+    hwaccel_args: auto
+    # 可选：同时处理的最大导出作业数（默认值：如下所示）
+    max_concurrent: 3
   # 可选：录制预览设置
   preview:
     # 可选：录制预览质量（默认值：如下所示）。
@@ -664,8 +681,12 @@ lpr:
   enhancement: 0
   # 可选：保存车牌图像到/media/frigate/clips/lpr用于调试目的（默认值：如下所示）
   debug_save_plates: False
-  # 可选: 用于标准化识别到的车牌信息的正则表达式替换规则列表（默认值：如下所示）
-  replace_rules: {}
+  # 可选: 用于标准化识别到的车牌信息的正则表达式替换规则列表（默认值：无）
+  replace_rules:
+    # 必需：要匹配识别车牌中的正则表达式模式
+    - pattern: "O"
+      # 必需：替换匹配模式的字符串
+      replacement: "0"
 
 # 可选：AI大模型生成的追踪目标描述配置
 # 警告：根据提供者的不同，这将通过互联网将缩略图发送到
