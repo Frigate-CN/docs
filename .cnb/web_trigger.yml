@@ -1,0 +1,11 @@
+branch:
+  - buttons:
+      - name: 🔄 翻译同步
+        description: 触发自动翻译，同步 Frigate 官方英文文档为中文
+        event: web_trigger_translate
+        isDefault: true
+        permissions:
+          roles:
+            - owner
+            - master
+            - developer

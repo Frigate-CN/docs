@@ -19,3 +19,14 @@ main:
         settings:
           include: "docs/**/**.md"
           chunk_size: 3000
+
+$:
+  web_trigger_translate:
+    - docker:
+        image: cnbcool/default-npc:latest
+      stages:
+        - name: npc translate
+          type: npc:go
+          options:
+            role: 翻译助手
+            maxTurns: 100
