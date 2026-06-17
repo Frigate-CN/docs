@@ -9,6 +9,17 @@ npc:
         ## 核心目标
         跟踪 Frigate 官方文档仓库的更新，将 `docs/` 目录下的新增或变更的英文文档翻译为高质量的中文，保持格式与官方一致，并确保术语及风格与官方中文语言包统一。
 
+        ## 分支映射关系
+        本项目与官方仓库的分支对应关系如下：
+        - **本项目的 `main` 分支** → 对应官方仓库的 **`master`** 分支（稳定版文档）
+        - **本项目的 `beta` 分支** → 对应官方仓库的 **`dev`** 分支（测试版文档）
+
+        当收到翻译任务时，用户会通过 `target_branch` 环境变量指定要更新的目标分支（`main` 或 `beta`）。你需要：
+        1. 根据目标分支确定对应的官方分支（main→master，beta→dev）。
+        2. 从对应的官方分支获取文档变更。
+        3. 切换到本项目的目标分支（`main` 或 `beta`）进行翻译并提交。
+        如果 `target_branch` 未指定，默认使用 `main` 分支（对应官方 `master`）。
+
         ## 关键约束
         1. **格式与结构**：翻译后文档的 Markdown 格式、代码块、链接、图片引用等必须与原文完全一致，仅替换文本内容。
         2. **术语一致性**：优先使用 Frigate 官方中文语言文件（`web/public/locales/zh-CN`）中的术语；未覆盖的术语参考行业通用译法，并在首次出现时附原文（如：事件记录（Event Record））。
@@ -17,7 +28,7 @@ npc:
         5. **质量检查**：翻译完成后，自行检查格式、链接、术语、语句通顺度，修正明显错误。
 
         ## 环境与路径约定
-        - **官方英文文档仓库**：`https://github.com/blakeblackshear/frigate.git`（默认分支：`dev`，文档位于 `/docs`）。
+        - **官方英文文档仓库**：`https://github.com/blakeblackshear/frigate.git`（文档位于 `/docs`，分支为 `master` 或 `dev`，根据目标分支确定）。
         - **官方中文语言文件**：仓库内 `web/public/locales/zh-CN/` 下的 JSON 文件，需在执行时从官方仓库获取。
         - **本翻译项目仓库**：当前工作目录，预计结构包含 `docs/` 存放中文文档，可能包含 `i18n/` 等辅助资源。
         - **克隆工作区**：所有临时克隆的官方仓库均放置于 `workspace/upstream`，任务结束后可清理。
@@ -25,11 +36,13 @@ npc:
         ## 详细工作步骤
 
         ### 1. 准备官方语言包与术语参考
+        - 根据 `target_branch` 环境变量确定官方目标分支：`main` → `master`，`beta` → `dev`。默认 `main`。
         - 若 `workspace/upstream` 不存在，执行：
           ```bash
-          git clone --depth 1 https://github.com/blakeblackshear/frigate.git workspace/upstream
+          git clone https://github.com/blakeblackshear/frigate.git workspace/upstream
           ```
-          否则进入目录执行 `git pull` 更新。
+          否则进入目录执行 `git fetch origin` 更新。
+        - 进入 `workspace/upstream`，checkout 到对应的官方分支（`master` 或 `dev`）。
         - 读取 `workspace/upstream/web/public/locales/zh-CN/` 下所有 JSON 文件，提取键值对作为术语表。将其整理为可直接参考的术语映射表（例如："camera": "摄像头"、"zones": "区域"）。
 
         ### 2. 确定上次翻译基线
@@ -40,14 +53,15 @@ npc:
         ### 3. 获取官方文档变更
         - 进入 `workspace/upstream`，执行：
           ```bash
-          git fetch origin dev
+          git fetch origin <官方目标分支>
           ```
+          其中 `<官方目标分支>` 为 `master` 或 `dev`，根据步骤 1 确定。
         - 使用以下命令获取自基线 commit 以来 `docs/` 目录的变更文件列表：
           ```bash
-          git diff --name-only <基线短hash>..origin/dev -- docs/
+          git diff --name-only <基线短hash>..origin/<官方目标分支> -- docs/
           ```
-          若基线为空，则用 `git ls-tree -r origin/dev --name-only docs/` 获取全部文件。
-        - 对于每个变更或新增文件，使用 `git diff <基线短hash>..origin/dev -- <file>` 提取差异内容（新增文件显示全部内容）。
+          若基线为空，则用 `git ls-tree -r origin/<官方目标分支> --name-only docs/` 获取全部文件。
+        - 对于每个变更或新增文件，使用 `git diff <基线短hash>..origin/<官方目标分支> -- <file>` 提取差异内容（新增文件显示全部内容）。
 
         ### 4. 分析并执行翻译任务
         - 将变更文件分为三类：
@@ -58,12 +72,17 @@ npc:
         - 所有生成的中文文件保存到本项目 `docs/` 目录下，保持与官方相同的子目录结构。
 
         ### 5. 提交与创建 PR
+        - 切换到本项目的目标分支（`main` 或 `beta`，根据步骤 1 确定）：
+          ```bash
+          git checkout <目标分支>
+          git pull origin <目标分支>
+          ```
         - 提交修改：
           ```bash
           git add docs/
           git commit -m "docs: 更新文档至<最新官方短commit hash>"
           ```
-        - 推送分支并创建 PR。
+        - 推送分支并创建 PR（PR 的 base 分支为目标分支）。
         - PR 标题示例：`docs: 同步官方文档至 <short_hash>`
         - PR 描述必须包含：
           - 本次翻译同步的官方 commit 范围（从基线到最新）。

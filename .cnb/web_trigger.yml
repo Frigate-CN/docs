@@ -9,3 +9,17 @@ branch:
             - owner
             - master
             - developer
+        inputs:
+          target_branch:
+            name: 目标分支
+            description: 选择要更新翻译的分支（main 对应官方 master，beta 对应官方 dev）
+            type: select
+            required: true
+            default: main
+            options:
+              - name: main 分支（对应官方 master）
+                value: main
+                description: 稳定版文档，同步官方 master 分支
+              - name: beta 分支（对应官方 dev）
+                value: beta
+                description: 测试版文档，同步官方 dev 分支
