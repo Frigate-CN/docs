@@ -410,7 +410,7 @@ logger:
 
 如果你使用的是 Frigate+ 或`license_plate`检测模型：
 
-- 查看调试页面(设置-->调试)以确保检测到`license_plate`。
+- 查看[调试视图](/usage/live#the-single-camera-view)以确保检测到`license_plate`。
 - 查看`frigate/events`的 MQTT 消息以验证检测到的车牌。
 - 如果车牌未被检测到，你可能需要调整 license_plate 目标的`min_score`和/或`threshold`参数。
 

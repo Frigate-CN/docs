@@ -44,6 +44,8 @@ Prometheus 指标通过遥测配置暴露。启用或配置遥测以控制指标
 - `frigate_storage_used_bytes{storage=""}` - 存储已用空间（字节）
 - `frigate_storage_mount_type{mount_type="", storage=""}` - 存储挂载类型信息
 
+这些指标报告的是操作系统对整个文件系统的统计值（与 `df` 的数据相同），而非 Frigate 自身的录制占用量。有关此值与界面中显示的录制用量的区别，请参阅[理解存储用量](/configuration/record#understanding-storage-usage)。
+
 ### 服务指标
 
 - `frigate_service_uptime_seconds` - 服务运行时间（秒）

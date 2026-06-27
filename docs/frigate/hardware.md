@@ -53,26 +53,26 @@ Frigate 支持多种硬件平台的检测器方案：
 **AMD**
 
 - [ROCm](#rocm---amd-gpu): ROCm 能够在 AMD 独立显卡上运行，提供高效的检测功能
-  - [支持一部分模型](/configuration/object_detectors#rocm-supported-models)
+  - [支持一部分模型](/configuration/object_detectors#amdrocm-gpu-detector)
   - 最好运行在 AMD 独显上
 
 **Apple Silicon**
 
 - [Apple Silicon](#apple-silicon): Apple Silicon 可在所有 M1 及更新的 Apple Silicon 设备上使用，提供高效快速的目标检测
-  - [主要支持 ssdlite 和 mobilenet 模型架构](/configuration/object_detectors#apple-silicon-supported-models)
+  - [主要支持 ssdlite 和 mobilenet 模型架构](/configuration/object_detectors#apple-silicon-detector)
   - 能够流畅运行包括 large 在内各尺寸模型
   - 通过 ZMQ 代理运行会带来一定延迟，仅推荐用于本地连接
 
 **Intel**
 
 - [OpenVINO](#openvino---intel): OpenVINO 可以运行在 Intel Arc 独立显卡、Intel 核显以及 Intel NPU 上
-  - [支持大部分主流模型](/configuration/object_detectors#openvino-supported-models)
+  - [支持大部分主流模型](/configuration/object_detectors#openvino-detector)
   - 推荐使用 tiny/small/medium 尺寸的模型
 
 **NVIDIA**
 
 - [NVIDIA GPU](#nvidia-gpus): NVIDIA GPU 可以提供高效的目标检测
-  - [通过 ONNX 支持主流模型](/configuration/object_detectors#onnx-supported-models)
+  - [通过 ONNX 支持主流模型](/configuration/object_detectors#onnx)
   - 可流畅运行包括 large 在内各尺寸模型
 
 - <Badge text="社区支持" type="warning" /> [Jetson](#nvidia-jetson): 在运行 Jetpack 6 的情况下，Jetson 设备可通过 TensorRT 或 ONNX 检测器获得支持。

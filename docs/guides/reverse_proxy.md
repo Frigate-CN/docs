@@ -14,9 +14,10 @@ title: 设置反向代理
 |身份验证|请参阅[身份验证](../configuration/authentication.md)文档|
 |IPv6|[启用 IPv6](../configuration/advanced/system.md#启用ipv6)|
 
-**关于 TLS 的说明**  
-使用反向代理时，TLS 会话通常在代理处终止，通过普通 HTTP 发送内部请求。如果这是所需的行为，必须首先在 Frigate 中禁用 TLS，否则你将遇到 HTTP 400 错误："The plain HTTP request was sent to HTTPS port."（普通 HTTP 请求被发送到 HTTPS 端口）。  
+**关于 TLS 的说明**
+使用反向代理时，TLS 会话通常在代理处终止，通过普通 HTTP 发送内部请求。如果这是所需的行为，必须首先在 Frigate 中禁用 TLS，否则你将遇到 HTTP 400 错误："The plain HTTP request was sent to HTTPS port."（普通 HTTP 请求被发送到 HTTPS 端口）。
 要禁用 TLS，在你的 Frigate 配置中设置以下内容：
+
 ```yml
 tls:
   enabled: false
@@ -24,18 +25,26 @@ tls:
 
 :::warning
 反向代理可用于保护对内部 web 服务器的访问，但用户将完全依赖于他们采取的步骤。你必须确保遵循安全最佳实践。
-本页面不试图概述保护内部网站所需的具体步骤。  
+本页面不试图概述保护内部网站所需的具体步骤。
 请使用你自己的知识来评估和审查反向代理软件，然后再在你的系统上安装任何东西。
 :::
+
+## WebSocket 支持
+
+Frigate 依赖 WebSocket 进行浏览器与后端之间的实时通信。如果 WebSocket 连接未被代理，摄像头控制（启用/禁用摄像头、音频、检测、录制和其他开关）、实时流播放以及界面中其他实时更新的部分将无法正常工作。
+
+你的反向代理必须配置转发 `Upgrade` 和 `Connection` 头，以便建立 WebSocket 连接。下面的每个代理示例都已包含所需的指令，但如果你在自定义配置中自行适配，请确保传递这些头。
+
+请注意，某些代理默认禁用 WebSocket 支持——例如 Nginx Proxy Manager 有一个 "Websockets Support" 开关需要手动启用。
 
 ## 代理
 
 有许多可用的解决方案来实现反向代理，我们欢迎社区通过对本页面的贡献来帮助记录其他方案。
 
-* [Apache2](#apache2-反向代理)
-* [Nginx](#nginx-反向代理)
-* [Traefik](#traefik-反向代理)
-* [Caddy](#caddy-reverse-proxy)
+- [Apache2](#apache2-反向代理)
+- [Nginx](#nginx-反向代理)
+- [Traefik](#traefik-反向代理)
+- [Caddy](#caddy-reverse-proxy)
 
 ## Caddy 反向代理
 
@@ -60,7 +69,7 @@ tls:
 }
 
 frigate.YOUR_DOMAIN.TLD {
-        reverse_proxy http://localhost:8971 
+        reverse_proxy http://localhost:8971
         import tls
         import logging frigate.YOUR_DOMAIN.TLD
 }
@@ -190,7 +199,7 @@ server {
 
 ## Traefik 反向代理
 
-此示例展示了如何向 Frigate Docker compose 文件添加 `label`，使 Traefik 能够自动发现你的 Frigate 实例。  
+此示例展示了如何向 Frigate Docker compose 文件添加 `label`，使 Traefik 能够自动发现你的 Frigate 实例。
 在使用下面的示例之前，你必须首先使用 [Docker provider](https://doc.traefik.io/traefik/providers/docker/) 设置 Traefik
 
 ```yml
