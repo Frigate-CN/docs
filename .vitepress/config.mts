@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from "vitepress";
 import { sidebar } from "./sidebar.ts";
 import { defineTeekConfig } from "vitepress-theme-teek/config";
 import { vitepressPluginLegend } from "vitepress-plugin-legend";
+import { collapsePlugin } from "./theme/plugins/collapse";
 
 const teekConfig = defineTeekConfig({
   teekHome: false,
@@ -21,6 +22,7 @@ const teekConfig = defineTeekConfig({
   markdown: {
     config: (md) => {
       md.use(vitepressPluginLegend);
+      md.use(collapsePlugin, { defaultTitle: "展开查看" });
     },
     image: {
       lazyLoading: true,

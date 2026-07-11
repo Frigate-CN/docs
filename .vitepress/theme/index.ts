@@ -8,6 +8,7 @@ import StreamAI from "./StreamAI.vue";
 import Question from "./Question.vue";
 import ShmCalculator from "./ShmCalculator.vue";
 import DockerComposeGenerator from "./DockerComposeGenerator.vue";
+import CollapseContainer from "./CollapseContainer.vue";
 import DetailsCollapse from "./DetailsCollapse.vue";
 import InfoIcon from "./InfoIcon.vue";
 import LanguageSwitch from "./LanguageSwitch.vue";
@@ -31,6 +32,7 @@ export default {
     app.component('Question', Question) // 全局注册组件
     app.component('ShmCalculator', ShmCalculator)
     app.component('DockerComposeGenerator', DockerComposeGenerator)
+    app.component('CollapseContainer', CollapseContainer)
     app.component('DetailsCollapse', DetailsCollapse)
     app.component('InfoIcon', InfoIcon)
     app.component('LanguageSwitch', LanguageSwitch)

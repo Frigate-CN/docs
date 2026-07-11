@@ -153,3 +153,29 @@ TCP能确保数据包有序到达，这对视频录制、解码和流处理至�
 如果你的系统已经占用了5000端口（例如群晖的管理页面），你可以将容器的5000端口映射至其他任意空闲端口。
 
 :::
+
+### 为什么 Frigate 不断为我的停放汽车创建新的被追踪目标？
+
+静止追踪旨在**防止**这种情况：一辆停放的汽车应保持为一个单一的被追踪目标，而不是生成新的目标。如果你不断为同一辆车获得新的被追踪目标，那么 Frigate 很可能丢失了该目标并重新将其检测为新目标。
+
+在浏览 → **追踪详情**中打开其中一个被追踪目标。如果检测分数较低（< 70% 左右），则模型对停放汽车是汽车没有信心。这在免费的 [COCO 训练](https://cocodataset.org/#explore)目标检测模型上很常见，例如陡峭/俯视角度、部分遮挡的汽车、树叶遮挡或低光照画面。当检测结果在太多帧中低于 `min_score` 时，追踪器会丢失目标，下一个有信心帧会创建一个全新的目标。
+
+以下方法应该能改善：
+
+- **改善视角**：即使是一个小的角度变化，让汽车更多的部分可见，也可能将分数提高到足以稳定追踪的水平。
+- **使用更准确的模型**：从 `mobiledet` 切换到 `yolov9`，或升级到更大的变体如 `yolov9-s` 而非 `yolov9-t`。最大的收益通常来自在你自己的摄像头图像上微调模型，使其学习你的特定场景。[Frigate+](https://frigate.video/plus) 是一个付费选项——模型基于安防摄像头画面训练，并可微调为你提交的图像。
+- **不要为 `car` 设置 `detect -> stationary -> max_frames`**：这会人为结束追踪并强制重新检测为新目标。参见[静止目标](../configuration/stationary_objects.md)。
+- **使用 `required_zones` 将警报限制在你关心的区域**。参见[区域](../configuration/zones.md#restricting-alerts-and-detections-to-specific-zones)。
+- **使用[目标过滤遮罩](../configuration/masks.md#object-filter-masks)过滤不可能的位置**，如果汽车在屋顶/树顶等位置被检测到。
+
+参见[目标过滤器](../configuration/object_filters.md)了解更多关于调整 `min_score` 和 `threshold` 的信息。注意将它们提得太高会使这个问题更严重。
+
+### 当 Frigate 将某物检测为错误目标时，如何纠正？
+
+Frigate 的目标检测依赖机器学习[模型](../frigate/glossary.md#model)，而随 Frigate 提供的免费 [COCO 训练](https://cocodataset.org/#explore)模型可能在其未训练的场境中误识别目标。有两种处理方法：
+
+**使用你自己的图像训练或微调模型。** 最持久的修复方法是改进模型本身。最大的收益通常来自在你自己的摄像头图像上微调模型，使其学习你的特定场景。[Frigate+](https://frigate.video/plus) 是付费选项。当 Frigate 标记错误时，在浏览中打开被追踪目标，选择**快照**标签页，使用**提交到 Frigate+** 发送带有正确标签的示例（或将其标记为[误报](../frigate/glossary.md#false-positive)）。一旦你提交了示例并[请求了模型](../plus/first_model.md)，重新训练的模型将对你的摄像头更准确。
+
+**使用过滤器抑制误识别。** 你可以使用过滤器阻止特定误报被追踪：调整 `min_score` / `threshold`，或添加 `min_area` / `max_area` / `min_ratio` / `max_ratio` 过滤器。如果误报始终在相同的固定位置（如被识别为人的雕像或邮箱），在该位置添加[目标过滤遮罩](../configuration/masks.md#object-filter-masks)。
+
+过滤器和遮罩只能隐藏不正确的结果——它们不会教会 Frigate 目标实际上是什么。要做到这一点，请微调你自己的模型或使用 Frigate+。
