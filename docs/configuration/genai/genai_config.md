@@ -3,13 +3,13 @@ id: genai_config
 title: 配置生成式 AI
 ---
 
-## 配置
+## 配置 {#configuration}
 
 可以在全局配置中设置生成式 AI 提供商，启用后即可使用生成式 AI 功能。目前有 4 种原生提供商可与 Frigate 集成。支持 OpenAI 标准 API 的其他提供商也可使用，请参阅下方的 OpenAI 兼容部分。
 
 要使用生成式 AI，你必须在 Frigate 配置的全局层级定义一个提供商。如果你选择的提供商需要 API 密钥，可以直接将其粘贴在配置中，或存储在以 `FRIGATE_` 为前缀的环境变量中。
 
-## 本地提供商
+## 本地提供商 {#local-providers}
 
 本地提供商运行在你自己的硬件上，所有数据处理都在本地完成。这些提供商需要 GPU 或专用硬件以获得最佳性能。
 
@@ -19,7 +19,7 @@ title: 配置生成式 AI
 
 :::
 
-### 推荐本地模型
+### 推荐本地模型 {#recommended-local-models}
 
 你必须为 Frigate 使用具备视觉能力的模型。以下是推荐的本地部署模型：
 
@@ -43,7 +43,7 @@ title: 配置生成式 AI
 
 :::
 
-### 模型类型：指令型与思考型
+### 模型类型：指令型与思考型 {#model-types-instruct-vs-thinking}
 
 视觉-语言模型有**指令型（instruct）**变体（经过微调以遵循指令并简洁回复）、**思考型（thinking）**变体（经过微调用于自由格式、推测性推理）以及支持按请求切换两种模式的**混合型（hybrid）**变体。大多数现代视觉-语言模型都是混合型的。
 
@@ -60,11 +60,11 @@ Frigate 会按任务自动管理推理模式：
 
 强烈建议在配备独立显卡的机器或 Apple Silicon Mac 上托管 llama.cpp 服务器以获得最佳性能。
 
-#### 支持的模型
+#### 支持的模型 {#supported-models}
 
 你必须为 Frigate 使用具备视觉能力的模型。llama.cpp 服务器支持多种 GGUF 格式的视觉模型。
 
-#### 配置
+#### 配置 {#configuration-1}
 
 所有 llama.cpp 原生选项都可以通过 `provider_options` 传递，包括 `temperature`、`top_k`、`top_p`、`min_p`、`repeat_penalty`、`repeat_last_n`、`seed`、`grammar` 等。完整参数列表请参阅 [llama.cpp 服务器文档](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md)。
 
@@ -77,7 +77,7 @@ genai:
     context_size: 16000 # 告知 Frigate 你的上下文大小，以便发送适当数量的信息
 ```
 
-### Ollama
+### Ollama {#ollama}
 
 [Ollama](https://ollama.com/) 允许你自托管大型语言模型并保持所有内容在本地运行。强烈建议在配备 Nvidia 独立显卡的机器或 Apple Silicon Mac 上托管此服务以获得最佳性能。
 
@@ -93,7 +93,7 @@ genai:
 
 注意，Frigate 不会自动下载你在配置中指定的模型。Ollama 会尝试下载该模型，但下载过程可能超过超时时间，因此建议你在 Ollama 服务器或 Docker 容器中提前运行 `ollama pull your_model` 来拉取模型。Frigate 配置中指定的模型必须与你下载的模型标签匹配。
 
-#### 配置
+#### 配置 {#configuration-2}
 
 ```yaml
 genai:
@@ -127,7 +127,7 @@ genai:
 
 :::
 
-#### 配置
+#### 配置 {#configuration-3}
 
 ```yaml
 genai:
@@ -139,7 +139,7 @@ genai:
 
 要使用其他 OpenAI 兼容 API 端点，请设置 `OPENAI_BASE_URL` 环境变量为你的提供商 API URL。
 
-## 云端提供商
+## 云端提供商 {#cloud-providers}
 
 云端提供商运行在远程基础设施上，需要 API 密钥进行认证。这些服务在其服务器上处理所有模型推理。
 
@@ -153,7 +153,7 @@ genai:
 
 Ollama 也支持[云端模型](https://ollama.com/cloud)，模型推理在云端完成。你可以通过将 `base_url` 设置为 `https://ollama.com` 并提供 API 密钥来直接连接 Ollama Cloud。或者，你可以在本地运行 Ollama 并使用云端模型名称，让本地实例将请求转发到云端。更多详情请查阅 Ollama 云端模型[文档](https://docs.ollama.com/cloud)。
 
-#### 配置
+#### 配置 {#configuration-4}
 
 ```yaml
 genai:
@@ -172,15 +172,15 @@ genai:
   api_key: your-api-key
 ```
 
-### Google Gemini
+### Google Gemini {#google-gemini}
 
 Google Gemini API 提供了[免费套餐](https://ai.google.dev/pricing)，但该套餐的配额限制可能无法满足 Frigate 的常规使用需求。请根据你的部署场景选择合适的计费套餐。
 
-#### 支持的模型
+#### 支持的模型 {#supported-models-1}
 
 你必须使用支持视觉的模型。当前模型变体可在[其文档](https://ai.google.dev/gemini-api/docs/models/gemini)中找到。
 
-#### 获取 API 密钥
+#### 获取 API 密钥 {#get-api-key}
 
 要开始使用 Gemini，你必须首先从 [Google AI Studio](https://aistudio.google.com) 获取 API 密钥。
 
@@ -189,7 +189,7 @@ Google Gemini API 提供了[免费套餐](https://ai.google.dev/pricing)，但�
 3. 点击"在新项目中创建 API 密钥"
 4. 复制 API 密钥用于你的配置
 
-#### 配置
+#### 配置 {#configuration-5}
 
 ```yaml
 genai:
@@ -214,7 +214,7 @@ genai:
 
 :::
 
-### OpenAI
+### OpenAI {#openai}
 
 OpenAI 没有为其 API 提供免费等级。随着 gpt-4o 的发布，价格已经降低，每次生成应该只需几分钱。
 
@@ -226,7 +226,7 @@ OpenAI 没有为其 API 提供免费等级。随着 gpt-4o 的发布，价格已
 
 :::
 
-#### 支持的模型
+#### 支持的模型 {#supported-models-2}
 
 你必须使用支持视觉的模型。当前模型变体可在[其文档](https://platform.openai.com/docs/models)中找到。
 
@@ -236,11 +236,11 @@ OpenAI 没有为其 API 提供免费等级。随着 gpt-4o 的发布，价格已
 
 :::
 
-#### 获取 API 密钥
+#### 获取 API 密钥 {#get-api-key-1}
 
 要开始使用 OpenAI，你必须首先[创建 API 密钥](https://platform.openai.com/api-keys)并[配置计费](https://platform.openai.com/settings/organization/billing/overview)。
 
-#### 配置
+#### 配置 {#configuration-6}
 
 ```yaml
 genai:
@@ -274,19 +274,19 @@ genai:
 
 :::
 
-### Azure OpenAI
+### Azure OpenAI {#azure-openai}
 
 微软通过 Azure OpenAI 提供了几种视觉模型。需要订阅。
 
-#### 支持的模型
+#### 支持的模型 {#supported-models-3}
 
 你必须使用支持视觉的模型。当前模型变体可在[其文档](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models)中找到。
 
-#### 创建资源并获取 API 密钥
+#### 创建资源并获取 API 密钥 {#create-resource-and-get-api-key}
 
 要开始使用 Azure OpenAI，你必须首先[创建资源](https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)。你需要你的 API 密钥、模型名称和资源 URL，其中必须包含 `api-version` 参数（参见下面的示例）。
 
-#### 配置
+#### 配置 {#configuration-7}
 
 ```yaml
 genai:
