@@ -9,6 +9,8 @@ title: Home Assistant集成
 
 ### 准备工作
 
+在设置集成之前，必须先安装并运行 Frigate 本身。详情请参阅[安装文档](../frigate/installation.md)。
+
 Frigate集成需要先安装并手动配置`mqtt`集成。
 
 更多详细信息请参见[MQTT集成文档](https://www.home-assistant.io/integrations/mqtt/)。

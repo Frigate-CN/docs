@@ -47,6 +47,12 @@ go2rtc:
 
 以 `FRIGATE_` 为前缀的变量可以在支持环境变量替换的配置字段（如 MQTT 主机和凭据、摄像头流 URL、ONVIF 主机和凭据）中使用 `{FRIGATE_VARIABLE_NAME}` 语法引用。
 
+:::note
+
+`go2rtc` 部分是一个例外。go2rtc 作为独立进程运行，因此其流定义只能使用容器环境中存在的变量进行替换（通过 Docker `-e`、`docker-compose.yml` 的 `environment:` 部分或 Docker secrets 设置）。上面 `environment_vars` 块中定义的变量对 go2rtc 流不可用。Home Assistant 应用用户无法设置容器环境变量，因此必须将凭据直接写在 go2rtc 的流 URL 中。
+
+:::
+
 ```yaml
 environment_vars:
   FRIGATE_MQTT_USER: my_mqtt_user

@@ -73,13 +73,37 @@ services:
 
 Frigate 使用共享内存处理视频帧。Docker 默认提供的 `shm-size` 为 **64MB**。
 
-对于 2 个 720p 摄像头的检测场景，**128MB** 的默认 shm 大小就足够了。若出现 "Bus error" 错误退出，通常是由于高分辨率摄像头过多，需通过 [`--shm-size`](https://docs.docker.com/engine/reference/run/#runtime-constraints-on-resources)（或 Docker Compose 中的 [`service.shm_size`](https://docs.docker.com/compose/compose-file/compose-file-v2/#shm_size)）增加 shm 容量。
+对于 2 个 720p 摄像头的检测场景，**128MB** 的默认 shm 大小就足够了。若出现 "Bus error" 错误退出，通常是由于高分辨率摄像头过多，需通过 [`--shm-size`](https://docs.docker.com/engine/reference/run/#runtime-constraints-on-resources)（或 Docker Compose 中的 [`service.shm_size`](https://docs.docker.com/compose/compose-file/compose-file-v2/#shm_size)）增加 shm 容量。如果增大 shm 大小后问题仍未解决，请同时检查[进程与文件限制](#process-and-file-limits)。
 
 Frigate 容器日志也会存储在 shm 中，最多可占用 **40MB**，计算时需计入。
 
 <ShmCalculator />
 
 Home Assistant App 无法单独设置容器共享内存。但由于 Home Assistant Supervisor 默认分配总内存的 50% 给 `/dev/shm`（例如 8GB 内存机器可分配约 4GB），通常无需额外配置。
+
+### 进程与文件限制 {#process-and-file-limits}
+
+Frigate 会运行大量进程并打开多个共享内存文件。摄像头数量较多的安装场景可能会超出容器运行时默认施加的限制。
+
+触及 PID 限制时会记录 `RuntimeError: can't start new thread`，随后往往跟随一个 "Bus error"，看起来像是 shm 容量问题。可以在容器内对比当前计数与最大值：
+
+```bash
+cat /sys/fs/cgroup/pids.current
+cat /sys/fs/cgroup/pids.max
+```
+
+如果两者接近，请通过 [`--pids-limit`](https://docs.docker.com/engine/containers/resource_constraints/)（或 Docker Compose 中的 `service.pids_limit`）提高限制。
+
+文件描述符耗尽时会记录 `OSError: [Errno 24] Too many open files`。在 Docker Compose 中提高该限制：
+
+```yaml
+services:
+  frigate:
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+```
 
 ## 特定硬件的额外设置步骤 {#extra-steps-for-specific-hardware}
 

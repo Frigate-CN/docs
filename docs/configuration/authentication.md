@@ -190,6 +190,19 @@ proxy:
 **关于权限匹配规则的说明：**
 管理员权限优先：如果 `admin` 权限规则匹配成功，Frigate 会直接将会话判定为 `admin` 身份，避免用户同时属于多个用户组（例如同时属于 `admin` 和 `viewer` 组）时出现权限意外降级的情况。
 
+:::note
+
+如果用户没有被分配到你预期的权限，可以启用调试日志，查看 Frigate 从代理接收到的确切头部信息：
+
+```yaml
+logger:
+  default: info
+  logs:
+    frigate.api.auth: debug
+```
+
+:::
+
 ### 端口注意事项 {#port-considerations}
 
 **认证端口 (8971)**
