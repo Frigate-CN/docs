@@ -12,6 +12,7 @@ import CollapseContainer from "./CollapseContainer.vue";
 import DetailsCollapse from "./DetailsCollapse.vue";
 import InfoIcon from "./InfoIcon.vue";
 import LanguageSwitch from "./LanguageSwitch.vue";
+import ModelConfigDropdown from "./ModelConfigDropdown.vue";
 import { initComponent } from 'vitepress-plugin-legend/component';
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
@@ -36,6 +37,7 @@ export default {
     app.component('DetailsCollapse', DetailsCollapse)
     app.component('InfoIcon', InfoIcon)
     app.component('LanguageSwitch', LanguageSwitch)
+    app.component('ModelConfigDropdown', ModelConfigDropdown)
   },
   extends: Teek,
   Layout: CustomLayout,

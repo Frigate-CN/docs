@@ -3,11 +3,9 @@ id: object_detectors
 title: 物体/目标检测器
 ---
 
-import ConfigTabs from '@site/src/components/ConfigTabs';
-import TabItem from '@theme/TabItem';
-import NavPath from '@site/src/components/NavPath';
-import ModelConfigDropdown from '@site/src/components/ModelConfigDropdown';
-import objectDetectorsModels from '@site/data/object_detectors_models.json';
+<script setup>
+import objectDetectorsModels from '../data/object_detectors_models.json';
+</script>
 
 ### 支持的硬件
 
@@ -241,7 +239,7 @@ detectors:
 
 ### 配置
 
-<ModelConfigDropdown detectorTitle="EdgeTPU" models={objectDetectorsModels.edgeTPU.models} />
+<ModelConfigDropdown detectorTitle="EdgeTPU" :models="objectDetectorsModels.edgeTPU.models" />
 
 ---
 
@@ -262,7 +260,7 @@ Hailo-8 检测器支持 Hailo-8 和 Hailo-8L AI 加速模块。该集成会自�
 配置 Hailo 检测器时，你有两种指定模型的方式：本地**路径**或**URL**。
 如果同时提供两者，检测器将首先检查给定的本地路径。如果未找到文件，则会从指定的 URL 下载模型。模型文件缓存在`/config/model_cache/hailo`目录下。
 
-<ModelConfigDropdown detectorTitle="Hailo-8/Hailo-8L" models={objectDetectorsModels.hailo8l.models} />
+<ModelConfigDropdown detectorTitle="Hailo-8/Hailo-8L" :models="objectDetectorsModels.hailo8l.models" />
 
 更多现成模型，请访问：https://github.com/hailo-ai/hailo_model_zoo
 
@@ -301,7 +299,7 @@ detectors:
 
 ### 配置
 
-<ModelConfigDropdown detectorTitle="OpenVINO" models={objectDetectorsModels.openvino.models} />
+<ModelConfigDropdown detectorTitle="OpenVINO" :models="objectDetectorsModels.openvino.models" />
 
 ---
 
@@ -318,7 +316,7 @@ Apple Silicon 中的 NPU 无法从容器内访问，因此必须先设置[Apple 
 
 使用下面的检测器配置将连接到客户端：
 
-<ModelConfigDropdown detectorTitle="Apple Silicon" models={objectDetectorsModels.appleSilicon.models} />
+<ModelConfigDropdown detectorTitle="Apple Silicon" :models="objectDetectorsModels.appleSilicon.models" />
 
 注意：labelmap 使用的是完整 COCO 标签集的子集，仅包含 80 种类型的目标。
 
@@ -420,7 +418,7 @@ $ docker exec -it frigate /bin/bash -c '(unset HSA_OVERRIDE_GFX_VERSION && /opt/
 - 不支持 D-FINE / DEIMv2 模型
 - 已知 YOLO-NAS 模型在核显上运行不佳
 
-<ModelConfigDropdown detectorTitle="AMD ROCm" models={objectDetectorsModels.onnx.models} />
+<ModelConfigDropdown detectorTitle="AMD ROCm" :models="objectDetectorsModels.onnx.models" />
 
 ## ONNX
 
@@ -458,7 +456,7 @@ detectors:
 
 ### 配置
 
-<ModelConfigDropdown detectorTitle="ONNX" models={objectDetectorsModels.onnx.models} />
+<ModelConfigDropdown detectorTitle="ONNX" :models="objectDetectorsModels.onnx.models" />
 
 ---
 
@@ -478,7 +476,7 @@ CPU 检测器类型运行 TensorFlow Lite 模型，使用 CPU 进行处理而不
 
 ### 配置
 
-<ModelConfigDropdown detectorTitle="CPU" models={objectDetectorsModels.cpu.models} />
+<ModelConfigDropdown detectorTitle="CPU" :models="objectDetectorsModels.cpu.models" />
 
 使用 CPU 检测器时，可以为每个摄像头添加一个 CPU 检测器。添加比摄像头数量更多的检测器不会提高性能。
 
@@ -494,7 +492,7 @@ Frigate 的 Deepstack/CodeProject.AI 服务器检测器允许你将 Deepstack �
 
 ### 配置
 
-<ModelConfigDropdown detectorTitle="DeepStack" models={objectDetectorsModels.deepstack.models} />
+<ModelConfigDropdown detectorTitle="DeepStack" :models="objectDetectorsModels.deepstack.models" />
 
 将`<your_codeproject_ai_server_ip>`和`<port>`替换为你的 CodeProject.AI 服务器的 IP 地址和端口。
 
@@ -512,7 +510,7 @@ Frigate 的 Deepstack/CodeProject.AI 服务器检测器允许你将 Deepstack �
 
 ### 配置
 
-<ModelConfigDropdown detectorTitle="MemryX" models={objectDetectorsModels.memryx.models} />
+<ModelConfigDropdown detectorTitle="MemryX" :models="objectDetectorsModels.memryx.models" />
 
 #### 使用自定义模型
 
@@ -632,7 +630,7 @@ TensorRT 检测器默认使用位于`/config/model_cache/tensorrt`中的`.trt`�
 
 使用以下配置来处理生成的 TRT 模型：
 
-<ModelConfigDropdown detectorTitle="TensorRT" models={objectDetectorsModels.tensorrt.models} />
+<ModelConfigDropdown detectorTitle="TensorRT" :models="objectDetectorsModels.tensorrt.models" />
 
 ## Synaptics
 
@@ -650,7 +648,7 @@ TensorRT 检测器默认使用位于`/config/model_cache/tensorrt`中的`.trt`�
 
 配置 Synap 检测器时，你必须指定模型：本地**路径**。
 
-<ModelConfigDropdown detectorTitle="Synaptics" models={objectDetectorsModels.synaptics.models} />
+<ModelConfigDropdown detectorTitle="Synaptics" :models="objectDetectorsModels.synaptics.models" />
 
 ## 瑞芯微 Rockchip 平台检测器 {#rockchip-platform}
 
@@ -719,7 +717,7 @@ $ cat /sys/kernel/debug/rknpu/load
 - 所有模型都会自动下载并存储在`config/model_cache/rknn_cache`文件夹中。升级 Frigate 后，应删除旧模型以释放空间。
 - 你也可以提供自己的`.rknn`模型。请不要将自己的模型保存在`rknn_cache`文件夹中，应直接存储在`model_cache`文件夹或其他子文件夹中。要将模型转换为`.rknn`格式，请参阅`rknn-toolkit2`（需要 x86 机器）。注意，仅支持对特定模型进行后处理。
 
-<ModelConfigDropdown detectorTitle="RKNN" models={objectDetectorsModels.rknn.models} />
+<ModelConfigDropdown detectorTitle="RKNN" :models="objectDetectorsModels.rknn.models" />
 
 ### 将自定义 onnx 模型转换为 rknn 格式
 
@@ -778,7 +776,7 @@ degirum_detector:
 
 完成后，按以下方式配置检测器：
 
-<ModelConfigDropdown detectorTitle="DeGirum" models={objectDetectorsModels.degirumAiServer.models} />
+<ModelConfigDropdown detectorTitle="DeGirum" :models="objectDetectorsModels.degirumAiServer.models" />
 
 在 `config.yml` 中设置模型类似于设置 AI 服务器。
 你可以将其设置为：
@@ -804,7 +802,7 @@ model:
 2. 要再次检查运行时是否被 DeGirum 检测器检测到，确保 `degirum sys-info` 命令正确显示你打算安装的任何运行时。
 3. 在你的 `config.yml` 文件中创建 DeGirum 检测器。
 
-<ModelConfigDropdown detectorTitle="DeGirum" models={objectDetectorsModels.degirumLocal.models} />
+<ModelConfigDropdown detectorTitle="DeGirum" :models="objectDetectorsModels.degirumLocal.models" />
 
 一旦 `degirum_detector` 设置完成，你可以通过 `config.yml` 文件中的'model'部分选择模型。
 
@@ -824,7 +822,7 @@ model:
 2. 获取访问令牌。
 3. 在你的 `config.yml` 文件中创建 DeGirum 检测器。
 
-<ModelConfigDropdown detectorTitle="DeGirum" models={objectDetectorsModels.degirumCloud.models} />
+<ModelConfigDropdown detectorTitle="DeGirum" :models="objectDetectorsModels.degirumCloud.models" />
 
 一旦 `degirum_detector` 设置完成，你可以通过 `config.yml` 文件中的'model'部分选择模型。
 
@@ -857,4 +855,4 @@ AXEngine 检测器会在首次启动时从 HuggingFace 下载默认模型。缓�
 
 配置 AXEngine 检测器时，你必须指定模型名称。
 
-<ModelConfigDropdown detectorTitle="AXEngine" models={objectDetectorsModels.axengine.models} />
+<ModelConfigDropdown detectorTitle="AXEngine" :models="objectDetectorsModels.axengine.models" />
