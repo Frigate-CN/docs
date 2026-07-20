@@ -1,0 +1,5317 @@
+{
+  "generatedFrom": "script/config-schema.json",
+  "detectorTypes": {
+    "cpu": {
+      "label": "CPU",
+      "description": "在主机 CPU 上运行 TensorFlow Lite 模型的 CPU TFLite 检测器，无硬件加速。不推荐使用。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "num_threads": {
+          "label": "检测线程数",
+          "description": "用于基于 CPU 的推理的线程数。"
+        }
+      }
+    },
+    "deepstack": {
+      "label": "DeepStack",
+      "description": "将图像发送到远程 DeepStack HTTP API 进行推理的 DeepStack/CodeProject.AI 检测器。不推荐使用。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "api_url": {
+          "label": "DeepStack API URL",
+          "description": "DeepStack API 的 URL。"
+        },
+        "api_timeout": {
+          "label": "DeepStack API 超时时间（秒）",
+          "description": "DeepStack API 请求允许的最长时间。"
+        },
+        "api_key": {
+          "label": "DeepStack API 密钥（如需要）",
+          "description": "用于认证 DeepStack 服务的可选 API 密钥。"
+        }
+      }
+    },
+    "degirum": {
+      "label": "DeGirum",
+      "description": "通过 DeGirum 云或本地推理服务运行模型的 DeGirum 检测器。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "location": {
+          "label": "推理位置",
+          "description": "DeGirum 推理引擎的位置（例如 '@cloud'、'127.0.0.1'）。"
+        },
+        "zoo": {
+          "label": "模型库",
+          "description": "DeGirum 模型库的路径或 URL。"
+        },
+        "token": {
+          "label": "DeGirum 云令牌",
+          "description": "用于 DeGirum 云访问的令牌。"
+        }
+      }
+    },
+    "edgetpu": {
+      "label": "EdgeTPU",
+      "description": "使用 EdgeTPU 委托运行为 Coral EdgeTPU 编译的 TensorFlow Lite 模型的 EdgeTPU 检测器。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "device": {
+          "label": "设备类型",
+          "description": "用于 EdgeTPU 推理的设备（例如 'usb'、'pci'）。"
+        }
+      }
+    },
+    "hailo8l": {
+      "label": "Hailo-8/Hailo-8L",
+      "description": "使用 HEF 模型和 HailoRT SDK 在 Hailo 硬件上进行推理的 Hailo-8/Hailo-8L 检测器。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "device": {
+          "label": "设备类型",
+          "description": "用于 Hailo 推理的设备（例如 'PCIe'、'M.2'）。"
+        }
+      }
+    },
+    "memryx": {
+      "label": "MemryX",
+      "description": "在 MemryX 加速器上运行编译的 DFP 模型的 MemryX MX3 检测器。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "device": {
+          "label": "设备路径",
+          "description": "用于 MemryX 推理的设备（例如 'PCIe'）。"
+        }
+      }
+    },
+    "onnx": {
+      "label": "ONNX",
+      "description": "运行 ONNX 模型的 ONNX 检测器；当可用时将使用可用的加速后端（CUDA/ROCm/OpenVINO）。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "device": {
+          "label": "设备类型",
+          "description": "用于 ONNX 推理的设备（例如 'AUTO'、'CPU'、'GPU'）。"
+        }
+      }
+    },
+    "openvino": {
+      "label": "OpenVINO",
+      "description": "适用于 AMD 和 Intel CPU、Intel GPU 和 Intel VPU 硬件的 OpenVINO 检测器。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "device": {
+          "label": "设备类型",
+          "description": "用于 OpenVINO 推理的设备（例如 'CPU'、'GPU'、'NPU'）。"
+        }
+      }
+    },
+    "rknn": {
+      "label": "RKNN",
+      "description": "用于 Rockchip NPU 的 RKNN 检测器；在 Rockchip 硬件上运行编译的 RKNN 模型。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "num_cores": {
+          "label": "使用的 NPU 核心数。",
+          "description": "要使用的 NPU 核心数（0 表示自动）。"
+        }
+      }
+    },
+    "synaptics": {
+      "label": "Synaptics",
+      "description": "使用 Synap SDK 在 Synaptics 硬件上运行 .synap 格式模型的 Synaptics NPU 检测器。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        }
+      }
+    },
+    "teflon_tfl": {
+      "label": "Teflon",
+      "description": "使用 Mesa Teflon 委托库在支持的 GPU 上加速推理的 TFLite Teflon 委托检测器。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        }
+      }
+    },
+    "tensorrt": {
+      "label": "TensorRT",
+      "description": "使用序列化的 TensorRT 引擎进行加速推理的 Nvidia Jetson 设备 TensorRT 检测器。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "device": {
+          "label": "GPU 设备索引",
+          "description": "要使用的 GPU 设备索引。"
+        }
+      }
+    },
+    "zmq": {
+      "label": "ZMQ IPC",
+      "description": "通过 ZeroMQ IPC 端点将推理卸载到外部进程的 ZMQ IPC 检测器。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        },
+        "model": {
+          "label": "检测器特定模型配置",
+          "description": "检测器特定的模型配置选项（路径、输入大小等）。"
+        },
+        "model_path": {
+          "label": "检测器特定模型路径",
+          "description": "如果所选检测器需要，则为检测器模型二进制文件的路径。"
+        },
+        "endpoint": {
+          "label": "ZMQ IPC 端点",
+          "description": "要连接的 ZMQ 端点。"
+        },
+        "request_timeout_ms": {
+          "label": "ZMQ 请求超时（毫秒）",
+          "description": "ZMQ 请求的超时时间（毫秒）。"
+        },
+        "linger_ms": {
+          "label": "ZMQ 套接字逗留时间（毫秒）",
+          "description": "套接字逗留时间（毫秒）。"
+        }
+      }
+    },
+    "axengine": {
+      "label": "爱芯元智 NPU",
+      "description": "AXERA AX650N/AX8850N NPU 检测器，通过 AXEngine 运行库加载并执行编译后的 .axmodel 模型文件。",
+      "fields": {
+        "type": {
+          "label": "类型",
+          "description": ""
+        }
+      }
+    }
+  },
+  "levels": {
+    "global": {
+      "logger": {
+        "label": "日志",
+        "description": "控制默认日志详细程度，以及各组件的日志级别覆盖。",
+        "order": [
+          "default",
+          "logs"
+        ],
+        "groups": [],
+        "docs": "/configuration/advanced/system#frigate-logger",
+        "fields": {
+          "default": {
+            "label": "日志等级",
+            "description": "默认全局日志详细程度（调试、信息、警告、错误）。",
+            "widget": "select",
+            "default": "info",
+            "enum": [
+              "debug",
+              "info",
+              "warning",
+              "error",
+              "critical"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "logs": {
+            "label": "单进程日志级别",
+            "description": "按组件覆盖日志级别配置，用于提高或降低特定模块的日志详细程度。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "auth": {
+        "label": "身份验证",
+        "description": "身份验证和会话相关设置，包括 Cookie 和速率限制选项。",
+        "order": [
+          "enabled",
+          "reset_admin_password",
+          "cookie_name",
+          "cookie_secure",
+          "session_length",
+          "refresh_time",
+          "native_oauth_url",
+          "failed_login_rate_limit",
+          "trusted_proxies",
+          "hash_iterations",
+          "roles"
+        ],
+        "groups": [],
+        "docs": "/configuration/authentication",
+        "fields": {
+          "enabled": {
+            "label": "开启身份验证",
+            "description": "为 Frigate 页面开启原生身份验证。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "reset_admin_password": {
+            "label": "重置管理员密码",
+            "description": "开启后，启动时将重置管理员用户密码，并在日志中打印新密码。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "cookie_name": {
+            "label": "JWT Cookie 名称",
+            "description": "用于存储原生身份验证 JWT 令牌的 Cookie 名称。",
+            "widget": "text",
+            "default": "frigate_token",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "cookie_secure": {
+            "label": "安全 Cookie 标志",
+            "description": "在身份验证 Cookie 上设置安全标志；使用 TLS 时应启用此选项。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "session_length": {
+            "label": "会话时长",
+            "description": "基于 JWT 的会话持续时间（秒）。",
+            "widget": "number",
+            "default": 86400,
+            "enum": null,
+            "minimum": 60,
+            "maximum": null,
+            "advanced": true
+          },
+          "refresh_time": {
+            "label": "会话刷新窗口",
+            "description": "当会话距离过期时间在此秒数范围内时，将会话刷新回完整时长。",
+            "widget": "number",
+            "default": 1800,
+            "enum": null,
+            "minimum": 30,
+            "maximum": null,
+            "advanced": true
+          },
+          "failed_login_rate_limit": {
+            "label": "登录失败限制",
+            "description": "用于限制登录失败尝试次数的规则，以减少暴力破解攻击。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "trusted_proxies": {
+            "label": "受信任的代理",
+            "description": "用于确定客户端 IP 以进行速率限制的受信任代理 IP 列表。",
+            "widget": "tags",
+            "default": [],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "hash_iterations": {
+            "label": "哈希迭代次数",
+            "description": "对用户密码进行哈希处理时使用的 PBKDF2-SHA256 迭代次数。",
+            "widget": "number",
+            "default": 600000,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "database": {
+        "label": "数据库",
+        "description": "Frigate 用于存储追踪目标和录像元数据的 SQLite 数据库设置。",
+        "order": [
+          "path"
+        ],
+        "groups": [],
+        "docs": "/configuration/advanced/system#database",
+        "fields": {
+          "path": {
+            "label": "数据库路径",
+            "description": "Frigate SQLite 数据库文件的存储路径。",
+            "widget": "text",
+            "default": "/config/frigate.db",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "go2rtc": {
+        "label": "go2rtc",
+        "description": "集成的 go2rtc 转发服务设置，用于实时监控流转发和转码。",
+        "order": [],
+        "groups": [],
+        "docs": null,
+        "fields": {}
+      },
+      "mqtt": {
+        "label": "MQTT",
+        "description": "连接到 MQTT 代理并发布遥测数据、快照和事件详情的设置。",
+        "order": [
+          "enabled",
+          "host",
+          "port",
+          "user",
+          "password",
+          "topic_prefix",
+          "client_id",
+          "stats_interval",
+          "qos",
+          "tls_ca_certs",
+          "tls_client_cert",
+          "tls_client_key",
+          "tls_insecure"
+        ],
+        "groups": [],
+        "docs": "/integrations/mqtt",
+        "fields": {
+          "enabled": {
+            "label": "开启 MQTT",
+            "description": "启用或禁用 MQTT 集成，用于状态、事件和快照。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "host": {
+            "label": "MQTT 主机",
+            "description": "MQTT 代理的主机名或 IP 地址。",
+            "widget": "text",
+            "default": "",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "port": {
+            "label": "MQTT 端口",
+            "description": "MQTT 代理的端口（普通 MQTT 通常为 1883）。",
+            "widget": "number",
+            "default": 1883,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "topic_prefix": {
+            "label": "主题前缀",
+            "description": "所有 Frigate 主题的 MQTT 主题前缀；如果运行多个实例，必须唯一。",
+            "widget": "text",
+            "default": "frigate",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "client_id": {
+            "label": "客户端 ID",
+            "description": "连接到 MQTT 代理时使用的客户端标识符；每个实例应该唯一。",
+            "widget": "text",
+            "default": "frigate",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "stats_interval": {
+            "label": "统计信息间隔",
+            "description": "向 MQTT 发布系统和摄像头统计信息的时间间隔（秒）。",
+            "widget": "number",
+            "default": 60,
+            "enum": null,
+            "minimum": 15,
+            "maximum": null,
+            "advanced": true
+          },
+          "user": {
+            "label": "MQTT 用户名",
+            "description": "可选的 MQTT 用户名；可以通过环境变量或密钥提供。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "password": {
+            "label": "MQTT 密码",
+            "description": "可选的 MQTT 密码；可以通过环境变量或密钥提供。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "tls_ca_certs": {
+            "label": "TLS CA 证书",
+            "description": "用于 TLS 连接到代理的 CA 证书路径（用于自签名证书）。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "tls_client_cert": {
+            "label": "客户端证书",
+            "description": "TLS 双向认证的客户端证书路径；使用客户端证书时不要设置用户名/密码。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "tls_client_key": {
+            "label": "客户端密钥",
+            "description": "客户端证书的私钥路径。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "tls_insecure": {
+            "label": "TLS 不安全连接",
+            "description": "通过跳过主机名验证允许不安全的 TLS 连接（不推荐）。",
+            "widget": "switch",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "qos": {
+            "label": "MQTT QoS",
+            "description": "MQTT 发布/订阅的服务质量级别（0、1 或 2）。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "notifications": {
+        "label": "通知",
+        "description": "为所有摄像头启用和控制通知的设置；可按摄像头覆盖。",
+        "order": [
+          "enabled",
+          "email"
+        ],
+        "groups": [],
+        "docs": "/configuration/notifications",
+        "fields": {
+          "enabled": {
+            "label": "开启通知",
+            "description": "为所有摄像头启用或禁用通知；可按摄像头覆盖。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "email": {
+            "label": "通知邮箱",
+            "description": "用于推送通知或某些通知提供商要求的邮箱地址。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "cooldown": {
+            "label": "冷却时间",
+            "description": "通知之间的冷却时间（秒），以避免向收件人发送垃圾信息。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "networking": {
+        "label": "网络",
+        "description": "网络相关设置，如 Frigate 端点的 IPv6 启用。",
+        "order": [],
+        "groups": [],
+        "docs": "/configuration/advanced/system#network-configuration",
+        "fields": {
+          "ipv6.enabled": {
+            "label": "开启 IPv6",
+            "description": "在适用的情况下为 Frigate 服务（API 和 UI）启用 IPv6 支持。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "listen.internal": {
+            "label": "内部端口",
+            "description": "Frigate 的内部监听端口（默认 5000）。",
+            "widget": "number",
+            "default": 5000,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "listen.external": {
+            "label": "外部端口",
+            "description": "Frigate 的外部监听端口（默认 8971）。",
+            "widget": "number",
+            "default": 8971,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "proxy": {
+        "label": "代理",
+        "description": "用于将 Frigate 集成到传递已认证用户头的反向代理后面的设置。",
+        "order": [
+          "header_map",
+          "logout_url",
+          "auth_secret",
+          "default_role",
+          "separator"
+        ],
+        "groups": [],
+        "docs": "/configuration/authentication#proxy",
+        "fields": {
+          "header_map.user": {
+            "label": "用户请求头",
+            "description": "包含上游代理提供的已认证用户名的请求头。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "header_map.role": {
+            "label": "权限组请求头",
+            "description": "包含来自上游代理的已认证用户权限组或用户组的请求头。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "header_map.role_map": {
+            "label": "权限组映射",
+            "description": "将上游组值映射到 Frigate 权限组（例如将管理员组映射到管理员权限组）。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "logout_url": {
+            "label": "登出 URL",
+            "description": "通过代理登出时重定向用户的 URL。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "auth_secret": {
+            "label": "代理密钥",
+            "description": "与 X-Proxy-Secret 请求头进行比对的可选密钥，用于验证受信任的代理。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "default_role": {
+            "label": "默认权限组",
+            "description": "当没有权限组映射适用时分配给代理认证用户的默认权限组。",
+            "widget": "text",
+            "default": "viewer",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "separator": {
+            "label": "分隔符",
+            "description": "用于分割代理请求头中多个值的字符。",
+            "widget": "text",
+            "default": ",",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "telemetry": {
+        "label": "遥测",
+        "description": "系统遥测和统计选项，包括 GPU 和网络带宽监控。",
+        "order": [
+          "network_interfaces",
+          "stats",
+          "version_check"
+        ],
+        "groups": [],
+        "docs": "/configuration/advanced/reference",
+        "fields": {
+          "network_interfaces": {
+            "label": "网络接口",
+            "description": "要监控带宽统计信息的网络接口名称前缀列表。",
+            "widget": "tags",
+            "default": [],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "stats.amd_gpu_stats": {
+            "label": "AMD GPU 统计",
+            "description": "如果存在 AMD GPU，则启用 AMD GPU 统计信息收集。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "stats.intel_gpu_stats": {
+            "label": "Intel GPU 统计",
+            "description": "如果存在 Intel GPU，则启用 Intel GPU 统计信息收集。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "stats.network_bandwidth": {
+            "label": "网络带宽",
+            "description": "为摄像头 ffmpeg 进程和检测器启用按进程网络带宽监控（需要权限）。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "stats.intel_gpu_device": {
+            "label": "Intel GPU 设备",
+            "description": "当系统存在多个 Intel 显卡时，用于将显卡运行数据绑定到指定设备的 PCI 总线地址或 DRM 设备路径（示例：/dev/dri/card1）。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "version_check": {
+            "label": "版本检查",
+            "description": "启用出站检查以检测是否有更新版本的 Frigate 可用。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "tls": {
+        "label": "TLS",
+        "description": "Frigate Web 端点（端口 8971）的 TLS 设置。",
+        "order": [
+          "enabled",
+          "cert",
+          "key"
+        ],
+        "groups": [],
+        "docs": "/configuration/tls",
+        "fields": {
+          "enabled": {
+            "label": "开启 TLS",
+            "description": "为 Frigate 的网页页面和 API 的端口开启 TLS 加密。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "ui": {
+        "label": "用户界面",
+        "description": "用户界面偏好设置，如时区、时间/日期格式和单位。",
+        "order": [
+          "timezone",
+          "time_format",
+          "unit_system"
+        ],
+        "groups": [],
+        "docs": "/configuration/advanced/reference",
+        "fields": {
+          "timezone": {
+            "label": "时区",
+            "description": "可选时区，用于整个界面展示时间（如果未设置，则默认为浏览器本地时间的时区）。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "time_format": {
+            "label": "时间格式",
+            "description": "页面中将使用的时间格式（浏览器、12小时制 或 24小时制）。",
+            "widget": "select",
+            "default": "browser",
+            "enum": [
+              "browser",
+              "12hour",
+              "24hour"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "unit_system": {
+            "label": "单位系统",
+            "description": "UI 和 MQTT 中使用的显示单位系统（公制或英制）。",
+            "widget": "select",
+            "default": "metric",
+            "enum": [
+              "imperial",
+              "metric"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "model": {
+        "label": "检测模型",
+        "description": "用于配置自定义目标检测模型及其输入形状的设置。",
+        "order": [
+          "path",
+          "labelmap_path",
+          "width",
+          "height",
+          "input_pixel_format",
+          "input_tensor",
+          "input_dtype",
+          "model_type"
+        ],
+        "groups": [],
+        "docs": "/configuration/object_detectors#model",
+        "fields": {
+          "path": {
+            "label": "自定义目标检测模型路径",
+            "description": "自定义检测模型文件的路径（或 Frigate+ 模型的 plus://<model_id>）。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "labelmap_path": {
+            "label": "自定义目标检测器的标签映射",
+            "description": "将数字类别映射到检测器字符串标签的标签映射文件路径。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "width": {
+            "label": "目标检测模型输入宽度",
+            "description": "模型输入张量的宽度（像素）。",
+            "widget": "number",
+            "default": 320,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "height": {
+            "label": "目标检测模型输入高度",
+            "description": "模型输入张量的高度（像素）。",
+            "widget": "number",
+            "default": 320,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "input_tensor": {
+            "label": "模型输入张量形状",
+            "description": "模型期望的张量格式：'nhwc' 或 'nchw'。",
+            "widget": "select",
+            "default": "nhwc",
+            "enum": [
+              "nchw",
+              "nhwc",
+              "hwnc",
+              "hwcn"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "input_pixel_format": {
+            "label": "模型输入像素颜色格式",
+            "description": "模型期望的像素色彩空间：'rgb'、'bgr' 或 'yuv'。",
+            "widget": "select",
+            "default": "rgb",
+            "enum": [
+              "rgb",
+              "bgr",
+              "yuv"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "input_dtype": {
+            "label": "模型输入数据类型",
+            "description": "模型输入张量的数据类型（例如 'float32'）。",
+            "widget": "select",
+            "default": "int",
+            "enum": [
+              "float",
+              "float_denorm",
+              "int"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "model_type": {
+            "label": "目标检测模型类型",
+            "description": "某些检测器用于优化的检测器模型架构类型（ssd、yolox、yolonas）。",
+            "widget": "select",
+            "default": "ssd",
+            "enum": [
+              "dfine",
+              "rfdetr",
+              "ssd",
+              "yolox",
+              "yolonas",
+              "yolo-generic"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "detectors": {
+            "label": "检测器硬件",
+            "description": "目标检测器（CPU、GPU、ONNX 后端）的配置以及任何检测器特定的模型设置。",
+            "widget": "object",
+            "default": {
+              "cpu": {
+                "type": "cpu"
+              }
+            },
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "audio": {
+        "label": "音频检测",
+        "description": "所有摄像头的基于音频的事件检测设置；可按摄像头覆盖。",
+        "order": [
+          "enabled",
+          "listen",
+          "filters",
+          "min_volume",
+          "max_not_heard",
+          "num_threads"
+        ],
+        "groups": [
+          {
+            "key": "detection",
+            "label": "全局检测",
+            "fields": [
+              "listen",
+              "filters"
+            ]
+          },
+          {
+            "key": "sensitivity",
+            "label": "全局灵敏度",
+            "fields": [
+              "min_volume",
+              "max_not_heard"
+            ]
+          }
+        ],
+        "docs": "/configuration/audio_detectors",
+        "fields": {
+          "enabled": {
+            "label": "开启音频检测",
+            "description": "为所有摄像头启用或禁用音频事件检测；可按摄像头覆盖。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "max_not_heard": {
+            "label": "结束超时",
+            "description": "在结束音频事件之前，未检测到配置的音频类型的秒数。",
+            "widget": "number",
+            "default": 30,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "min_volume": {
+            "label": "最小音量",
+            "description": "运行音频检测所需的最小 RMS 音量阈值；数值越低灵敏度越高（例如 200 高灵敏度，500 中等，1000 低灵敏度）。",
+            "widget": "number",
+            "default": 500,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "listen": {
+            "label": "监听类型",
+            "description": "要检测的音频事件类型列表（例如：bark、fire_alarm、speech、yell）。",
+            "widget": "tags",
+            "default": [
+              "bark",
+              "fire_alarm",
+              "speech",
+              "yell"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "filters": {
+            "label": "音频过滤器",
+            "description": "按音频类型的过滤器设置，如用于减少误报的置信度阈值。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "num_threads": {
+            "label": "检测线程",
+            "description": "用于音频检测处理的线程数量。",
+            "widget": "number",
+            "default": 2,
+            "enum": null,
+            "minimum": 1,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "birdseye": {
+        "label": "鸟瞰图",
+        "description": "将多路摄像头画面合并为统一布局的鸟瞰合成视图设置。",
+        "order": [
+          "enabled",
+          "restream",
+          "width",
+          "height",
+          "quality",
+          "mode",
+          "layout",
+          "inactivity_threshold",
+          "idle_heartbeat_fps"
+        ],
+        "groups": [],
+        "docs": "/configuration/birdseye",
+        "fields": {
+          "enabled": {
+            "label": "开启鸟瞰图",
+            "description": "开启或关闭鸟瞰图功能。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "mode": {
+            "label": "追踪模式",
+            "description": "在鸟瞰视图中包含摄像头的模式有：“基于目标”、“基于画面变动”或“连续”。",
+            "widget": "select",
+            "default": "objects",
+            "enum": [
+              "objects",
+              "motion",
+              "continuous"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "restream": {
+            "label": "转发 RTSP",
+            "description": "将鸟瞰图输出作为 RTSP 流重新转发；启用此功能将使鸟瞰图持续运行。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "width": {
+            "label": "宽度",
+            "description": "合成的鸟瞰帧的输出宽度（像素）。",
+            "widget": "number",
+            "default": 1280,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "height": {
+            "label": "高度",
+            "description": "合成的鸟瞰帧的输出高度（像素）。",
+            "widget": "number",
+            "default": 720,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "quality": {
+            "label": "编码质量",
+            "description": "鸟瞰图 mpeg1 流的编码质量（1 最高质量，31 最低）。",
+            "widget": "range",
+            "default": 8,
+            "enum": null,
+            "minimum": 1,
+            "maximum": 31,
+            "advanced": true
+          },
+          "inactivity_threshold": {
+            "label": "非活动阈值",
+            "description": "摄像头停止在鸟瞰图中显示的非活动秒数。",
+            "widget": "number",
+            "default": 30,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": true
+          },
+          "layout.scaling_factor": {
+            "label": "缩放因子",
+            "description": "布局计算器使用的缩放因子（范围 1.0 到 5.0）。",
+            "widget": "range",
+            "default": 2,
+            "enum": null,
+            "minimum": 1,
+            "maximum": 5,
+            "advanced": false
+          },
+          "layout.max_cameras": {
+            "label": "最大摄像头数",
+            "description": "鸟瞰图中同时显示的最大摄像头数量；显示最近的摄像头。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "idle_heartbeat_fps": {
+            "label": "空闲心跳 FPS",
+            "description": "空闲时重新发送最后一个合成鸟瞰帧的每秒帧数；设为 0 则禁用。",
+            "widget": "range",
+            "default": 0,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 10,
+            "advanced": false
+          }
+        }
+      },
+      "detect": {
+        "label": "目标检测",
+        "description": "用于运行目标检测、初始化追踪器的检测模块设置。",
+        "order": [
+          "enabled",
+          "width",
+          "height",
+          "fps",
+          "min_initialized",
+          "max_disappeared",
+          "annotation_offset",
+          "stationary",
+          "stationary.interval",
+          "stationary.threshold",
+          "stationary.max_frames"
+        ],
+        "groups": [
+          {
+            "key": "resolution",
+            "label": "全局分辨率",
+            "fields": [
+              "width",
+              "height",
+              "fps"
+            ]
+          },
+          {
+            "key": "tracking",
+            "label": "全局追踪",
+            "fields": [
+              "min_initialized",
+              "max_disappeared"
+            ]
+          }
+        ],
+        "docs": "/configuration/camera_specific",
+        "fields": {
+          "enabled": {
+            "label": "开启目标检测",
+            "description": "为所有摄像头启用或禁用目标检测，可按摄像头覆盖。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "height": {
+            "label": "检测画面高度",
+            "description": "用于配置检测流的画面高度（像素）；留空则使用原始视频流分辨率。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "width": {
+            "label": "检测画面宽度",
+            "description": "用于配置检测流的画面宽度（像素）；留空则使用原始视频流分辨率。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "fps": {
+            "label": "检测帧率",
+            "description": "检测时希望使用的帧率；数值越低，CPU 占用越小（推荐值为 5，仅在追踪极高速运动的目标时才设置更高数值，最高不建议超过 10）。",
+            "widget": "number",
+            "default": 5,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "min_initialized": {
+            "label": "最小初始化帧数",
+            "description": "创建追踪目标前，需要连续检测到目标的次数。数值越大，错误触发的追踪越少。默认值为帧率除以 2。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 2,
+            "maximum": null,
+            "advanced": true
+          },
+          "max_disappeared": {
+            "label": "最大消失帧数",
+            "description": "追踪目标在连续多少帧未被检测到时，将被判定为已消失。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "stationary.interval": {
+            "label": "静止间隔",
+            "description": "设置每隔多少帧执行一次检测，用于确认目标是否处于静止状态。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "stationary.threshold": {
+            "label": "静止阈值",
+            "description": "目标需要连续多少帧位置不变，才会被标记为静止状态。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 1,
+            "maximum": null,
+            "advanced": false
+          },
+          "stationary.max_frames.default": {
+            "label": "默认最大帧数",
+            "description": "停止追踪前，用于追踪静止目标的默认最大帧数。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 1,
+            "maximum": null,
+            "advanced": false
+          },
+          "stationary.max_frames.objects": {
+            "label": "目标最大帧数",
+            "description": "可对不同类型目标分别设置静止追踪的最大帧数（覆盖全局设置）。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "stationary.classifier": {
+            "label": "开启视觉分类器",
+            "description": "使用视觉分类器，即使检测框有轻微抖动，也能准确判断物体是否为静止。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "annotation_offset": {
+            "label": "标记偏移量",
+            "description": "检测标记的时间偏移量（毫秒），用于让时间轴上的检测框与录像画面更精准对齐；可设置为正数或负数。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "ffmpeg": {
+        "label": "FFmpeg",
+        "description": "FFmpeg 编解码相关设置，包含可执行文件路径、命令行参数、硬件加速选项，以及按不同功能划分的输出参数。",
+        "order": [
+          "hwaccel_args",
+          "path",
+          "global_args",
+          "input_args",
+          "output_args",
+          "apple_compatibility",
+          "gpu"
+        ],
+        "groups": [],
+        "docs": "/configuration/ffmpeg_presets",
+        "fields": {
+          "path": {
+            "label": "FFmpeg 路径",
+            "description": "要使用的 FFmpeg 可执行文件路径，或版本别名（如 \"7.0\" 或 \"8.0\"）。",
+            "widget": "text",
+            "default": "default",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "global_args": {
+            "label": "FFmpeg 全局参数",
+            "description": "传递给 FFmpeg 进程的全局参数。",
+            "widget": "text",
+            "default": [
+              "-hide_banner",
+              "-loglevel",
+              "warning",
+              "-threads",
+              "2"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "hwaccel_args": {
+            "label": "硬件加速参数",
+            "description": "用于 FFmpeg 的硬件加速参数。建议使用对应硬件厂商的预设配置。",
+            "widget": "text",
+            "default": "auto",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "input_args": {
+            "label": "输入参数",
+            "description": "应用于 FFmpeg 输入视频流的输入参数。",
+            "widget": "text",
+            "default": "preset-rtsp-generic",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "output_args.detect": {
+            "label": "检测输出参数",
+            "description": "检测功能视频流的默认输出参数。",
+            "widget": "text",
+            "default": [
+              "-threads",
+              "2",
+              "-f",
+              "rawvideo",
+              "-pix_fmt",
+              "yuv420p"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "output_args.record": {
+            "label": "录制输出参数",
+            "description": "录制功能视频流的默认输出参数。",
+            "widget": "text",
+            "default": "preset-record-generic-audio-aac",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "apple_compatibility": {
+            "label": "Apple 兼容性",
+            "description": "录制 H.265 视频时启用 HEVC 标记，以提升对 Apple 设备播放的兼容性。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "gpu": {
+            "label": "GPU 索引",
+            "description": "在启用硬件加速时，默认使用的 GPU 索引。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "live": {
+        "label": "实时监控观看",
+        "description": "用于控制 JSMPEG 实时流分辨率与画质的设置。此设置不影响使用 go2rtc 进行实时预览的摄像头。",
+        "order": [
+          "streams",
+          "height",
+          "quality"
+        ],
+        "groups": [],
+        "docs": "/configuration/live",
+        "fields": {
+          "height": {
+            "label": "实时监控高度",
+            "description": "在网页页面中渲染 jsmpeg 实时监控流的高度（像素）；必须小于等于检测流高度。",
+            "widget": "number",
+            "default": 720,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "quality": {
+            "label": "实时监控质量",
+            "description": "jsmpeg 流的编码质量（1 最高，31 最低）。",
+            "widget": "range",
+            "default": 8,
+            "enum": null,
+            "minimum": 1,
+            "maximum": 31,
+            "advanced": true
+          }
+        }
+      },
+      "motion": {
+        "label": "画面变动检测",
+        "description": "应用于摄像头的默认动作检测设置，除非按摄像头覆盖。",
+        "order": [
+          "enabled",
+          "threshold",
+          "lightning_threshold",
+          "skip_motion_threshold",
+          "improve_contrast",
+          "contour_area",
+          "delta_alpha",
+          "frame_alpha",
+          "frame_height",
+          "mqtt_off_delay"
+        ],
+        "groups": [
+          {
+            "key": "sensitivity",
+            "label": "全局灵敏度",
+            "fields": [
+              "threshold",
+              "contour_area"
+            ]
+          },
+          {
+            "key": "algorithm",
+            "label": "全局算法",
+            "fields": [
+              "improve_contrast",
+              "delta_alpha",
+              "frame_alpha"
+            ]
+          }
+        ],
+        "docs": "/configuration/motion_detection",
+        "fields": {
+          "enabled": {
+            "label": "开启画面变动检测",
+            "description": "为所有摄像头启用或禁用动作检测；可按摄像头覆盖。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "threshold": {
+            "label": "画面变动阈值",
+            "description": "画面变动检测器使用的像素差异阈值；数值越高灵敏度越低（范围 1-255）。",
+            "widget": "range",
+            "default": 30,
+            "enum": null,
+            "minimum": 1,
+            "maximum": 255,
+            "advanced": false
+          },
+          "lightning_threshold": {
+            "label": "闪电阈值",
+            "description": "用于检测和忽略短暂闪电闪烁的阈值（数值越低越敏感，范围 0.3 到 1.0）。这不会完全阻止画面变动检测；只是当超过阈值时检测器会停止分析额外的帧。在此类事件期间仍会创建基于画面变动的录像。",
+            "widget": "range",
+            "default": 0.8,
+            "enum": null,
+            "minimum": 0.3,
+            "maximum": 1,
+            "advanced": true
+          },
+          "skip_motion_threshold": {
+            "label": "跳过画面变动阈值",
+            "description": "如果单帧中画面变化超过此比例，检测器将判定为无画面变动并立即重新校准。这可以节省 CPU 并减少闪电、风暴等情况下的误报，但也可能会错过真正的事件，如 PTZ 摄像头自动追踪目标。你需要权衡取舍：是否牺牲少量录制片段，换取更少无效视频与更低的误检。保持为空即可关闭该功能。",
+            "widget": "range",
+            "default": null,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 1,
+            "advanced": true
+          },
+          "improve_contrast": {
+            "label": "改善对比度",
+            "description": "在画面变动分析之前对帧应用对比度改善以帮助检测。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "contour_area": {
+            "label": "轮廓区域",
+            "description": "画面变动轮廓被计入所需的最小轮廓区域（像素）。",
+            "widget": "number",
+            "default": 10,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "delta_alpha": {
+            "label": "Delta alpha",
+            "description": "用于画面变动计算的帧差异中使用的 alpha 混合因子。",
+            "widget": "number",
+            "default": 0.2,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "frame_alpha": {
+            "label": "画面 alpha 通道",
+            "description": "画面变动预处理时混合画面所使用的 alpha 值。",
+            "widget": "number",
+            "default": 0.01,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "frame_height": {
+            "label": "画面高度",
+            "description": "计算画面变动时缩放画面的高度（像素）。",
+            "widget": "number",
+            "default": 100,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "mqtt_off_delay": {
+            "label": "MQTT 关闭延迟",
+            "description": "在发布 MQTT 'off' 状态之前，最后一次画面变动后等待的秒数。",
+            "widget": "number",
+            "default": 30,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "objects": {
+        "label": "目标",
+        "description": "目标追踪默认设置，包括要追踪的标签和按目标的过滤器。",
+        "order": [
+          "track",
+          "alert",
+          "detect",
+          "filters"
+        ],
+        "groups": [
+          {
+            "key": "tracking",
+            "label": "全局追踪",
+            "fields": [
+              "track",
+              "alert",
+              "detect"
+            ]
+          },
+          {
+            "key": "filtering",
+            "label": "全局筛选",
+            "fields": [
+              "filters"
+            ]
+          }
+        ],
+        "docs": "/configuration/object_filters",
+        "fields": {
+          "track": {
+            "label": "要追踪的目标",
+            "description": "所有摄像头要追踪的目标标签列表；可按摄像头覆盖。",
+            "widget": "tags",
+            "default": [
+              "person"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "filters": {
+            "label": "目标过滤器",
+            "description": "应用于检测到的目标以减少误报的过滤器（区域、比例、置信度）。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.enabled": {
+            "label": "开启生成式 AI",
+            "description": "默认开启生成式 AI 生成追踪目标的描述。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.use_snapshot": {
+            "label": "使用快照",
+            "description": "使用目标快照而不是缩略图给生成式 AI 进行描述生成。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.prompt": {
+            "label": "字幕提示",
+            "description": "使用生成式 AI 生成描述时使用的默认提示模板。",
+            "widget": "text",
+            "default": "Analyze the sequence of images containing the {label}. Focus on the likely intent or behavior of the {label} based on its actions and movement, rather than describing its appearance or the surroundings. Consider what the {label} is doing, why, and what it might do next.",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.object_prompts": {
+            "label": "目标提示",
+            "description": "按目标设置提示词，让生成式 AI 对不同标签的输出进行定制。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.objects": {
+            "label": "生成式 AI 目标",
+            "description": "默认发送给生成式 AI 的目标标签列表。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.debug_save_thumbnails": {
+            "label": "保存缩略图",
+            "description": "保存发送给生成式 AI 的缩略图用于调试和核查。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.send_triggers.tracked_object_end": {
+            "label": "结束时发送",
+            "description": "目标追踪结束时向生成式 AI 发送请求。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.send_triggers.after_significant_updates": {
+            "label": "生成式 AI 提前触发",
+            "description": "在追踪目标发生指定次数的重要变化后，向生成式 AI 发送请求。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 1,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "record": {
+        "label": "录像",
+        "description": "应用于摄像头的录像和保留设置，除非按摄像头覆盖。",
+        "order": [
+          "enabled",
+          "expire_interval",
+          "continuous",
+          "motion",
+          "alerts",
+          "detections",
+          "preview",
+          "export"
+        ],
+        "groups": [
+          {
+            "key": "retention",
+            "label": "全局保留",
+            "fields": [
+              "continuous",
+              "motion"
+            ]
+          },
+          {
+            "key": "events",
+            "label": "全局事件",
+            "fields": [
+              "alerts",
+              "detections"
+            ]
+          }
+        ],
+        "docs": "/configuration/record",
+        "fields": {
+          "enabled": {
+            "label": "开启录像",
+            "description": "为所有摄像头启用或禁用录像；可按摄像头覆盖。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "expire_interval": {
+            "label": "录像清理间隔",
+            "description": "清理过期录像片段的间隔分钟数。",
+            "widget": "number",
+            "default": 60,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "continuous.days": {
+            "label": "保留天数",
+            "description": "保留录像的天数。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "motion.days": {
+            "label": "保留天数",
+            "description": "保留录像的天数。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.pre_capture": {
+            "label": "前捕获秒数",
+            "description": "检测事件之前包含在录像中的秒数。",
+            "widget": "range",
+            "default": 5,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 60,
+            "advanced": false
+          },
+          "detections.post_capture": {
+            "label": "后捕获秒数",
+            "description": "检测事件之后包含在录像中的秒数。",
+            "widget": "number",
+            "default": 5,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.retain.days": {
+            "label": "保留天数",
+            "description": "保留检测事件录像的天数。",
+            "widget": "number",
+            "default": 10,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.retain.mode": {
+            "label": "保留模式",
+            "description": "保留模式：all（保存所有片段）、motion（保存有动作的片段）或 active_objects（保存有活动目标的片段）。",
+            "widget": "select",
+            "default": "motion",
+            "enum": [
+              "all",
+              "motion",
+              "active_objects"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.pre_capture": {
+            "label": "前捕获秒数",
+            "description": "检测事件之前包含在录像中的秒数。",
+            "widget": "range",
+            "default": 5,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 60,
+            "advanced": false
+          },
+          "alerts.post_capture": {
+            "label": "后捕获秒数",
+            "description": "检测事件之后包含在录像中的秒数。",
+            "widget": "number",
+            "default": 5,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.retain.days": {
+            "label": "保留天数",
+            "description": "保留检测事件录像的天数。",
+            "widget": "number",
+            "default": 10,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.retain.mode": {
+            "label": "保留模式",
+            "description": "保留模式：all（保存所有片段）、motion（保存有动作的片段）或 active_objects（保存有活动目标的片段）。",
+            "widget": "select",
+            "default": "motion",
+            "enum": [
+              "all",
+              "motion",
+              "active_objects"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "export.hwaccel_args": {
+            "label": "导出硬件加速参数",
+            "description": "用于导出/转码操作的硬件加速参数。",
+            "widget": "text",
+            "default": "auto",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "export.max_concurrent": {
+            "label": "最大并发导出数",
+            "description": "同时可处理的最大导出任务数量。",
+            "widget": "number",
+            "default": 3,
+            "enum": null,
+            "minimum": 1,
+            "maximum": null,
+            "advanced": false
+          },
+          "preview.quality": {
+            "label": "预览质量",
+            "description": "预览质量级别（very_low、low、medium、high、very_high）。",
+            "widget": "select",
+            "default": "medium",
+            "enum": [
+              "very_low",
+              "low",
+              "medium",
+              "high",
+              "very_high"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "review": {
+        "label": "核查",
+        "description": "控制界面与存储所使用的警报、检测和生成式 AI 核查总结的相关设置。",
+        "order": [
+          "alerts",
+          "detections",
+          "genai",
+          "genai.enabled"
+        ],
+        "groups": [],
+        "docs": "/configuration/review",
+        "fields": {
+          "alerts.enabled": {
+            "label": "开启警报",
+            "description": "为所有摄像头启用或禁用警报生成；可按摄像头覆盖。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.labels": {
+            "label": "警报标签",
+            "description": "符合警报条件的目标标签列表（例如：car、person）。",
+            "widget": "tags",
+            "default": [
+              "person",
+              "car"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.required_zones": {
+            "label": "必需区域",
+            "description": "目标必须进入才能被视为警报的区域；留空则允许任何区域。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.cutoff_time": {
+            "label": "警报截止时间",
+            "description": "在没有引起警报的活动后等待多少秒后截止警报。",
+            "widget": "number",
+            "default": 40,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.enabled": {
+            "label": "开启检测",
+            "description": "为所有摄像头启用或禁用检测事件；可按摄像头覆盖。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.labels": {
+            "label": "检测标签",
+            "description": "符合检测事件条件的目标标签列表。",
+            "widget": "tags",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.required_zones": {
+            "label": "必需区域",
+            "description": "目标必须进入才能被视为检测的区域；留空则允许任何区域。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.cutoff_time": {
+            "label": "检测截止时间",
+            "description": "在没有引起检测的活动后等待多少秒后截止检测。",
+            "widget": "number",
+            "default": 30,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.enabled": {
+            "label": "开启生成式 AI 描述",
+            "description": "为核查项开启或关闭使用生成式 AI 生成描述和摘要。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.alerts": {
+            "label": "为警报开启生成式 AI",
+            "description": "使用生成式 AI 为警报项生成描述。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.detections": {
+            "label": "为检测开启生成式 AI",
+            "description": "使用生成式 AI 为检测项生成描述。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.image_source": {
+            "label": "核查图像来源",
+            "description": "发送给生成式 AI 的画面来源（“预览” 或 “录制”）；“录制”将使用更高质量的画面帧，但会消耗更多的 token。",
+            "widget": "select",
+            "default": "preview",
+            "enum": [
+              "preview",
+              "recordings"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.additional_concerns": {
+            "label": "额外关注事项",
+            "description": "生成式 AI 在分析此摄像头的监控行为时，需要额外注意的事项或说明列表。",
+            "widget": "tags",
+            "default": [],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.debug_save_thumbnails": {
+            "label": "保存缩略图",
+            "description": "保存发送给生成式 AI 提供商的缩略图用于调试和核查。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.preferred_language": {
+            "label": "首选语言",
+            "description": "向生成式 AI 提供商请求生成响应的首选语言。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.activity_context_prompt": {
+            "label": "活动上下文提示",
+            "description": "自定义提示词，用于说明可疑行为与非可疑行为的界定，为生成式 AI 生成摘要提供上下文依据。",
+            "widget": "text",
+            "default": "### Normal Activity Indicators (Level 0)\n- Known/verified people in any zone at any time\n- People with pets in residential areas\n- Routine residential vehicle access during daytime/evening (6 AM - 10 PM): entering, exiting, loading/unloading items — normal commute and travel patterns\n- Deliveries or services during daytime/evening (6 AM - 10 PM): carrying packages to doors/porches, placing items, leaving\n- Services/maintenance workers with visible tools, uniforms, or service vehicles during daytime\n- Activity confined to public areas only (sidewalks, streets) without entering property at any time\n\n### Suspicious Activity Indicators (Level 1)\n- **Checking or probing vehicle/building access**: trying handles without entering, peering through windows, examining multiple vehicles, or possessing break-in tools — Level 1\n- **Unidentified person in private areas (driveways, near vehicles/buildings) during late night/early morning (11 PM - 5 AM)** — ALWAYS Level 1 regardless of activity or duration\n- Taking items that don't belong to them (packages, objects from porches/driveways)\n- Climbing or jumping fences/barriers to access property\n- Attempting to conceal actions or items from view\n- Prolonged loitering: remaining in same area without visible purpose throughout most of the sequence\n\n### Critical Threat Indicators (Level 2)\n- Holding break-in tools (crowbars, pry bars, bolt cutters)\n- Weapons visible (guns, knives, bats used aggressively)\n- Forced entry in progress\n- Physical aggression or violence\n- Active property damage or theft in progress\n\n### Assessment Guidance\nEvaluate in this order:\n\n1. **If person is verified/known** → Level 0 regardless of time or activity\n2. **If person is unidentified:**\n   - Check time: If late night/early morning (11 PM - 5 AM) AND in private areas (driveways, near vehicles/buildings) → Level 1\n   - Check actions: If probing access (trying handles without entering, checking multiple vehicles), taking items, climbing → Level 1\n   - Otherwise, if daytime/evening (6 AM - 10 PM) with clear legitimate purpose (delivery, service, routine vehicle access) → Level 0\n3. **Escalate to Level 2 if:** Weapons, break-in tools, forced entry in progress, violence, or active property damage visible (escalates from Level 0 or 1)\n\nThe mere presence of an unidentified person in private areas during late night hours is inherently suspicious and warrants human review, regardless of what activity they appear to be doing or how brief the sequence is.",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "snapshots": {
+        "label": "快照",
+        "description": "所有摄像头的追踪目标 API 快照设置；可摄像头单独配置覆盖全局配置。",
+        "order": [
+          "enabled",
+          "bounding_box",
+          "crop",
+          "quality",
+          "timestamp",
+          "required_zones",
+          "retain"
+        ],
+        "groups": [
+          {
+            "key": "display",
+            "label": "全局显示",
+            "fields": [
+              "bounding_box",
+              "crop",
+              "quality",
+              "timestamp"
+            ]
+          }
+        ],
+        "docs": "/configuration/snapshots",
+        "fields": {
+          "enabled": {
+            "label": "开启快照",
+            "description": "为所有摄像头启用或禁用保存快照；可按摄像头覆盖。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "timestamp": {
+            "label": "时间戳叠加",
+            "description": "在 API 生成的快照上叠加时间戳。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "bounding_box": {
+            "label": "边界框叠加",
+            "description": "在 API 生成的快照上绘制追踪目标的边界框。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "crop": {
+            "label": "裁剪快照",
+            "description": "在 API 生成的快照裁剪到检测到的目标边界框。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "height": {
+            "label": "快照高度",
+            "description": "将 API 生成的快照调整到的目标高度（像素）；留空则保持原始大小。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "retain.default": {
+            "label": "默认保留",
+            "description": "保留快照的默认天数。",
+            "widget": "number",
+            "default": 10,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "retain.objects": {
+            "label": "目标保留",
+            "description": "按目标覆盖的快照保留天数。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "quality": {
+            "label": "快照质量",
+            "description": "保存快照的编码质量（0-100）。",
+            "widget": "range",
+            "default": 60,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 100,
+            "advanced": true
+          }
+        }
+      },
+      "timestamp_style": {
+        "label": "时间戳样式",
+        "description": "应用于调试视图和快照的帧内时间戳样式选项。",
+        "order": [
+          "position",
+          "format",
+          "thickness",
+          "color"
+        ],
+        "groups": [],
+        "docs": "/configuration/advanced/reference",
+        "fields": {
+          "position": {
+            "label": "时间戳位置",
+            "description": "时间戳在图像上的位置（tl/tr/bl/br）。",
+            "widget": "select",
+            "default": "tl",
+            "enum": [
+              "tl",
+              "tr",
+              "bl",
+              "br"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "format": {
+            "label": "时间戳格式",
+            "description": "用于时间戳的日期时间格式字符串（Python 日期时间格式代码）。",
+            "widget": "text",
+            "default": "%m/%d/%Y %H:%M:%S",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "color.red": {
+            "label": "红色",
+            "description": "时间戳颜色的红色分量（0-255）。",
+            "widget": "range",
+            "default": 255,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 255,
+            "advanced": false
+          },
+          "color.green": {
+            "label": "绿色",
+            "description": "时间戳颜色的绿色分量（0-255）。",
+            "widget": "range",
+            "default": 255,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 255,
+            "advanced": false
+          },
+          "color.blue": {
+            "label": "蓝色",
+            "description": "时间戳颜色的蓝色分量（0-255）。",
+            "widget": "range",
+            "default": 255,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 255,
+            "advanced": false
+          },
+          "thickness": {
+            "label": "时间戳粗细",
+            "description": "时间戳文本的线条粗细。",
+            "widget": "number",
+            "default": 2,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "audio_transcription": {
+        "label": "音频转录",
+        "description": "用于事件和实时字幕的实时和语音音频转录设置。",
+        "order": [
+          "enabled",
+          "language",
+          "device",
+          "model_size"
+        ],
+        "groups": [],
+        "docs": "/configuration/audio_detectors#audio-transcription",
+        "fields": {
+          "enabled": {
+            "label": "开启音频转录",
+            "description": "为所有摄像头启用或禁用自动音频转录；可按摄像头覆盖。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "language": {
+            "label": "转录语言",
+            "description": "用于转录/翻译的语言代码（例如 'en' 表示英语）。请参阅 https://whisper-api.com/docs/languages/ 了解支持的语言代码。",
+            "widget": "text",
+            "default": "en",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "device": {
+            "label": "转录设备",
+            "description": "运行转录模型的设备密钥（CPU/GPU）。目前仅支持 NVIDIA CUDA GPU 进行转录。",
+            "widget": "select",
+            "default": "CPU",
+            "enum": [
+              "GPU",
+              "CPU"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "model_size": {
+            "label": "模型大小",
+            "description": "用于离线音频事件转录的模型大小。",
+            "widget": "select",
+            "default": "small",
+            "enum": [
+              "small",
+              "large"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "classification": {
+        "label": "目标分类",
+        "description": "用于优化目标标签或状态分类的分类模型设置。",
+        "order": [],
+        "groups": [],
+        "docs": "/configuration/custom_classification/object_classification",
+        "fields": {
+          "bird.enabled": {
+            "label": "鸟类分类",
+            "description": "启用或禁用鸟类分类。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "bird.threshold": {
+            "label": "最小分数",
+            "description": "接受鸟类分类所需的最小分类分数。",
+            "widget": "number",
+            "default": 0.9,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 1,
+            "advanced": false
+          }
+        }
+      },
+      "semantic_search": {
+        "label": "语义搜索",
+        "description": "用于构建和查询目标嵌入以查找相似项的语义搜索设置。",
+        "order": [
+          "enabled",
+          "reindex",
+          "model",
+          "model_size",
+          "device"
+        ],
+        "groups": [],
+        "docs": "/configuration/semantic_search",
+        "fields": {
+          "enabled": {
+            "label": "开启语义搜索",
+            "description": "启用或禁用语义搜索功能。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "model": {
+            "label": "语义搜索模型或生成式 AI 服务名称",
+            "description": "用于语义搜索的嵌入模型（例如 'jinav1'），或具有嵌入功能（embeddings）的生成式 AI 服务名称。",
+            "widget": "select",
+            "default": "jinav1",
+            "enum": [
+              "jinav1",
+              "jinav2"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "model_size": {
+            "label": "模型大小",
+            "description": "选择模型大小；“小型”模型一般在 CPU 上运行，而“大型”模型通常需要 GPU。",
+            "widget": "select",
+            "default": "small",
+            "enum": [
+              "small",
+              "large"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "device": {
+            "label": "设备",
+            "description": "这是一个覆盖选项，用于指定特定设备。请参阅 https://onnxruntime.ai/docs/execution-providers/ 了解更多信息",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "face_recognition": {
+        "label": "人脸识别",
+        "description": "所有摄像头的人脸检测和识别设置；可按摄像头覆盖。",
+        "order": [
+          "enabled",
+          "model_size",
+          "unknown_score",
+          "detection_threshold",
+          "recognition_threshold",
+          "min_area",
+          "min_faces",
+          "save_attempts",
+          "blur_confidence_filter",
+          "device"
+        ],
+        "groups": [],
+        "docs": "/configuration/face_recognition",
+        "fields": {
+          "enabled": {
+            "label": "开启人脸识别",
+            "description": "为所有摄像头启用或禁用人脸识别；可按摄像头覆盖。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "model_size": {
+            "label": "模型大小",
+            "description": "用于人脸嵌入的模型大小（小型/大型）；较大的可能需要 GPU。",
+            "widget": "select",
+            "default": "small",
+            "enum": [
+              "small",
+              "large"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "unknown_score": {
+            "label": "未知分数阈值",
+            "description": "低于此距离阈值的人脸被视为潜在匹配（数值越高越严格）。",
+            "widget": "number",
+            "default": 0.8,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 1,
+            "advanced": true
+          },
+          "detection_threshold": {
+            "label": "检测阈值",
+            "description": "将人脸检测视为有效所需的最小检测置信度。",
+            "widget": "number",
+            "default": 0.7,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 1,
+            "advanced": true
+          },
+          "recognition_threshold": {
+            "label": "识别阈值",
+            "description": "将两张人脸视为匹配的人脸嵌入距离阈值。",
+            "widget": "number",
+            "default": 0.9,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 1,
+            "advanced": true
+          },
+          "min_area": {
+            "label": "最小人脸区域",
+            "description": "需要尝试进行人脸识别的人脸检测框最小大小（像素）。",
+            "widget": "number",
+            "default": 750,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "min_faces": {
+            "label": "最小人脸数",
+            "description": "在将识别的子标签应用于人员之前所需的最小人脸识别次数。",
+            "widget": "number",
+            "default": 1,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 6,
+            "advanced": true
+          },
+          "save_attempts": {
+            "label": "保存尝试",
+            "description": "为最近识别 UI 保留的人脸识别尝试次数。",
+            "widget": "number",
+            "default": 200,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": true
+          },
+          "blur_confidence_filter": {
+            "label": "模糊置信度过滤器",
+            "description": "根据图像模糊程度调整置信度分数，以减少低质量人脸的误报。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "device": {
+            "label": "设备",
+            "description": "这是一个覆盖选项，用于指定特定设备。请参阅 https://onnxruntime.ai/docs/execution-providers/ 了解更多信息",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "lpr": {
+        "label": "车牌识别",
+        "description": "车牌识别设置，包括检测阈值、格式化和已知车牌。",
+        "order": [
+          "enabled",
+          "model_size",
+          "detection_threshold",
+          "min_area",
+          "recognition_threshold",
+          "min_plate_length",
+          "format",
+          "match_distance",
+          "known_plates",
+          "enhancement",
+          "debug_save_plates",
+          "device",
+          "replace_rules"
+        ],
+        "groups": [],
+        "docs": "/configuration/license_plate_recognition",
+        "fields": {
+          "enabled": {
+            "label": "开启车牌识别",
+            "description": "为所有摄像头启用或禁用车牌识别；可按摄像头覆盖。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "model_size": {
+            "label": "模型大小",
+            "description": "用于文本检测/识别的模型大小，大多数用户应使用“小型”模型，而且只有“小型”模型支持中文车牌。",
+            "widget": "select",
+            "default": "small",
+            "enum": [
+              "small",
+              "large"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "detection_threshold": {
+            "label": "检测阈值",
+            "description": "开始对疑似车牌运行 OCR 的检测置信度阈值。",
+            "widget": "number",
+            "default": 0.7,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 1,
+            "advanced": true
+          },
+          "min_area": {
+            "label": "最小车牌区域",
+            "description": "尝试识别所需的最小车牌区域（像素）。",
+            "widget": "number",
+            "default": 1000,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "recognition_threshold": {
+            "label": "识别阈值",
+            "description": "识别的车牌文本作为子标签附加所需的置信度阈值。",
+            "widget": "number",
+            "default": 0.9,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 1,
+            "advanced": true
+          },
+          "min_plate_length": {
+            "label": "最小车牌长度",
+            "description": "识别的车牌被视为有效所需的最小字符数。",
+            "widget": "number",
+            "default": 4,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "format": {
+            "label": "车牌格式正则",
+            "description": "用于验证识别的车牌字符串是否符合预期格式的可选正则表达式。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "match_distance": {
+            "label": "匹配距离",
+            "description": "将检测到的车牌与已知车牌比较时允许的字符不匹配数。",
+            "widget": "number",
+            "default": 1,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": true
+          },
+          "known_plates": {
+            "label": "已知车牌",
+            "description": "要特别追踪或报警的车牌或正则表达式列表。",
+            "widget": "object",
+            "default": {},
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "enhancement": {
+            "label": "增强级别",
+            "description": "在 OCR 之前应用于车牌裁剪的增强级别（0-10）；较高的值可能不总是改善结果，5 以上的级别可能仅适用于夜间车牌，应谨慎使用。",
+            "widget": "range",
+            "default": 0,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 10,
+            "advanced": true
+          },
+          "debug_save_plates": {
+            "label": "保存调试车牌",
+            "description": "保存车牌裁剪图像用于调试 LPR 性能。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "device": {
+            "label": "设备",
+            "description": "这是一个覆盖选项，用于指定特定设备。请参阅 https://onnxruntime.ai/docs/execution-providers/ 了解更多信息",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "replace_rules": {
+            "label": "替换规则",
+            "description": "用于在匹配之前规范化检测到的车牌字符串的正则替换规则。",
+            "widget": "tags",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      }
+    },
+    "camera": {
+      "audio": {
+        "label": "音频检测",
+        "description": "此摄像头的音频事件检测设置。",
+        "order": [
+          "enabled",
+          "listen",
+          "filters",
+          "min_volume",
+          "max_not_heard",
+          "num_threads"
+        ],
+        "groups": [
+          {
+            "key": "detection",
+            "label": "检测",
+            "fields": [
+              "listen",
+              "filters"
+            ]
+          },
+          {
+            "key": "sensitivity",
+            "label": "灵敏度",
+            "fields": [
+              "min_volume",
+              "max_not_heard"
+            ]
+          }
+        ],
+        "docs": "/configuration/audio_detectors",
+        "fields": {
+          "enabled": {
+            "label": "开启音频检测",
+            "description": "开启或禁用此摄像头的音频事件检测。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "max_not_heard": {
+            "label": "结束超时",
+            "description": "在结束音频事件之前，未检测到配置的音频类型的秒数。",
+            "widget": "number",
+            "default": 30,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "min_volume": {
+            "label": "最小音量",
+            "description": "运行音频检测所需的最小 RMS 音量阈值；数值越低灵敏度越高（例如 200 高灵敏度，500 中等，1000 低灵敏度）。",
+            "widget": "number",
+            "default": 500,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "listen": {
+            "label": "监听类型",
+            "description": "要检测的音频事件类型列表（例如：bark、fire_alarm、speech、yell）。",
+            "widget": "tags",
+            "default": [
+              "bark",
+              "fire_alarm",
+              "speech",
+              "yell"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "filters": {
+            "label": "音频过滤器",
+            "description": "按音频类型的过滤器设置，如用于减少误报的置信度阈值。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "num_threads": {
+            "label": "检测线程",
+            "description": "用于音频检测处理的线程数量。",
+            "widget": "number",
+            "default": 2,
+            "enum": null,
+            "minimum": 1,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "audio_transcription": {
+        "label": "音频转录",
+        "description": "用于事件和实时字幕的实时和语音音频转录设置。",
+        "order": [
+          "enabled",
+          "language",
+          "device",
+          "model_size"
+        ],
+        "groups": [],
+        "docs": "/configuration/audio_detectors#audio-transcription",
+        "fields": {
+          "enabled": {
+            "label": "开启转录",
+            "description": "开启或关闭手动触发的音频事件转写。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "birdseye": {
+        "label": "鸟瞰图",
+        "description": "将多路摄像头画面合并为统一布局的鸟瞰合成视图设置。",
+        "order": [
+          "enabled",
+          "mode",
+          "order"
+        ],
+        "groups": [],
+        "docs": "/configuration/birdseye",
+        "fields": {
+          "enabled": {
+            "label": "开启鸟瞰图",
+            "description": "开启或关闭鸟瞰图功能。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "mode": {
+            "label": "追踪模式",
+            "description": "在鸟瞰视图中包含摄像头的模式有：“基于目标”、“基于画面变动”或“连续”。",
+            "widget": "select",
+            "default": "objects",
+            "enum": [
+              "objects",
+              "motion",
+              "continuous"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "detect": {
+        "label": "目标检测",
+        "description": "用于运行目标检测、初始化追踪器的检测模块设置。",
+        "order": [
+          "enabled",
+          "width",
+          "height",
+          "fps",
+          "min_initialized",
+          "max_disappeared",
+          "annotation_offset",
+          "stationary",
+          "stationary.interval",
+          "stationary.threshold",
+          "stationary.max_frames"
+        ],
+        "groups": [
+          {
+            "key": "resolution",
+            "label": "分辨率",
+            "fields": [
+              "width",
+              "height",
+              "fps"
+            ]
+          },
+          {
+            "key": "tracking",
+            "label": "追踪",
+            "fields": [
+              "min_initialized",
+              "max_disappeared"
+            ]
+          }
+        ],
+        "docs": "/configuration/camera_specific",
+        "fields": {
+          "enabled": {
+            "label": "开启目标检测",
+            "description": "开启或关闭该摄像头的目标检测。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "height": {
+            "label": "检测画面高度",
+            "description": "用于配置检测流的画面高度（像素）；留空则使用原始视频流分辨率。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "width": {
+            "label": "检测画面宽度",
+            "description": "用于配置检测流的画面宽度（像素）；留空则使用原始视频流分辨率。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "fps": {
+            "label": "检测帧率",
+            "description": "检测时希望使用的帧率；数值越低，CPU 占用越小（推荐值为 5，仅在追踪极高速运动的目标时才设置更高数值，最高不建议超过 10）。",
+            "widget": "number",
+            "default": 5,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "min_initialized": {
+            "label": "最小初始化帧数",
+            "description": "创建追踪目标前，需要连续检测到目标的次数。数值越大，错误触发的追踪越少。默认值为帧率除以 2。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 2,
+            "maximum": null,
+            "advanced": true
+          },
+          "max_disappeared": {
+            "label": "最大消失帧数",
+            "description": "追踪目标在连续多少帧未被检测到时，将被判定为已消失。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "stationary.interval": {
+            "label": "静止间隔",
+            "description": "设置每隔多少帧执行一次检测，用于确认目标是否处于静止状态。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "stationary.threshold": {
+            "label": "静止阈值",
+            "description": "目标需要连续多少帧位置不变，才会被标记为静止状态。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 1,
+            "maximum": null,
+            "advanced": false
+          },
+          "stationary.max_frames.default": {
+            "label": "默认最大帧数",
+            "description": "停止追踪前，用于追踪静止目标的默认最大帧数。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 1,
+            "maximum": null,
+            "advanced": false
+          },
+          "stationary.max_frames.objects": {
+            "label": "目标最大帧数",
+            "description": "可对不同类型目标分别设置静止追踪的最大帧数（覆盖全局设置）。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "stationary.classifier": {
+            "label": "开启视觉分类器",
+            "description": "使用视觉分类器，即使检测框有轻微抖动，也能准确判断物体是否为静止。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "annotation_offset": {
+            "label": "标记偏移量",
+            "description": "检测标记的时间偏移量（毫秒），用于让时间轴上的检测框与录像画面更精准对齐；可设置为正数或负数。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "face_recognition": {
+        "label": "人脸识别",
+        "description": "该摄像头的人脸检测与识别设置。",
+        "order": [
+          "enabled",
+          "min_area"
+        ],
+        "groups": [],
+        "docs": "/configuration/face_recognition",
+        "fields": {
+          "enabled": {
+            "label": "开启人脸识别",
+            "description": "开启或关闭人脸识别。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "min_area": {
+            "label": "最小人脸区域",
+            "description": "需要尝试进行人脸识别的人脸检测框最小大小（像素）。",
+            "widget": "number",
+            "default": 750,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "ffmpeg": {
+        "label": "视频流（FFmpeg）",
+        "description": "摄像头视频流和 FFmpeg 编解码相关设置，包含可执行文件路径、命令行参数、硬件加速，以及按不同功能划分的输出参数。",
+        "order": [
+          "inputs",
+          "global_args",
+          "input_args",
+          "hwaccel_args",
+          "output_args",
+          "apple_compatibility",
+          "path",
+          "gpu"
+        ],
+        "groups": [
+          {
+            "key": "cameraFfmpeg",
+            "label": "摄像头特定的 FFmpeg 参数",
+            "fields": [
+              "input_args",
+              "hwaccel_args",
+              "output_args"
+            ]
+          }
+        ],
+        "docs": "/configuration/ffmpeg_presets",
+        "fields": {
+          "path": {
+            "label": "FFmpeg 路径",
+            "description": "要使用的 FFmpeg 可执行文件路径，或版本别名（如 \"7.0\" 或 \"8.0\"）。",
+            "widget": "text",
+            "default": "default",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "global_args": {
+            "label": "FFmpeg 全局参数",
+            "description": "传递给 FFmpeg 进程的全局参数。",
+            "widget": "text",
+            "default": [
+              "-hide_banner",
+              "-loglevel",
+              "warning",
+              "-threads",
+              "2"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "hwaccel_args": {
+            "label": "硬件加速参数",
+            "description": "用于 FFmpeg 的硬件加速参数。建议使用对应硬件厂商的预设配置。",
+            "widget": "text",
+            "default": "auto",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "input_args": {
+            "label": "输入参数",
+            "description": "应用于 FFmpeg 输入视频流的输入参数。",
+            "widget": "text",
+            "default": "preset-rtsp-generic",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "output_args.detect": {
+            "label": "检测输出参数",
+            "description": "检测功能视频流的默认输出参数。",
+            "widget": "text",
+            "default": [
+              "-threads",
+              "2",
+              "-f",
+              "rawvideo",
+              "-pix_fmt",
+              "yuv420p"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "output_args.record": {
+            "label": "录制输出参数",
+            "description": "录制功能视频流的默认输出参数。",
+            "widget": "text",
+            "default": "preset-record-generic-audio-aac",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "apple_compatibility": {
+            "label": "Apple 兼容性",
+            "description": "录制 H.265 视频时启用 HEVC 标记，以提升对 Apple 设备播放的兼容性。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "gpu": {
+            "label": "GPU 索引",
+            "description": "在启用硬件加速时，默认使用的 GPU 索引。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "inputs": {
+            "label": "摄像头输入视频流",
+            "description": "该摄像头的所有输入流配置列表（包含路径和功能）。",
+            "widget": "tags",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "live": {
+        "label": "实时监控观看",
+        "description": "用于控制实时流选择、分辨率和质量的网页页面设置。",
+        "order": [
+          "streams",
+          "height",
+          "quality"
+        ],
+        "groups": [],
+        "docs": "/configuration/live",
+        "fields": {
+          "streams": {
+            "label": "实时监控流名称",
+            "description": "配置的流名称到用于实时监控播放的 restream/go2rtc 名称的映射。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "height": {
+            "label": "实时监控高度",
+            "description": "在网页页面中渲染 jsmpeg 实时监控流的高度（像素）；必须小于等于检测流高度。",
+            "widget": "number",
+            "default": 720,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "quality": {
+            "label": "实时监控质量",
+            "description": "jsmpeg 流的编码质量（1 最高，31 最低）。",
+            "widget": "range",
+            "default": 8,
+            "enum": null,
+            "minimum": 1,
+            "maximum": 31,
+            "advanced": true
+          }
+        }
+      },
+      "lpr": {
+        "label": "车牌识别",
+        "description": "车牌识别设置，包括检测阈值、格式化和已知车牌。",
+        "order": [
+          "enabled",
+          "min_area",
+          "enhancement",
+          "expire_time"
+        ],
+        "groups": [],
+        "docs": "/configuration/license_plate_recognition",
+        "fields": {
+          "enabled": {
+            "label": "开启车牌识别",
+            "description": "在此摄像头上启用或禁用车牌识别。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "min_area": {
+            "label": "最小车牌区域",
+            "description": "尝试识别所需的最小车牌区域（像素）。",
+            "widget": "number",
+            "default": 1000,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "enhancement": {
+            "label": "增强级别",
+            "description": "在 OCR 之前应用于车牌裁剪的增强级别（0-10）；较高的值可能不总是改善结果，5 以上的级别可能仅适用于夜间车牌，应谨慎使用。",
+            "widget": "range",
+            "default": 0,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 10,
+            "advanced": true
+          }
+        }
+      },
+      "motion": {
+        "label": "画面变动检测",
+        "description": "此摄像头的默认画面变动检测设置。",
+        "order": [
+          "enabled",
+          "threshold",
+          "lightning_threshold",
+          "skip_motion_threshold",
+          "improve_contrast",
+          "contour_area",
+          "delta_alpha",
+          "frame_alpha",
+          "frame_height",
+          "mqtt_off_delay"
+        ],
+        "groups": [
+          {
+            "key": "sensitivity",
+            "label": "灵敏度",
+            "fields": [
+              "threshold",
+              "contour_area"
+            ]
+          },
+          {
+            "key": "algorithm",
+            "label": "算法",
+            "fields": [
+              "improve_contrast",
+              "delta_alpha",
+              "frame_alpha"
+            ]
+          }
+        ],
+        "docs": "/configuration/motion_detection",
+        "fields": {
+          "enabled": {
+            "label": "开启画面变动检测",
+            "description": "开启或关闭此摄像头的画面变动检测。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "threshold": {
+            "label": "画面变动阈值",
+            "description": "画面变动检测器使用的像素差异阈值；数值越高灵敏度越低（范围 1-255）。",
+            "widget": "range",
+            "default": 30,
+            "enum": null,
+            "minimum": 1,
+            "maximum": 255,
+            "advanced": false
+          },
+          "lightning_threshold": {
+            "label": "闪电阈值",
+            "description": "用于检测和忽略短暂闪电闪烁的阈值（数值越低越敏感，范围 0.3 到 1.0）。这不会完全阻止画面变动检测；只是当超过阈值时检测器会停止分析额外的帧。在此类事件期间仍会创建基于画面变动的录像。",
+            "widget": "range",
+            "default": 0.8,
+            "enum": null,
+            "minimum": 0.3,
+            "maximum": 1,
+            "advanced": true
+          },
+          "skip_motion_threshold": {
+            "label": "跳过画面变动阈值",
+            "description": "如果单帧中画面变化超过此比例，检测器将判定为无画面变动并立即重新校准。这可以节省 CPU 并减少闪电、风暴等情况下的误报，但也可能会错过真正的事件，如 PTZ 摄像头自动追踪目标。你需要权衡取舍：是否牺牲少量录制片段，换取更少无效视频与更低的误检。保持为空即可关闭该功能。",
+            "widget": "range",
+            "default": null,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 1,
+            "advanced": true
+          },
+          "improve_contrast": {
+            "label": "改善对比度",
+            "description": "在画面变动分析之前对帧应用对比度改善以帮助检测。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "contour_area": {
+            "label": "轮廓区域",
+            "description": "画面变动轮廓被计入所需的最小轮廓区域（像素）。",
+            "widget": "number",
+            "default": 10,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "delta_alpha": {
+            "label": "Delta alpha",
+            "description": "用于画面变动计算的帧差异中使用的 alpha 混合因子。",
+            "widget": "number",
+            "default": 0.2,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "frame_alpha": {
+            "label": "画面 alpha 通道",
+            "description": "画面变动预处理时混合画面所使用的 alpha 值。",
+            "widget": "number",
+            "default": 0.01,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "frame_height": {
+            "label": "画面高度",
+            "description": "计算画面变动时缩放画面的高度（像素）。",
+            "widget": "number",
+            "default": 100,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "mqtt_off_delay": {
+            "label": "MQTT 关闭延迟",
+            "description": "在发布 MQTT 'off' 状态之前，最后一次画面变动后等待的秒数。",
+            "widget": "number",
+            "default": 30,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "objects": {
+        "label": "目标",
+        "description": "目标追踪默认设置，包括要追踪的标签和按目标的过滤器。",
+        "order": [
+          "track",
+          "alert",
+          "detect",
+          "filters"
+        ],
+        "groups": [
+          {
+            "key": "tracking",
+            "label": "追踪",
+            "fields": [
+              "track",
+              "alert",
+              "detect"
+            ]
+          },
+          {
+            "key": "filtering",
+            "label": "筛选",
+            "fields": [
+              "filters"
+            ]
+          }
+        ],
+        "docs": "/configuration/object_filters",
+        "fields": {
+          "track": {
+            "label": "要追踪的目标",
+            "description": "此摄像头要追踪的目标标签列表。",
+            "widget": "tags",
+            "default": [
+              "person"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "filters": {
+            "label": "目标过滤器",
+            "description": "应用于检测到的目标以减少误报的过滤器（区域、比例、置信度）。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.enabled": {
+            "label": "开启生成式 AI",
+            "description": "默认开启生成式 AI 生成追踪目标的描述。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.use_snapshot": {
+            "label": "使用快照",
+            "description": "使用目标快照而不是缩略图给生成式 AI 进行描述生成。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.prompt": {
+            "label": "字幕提示",
+            "description": "使用生成式 AI 生成描述时使用的默认提示模板。",
+            "widget": "text",
+            "default": "Analyze the sequence of images containing the {label}. Focus on the likely intent or behavior of the {label} based on its actions and movement, rather than describing its appearance or the surroundings. Consider what the {label} is doing, why, and what it might do next.",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.object_prompts": {
+            "label": "目标提示",
+            "description": "按目标设置提示词，让生成式 AI 对不同标签的输出进行定制。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.objects": {
+            "label": "生成式 AI 目标",
+            "description": "默认发送给生成式 AI 的目标标签列表。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.required_zones": {
+            "label": "必需区域",
+            "description": "目标必须进入这些区域，才会触发生成式 AI 描述生成。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.debug_save_thumbnails": {
+            "label": "保存缩略图",
+            "description": "保存发送给生成式 AI 的缩略图用于调试和核查。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.send_triggers.tracked_object_end": {
+            "label": "结束时发送",
+            "description": "目标追踪结束时向生成式 AI 发送请求。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.send_triggers.after_significant_updates": {
+            "label": "生成式 AI 提前触发",
+            "description": "在追踪目标发生指定次数的重要变化后，向生成式 AI 发送请求。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 1,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "record": {
+        "label": "录像",
+        "description": "此摄像头的录像和保留设置。",
+        "order": [
+          "enabled",
+          "expire_interval",
+          "continuous",
+          "motion",
+          "alerts",
+          "detections",
+          "preview",
+          "export"
+        ],
+        "groups": [
+          {
+            "key": "retention",
+            "label": "保留",
+            "fields": [
+              "continuous",
+              "motion"
+            ]
+          },
+          {
+            "key": "events",
+            "label": "事件",
+            "fields": [
+              "alerts",
+              "detections"
+            ]
+          }
+        ],
+        "docs": "/configuration/record",
+        "fields": {
+          "enabled": {
+            "label": "开启录像",
+            "description": "开启或关闭此摄像头的录像。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "expire_interval": {
+            "label": "录像清理间隔",
+            "description": "清理过期录像片段的间隔分钟数。",
+            "widget": "number",
+            "default": 60,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "continuous.days": {
+            "label": "保留天数",
+            "description": "保留录像的天数。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "motion.days": {
+            "label": "保留天数",
+            "description": "保留录像的天数。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.pre_capture": {
+            "label": "前捕获秒数",
+            "description": "检测事件之前包含在录像中的秒数。",
+            "widget": "range",
+            "default": 5,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 60,
+            "advanced": false
+          },
+          "detections.post_capture": {
+            "label": "后捕获秒数",
+            "description": "检测事件之后包含在录像中的秒数。",
+            "widget": "number",
+            "default": 5,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.retain.days": {
+            "label": "保留天数",
+            "description": "保留检测事件录像的天数。",
+            "widget": "number",
+            "default": 10,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.retain.mode": {
+            "label": "保留模式",
+            "description": "保留模式：all（保存所有片段）、motion（保存有动作的片段）或 active_objects（保存有活动目标的片段）。",
+            "widget": "select",
+            "default": "motion",
+            "enum": [
+              "all",
+              "motion",
+              "active_objects"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.pre_capture": {
+            "label": "前捕获秒数",
+            "description": "检测事件之前包含在录像中的秒数。",
+            "widget": "range",
+            "default": 5,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 60,
+            "advanced": false
+          },
+          "alerts.post_capture": {
+            "label": "后捕获秒数",
+            "description": "检测事件之后包含在录像中的秒数。",
+            "widget": "number",
+            "default": 5,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.retain.days": {
+            "label": "保留天数",
+            "description": "保留检测事件录像的天数。",
+            "widget": "number",
+            "default": 10,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.retain.mode": {
+            "label": "保留模式",
+            "description": "保留模式：all（保存所有片段）、motion（保存有动作的片段）或 active_objects（保存有活动目标的片段）。",
+            "widget": "select",
+            "default": "motion",
+            "enum": [
+              "all",
+              "motion",
+              "active_objects"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "export.hwaccel_args": {
+            "label": "导出硬件加速参数",
+            "description": "用于导出/转码操作的硬件加速参数。",
+            "widget": "text",
+            "default": "auto",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "preview.quality": {
+            "label": "预览质量",
+            "description": "预览质量级别（very_low、low、medium、high、very_high）。",
+            "widget": "select",
+            "default": "medium",
+            "enum": [
+              "very_low",
+              "low",
+              "medium",
+              "high",
+              "very_high"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "review": {
+        "label": "核查",
+        "description": "控制此摄像头的警报、检测和生成式 AI 核查总结的设置，这些设置会被界面与存储功能使用。",
+        "order": [
+          "alerts",
+          "detections",
+          "genai",
+          "genai.enabled"
+        ],
+        "groups": [],
+        "docs": "/configuration/review",
+        "fields": {
+          "alerts.enabled": {
+            "label": "开启警报",
+            "description": "开启或关闭此摄像头的警报生成。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.labels": {
+            "label": "警报标签",
+            "description": "符合警报条件的目标标签列表（例如：car、person）。",
+            "widget": "tags",
+            "default": [
+              "person",
+              "car"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.required_zones": {
+            "label": "必需区域",
+            "description": "目标必须进入才能被视为警报的区域；留空则允许任何区域。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "alerts.cutoff_time": {
+            "label": "警报截止时间",
+            "description": "在没有引起警报的活动后等待多少秒后截止警报。",
+            "widget": "number",
+            "default": 40,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.enabled": {
+            "label": "开启检测",
+            "description": "开启或关闭此摄像头的检测事件。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.labels": {
+            "label": "检测标签",
+            "description": "符合检测事件条件的目标标签列表。",
+            "widget": "tags",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.required_zones": {
+            "label": "必需区域",
+            "description": "目标必须进入才能被视为检测的区域；留空则允许任何区域。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "detections.cutoff_time": {
+            "label": "检测截止时间",
+            "description": "在没有引起检测的活动后等待多少秒后截止检测。",
+            "widget": "number",
+            "default": 30,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.enabled": {
+            "label": "开启生成式 AI 描述",
+            "description": "为核查项开启或关闭使用生成式 AI 生成描述和摘要。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.alerts": {
+            "label": "为警报开启生成式 AI",
+            "description": "使用生成式 AI 为警报项生成描述。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.detections": {
+            "label": "为检测开启生成式 AI",
+            "description": "使用生成式 AI 为检测项生成描述。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.image_source": {
+            "label": "核查图像来源",
+            "description": "发送给生成式 AI 的画面来源（“预览” 或 “录制”）；“录制”将使用更高质量的画面帧，但会消耗更多的 token。",
+            "widget": "select",
+            "default": "preview",
+            "enum": [
+              "preview",
+              "recordings"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.additional_concerns": {
+            "label": "额外关注事项",
+            "description": "生成式 AI 在分析此摄像头的监控行为时，需要额外注意的事项或说明列表。",
+            "widget": "tags",
+            "default": [],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.debug_save_thumbnails": {
+            "label": "保存缩略图",
+            "description": "保存发送给生成式 AI 提供商的缩略图用于调试和核查。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.preferred_language": {
+            "label": "首选语言",
+            "description": "向生成式 AI 提供商请求生成响应的首选语言。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "genai.activity_context_prompt": {
+            "label": "活动上下文提示",
+            "description": "自定义提示词，用于说明可疑行为与非可疑行为的界定，为生成式 AI 生成摘要提供上下文依据。",
+            "widget": "text",
+            "default": "### Normal Activity Indicators (Level 0)\n- Known/verified people in any zone at any time\n- People with pets in residential areas\n- Routine residential vehicle access during daytime/evening (6 AM - 10 PM): entering, exiting, loading/unloading items — normal commute and travel patterns\n- Deliveries or services during daytime/evening (6 AM - 10 PM): carrying packages to doors/porches, placing items, leaving\n- Services/maintenance workers with visible tools, uniforms, or service vehicles during daytime\n- Activity confined to public areas only (sidewalks, streets) without entering property at any time\n\n### Suspicious Activity Indicators (Level 1)\n- **Checking or probing vehicle/building access**: trying handles without entering, peering through windows, examining multiple vehicles, or possessing break-in tools — Level 1\n- **Unidentified person in private areas (driveways, near vehicles/buildings) during late night/early morning (11 PM - 5 AM)** — ALWAYS Level 1 regardless of activity or duration\n- Taking items that don't belong to them (packages, objects from porches/driveways)\n- Climbing or jumping fences/barriers to access property\n- Attempting to conceal actions or items from view\n- Prolonged loitering: remaining in same area without visible purpose throughout most of the sequence\n\n### Critical Threat Indicators (Level 2)\n- Holding break-in tools (crowbars, pry bars, bolt cutters)\n- Weapons visible (guns, knives, bats used aggressively)\n- Forced entry in progress\n- Physical aggression or violence\n- Active property damage or theft in progress\n\n### Assessment Guidance\nEvaluate in this order:\n\n1. **If person is verified/known** → Level 0 regardless of time or activity\n2. **If person is unidentified:**\n   - Check time: If late night/early morning (11 PM - 5 AM) AND in private areas (driveways, near vehicles/buildings) → Level 1\n   - Check actions: If probing access (trying handles without entering, checking multiple vehicles), taking items, climbing → Level 1\n   - Otherwise, if daytime/evening (6 AM - 10 PM) with clear legitimate purpose (delivery, service, routine vehicle access) → Level 0\n3. **Escalate to Level 2 if:** Weapons, break-in tools, forced entry in progress, violence, or active property damage visible (escalates from Level 0 or 1)\n\nThe mere presence of an unidentified person in private areas during late night hours is inherently suspicious and warrants human review, regardless of what activity they appear to be doing or how brief the sequence is.",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "semantic_search": {
+        "label": "语义搜索",
+        "description": "语义搜索设置，用于构建和查询目标嵌入以查找相似项目。",
+        "order": [],
+        "groups": [],
+        "docs": "/configuration/semantic_search",
+        "fields": {
+          "triggers": {
+            "label": "触发器",
+            "description": "摄像头特定语义搜索触发器的操作和匹配条件。",
+            "widget": "object",
+            "default": {},
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "snapshots": {
+        "label": "快照",
+        "description": "此摄像头的追踪目标 API 快照设置。",
+        "order": [
+          "enabled",
+          "bounding_box",
+          "crop",
+          "quality",
+          "timestamp",
+          "required_zones",
+          "retain"
+        ],
+        "groups": [
+          {
+            "key": "display",
+            "label": "显示",
+            "fields": [
+              "bounding_box",
+              "crop",
+              "quality",
+              "timestamp"
+            ]
+          }
+        ],
+        "docs": "/configuration/snapshots",
+        "fields": {
+          "enabled": {
+            "label": "开启快照",
+            "description": "开启或关闭此摄像头的快照保存。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "timestamp": {
+            "label": "时间戳叠加",
+            "description": "在 API 生成的快照上叠加时间戳。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "bounding_box": {
+            "label": "边界框叠加",
+            "description": "在 API 生成的快照上绘制追踪目标的边界框。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "crop": {
+            "label": "裁剪快照",
+            "description": "在 API 生成的快照裁剪到检测到的目标边界框。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "required_zones": {
+            "label": "必需区域",
+            "description": "目标必须进入才能保存快照的区域。",
+            "widget": "tags",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "height": {
+            "label": "快照高度",
+            "description": "将 API 生成的快照调整到的目标高度（像素）；留空则保持原始大小。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "retain.default": {
+            "label": "默认保留",
+            "description": "保留快照的默认天数。",
+            "widget": "number",
+            "default": 10,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "retain.objects": {
+            "label": "目标保留",
+            "description": "按目标覆盖的快照保留天数。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "quality": {
+            "label": "快照质量",
+            "description": "保存快照的编码质量（0-100）。",
+            "widget": "range",
+            "default": 60,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 100,
+            "advanced": true
+          }
+        }
+      },
+      "timestamp_style": {
+        "label": "时间戳样式",
+        "description": "快照与调试视图的时间戳样式设置。",
+        "order": [
+          "position",
+          "format",
+          "thickness",
+          "color"
+        ],
+        "groups": [],
+        "docs": "/configuration/advanced/reference",
+        "fields": {
+          "position": {
+            "label": "时间戳位置",
+            "description": "时间戳在图像上的位置（tl/tr/bl/br）。",
+            "widget": "select",
+            "default": "tl",
+            "enum": [
+              "tl",
+              "tr",
+              "bl",
+              "br"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "format": {
+            "label": "时间戳格式",
+            "description": "用于时间戳的日期时间格式字符串（Python 日期时间格式代码）。",
+            "widget": "text",
+            "default": "%m/%d/%Y %H:%M:%S",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "color.red": {
+            "label": "红色",
+            "description": "时间戳颜色的红色分量（0-255）。",
+            "widget": "range",
+            "default": 255,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 255,
+            "advanced": false
+          },
+          "color.green": {
+            "label": "绿色",
+            "description": "时间戳颜色的绿色分量（0-255）。",
+            "widget": "range",
+            "default": 255,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 255,
+            "advanced": false
+          },
+          "color.blue": {
+            "label": "蓝色",
+            "description": "时间戳颜色的蓝色分量（0-255）。",
+            "widget": "range",
+            "default": 255,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 255,
+            "advanced": false
+          },
+          "thickness": {
+            "label": "时间戳粗细",
+            "description": "时间戳文本的线条粗细。",
+            "widget": "number",
+            "default": 2,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "mqtt": {
+        "label": "MQTT",
+        "description": "MQTT 图像发布设置。",
+        "order": [
+          "enabled",
+          "timestamp",
+          "bounding_box",
+          "crop",
+          "height",
+          "required_zones",
+          "quality"
+        ],
+        "groups": [],
+        "docs": "/integrations/mqtt",
+        "fields": {
+          "enabled": {
+            "label": "发送图像",
+            "description": "为此摄像头启用向 MQTT 主题发布目标图像快照。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "timestamp": {
+            "label": "添加时间戳",
+            "description": "在发布到 MQTT 的图像上叠加时间戳。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "bounding_box": {
+            "label": "添加边界框",
+            "description": "在通过 MQTT 发布的图像上绘制边界框。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "crop": {
+            "label": "裁剪图像",
+            "description": "将发布到 MQTT 的图像裁剪到检测到的目标边界框。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "height": {
+            "label": "图像高度",
+            "description": "通过 MQTT 发布的图像的调整高度（像素）。",
+            "widget": "number",
+            "default": 270,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "required_zones": {
+            "label": "必需区域",
+            "description": "目标必须进入才能发布 MQTT 图像的区域。",
+            "widget": "tags",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "quality": {
+            "label": "JPEG 质量",
+            "description": "发布到 MQTT 的图像的 JPEG 质量（0-100）。",
+            "widget": "range",
+            "default": 70,
+            "enum": null,
+            "minimum": 0,
+            "maximum": 100,
+            "advanced": true
+          }
+        }
+      },
+      "notifications": {
+        "label": "通知",
+        "description": "为此摄像头启用和控制通知的设置。",
+        "order": [
+          "enabled",
+          "email"
+        ],
+        "groups": [],
+        "docs": "/configuration/notifications",
+        "fields": {
+          "enabled": {
+            "label": "开启通知",
+            "description": "为此摄像头启用或禁用通知。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "cooldown": {
+            "label": "冷却时间",
+            "description": "通知之间的冷却时间（秒），以避免向收件人发送垃圾信息。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      },
+      "onvif": {
+        "label": "ONVIF",
+        "description": "此摄像头的 ONVIF 连接和 PTZ 自动追踪设置。",
+        "order": [
+          "host",
+          "port",
+          "user",
+          "password",
+          "profile",
+          "tls_insecure",
+          "ignore_time_mismatch",
+          "autotracking"
+        ],
+        "groups": [],
+        "docs": "/configuration/cameras#setting-up-camera-ptz-controls",
+        "fields": {
+          "host": {
+            "label": "ONVIF 主机",
+            "description": "此摄像头 ONVIF 服务的主机（和可选协议）。",
+            "widget": "text",
+            "default": "",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "port": {
+            "label": "ONVIF 端口",
+            "description": "ONVIF 服务的端口号。",
+            "widget": "number",
+            "default": 8000,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "user": {
+            "label": "ONVIF 用户名",
+            "description": "ONVIF 身份验证的用户名；某些设备需要管理员用户才能使用 ONVIF。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "password": {
+            "label": "ONVIF 密码",
+            "description": "ONVIF 身份验证的密码。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "tls_insecure": {
+            "label": "禁用 TLS 验证",
+            "description": "跳过 TLS 验证并禁用 ONVIF 的摘要认证（不安全；仅用于安全网络）。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "profile": {
+            "label": "ONVIF 配置文件",
+            "description": "用于 PTZ 控制的指定 ONVIF 媒体配置，将通过 Token 或名称匹配。如果未手动指定，将自动选择第一个包含有效 PTZ 配置的媒体配置。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "autotracking.enabled": {
+            "label": "开启自动追踪",
+            "description": "启用或禁用检测目标的自动 PTZ 摄像头追踪。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "autotracking.calibrate_on_startup": {
+            "label": "启动时校准",
+            "description": "在启动时测量 PTZ 电机速度以提高追踪精度。Frigate 将在校准后用 movement_weights 更新配置。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "autotracking.zooming": {
+            "label": "变焦模式",
+            "description": "控制变焦行为：disabled（仅平移/倾斜）、absolute（最兼容）或 relative（同时平移/倾斜/变焦）。",
+            "widget": "select",
+            "default": "disabled",
+            "enum": [
+              "disabled",
+              "absolute",
+              "relative"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "autotracking.zoom_factor": {
+            "label": "变焦因子",
+            "description": "控制追踪目标的变焦级别。数值越低保持更多场景可见；数值越高放大更近但可能丢失追踪。数值范围 0.1 到 0.75。",
+            "widget": "range",
+            "default": 0.3,
+            "enum": null,
+            "minimum": 0.1,
+            "maximum": 0.75,
+            "advanced": false
+          },
+          "autotracking.track": {
+            "label": "追踪目标",
+            "description": "应触发自动追踪的目标类型列表。",
+            "widget": "tags",
+            "default": [
+              "person"
+            ],
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "autotracking.required_zones": {
+            "label": "必需区域",
+            "description": "目标必须进入这些区域之一才能开始自动追踪。",
+            "widget": "tags",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "autotracking.return_preset": {
+            "label": "返回预设",
+            "description": "追踪结束后返回的摄像头固件中配置的 ONVIF 预设名称。",
+            "widget": "text",
+            "default": "home",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "autotracking.timeout": {
+            "label": "返回超时",
+            "description": "失去追踪后等待多少秒后将摄像头返回到预设位置。",
+            "widget": "number",
+            "default": 10,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "ignore_time_mismatch": {
+            "label": "忽略时间不匹配",
+            "description": "忽略 ONVIF 通信中摄像头和 Frigate 服务器之间的时间同步差异。",
+            "widget": "switch",
+            "default": false,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          }
+        }
+      },
+      "ui": {
+        "label": "摄像头页面",
+        "description": "此摄像头在页面中的显示顺序和可见性。显示顺序仅影响默认仪表板。如需更精细的控制，请使用“摄像头组”。",
+        "order": [
+          "dashboard",
+          "order"
+        ],
+        "groups": [],
+        "docs": "/configuration/advanced/reference",
+        "fields": {
+          "dashboard": {
+            "label": "在页面中显示",
+            "description": "切换此摄像头在 Frigate 页面的所有位置是否可见。禁用此项将需要手动编辑配置才能在页面中再次查看此摄像头。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "review": {
+            "label": "在核查中显示",
+            "description": "切换该摄像头是否在核查页面可见（包含核查页、摄像头筛选栏、画面变动核查与历史视图）。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        }
+      }
+    }
+  },
+  "navigation": {
+    "groups": [
+      {
+        "key": "general",
+        "label": "常规",
+        "items": [
+          {
+            "key": "uiSettings",
+            "label": "界面设置"
+          }
+        ]
+      },
+      {
+        "key": "globalConfig",
+        "label": "全局配置",
+        "items": [
+          {
+            "key": "profiles",
+            "label": "配置模板"
+          },
+          {
+            "key": "cameraManagement",
+            "label": "摄像头管理"
+          },
+          {
+            "key": "globalDetect",
+            "label": "目标检测",
+            "section": "detect",
+            "page": "globalDetect",
+            "level": "global"
+          },
+          {
+            "key": "globalObjects",
+            "label": "目标",
+            "section": "objects",
+            "page": "globalObjects",
+            "level": "global"
+          },
+          {
+            "key": "globalMotion",
+            "label": "画面变动检测",
+            "section": "motion",
+            "page": "globalMotion",
+            "level": "global"
+          },
+          {
+            "key": "globalFfmpeg",
+            "label": "FFmpeg",
+            "section": "ffmpeg",
+            "page": "globalFfmpeg",
+            "level": "global"
+          },
+          {
+            "key": "globalRecording",
+            "label": "录制",
+            "section": "record",
+            "page": "globalRecording",
+            "level": "global"
+          },
+          {
+            "key": "globalSnapshots",
+            "label": "快照",
+            "section": "snapshots",
+            "page": "globalSnapshots",
+            "level": "global"
+          },
+          {
+            "key": "globalReview",
+            "label": "核查",
+            "section": "review",
+            "page": "globalReview",
+            "level": "global"
+          },
+          {
+            "key": "globalAudioEvents",
+            "label": "音频检测",
+            "section": "audio",
+            "page": "globalAudioEvents",
+            "level": "global"
+          },
+          {
+            "key": "globalLivePlayback",
+            "label": "实时监控观看",
+            "section": "live",
+            "page": "globalLivePlayback",
+            "level": "global"
+          },
+          {
+            "key": "globalTimestampStyle",
+            "label": "时间戳样式",
+            "section": "timestamp_style",
+            "page": "globalTimestampStyle",
+            "level": "global"
+          }
+        ]
+      },
+      {
+        "key": "cameras",
+        "label": "摄像头设置",
+        "items": [
+          {
+            "key": "cameraDetect",
+            "label": "目标检测",
+            "section": "detect",
+            "page": "cameraDetect",
+            "level": "camera"
+          },
+          {
+            "key": "cameraObjects",
+            "label": "目标",
+            "section": "objects",
+            "page": "cameraObjects",
+            "level": "camera"
+          },
+          {
+            "key": "cameraMotion",
+            "label": "画面变动检测",
+            "section": "motion",
+            "page": "cameraMotion",
+            "level": "camera"
+          },
+          {
+            "key": "motionTuner",
+            "label": "画面变动调整"
+          },
+          {
+            "key": "cameraFfmpeg",
+            "label": "视频流（FFmpeg）",
+            "section": "ffmpeg",
+            "page": "cameraFfmpeg",
+            "level": "camera"
+          },
+          {
+            "key": "cameraRecording",
+            "label": "录制",
+            "section": "record",
+            "page": "cameraRecording",
+            "level": "camera"
+          },
+          {
+            "key": "cameraSnapshots",
+            "label": "快照",
+            "section": "snapshots",
+            "page": "cameraSnapshots",
+            "level": "camera"
+          },
+          {
+            "key": "masksAndZones",
+            "label": "遮罩/ 区域",
+            "section": "masksAndZones",
+            "page": "masksAndZones",
+            "level": "camera"
+          },
+          {
+            "key": "cameraReview",
+            "label": "核查",
+            "section": "review",
+            "page": "cameraReview",
+            "level": "camera"
+          },
+          {
+            "key": "cameraAudioEvents",
+            "label": "音频检测",
+            "section": "audio",
+            "page": "cameraAudioEvents",
+            "level": "camera"
+          },
+          {
+            "key": "cameraAudioTranscription",
+            "label": "音频转录",
+            "section": "audio_transcription",
+            "page": "cameraAudioTranscription",
+            "level": "camera"
+          },
+          {
+            "key": "cameraBirdseye",
+            "label": "鸟瞰图",
+            "section": "birdseye",
+            "page": "cameraBirdseye",
+            "level": "camera"
+          },
+          {
+            "key": "cameraLivePlayback",
+            "label": "实时监控观看",
+            "section": "live",
+            "page": "cameraLivePlayback",
+            "level": "camera"
+          },
+          {
+            "key": "cameraNotifications",
+            "label": "通知",
+            "section": "notifications",
+            "page": "cameraNotifications",
+            "level": "camera"
+          },
+          {
+            "key": "cameraFaceRecognition",
+            "label": "人脸识别",
+            "section": "face_recognition",
+            "page": "cameraFaceRecognition",
+            "level": "camera"
+          },
+          {
+            "key": "cameraLpr",
+            "label": "车牌识别",
+            "section": "lpr",
+            "page": "cameraLpr",
+            "level": "camera"
+          },
+          {
+            "key": "cameraOnvif",
+            "label": "ONVIF",
+            "section": "onvif",
+            "page": "cameraOnvif",
+            "level": "camera"
+          },
+          {
+            "key": "cameraMqttConfig",
+            "label": "MQTT",
+            "section": "mqtt",
+            "page": "cameraMqttConfig",
+            "level": "camera"
+          },
+          {
+            "key": "cameraTimestampStyle",
+            "label": "时间戳样式",
+            "section": "timestamp_style",
+            "page": "cameraTimestampStyle",
+            "level": "camera"
+          }
+        ]
+      },
+      {
+        "key": "enrichments",
+        "label": "增强功能",
+        "items": [
+          {
+            "key": "integrationSemanticSearch",
+            "label": "语义搜索",
+            "section": "semantic_search",
+            "page": "integrationSemanticSearch",
+            "level": "global"
+          },
+          {
+            "key": "integrationGenerativeAi",
+            "label": "生成式 AI",
+            "section": "genai",
+            "page": "integrationGenerativeAi",
+            "level": "global"
+          },
+          {
+            "key": "integrationFaceRecognition",
+            "label": "人脸识别",
+            "section": "face_recognition",
+            "page": "integrationFaceRecognition",
+            "level": "global"
+          },
+          {
+            "key": "integrationLpr",
+            "label": "车牌识别",
+            "section": "lpr",
+            "page": "integrationLpr",
+            "level": "global"
+          },
+          {
+            "key": "integrationObjectClassification",
+            "label": "目标分类",
+            "section": "classification",
+            "page": "integrationObjectClassification",
+            "level": "global"
+          },
+          {
+            "key": "triggers",
+            "label": "触发器"
+          },
+          {
+            "key": "integrationAudioTranscription",
+            "label": "音频转录",
+            "section": "audio_transcription",
+            "page": "integrationAudioTranscription",
+            "level": "global"
+          }
+        ]
+      },
+      {
+        "key": "system",
+        "label": "系统",
+        "items": [
+          {
+            "key": "systemGo2rtcStreams",
+            "label": "go2rtc 视频流",
+            "section": "go2rtc_streams",
+            "page": "systemGo2rtcStreams",
+            "level": "global"
+          },
+          {
+            "key": "systemDetectorsAndModel",
+            "label": "检测器和模型",
+            "section": "model",
+            "page": "systemDetectorsAndModel",
+            "level": "global"
+          },
+          {
+            "key": "systemDatabase",
+            "label": "数据库",
+            "section": "database",
+            "page": "systemDatabase",
+            "level": "global"
+          },
+          {
+            "key": "systemMqtt",
+            "label": "MQTT",
+            "section": "mqtt",
+            "page": "systemMqtt",
+            "level": "global"
+          },
+          {
+            "key": "systemBirdseye",
+            "label": "鸟瞰图",
+            "section": "birdseye",
+            "page": "systemBirdseye",
+            "level": "global"
+          },
+          {
+            "key": "systemTls",
+            "label": "TLS加密链接",
+            "section": "tls",
+            "page": "systemTls",
+            "level": "global"
+          },
+          {
+            "key": "systemAuthentication",
+            "label": "验证",
+            "section": "auth",
+            "page": "systemAuthentication",
+            "level": "global"
+          },
+          {
+            "key": "systemNetworking",
+            "label": "网络",
+            "section": "networking",
+            "page": "systemNetworking",
+            "level": "global"
+          },
+          {
+            "key": "systemProxy",
+            "label": "反向代理",
+            "section": "proxy",
+            "page": "systemProxy",
+            "level": "global"
+          },
+          {
+            "key": "systemUi",
+            "label": "界面",
+            "section": "ui",
+            "page": "systemUi",
+            "level": "global"
+          },
+          {
+            "key": "systemLogging",
+            "label": "日志",
+            "section": "logger",
+            "page": "systemLogging",
+            "level": "global"
+          },
+          {
+            "key": "systemEnvironmentVariables",
+            "label": "环境变量",
+            "section": "environment_vars",
+            "page": "systemEnvironmentVariables",
+            "level": "global"
+          },
+          {
+            "key": "systemTelemetry",
+            "label": "遥测",
+            "section": "telemetry",
+            "page": "systemTelemetry",
+            "level": "global"
+          }
+        ]
+      },
+      {
+        "key": "users",
+        "label": "用户",
+        "items": [
+          {
+            "key": "users",
+            "label": "用户"
+          },
+          {
+            "key": "roles",
+            "label": "权限组"
+          }
+        ]
+      },
+      {
+        "key": "notifications",
+        "label": "通知",
+        "items": [
+          {
+            "key": "notifications",
+            "label": "通知",
+            "section": "notifications",
+            "page": "notifications",
+            "level": "global"
+          }
+        ]
+      },
+      {
+        "key": "frigateplus",
+        "label": "Frigate+",
+        "items": [
+          {
+            "key": "frigateplus",
+            "label": "Frigate+"
+          }
+        ]
+      },
+      {
+        "key": "maintenance",
+        "label": "维护",
+        "items": [
+          {
+            "key": "mediaSync",
+            "label": "媒体同步"
+          },
+          {
+            "key": "regionGrid",
+            "label": "区域网格"
+          }
+        ]
+      }
+    ],
+    "pages": {
+      "globalDetect": {
+        "section": "detect",
+        "page": "globalDetect",
+        "level": "global"
+      },
+      "globalFfmpeg": {
+        "section": "ffmpeg",
+        "page": "globalFfmpeg",
+        "level": "global"
+      },
+      "globalRecording": {
+        "section": "record",
+        "page": "globalRecording",
+        "level": "global"
+      },
+      "globalSnapshots": {
+        "section": "snapshots",
+        "page": "globalSnapshots",
+        "level": "global"
+      },
+      "globalMotion": {
+        "section": "motion",
+        "page": "globalMotion",
+        "level": "global"
+      },
+      "globalObjects": {
+        "section": "objects",
+        "page": "globalObjects",
+        "level": "global"
+      },
+      "globalReview": {
+        "section": "review",
+        "page": "globalReview",
+        "level": "global"
+      },
+      "globalAudioEvents": {
+        "section": "audio",
+        "page": "globalAudioEvents",
+        "level": "global"
+      },
+      "globalLivePlayback": {
+        "section": "live",
+        "page": "globalLivePlayback",
+        "level": "global"
+      },
+      "globalTimestampStyle": {
+        "section": "timestamp_style",
+        "page": "globalTimestampStyle",
+        "level": "global"
+      },
+      "notifications": {
+        "section": "notifications",
+        "page": "notifications",
+        "level": "global"
+      },
+      "cameraDetect": {
+        "section": "detect",
+        "page": "cameraDetect",
+        "level": "camera"
+      },
+      "cameraFfmpeg": {
+        "section": "ffmpeg",
+        "page": "cameraFfmpeg",
+        "level": "camera"
+      },
+      "cameraRecording": {
+        "section": "record",
+        "page": "cameraRecording",
+        "level": "camera"
+      },
+      "cameraSnapshots": {
+        "section": "snapshots",
+        "page": "cameraSnapshots",
+        "level": "camera"
+      },
+      "cameraMotion": {
+        "section": "motion",
+        "page": "cameraMotion",
+        "level": "camera"
+      },
+      "cameraObjects": {
+        "section": "objects",
+        "page": "cameraObjects",
+        "level": "camera"
+      },
+      "cameraReview": {
+        "section": "review",
+        "page": "cameraReview",
+        "level": "camera"
+      },
+      "cameraAudioEvents": {
+        "section": "audio",
+        "page": "cameraAudioEvents",
+        "level": "camera"
+      },
+      "cameraAudioTranscription": {
+        "section": "audio_transcription",
+        "page": "cameraAudioTranscription",
+        "level": "camera"
+      },
+      "cameraNotifications": {
+        "section": "notifications",
+        "page": "cameraNotifications",
+        "level": "camera"
+      },
+      "cameraLivePlayback": {
+        "section": "live",
+        "page": "cameraLivePlayback",
+        "level": "camera"
+      },
+      "cameraBirdseye": {
+        "section": "birdseye",
+        "page": "cameraBirdseye",
+        "level": "camera"
+      },
+      "cameraFaceRecognition": {
+        "section": "face_recognition",
+        "page": "cameraFaceRecognition",
+        "level": "camera"
+      },
+      "cameraLpr": {
+        "section": "lpr",
+        "page": "cameraLpr",
+        "level": "camera"
+      },
+      "cameraMqttConfig": {
+        "section": "mqtt",
+        "page": "cameraMqttConfig",
+        "level": "camera"
+      },
+      "cameraOnvif": {
+        "section": "onvif",
+        "page": "cameraOnvif",
+        "level": "camera"
+      },
+      "cameraTimestampStyle": {
+        "section": "timestamp_style",
+        "page": "cameraTimestampStyle",
+        "level": "camera"
+      },
+      "integrationSemanticSearch": {
+        "section": "semantic_search",
+        "page": "integrationSemanticSearch",
+        "level": "global"
+      },
+      "integrationGenerativeAi": {
+        "section": "genai",
+        "page": "integrationGenerativeAi",
+        "level": "global"
+      },
+      "integrationFaceRecognition": {
+        "section": "face_recognition",
+        "page": "integrationFaceRecognition",
+        "level": "global"
+      },
+      "integrationLpr": {
+        "section": "lpr",
+        "page": "integrationLpr",
+        "level": "global"
+      },
+      "integrationObjectClassification": {
+        "section": "classification",
+        "page": "integrationObjectClassification",
+        "level": "global"
+      },
+      "integrationAudioTranscription": {
+        "section": "audio_transcription",
+        "page": "integrationAudioTranscription",
+        "level": "global"
+      },
+      "systemGo2rtcStreams": {
+        "section": "go2rtc_streams",
+        "page": "systemGo2rtcStreams",
+        "level": "global"
+      },
+      "systemDatabase": {
+        "section": "database",
+        "page": "systemDatabase",
+        "level": "global"
+      },
+      "systemMqtt": {
+        "section": "mqtt",
+        "page": "systemMqtt",
+        "level": "global"
+      },
+      "systemTls": {
+        "section": "tls",
+        "page": "systemTls",
+        "level": "global"
+      },
+      "systemAuthentication": {
+        "section": "auth",
+        "page": "systemAuthentication",
+        "level": "global"
+      },
+      "systemNetworking": {
+        "section": "networking",
+        "page": "systemNetworking",
+        "level": "global"
+      },
+      "systemProxy": {
+        "section": "proxy",
+        "page": "systemProxy",
+        "level": "global"
+      },
+      "systemUi": {
+        "section": "ui",
+        "page": "systemUi",
+        "level": "global"
+      },
+      "systemLogging": {
+        "section": "logger",
+        "page": "systemLogging",
+        "level": "global"
+      },
+      "systemEnvironmentVariables": {
+        "section": "environment_vars",
+        "page": "systemEnvironmentVariables",
+        "level": "global"
+      },
+      "systemTelemetry": {
+        "section": "telemetry",
+        "page": "systemTelemetry",
+        "level": "global"
+      },
+      "systemBirdseye": {
+        "section": "birdseye",
+        "page": "systemBirdseye",
+        "level": "global"
+      },
+      "systemDetectorsAndModel": {
+        "section": "model",
+        "page": "systemDetectorsAndModel",
+        "level": "global"
+      }
+    }
+  }
+}

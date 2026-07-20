@@ -9,7 +9,7 @@ import objectDetectorsModels from '../data/object_detectors_models.json';
 
 ### 支持的硬件
 
-目标检测是 Frigate 用来识别摄像头视野中_什么_内容——人、车、动物等——的能力，而非仅仅对像素变化做出反应。当 Frigate 的画面变动检测在一帧中发现活动时，该区域会被发送到**目标检测器**，检测器返回它识别到的目标及其位置和置信度分数。这些检测结果驱动追踪目标、警报、检测和通知。
+目标检测是 Frigate 用来识别摄像头视野中*什么*内容——人、车、动物等——的能力，而非仅仅对像素变化做出反应。当 Frigate 的画面变动检测在一帧中发现活动时，该区域会被发送到**目标检测器**，检测器返回它识别到的目标及其位置和置信度分数。这些检测结果驱动追踪目标、警报、检测和通知。
 
 目标检测计算量大，因此 Frigate 被设计为在专用的 AI 加速器或 GPU 上运行，而非 CPU。**检测器**是 Frigate 用来运行推理的特定硬件和模型后端。选择与你硬件匹配的检测器是获得良好性能的最重要步骤之一，正确的选择取决于 Frigate 运行在什么设备上。
 
@@ -78,7 +78,7 @@ Frigate 支持多种不同类型的检测器，可在不同硬件上运行：
 
 除了为你的硬件选择检测器外，你还需要选择模型的**输入分辨率**（如 `320x320` 或 `640x640`），以及对于 YOLOv9 等模型系列，还需选择**变体大小**（`tiny`、`small` 等）。两者都会影响准确性与你的硬件所能承受的推理时间之间的平衡。
 
-**分辨率（320x320 vs 640x640）：** Frigate 针对 `320x320` 模型进行了优化，`320x320` 是绝大多数配置的最佳选择。Frigate 的设计专门通过从全帧中裁剪画面变动区域并在运行检测前放大该区域来弥补较小模型的不足，因此 `320x320` 模型实际上对小型和远距离目标_更优_——而非更差。`640x640` 模型速度更慢、资源消耗更大，其主要优势在于当许多目标分散在大面积区域时，可以在单次推理中容纳更多目标。近期版本的 Frigate 已改善对 `640x640` 模型的支持，但 `320x320` 仍然是几乎所有配置的推荐起点。
+**分辨率（320x320 vs 640x640）：** Frigate 针对 `320x320` 模型进行了优化，`320x320` 是绝大多数配置的最佳选择。Frigate 的设计专门通过从全帧中裁剪画面变动区域并在运行检测前放大该区域来弥补较小模型的不足，因此 `320x320` 模型实际上对小型和远距离目标*更优*——而非更差。`640x640` 模型速度更慢、资源消耗更大，其主要优势在于当许多目标分散在大面积区域时，可以在单次推理中容纳更多目标。近期版本的 Frigate 已改善对 `640x640` 模型的支持，但 `320x320` 仍然是几乎所有配置的推荐起点。
 
 **变体大小（tiny/small/medium）：** 更大的变体准确性逐步提高但速度更慢。差异是否明显取决于你的具体摄像头和场景。一个好的经验法则是使用你的硬件在不跳过检测的情况下能运行的最大模型，你可以在界面的 <NavPath path="系统 > 指标 > 摄像头" /> 页面进行监控——更好的准确性只有在你的检测器能跟上所有摄像头的检测负载时才有意义。
 
@@ -111,7 +111,12 @@ Edge TPU 设备可使用`"device"`属性指定，参考[TensorFlow Lite Python A
 <ConfigTabs>
 <TabItem value="ui">
 
-导航到 <NavPath path="设置 > 系统 > 检测器和模型" />，从检测器类型下拉菜单中选择 **EdgeTPU**，然后点击 **添加**，将设备设置为 `usb`。
+<FrigateConfigMock
+  :auto-play="false"
+  section="model"
+  :values="{ detectors: { coral: { type: 'edgetpu', device: 'usb' } } }"
+  :targets="[{ field: 'detectors', hint: '添加一个名为 coral 的 EdgeTPU 检测器，并将设备设置为 usb。' }]"
+/>
 
 </TabItem>
 <TabItem value="yaml">
@@ -131,7 +136,13 @@ detectors:
 <ConfigTabs>
 <TabItem value="ui">
 
-导航到 <NavPath path="设置 > 系统 > 检测器和模型" />，从检测器类型下拉菜单中选择 **EdgeTPU**，然后点击 **添加** 添加多个检测器，分别指定 `usb:0` 和 `usb:1` 作为设备。
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="model"
+  :values="{ detectors: { coral1: { type: 'edgetpu', device: 'usb:0' }, coral2: { type: 'edgetpu', device: 'usb:1' } } }"
+  :targets="[{ field: 'detectors', hint: '添加两个 EdgeTPU 检测器，分别将设备设置为 usb:0 和 usb:1。' }]"
+/>
 
 </TabItem>
 <TabItem value="yaml">
@@ -156,7 +167,13 @@ _警告：`v0.9.x`版本后可能有[兼容性问题](https://github.com/blakebl
 <ConfigTabs>
 <TabItem value="ui">
 
-导航到 <NavPath path="设置 > 系统 > 检测器和模型" />，从检测器类型下拉菜单中选择 **EdgeTPU**，然后点击 **添加**，将设备字段留空。
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="model"
+  :values="{ detectors: { coral: { type: 'edgetpu', device: '' } } }"
+  :targets="[{ field: 'detectors', hint: '添加一个 EdgeTPU 检测器，将设备字段留空，让 Frigate 自动检测原生 Coral。' }]"
+/>
 
 </TabItem>
 <TabItem value="yaml">
@@ -165,7 +182,7 @@ _警告：`v0.9.x`版本后可能有[兼容性问题](https://github.com/blakebl
 detectors:
   coral:
     type: edgetpu
-    device: ""
+    device: ''
 ```
 
 </TabItem>
@@ -176,7 +193,13 @@ detectors:
 <ConfigTabs>
 <TabItem value="ui">
 
-导航到 <NavPath path="设置 > 系统 > 检测器和模型" />，从检测器类型下拉菜单中选择 **EdgeTPU**，然后点击 **添加**，将设备设置为 `pci`。
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="model"
+  :values="{ detectors: { coral: { type: 'edgetpu', device: 'pci' } } }"
+  :targets="[{ field: 'detectors', hint: '添加一个名为 coral 的 EdgeTPU 检测器，并将设备设置为 pci。' }]"
+/>
 
 </TabItem>
 <TabItem value="yaml">
@@ -196,7 +219,13 @@ detectors:
 <ConfigTabs>
 <TabItem value="ui">
 
-导航到 <NavPath path="设置 > 系统 > 检测器和模型" />，从检测器类型下拉菜单中选择 **EdgeTPU**，然后点击 **添加** 添加多个检测器，分别指定 `pci:0` 和 `pci:1` 作为设备。
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="model"
+  :values="{ detectors: { coral1: { type: 'edgetpu', device: 'pci:0' }, coral2: { type: 'edgetpu', device: 'pci:1' } } }"
+  :targets="[{ field: 'detectors', hint: '添加两个 EdgeTPU 检测器，分别将设备设置为 pci:0 和 pci:1。' }]"
+/>
 
 </TabItem>
 <TabItem value="yaml">
@@ -219,7 +248,13 @@ detectors:
 <ConfigTabs>
 <TabItem value="ui">
 
-导航到 <NavPath path="设置 > 系统 > 检测器和模型" />，从检测器类型下拉菜单中选择 **EdgeTPU**，然后点击 **添加** 添加多个具有不同设备类型的检测器（如 `usb` 和 `pci`）。
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="model"
+  :values="{ detectors: { coral_usb: { type: 'edgetpu', device: 'usb' }, coral_pci: { type: 'edgetpu', device: 'pci' } } }"
+  :targets="[{ field: 'detectors', hint: '添加两个 EdgeTPU 检测器，一个设备设置为 usb，另一个设置为 pci。' }]"
+/>
 
 </TabItem>
 <TabItem value="yaml">
@@ -266,8 +301,7 @@ Hailo-8 检测器支持 Hailo-8 和 Hailo-8L AI 加速模块。该集成会自�
 
 Hailo8 支持 Hailo 模型库中所有包含 HailoRT 后处理的模型。你可以选择任何这些预配置模型。
 
-> **注意：**
-> `config.path` 参数可以接受以 `.hef` 结尾的本地文件路径或 URL。当提供时，检测器将首先检查路径是否为本地文件路径。如果文件在本地存在，将直接使用。如果未找到本地文件或提供了 URL，则会尝试从指定 URL 下载模型。
+> **注意：** > `config.path` 参数可以接受以 `.hef` 结尾的本地文件路径或 URL。当提供时，检测器将首先检查路径是否为本地文件路径。如果文件在本地存在，将直接使用。如果未找到本地文件或提供了 URL，则会尝试从指定 URL 下载模型。
 
 ---
 
@@ -429,9 +463,11 @@ ONNX 是一种用于构建机器学习模型的开放格式，Frigate 支持在 
 如果使用了适合你 GPU 的正确构建版本，GPU 将被自动检测并使用。
 
 - **AMD**
+
   - 在`-rocm`版 Frigate 镜像中，ROCm 会被自动检测并与 ONNX 检测器一起使用。
 
 - **Intel**
+
   - 在标准 Frigate 镜像中，OpenVINO 会被自动检测并与 ONNX 检测器一起使用。
 
 - **NVIDIA**
@@ -611,6 +647,7 @@ yolov7-320
 yolov7x-640
 yolov7x-320
 ```
+
 </details>
 
 为 Pascal 显卡转换`yolov4-608`和`yolov7x-640`模型的`docker-compose.yml`片段示例如下：
@@ -755,7 +792,7 @@ config:
 
 ## DeGirum
 
-DeGirum 可以使用[其网站](https://hub.degirum.com)上列出的任何类型硬件的检测器。DeGirum 可以通过 DeGirum AI 服务器或使用 `@local` 与本地硬件一起使用。你也可以直接连接到 DeGirum 的 AI Hub 来运行推理。**请注意：**此检测器_不能_用于商业目的。
+DeGirum 可以使用[其网站](https://hub.degirum.com)上列出的任何类型硬件的检测器。DeGirum 可以通过 DeGirum AI 服务器或使用 `@local` 与本地硬件一起使用。你也可以直接连接到 DeGirum 的 AI Hub 来运行推理。**请注意：**此检测器*不能*用于商业目的。
 
 ### 配置
 
