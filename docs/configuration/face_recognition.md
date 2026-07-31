@@ -180,7 +180,21 @@ face_recognition:
 ::: collapse 如何调试人脸识别问题？
 请从[使用方法](#usage)说明章节开始，并重新阅读上方[模型要求](#model-requirements)的说明。
 
-1.确保系统能**检测**到 `person` 目标。Frigate 会自动对检测到的`person`进行人脸扫描，所有识别到的人脸将显示在 Frigate 界面"人脸管理"的"近期识别"标签页中。
+1. 启用调试日志，查看 Frigate 实际操作。
+   - 通过在 `logger` 配置中添加 `frigate.data_processing.real_time.face: debug` 启用人脸识别的调试日志。修改后重启 Frigate。
+
+     ```yaml
+     logger:
+       default: info
+       logs:
+         # highlight-next-line
+         frigate.data_processing.real_time.face: debug
+     ```
+
+   - 这些日志会报告流水线在每个 `person` 目标上停止的位置，例如在人脸边界框内未找到人脸、检测到的人脸小于 `min_area`，或人脸被识别但评分过低。
+   - 如果完全没有看到与人脸相关的消息，还需添加 `frigate.embeddings.maintainer: debug` 以确认人脸处理器在启动时已创建，并且 `person` 更新确实到达了该处理器。
+
+2.确保系统能**检测**到 `person` 目标。Frigate 会自动对检测到的`person`进行人脸扫描，所有识别到的人脸将显示在 Frigate 界面"人脸管理"的"近期识别"标签页中。
 
 若你使用的是 Frigate+ 或能检测 `face` 的模型：
 - 通过调试页面确认系统是否同时检测到`person`和`face`目标
@@ -190,7 +204,7 @@ face_recognition:
 - 检查 `detect` 视频流的分辨率，确保其足够高以捕捉 `person` 目标的人脸细节
 - 若人脸检测失败，可能需要降低`detection_threshold`阈值
 
-2. 所有检测到的人脸将进入**识别**阶段：
+3. 所有检测到的人脸将进入**识别**阶段：
 - 请确保已按照上述建议完成至少一个人脸样本的训练
 - 根据上文说明调整`recognition_threshold`参数
 :::

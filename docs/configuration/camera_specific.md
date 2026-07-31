@@ -159,6 +159,13 @@ Frigate 与配置了以下选项的新款 Reolink 摄像头配合使用效果更
 - `开启，流畅优先` - 这将摄像头设置为 CBR(恒定比特率)
 - `帧间空间1x` - 这将 I 帧间隔设置为与帧率相同
 
+#### 通过添加摄像头向导设置
+
+[添加摄像头向导](cameras.md#adding-a-camera-with-the-add-camera-wizard)是添加标准 Reolink 摄像头的推荐方式。在开始之前，请确保已在摄像头的网络高级设置中[启用 HTTP](https://support.reolink.com/articles/360003452893-How-to-Access-Reolink-Cameras-NVRs-Home-Hub-Locally-via-Web-Browsers/)。该向导使用摄像头的 HTTP API 来确定分辨率，并从上表中推荐合适的流类型。
+
+1. 点击 <NavPath path="Settings > Global configuration > Camera management" /> 中的 **Add Camera**。
+2. 选择 **Manual selection** 作为流检测方法，并选择 **Reolink** 作为摄像头品牌。
+
 根据[此讨论](https://github.com/blakeblackshear/frigate/issues/3235#issuecomment-1135876973)，HTTP 视频流似乎是 Reolink 最可靠的选择。
 
 通过 Reolink NVR 连接的摄像头可以使用 HTTP 流，在流 URL 中使用`channel[0..15]`表示附加通道。

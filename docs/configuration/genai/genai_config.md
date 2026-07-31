@@ -5,9 +5,123 @@ title: 配置生成式 AI
 
 ## 配置 {#configuration}
 
-可以在全局配置中设置生成式 AI 提供商，启用后即可使用生成式 AI 功能。目前有 4 种原生提供商可与 Frigate 集成。支持 OpenAI 标准 API 的其他提供商也可使用，请参阅下方的 OpenAI 兼容部分。
+可以在全局配置中设置生成式 AI 提供商，启用后即可使用生成式 AI 功能。目前有 5 种原生提供商可与 Frigate 集成。支持 OpenAI 标准 API 的其他提供商也可使用，请参阅下方的 OpenAI 兼容部分。
 
-要使用生成式 AI，你必须在 Frigate 配置的全局层级定义一个提供商。如果你选择的提供商需要 API 密钥，可以直接将其粘贴在配置中，或存储在以 `FRIGATE_` 为前缀的环境变量中。
+`genai` 是一个命名提供者的映射。`genai` 下的每个键都是你选择的名称，其值是该提供者的设置：
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+1. 导航到 <NavPath path="Settings > Enrichments > Generative AI" />。
+   - 点击**添加（Add）**并输入**提供者名称（Provider name）**。接受字母、数字、连字符和下划线的任意名称，但创建后无法从界面更改。
+   - 将**提供者（Provider）**设置为你使用的服务（例如 `ollama`）
+   - 根据提供者要求设置**基础 URL（Base URL）**、**API 密钥（API key）**和**模型（Model）**
+   - 设置**角色（Roles）**为该提供者应处理的角色。
+
+2. 然后配置使用该提供者的具体功能（核查描述、目标描述等）。
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+genai:
+  my_provider: # 任意你喜欢的名称
+    provider: ollama
+    base_url: http://localhost:11434
+    model: qwen3-vl:4b
+    roles:
+      - descriptions
+      - embeddings
+      - chat
+```
+
+</TabItem>
+</ConfigTabs>
+
+## 常见问题
+
+### 如何调试 GenAI 问题？
+
+Frigate 的生成式 AI 功能是分别配置和启用的。[核查描述与摘要](/configuration/genai/genai_review)位于 `review.genai` 下，[目标描述](/configuration/genai/genai_objects)位于 `objects.genai` 下。在本页面配置提供者并不会启用任一功能，启用一个也不意味着启用了另一个。确定哪个功能不起作用，然后按以下步骤排查。
+
+1. 确认提供者可用并拥有 `descriptions` 角色。
+   - 核查描述、核查摘要和目标描述都使用在 <NavPath path="Settings > Enrichments > Generative AI > Roles" />（`genai.<provider>.roles`）中分配了 `descriptions` 角色的提供者。
+   - 提供者在其某个角色第一次实际使用时才会被联系。持有语义搜索 `embeddings` 角色的提供者在启动时初始化，而 `descriptions` 提供者直到第一次描述请求时才初始化，这可能远在启动之后。
+   - 在 <NavPath path="Settings > Enrichments > Generative AI" /> 中，使用模型字段旁的**刷新模型（Refresh models）**。它会查询提供者的模型列表，是验证基础 URL、API 密钥以及 Frigate 与提供者之间网络路径是否正确的快速方法。
+
+2. 确认你期望的功能实际已启用。
+   - 目标描述默认禁用。在全局或每个摄像头下打开 <NavPath path="Settings > Global configuration > Objects > GenAI object config > Enable GenAI" />（`objects.genai.enabled`）。这是自定义提示看起来被忽略而核查摘要仍在生成的最常见原因。
+   - 核查描述默认禁用。打开 <NavPath path="Settings > Global configuration > Review > GenAI config > Enable GenAI descriptions" />（`review.genai.enabled`）。一旦启用，警报默认会被描述，但检测不会，因此仅检测的核查项永远不会获得摘要，除非**启用 GenAI 检测（Enable GenAI for detections）**（`review.genai.detections`）也开启。
+
+3. 如果目标描述从未被请求，检查跳过生成的过滤器。
+   - <NavPath path="Settings > Global configuration > Objects > GenAI object config > GenAI objects" />（`objects.genai.objects`）限制生成到特定标签，**必需区域（Required zones）**（`objects.genai.required_zones`）要求目标进入其中一个区域。如果设置了但未匹配，Frigate 会静默跳过请求。
+   - 缩略图仅在目标移动时收集。提前静止的目标贡献的帧更少。
+   - **使用快照（Use snapshots）**（`objects.genai.use_snapshot`）要求为摄像头启用快照。如果无法读取快照，Frigate 会记录 `Cannot load snapshot for <id>, file not found` 且不生成描述。
+   - **结束发送（Send on end）**（`objects.genai.send_triggers.tracked_object_end`）默认开启。如果你关闭了它而使用**提前 GenAI 触发器（Early GenAI trigger）**（`objects.genai.send_triggers.after_significant_updates`），描述仅在该更新次数达到后才被请求。
+
+4. 启用调试日志查看 Frigate 实际在做什么。此更改后重启 Frigate。下一步也需要重启，所以同时开启两者以避免重启两次。
+
+   ```yaml
+   logger:
+     default: info
+     logs:
+       # highlight-start
+       frigate.genai: debug
+       frigate.data_processing.post.object_descriptions: debug
+       frigate.data_processing.post.review_descriptions: debug
+       # highlight-end
+   ```
+
+5. 保存发送给提供者的确切图像和提示词。
+   - 为正在调试的功能开启**保存缩略图（Save thumbnails）**（`review.genai.debug_save_thumbnails` 或 `objects.genai.debug_save_thumbnails`）。两个功能都写入 `/media/frigate/clips/genai-requests/`，这些文件仅限管理员访问。
+   - 核查描述写入 `genai-requests/<review_id>/`，包含发送的编号帧，以及 `prompt.txt` 和 `response.txt`（包含确切的提示词和原始、未解析的模型响应）。
+   - 核查摘要报告写入 `genai-requests/<start_ts>-<end_ts>/prompt.txt` 和 `response.txt`。不涉及图像，因为报告汇总现有的核查描述。
+   - 目标描述写入 `genai-requests/<event_id>/`，包含编号的缩略图。目标描述的提示词不写入文件，仅在步骤 4 的调试日志中可见。
+   - 在责怪模型之前先查看保存的图像。如果目标很小、模糊或在画面外，再好的提示词也无法修复结果。对于目标描述，考虑开启**使用快照**（`objects.genai.use_snapshot`）发送更高质量的图像。对于核查项，考虑将**核查图像源（Review image source）**（`review.genai.image_source`）设置为 `recordings` 以获取 480p 帧，而不是较低分辨率的预览帧。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+<FrigateConfigMock
+  :show-navigation-steps="false"
+  section="review"
+  focus="genai.debug_save_thumbnails"
+  :values="{ 'genai.debug_save_thumbnails': true }"
+  hint="开启保存缩略图以调试核查描述。对于目标描述，同样在 Objects > GenAI object config > Save thumbnails 中开启。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+review:
+  genai:
+    enabled: true
+    # highlight-next-line
+    debug_save_thumbnails: true
+
+objects:
+  genai:
+    enabled: true
+    # highlight-next-line
+    debug_save_thumbnails: true
+```
+
+</TabItem>
+</ConfigTabs>
+
+6. 验证提示词是否如你所想。
+   - 目标描述提示词是你直接控制的。摄像头级别的 <NavPath path="Settings > Camera configuration > Objects > GenAI object config > Caption prompt" />（`objects.genai.prompt`）覆盖全局的，**目标提示词（Object prompts）**（`objects.genai.object_prompts`）中某个标签的条目会覆盖该标签的两者。只有 `{label}`、`{sub_label}` 和 `{camera}` 会被替换。
+   - 核查描述提示词由 Frigate 构建并请求结构化 JSON 响应，因此不可完全替换。你控制的部分是 <NavPath path="Settings > Global configuration > Review > GenAI config > Activity context prompt" />（`review.genai.activity_context_prompt`）和**额外关注事项（Additional concerns）**（`review.genai.additional_concerns`）。保持活动上下文提示词通用，因为过于具体的规则会影响模型的威胁级别评分。
+
+7. 如果描述生成但结果不佳或不一致，检查模型和上下文窗口。
+   - 空字段、缺失 `shortSummary` 值或 `Failed to parse review description` 错误通常意味着模型未遵循请求的 JSON 结构。较小的模型在结构化输出方面有困难。尝试更大的参数量或[推荐模型](#推荐本地模型)之一。
+   - Frigate 根据提供者报告的上下文大小计算要发送多少帧。如果你的服务器报告的值与实际运行的值不同，帧将被截断或请求失败。通过在 <NavPath path="Settings > Enrichments > Generative AI > Provider options" />（`genai.<provider>.provider_options`）中添加 `context_size` 来固定该值，对于 Ollama 还确认 `options.num_ctx` 与配置的上下文匹配。
+   - 在 <NavPath path="System metrics > Enrichments" /> 中查看**核查描述速度（Review Description Speed）**和**目标描述速度（Object Description Speed）**。如果推理需要数十秒，请求会相互排队，描述会看似停止。对于 Ollama，检查 `OLLAMA_NUM_PARALLEL`、`OLLAMA_MAX_QUEUE` 和 `OLLAMA_MAX_LOADED_MODELS`，确保 Frigate 的并发请求按预期处理。
+
+本页面的例子都使用 `my_provider`，但名称是任意的，仅用于在配置的其他地方引用该提供者（例如 `semantic_search.model`）。
+
+每个提供者处理一个或多个**角色**：`chat`（对话）、`descriptions`（描述）和 `embeddings`（嵌入）。默认情况下一个提供者处理所有三个角色，每个角色可分配给恰好一个提供者。如果你想让一个提供者处理所有事情，只需定义一个；也可以使用 `roles` 选项将角色拆分到多个提供者。
 
 ## 本地提供商 {#local-providers}
 
@@ -21,13 +135,19 @@ title: 配置生成式 AI
 
 ### 推荐本地模型 {#recommended-local-models}
 
-你必须为 Frigate 使用具备视觉能力的模型。以下是推荐的本地部署模型：
+你必须为 Frigate 使用具备视觉能力的模型。以下是 `descriptions` 和 `chat` 角色的推荐本地部署模型：
 
-| 模型          | 说明                                                                                                                                                    |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `qwen3-vl`    | 强大的视觉和情境理解能力，增强了对较小目标和目标交互的识别能力。                                                                                         |
-| `qwen3.5`     | 强大的情境理解能力，但缺少 qwen3-vl 的 DeepStack，导致在识别人手中物体等小细节方面表现较差。                                                            |
-| `gemma4`      | 强大的情境理解能力，但有时会使用更模糊的词汇如"互动"而非具体的动作描述。                                                                                  |
+| 模型      | 说明                                                                                                                                                                |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `qwen3-vl`| 强大的视觉和情境理解能力，增强了对较小目标和目标交互的识别能力。                                                                                                     |
+| `qwen3.6` | 强大的情境理解能力，但与 qwen3-vl 相似。                                                                                                                             |
+| `gemma4`  | 强大的情境理解能力，但有时会使用更模糊的词汇如"互动"而非具体的动作描述。                                                                                             |
+
+`embeddings` 角色需要不同类型的模型。文本查询与存储的图像嵌入进行匹配，因此模型必须经过训练，将图像和文本放入同一向量空间。对话或描述模型在被要求时仍会返回向量，但这些向量并非为检索而训练，文本搜索将返回糟糕的匹配结果且不会报错指明原因。
+
+| 模型                | 说明                                                                                                                                                               |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `qwen3-vl-embedding` | 用于[语义搜索](/configuration/semantic_search#genai-提供者)的多模态嵌入。必须由 llama.cpp 以 `--embeddings` 和 `--mmproj` 启动。 |
 | `Intern3.5VL` | 速度相对较快，具有良好的视觉理解能力                                                                                                                   |
 | `gemma3`      | 推理速度较慢，但具有良好的视觉和时序理解能力                                                                                                           |
 
@@ -70,12 +190,15 @@ Frigate 会按任务自动管理推理模式：
 
 ```yaml
 genai:
-  provider: llamacpp
-  base_url: http://localhost:8080
-  model: your-model-name
-  provider_options:
-    context_size: 16000 # 告知 Frigate 你的上下文大小，以便发送适当数量的信息
+  my_provider:
+    provider: llamacpp
+    base_url: http://localhost:8080
+    model: your-model-name
+    provider_options:
+      context_size: 16000 # 可选，覆盖服务器报告的上下文大小。
 ```
+
+Frigate 在启动时查询 llama.cpp 服务器获取模型的上下文大小，并将其与其他检测到的功能一起记录到日志中。如果在 `provider_options` 中设置了 `context_size`，则始终使用该值，即使服务器报告了其自身的值。
 
 ### Ollama {#ollama}
 
@@ -97,13 +220,14 @@ genai:
 
 ```yaml
 genai:
-  provider: ollama
-  base_url: http://localhost:11434
-  model: qwen3-vl:4b
-  provider_options: # 其他 Ollama 客户端选项可在此定义
-    keep_alive: -1
-    options:
-      num_ctx: 8192 # 确保上下文大小与使用 Ollama 的其他服务匹配
+  my_provider:
+    provider: ollama
+    base_url: http://localhost:11434
+    model: qwen3-vl:4b
+    provider_options: # 其他 Ollama 客户端选项可在此定义
+      keep_alive: -1
+      options:
+        num_ctx: 8192 # 确保上下文大小与使用 Ollama 的其他服务匹配
 ```
 
 ### OpenAI 兼容 {#openai-compatible}
@@ -116,11 +240,12 @@ Frigate 支持任何实现了 OpenAI API 标准的提供商。这包括 [vLLM](h
 
 ```yaml
 genai:
-  provider: openai
-  base_url: http://your-llama-server
-  model: your-model-name
-  provider_options:
-    context_size: 8192 # 指定已配置的上下文大小
+  my_provider:
+    provider: openai
+    base_url: http://your-llama-server
+    model: your-model-name
+    provider_options:
+      context_size: 8192 # 指定已配置的上下文大小
 ```
 
 这确保 Frigate 在生成提示词时使用正确的上下文窗口大小。
@@ -131,10 +256,11 @@ genai:
 
 ```yaml
 genai:
-  provider: openai
-  base_url: http://your-server:port
-  api_key: your-api-key # 本地服务器可能不需要
-  model: your-model-name
+  my_provider:
+    provider: openai
+    base_url: http://your-server:port
+    api_key: your-api-key # 本地服务器可能不需要
+    model: your-model-name
 ```
 
 要使用其他 OpenAI 兼容 API 端点，请设置 `OPENAI_BASE_URL` 环境变量为你的提供商 API URL。
@@ -157,19 +283,21 @@ Ollama 也支持[云端模型](https://ollama.com/cloud)，模型推理在云端
 
 ```yaml
 genai:
-  provider: ollama
-  base_url: http://localhost:11434
-  model: cloud-model-name
+  my_provider:
+    provider: ollama
+    base_url: http://localhost:11434
+    model: cloud-model-name
 ```
 
 或直接使用 Ollama Cloud：
 
 ```yaml
 genai:
-  provider: ollama
-  base_url: https://ollama.com
-  model: cloud-model-name
-  api_key: your-api-key
+  my_provider:
+    provider: ollama
+    base_url: https://ollama.com
+    model: cloud-model-name
+    api_key: your-api-key
 ```
 
 ### Google Gemini {#google-gemini}
@@ -193,9 +321,10 @@ Google Gemini API 提供了[免费套餐](https://ai.google.dev/pricing)，但�
 
 ```yaml
 genai:
-  provider: gemini
-  api_key: "{FRIGATE_GEMINI_API_KEY}"
-  model: gemini-2.5-flash
+  my_provider:
+    provider: gemini
+    api_key: "{FRIGATE_GEMINI_API_KEY}"
+    model: gemini-2.5-flash
 ```
 
 :::note
@@ -204,10 +333,11 @@ genai:
 
 ```yaml
 genai:
-  provider: gemini
-  ...
-  provider_options:
-    base_url: https://...
+  my_provider:
+    provider: gemini
+    ...
+    provider_options:
+      base_url: https://...
 ```
 
 其他 HTTP 选项也可用，请参阅 [python-genai 文档](https://github.com/googleapis/python-genai)。
@@ -244,9 +374,10 @@ OpenAI 没有为其 API 提供免费等级。随着 gpt-4o 的发布，价格已
 
 ```yaml
 genai:
-  provider: openai
-  api_key: "{FRIGATE_OPENAI_API_KEY}"
-  model: gpt-4o
+  my_provider:
+    provider: openai
+    api_key: "{FRIGATE_OPENAI_API_KEY}"
+    model: gpt-4o
 ```
 
 :::note
@@ -263,11 +394,12 @@ genai:
 
 ```yaml
 genai:
-  provider: openai
-  base_url: http://your-llama-server
-  model: your-model-name
-  provider_options:
-    context_size: 8192 # 指定已配置的上下文大小
+  my_provider:
+    provider: openai
+    base_url: http://your-llama-server
+    model: your-model-name
+    provider_options:
+      context_size: 8192 # 指定已配置的上下文大小
 ```
 
 这确保 Frigate 在生成提示词时使用正确的上下文窗口大小。
@@ -290,8 +422,9 @@ genai:
 
 ```yaml
 genai:
-  provider: azure_openai
-  base_url: https://instance.cognitiveservices.azure.com/openai/responses?api-version=2025-04-01-preview
-  model: gpt-5-mini
-  api_key: "{FRIGATE_OPENAI_API_KEY}"
+  my_provider:
+    provider: azure_openai
+    base_url: https://instance.cognitiveservices.azure.com/openai/responses?api-version=2025-04-01-preview
+    model: gpt-5-mini
+    api_key: "{FRIGATE_OPENAI_API_KEY}"
 ```

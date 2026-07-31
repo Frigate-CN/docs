@@ -71,6 +71,10 @@ export const sidebar = [
             link: "/configuration/config",
           },
           {
+            text: "全局配置与摄像头级配置",
+            link: "/configuration/config_overrides",
+          },
+          {
             text: "Go2RTC 配置参考",
             link: "https://github.com/AlexxIT/go2rtc/tree/v1.9.13#configuration",
           },
@@ -276,6 +280,7 @@ export const sidebar = [
     text: '<i class="fa-solid fa-circle-question"></i>常见问题',
     items: [
       { text: "常见问题问答", link: "/troubleshooting/faqs" },
+      { text: "常见错误消息", link: "/troubleshooting/common_errors" },
       { text: "go2rtc 问题排查", link: "/troubleshooting/go2rtc" },
       { text: "录制问题", link: "/troubleshooting/recordings" },
       { text: "目标检测排查", link: "/troubleshooting/dummy-camera" },

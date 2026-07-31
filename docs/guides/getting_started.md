@@ -150,37 +150,17 @@ services:
 
 本节假设你已经按照[安装](/frigate/installation)中的说明设置了环境。你还应该根据[摄像头设置指南](/frigate/camera_setup)配置你的摄像头。特别注意选择检测分辨率的部分。
 
-### 步骤 1：添加检测流
+### 步骤 1：启动 Frigate
 
-首先我们将为摄像头添加检测（`detect`）视频流：
+此时你应该能够启动 Frigate，基本配置将自动创建。
 
-```yaml
-mqtt:
-  enabled: False
+### 步骤 2：添加摄像头
 
-cameras: # [!code ++]
-  name_of_your_camera: # <------ 命名你的摄像头 [!code ++]
-    enabled: True # [!code ++]
-    ffmpeg: # [!code ++]
-      inputs: # [!code ++]
-        - path: rtsp://10.0.10.10:554/rtsp # <----- 你想用于检测的视频流地址 [!code ++]
-          roles: # [!code ++] 设置这个流的功能，包含record（录制）、audio（音频）和detect（检测）
-            - detect # [!code ++] 此处只给这个视频流开启检测（detect）功能
-```
-
-### 步骤 2：启动 Frigate
-
-此时你应该能够启动 Frigate 并在实时监控页面中看到视频画面。
-
-如果你从摄像头获得错误图像，这意味着 ffmpeg 无法从你的摄像头获取视频流。检查日志中的 ffmpeg 错误消息。默认的 ffmpeg 参数设计用于支持 TCP 连接的 H264 RTSP 摄像头。
-
-其他类型摄像头的 FFmpeg 参数可以在[这里](../configuration/camera_specific.md)找到。
+点击 <NavPath path="Settings > Global configuration > Camera management" /> 中的 **Add Camera** 按钮，使用摄像头设置向导将你的第一个摄像头添加到 Frigate 中。有关每个步骤的详细说明，请参见[使用添加摄像头向导添加摄像头](../configuration/cameras.md#使用添加摄像头向导添加摄像头)。
 
 ### 步骤 3：配置硬件加速（推荐）
 
 现在你已经有了一个工作正常的摄像头配置，你需要设置硬件加速以**减少解码视频流所需的 CPU**。查看[硬件加速](../configuration/hardware_acceleration_video.md)配置参考，了解适用于你的硬件的示例。
-
-这里是一个使用[预设](../configuration/ffmpeg_presets.md)配置硬件加速的示例，适用于大多数带核显的 Intel 处理器：
 
 如果你在使用 Docker Compose 配置生成器的时候勾选了 GPU 加速，则**不需要**参考下方配置添加核显的映射。
 <DetailsCollapse title="添加核显的映射">

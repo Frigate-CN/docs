@@ -29,7 +29,7 @@ Frigate 智能地使用三种不同的视频流技术在仪表板和单摄像头
 
 - 视频编解码器：**H.264** - 提供与所有实时监控页面技术和浏览器最兼容的视频编解码器。避免使用任何"智能编解码器"或"+"编解码器，如 **H.264+** 或 **H.265+** 以及 **Smart H.265** 等，这些非标准编解码器会移除关键帧(见下文)。
 - 音频编解码器：**AAC** - 提供与所有支持音频的实时监控页面技术和浏览器最兼容的音频编解码器。
-- I 帧间隔（也叫关键帧间隔、帧间空间或 GOP 长度）：匹配摄像头的帧率，或选择"1x"(对于 Reolink 摄像头的帧间空间)。例如，如果你的流输出 20fps，I 帧间隔应为 20（或 Reolink 上的 1x）。高于帧率的值会导致流开始播放时间更长。有关关键帧的更多信息，请参阅[此页面](https://gardinal.net/understanding-the-keyframe-interval/)。对于多数用户而言这可能不是什么问题，但需注意：若你同时将视频流用于`record`（录制）功能，1 倍关键帧间隔（i-frame interval）会导致更高的存储空间占用
+- I 帧间隔（也叫关键帧间隔、帧间空间或 GOP 长度）：匹配摄像头的帧率，或选择"1x"(对于 Reolink 摄像头的帧间空间)。例如，如果你的流输出 20fps，I 帧间隔应为 20（或 Reolink 上的 1x）。高于帧率的值会导致流开始播放时间更长。有关关键帧的更多信息，请参阅[此页面](https://web.archive.org/web/20251213190836/https://gardinal.net/understanding-the-keyframe-interval/)。对于多数用户而言这可能不是什么问题，但需注意：若你同时将视频流用于`record`（录制）功能，1 倍关键帧间隔（i-frame interval）会导致更高的存储空间占用
 
 摄像头的默认视频和音频编解码器可能不总是与你的浏览器兼容，这就是为什么建议将它们设置为`H.264`和`AAC`。有关编解码器支持信息，请参阅 [go2rtc 文档](https://github.com/AlexxIT/go2rtc?tab=readme-ov-file#codecs-madness)。
 
@@ -170,7 +170,7 @@ services:
 
 :::
 
-有关更多信息，请参阅[go2rtc WebRTC 文档](https://github.com/AlexxIT/go2rtc/tree/v1.9.10#module-webrtc)。
+有关更多信息，请参阅[go2rtc WebRTC 文档](https://github.com/AlexxIT/go2rtc/tree/v1.9.14#module-webrtc)。
 
 ### 双向通话 {#two-way-talk}
 
@@ -269,7 +269,7 @@ Frigate 在摄像头组编辑面板中提供了一个对话框，其中包含几
 
 - **stalled**
   - 含义：播放已停滞，因为播放器落后实时太多（扩展缓冲或没有数据到达）。
-  - 解决方法：这通常表明浏览器难以同时解码太多高分辨率流。尝试选择较低带宽的流（子流），减少打开的实时流数量，改善网络连接，或降低摄像头分辨率。同时检查摄像头的关键帧（I 帧）间隔 — 较短的间隔使播放启动和恢复更快。你也可以尝试在 Frigate 设置的 UI 面板中增加超时值。
+  - 解决方法：这通常表明浏览器难以同时解码太多高分辨率流。尝试选择较低带宽的流（子流），减少打开的实时流数量，改善网络连接，或降低摄像头分辨率。同时检查摄像头的关键帧（I 帧）间隔 — 较短的间隔使播放启动和恢复更快。你也可以尝试在 <NavPath path="Settings > UI" /> 中增加超时值。
 
   - 播放器代码可能显示的控制台消息：
     - `Buffer time (10 seconds) exceeded, browser may not be playing media correctly.`
