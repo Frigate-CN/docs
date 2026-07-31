@@ -10,7 +10,8 @@
 #
 # Environment:
 #   FRIGATE_REPO  - override the official repo URL (default: https://github.com/blakeblackshear/frigate)
-#   FRIGATE_BRANCH - override the branch (default: auto-detected from docs branch)
+#   FRIGATE_BRANCH - override the branch to clone (default: auto-detected from docs branch)
+#   DOCS_BRANCH   - explicitly set the docs branch (main/beta); overrides auto-detection
 
 set -euo pipefail
 
@@ -18,7 +19,38 @@ OFFICIAL_REPO="${FRIGATE_REPO:-https://github.com/blakeblackshear/frigate}"
 TARGET_DIR="${1:-.frigate}"
 
 # Determine the docs branch and map it to the official Frigate branch.
-DOCS_BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")"
+detect_docs_branch() {
+  # Explicit override wins (works in any CI/local environment).
+  if [[ -n "${DOCS_BRANCH:-}" ]]; then
+    echo "$DOCS_BRANCH"
+    return
+  fi
+  # Prefer the actual branch name (empty on detached HEAD).
+  local branch
+  branch="$(git branch --show-current 2>/dev/null || true)"
+  if [[ -n "$branch" ]]; then
+    echo "$branch"
+    return
+  fi
+  # Detached HEAD: find a tracked branch that contains the current commit.
+  # Look at remote-tracking refs first, then local refs, matching the names
+  # we actually care about (main/beta) so we don't pick an unrelated branch.
+  local ref
+  for ref in $(git for-each-ref --format='%(refname:short)' \
+                refs/remotes/origin refs/heads 2>/dev/null); do
+    local name="${ref#origin/}"
+    if [[ "$name" == "main" || "$name" == "beta" ]]; then
+      if git merge-base --is-ancestor HEAD "$ref" 2>/dev/null; then
+        echo "$name"
+        return
+      fi
+    fi
+  done
+  # Last resort: symbolic abbreviation (may be 'HEAD').
+  git rev-parse --abbrev-ref HEAD 2>/dev/null || echo ""
+}
+
+DOCS_BRANCH="$(detect_docs_branch)"
 
 if [[ -n "${FRIGATE_BRANCH:-}" ]]; then
   FRIGATE_BRANCH_VALUE="${FRIGATE_BRANCH}"
