@@ -18,6 +18,8 @@ title: 配置生成式 AI
    - 根据提供者要求设置**基础 URL（Base URL）**、**API 密钥（API key）**和**模型（Model）**
    - 设置**角色（Roles）**为该提供者应处理的角色。
 
+2. 然后配置使用该提供者的具体功能（核查描述、目标描述等）。
+
 </TabItem>
 <TabItem value="YAML配置文件">
 
@@ -80,9 +82,13 @@ Frigate 的生成式 AI 功能是分别配置和启用的。[核查描述与摘�
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-对于核查描述，导航到 <NavPath path="Settings > Global configuration > Review" />，将 **GenAI config > Save thumbnails** 设置为开启。
-
-对于目标描述，导航到 <NavPath path="Settings > Global configuration > Objects" />，展开 **GenAI object config**，将 **Save thumbnails** 设置为开启。
+<FrigateConfigMock
+  :show-navigation-steps="false"
+  section="review"
+  focus="genai.debug_save_thumbnails"
+  :values="{ 'genai.debug_save_thumbnails': true }"
+  hint="开启保存缩略图以调试核查描述。对于目标描述，同样在 Objects > GenAI object config > Save thumbnails 中开启。"
+/>
 
 </TabItem>
 <TabItem value="YAML配置文件">

@@ -268,7 +268,7 @@ title: MQTT
 
 ### `frigate/camera_activity`
 
-返回关于每台摄像机、其当前功能以及是否检测到运动、目标等的数据。可以通过发布到 `frigate/onConnect` 来触发
+返回关于每台摄像机、其当前功能以及是否检测到画面变动、目标等的数据。可以通过发布到 `frigate/onConnect` 来触发
 
 ### `frigate/notifications/set`
 
@@ -385,17 +385,17 @@ title: MQTT
 
 ### `frigate/<camera_name>/motion/set`
 
-用于打开和关闭摄像机运动检测的主题。期望值为 `ON` 和 `OFF`。
-注意：如果未禁用检测，关闭运动检测将失败。
+用于打开和关闭摄像机画面变动检测的主题。期望值为 `ON` 和 `OFF`。
+注意：如果未禁用检测，关闭画面变动检测将失败。
 
 ### `frigate/<camera_name>/motion`
 
-camera_name 当前是否正在检测运动。期望值为 `ON` 和 `OFF`。
-注意：最初检测到运动后，将设置 `ON`，直到 `mqtt_off_delay` 秒（默认为 30 秒）内未检测到运动。
+camera_name 当前是否正在检测画面变动。期望值为 `ON` 和 `OFF`。
+注意：最初检测到画面变动后，将设置 `ON`，直到 `mqtt_off_delay` 秒（默认为 30 秒）内未检测到画面变动。
 
 ### `frigate/<camera_name>/motion/state`
 
-包含摄像机运动检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像机画面变动检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/improve_contrast/set`
 
@@ -407,19 +407,19 @@ camera_name 当前是否正在检测运动。期望值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/motion_threshold/set`
 
-用于调整摄像机运动阈值的主题。期望值为整数。
+用于调整摄像机画面变动阈值的主题。期望值为整数。
 
 ### `frigate/<camera_name>/motion_threshold/state`
 
-包含摄像机当前运动阈值的主题。发布的值为整数。
+包含摄像机当前画面变动阈值的主题。发布的值为整数。
 
 ### `frigate/<camera_name>/motion_contour_area/set`
 
-用于调整摄像机运动轮廓面积的主题。期望值为整数。
+用于调整摄像机画面变动轮廓面积的主题。期望值为整数。
 
 ### `frigate/<camera_name>/motion_contour_area/state`
 
-包含摄像机当前运动轮廓面积的主题。发布的值为整数。
+包含摄像机当前画面变动轮廓面积的主题。发布的值为整数。
 
 ### `frigate/<camera_name>/review_status`
 
@@ -497,7 +497,7 @@ _注意：将值从 `CONTINUOUS` 更改为 `MOTION | OBJECTS` 将需要最多 30
 | 命令        | 说明                                                      |
 | ----------- | --------------------------------------------------------- |
 | `CONTINUOUS` | 始终包含                                                  |
-| `MOTION`    | 当过去 30 秒内检测到运动时显示                            |
+| `MOTION`    | 当过去 30 秒内检测到画面变动时显示                            |
 | `OBJECTS`   | 如果在过去 30 秒内追踪了活动目标则显示                    |
 
 ### `frigate/<camera_name>/birdseye_mode/state`

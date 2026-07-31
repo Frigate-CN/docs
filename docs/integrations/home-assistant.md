@@ -155,7 +155,7 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 | `image`         | 每个摄像头最新检测物品/目标的图像                                                    |
 | `sensor`        | 用于监控Frigate性能的状态，所有区域和摄像头的对象计数                          |
 | `switch`        | 用于切换检测、录制和快照的开关实体                                              |
-| `binary_sensor` | 每个摄像头/区域/对象的"运动"二进制传感器实体                                    |
+| `binary_sensor` | 每个摄像头/区域/对象的"画面变动"二进制传感器实体                                    |
 
 ## 媒体浏览器支持
 
@@ -315,7 +315,7 @@ https://HA_URL/api/frigate/<client-id>/clips/front_door-1624599978.427826-976jaa
 
 #### 如果我检测多个对象，如何在HomeKit中将正确的`binary_sensor`分配给摄像头？
 
-[HomeKit集成](https://www.home-assistant.io/integrations/homekit/)随机链接Home Assistant中与摄像头设备分组的二进制传感器（运动传感器实体）之一。你可以在Home Assistant的[HomeKit配置](https://www.home-assistant.io/integrations/homekit/#linked_motion_sensor)中为每个摄像头指定`linked_motion_sensor`。
+[HomeKit集成](https://www.home-assistant.io/integrations/homekit/)随机链接Home Assistant中与摄像头设备分组的二进制传感器（画面变动传感器实体）之一。你可以在Home Assistant的[HomeKit配置](https://www.home-assistant.io/integrations/homekit/#linked_motion_sensor)中为每个摄像头指定`linked_motion_sensor`。
 
 #### 我基于占用传感器设置了自动化。有时传感器打开时自动化运行了，但当我查看Frigate时找不到触发传感器的对象。这是bug吗？
 

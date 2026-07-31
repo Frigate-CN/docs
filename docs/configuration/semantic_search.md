@@ -110,13 +110,13 @@ Frigate 可以在 GenAI 提供者具有 `embeddings` 角色时，使用该提供
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-导航到 <NavPath path="Settings > Enrichments > Semantic search" />。
-
-| 字段 | 描述 |
-| -------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| **语义搜索模型或 GenAI 提供者名称** | 设置为 GenAI 配置键（例如 `default`），以使用已配置的 GenAI 提供者进行嵌入 |
-
-GenAI 提供者还必须在 <NavPath path="Settings > Enrichments > Generative AI" /> 下配置 `embeddings` 角色。
+<FrigateConfigMock
+  :show-navigation-steps="false"
+  section="semantic_search"
+  focus="model"
+  :values="{ model: 'default' }"
+  hint="将语义搜索模型设置为 GenAI 配置键（例如 default），以使用已配置的 GenAI 提供者进行嵌入。GenAI 提供者还必须在 Settings > Enrichments > Generative AI 下配置 embeddings 角色。"
+/>
 
 </TabItem>
 <TabItem value="YAML配置文件">
