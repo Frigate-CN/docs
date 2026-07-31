@@ -45,13 +45,18 @@ npc:
         - 进入 `workspace/upstream`，checkout 到对应的官方分支（`master` 或 `dev`）。
         - 读取 `workspace/upstream/web/public/locales/zh-CN/` 下所有 JSON 文件，提取键值对作为术语表。将其整理为可直接参考的术语映射表（例如："camera": "摄像头"、"zones": "区域"）。
 
-        ### 2. 切换到目标分支
+        ### 2. 切换到目标分支并创建工作分支
         - 在查找基线之前，必须先切换到本项目的目标分支（`main` 或 `beta`，根据步骤 1 确定）：
           ```bash
           git checkout <目标分支>
           git pull origin <目标分支>
           ```
-        - 后续所有本项目 Git 操作（提交历史查询、文件修改、提交等）均在此分支上进行。
+        - 提交历史查询（查找基线）在目标分支上进行。
+        - **确定基线与最新官方短 hash 后，必须创建工作分支**，所有文件修改与提交都在工作分支上完成：
+          ```bash
+          git checkout -b auto/translate-<目标分支>-<最新官方短hash>
+          ```
+        - **严禁**直接向 `main` / `beta` 提交或推送。
 
         ### 3. 确定上次翻译基线
         - 分析本项目当前分支（即目标分支）的 Git 提交历史，查找最新一条符合格式 `<type>: 更新文档至<short_hash>` 的提交记录。
@@ -80,12 +85,26 @@ npc:
         - 所有生成的中文文件保存到本项目 `docs/` 目录下，保持与官方相同的子目录结构。
 
         ### 6. 提交与创建 PR
-        - 在目标分支上提交修改：
+        - 确认当前处于步骤 2 创建的工作分支（`git rev-parse --abbrev-ref HEAD` 不得为 `main` / `beta`），在工作分支上提交修改：
           ```bash
+          git config user.name "cnb-translator"
+          git config user.email "cnb-translator@cnb.cool"
           git add docs/
           git commit -m "docs: 更新文档至<最新官方短commit hash>"
           ```
-        - 推送分支并创建 PR（PR 的 base 分支为目标分支）。
+        - 推送工作分支（**不要**推送目标分支）：
+          ```bash
+          git push origin HEAD:refs/heads/auto/translate-<目标分支>-<最新官方短hash>
+          ```
+        - 调用 CNB OpenAPI 创建 PR（head 为工作分支，base 为目标分支）：
+          ```bash
+          curl -sS -X POST "https://api.cnb.cool/${CNB_REPO_SLUG}/-/pulls" \
+            -H "Authorization: Bearer ${CNB_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d '{"title":"docs: 同步官方文档至 <short_hash>","body":"<PR 描述>","head":"auto/translate-<目标分支>-<最新官方短hash>","base":"<目标分支>"}'
+          ```
+          `CNB_REPO_SLUG`、`CNB_TOKEN` 为流水线内置环境变量，直接引用即可。接口失败时打印完整响应并重试一次，仍失败则输出工作分支名后终止，**不得**改为直接推送目标分支。
         - PR 标题示例：`docs: 同步官方文档至 <short_hash>`
         - PR 描述必须包含：
           - 本次翻译同步的官方 commit 范围（从基线到最新）。

@@ -40,23 +40,122 @@ $:
               1. 翻译后文档的 Markdown 格式、代码块、链接、图片引用必须与原文完全一致，仅替换文本内容。
               2. 术语优先参考 Frigate 官方中文语言文件（`web/public/locales/zh-CN`），未覆盖的参考行业通用译法，首次出现时附原文。
               3. 依据上下文调整措辞，避免生硬直译。
+              4. 本项目文档中存在官方英文文档没有的**图形化 Mock UI 组件**，翻译时必须按下方规则保留与维护，严禁整篇覆盖导致组件丢失。
+
+              ## 图形化 Mock UI 组件规则
+              本项目使用 VitePress，在部分配置类文档中用 Vue 组件模拟 Frigate 网页界面的配置操作。这些内容是本项目独有的增量，官方英文原文里没有。
+
+              ### 组件说明（均已在 `.vitepress/theme/index.ts` 全局注册，Markdown 中无需 import）
+              - `<ConfigTabs>` + `<TabItem value="图形化配置">` / `<TabItem value="YAML配置文件">`：配置方式切换标签页。
+              - `<FrigateConfigMock ... />`：图形化配置演示动画。
+              - `<NavPath path="设置 > 全局配置 > 录制" />`：界面路径提示。
+
+              ### 硬性规则（按优先级）
+              1. **绝不删除已有组件**：翻译某个文件前，必须先读取本项目该文件的现有内容；凡包含 `<ConfigTabs>`、`<TabItem>`、`<FrigateConfigMock`、`<NavPath` 的片段一律保留。更新方式是**按段落合并**（只把上游变更的正文段落译文替换进去），而不是用整篇新译文覆盖原文件。
+              2. **标签值本地化**：上游 `<TabItem value="ui">` 统一改为 `<TabItem value="图形化配置">`，`<TabItem value="yaml">` 改为 `<TabItem value="YAML配置文件">`；组件名与属性名保持英文原样，不要翻译。
+              3. **删除 Docusaurus 导入语句**：上游 `import ConfigTabs from "@site/src/components/ConfigTabs";`、`import TabItem from "@theme/TabItem";`、`import NavPath from "@site/src/components/NavPath";` 等行必须删除（VitePress 已全局注册）；若上游导入的是数据文件（如 `import x from '../data/x.json';`），需包裹进 `<script setup>` 代码块中。
+              4. **格式要求**：`<ConfigTabs>`、`<TabItem>`、`<FrigateConfigMock ... />` 前后必须各留一个空行，标签与其内部 Markdown 内容之间也要留空行，否则 Markdown 解析异常。
+              5. **YAML 标签页内容与官方保持一致**：代码块中的字段名、结构、缩进不得改动，仅可翻译注释和示例中的中文友好名称。
+              6. **保持 UI 与 YAML 同步**：当上游 YAML 示例发生变化（新增/重命名字段、默认值变化）时，同步更新同一 `<ConfigTabs>` 内 `<FrigateConfigMock>` 的 `section`、`focus`、`:values`、`:targets`，使二者描述同一件事；若上游删除了某段配置说明，则连同其 `<ConfigTabs>` 整块一起删除。
+              7. **上游新增 UI 说明时**：若上游新增的 `<TabItem value="ui">` 内容对应的 section/字段在 `manifest.json` 中存在，用 `<FrigateConfigMock>` 替换其文字说明；否则保留翻译后的 `<NavPath>` 文字说明即可，**不要臆造** 不存在的 section 或字段。
+              8. **合法性校验**：`section`、`focus`、`:targets[].field`、`:values` 的键必须来自 `.vitepress/theme/components/FrigateConfigMock/manifest.json`：
+                 - `manifest.levels.global.<section>.fields.<field>` 对应 `level="global"`（默认）；
+                 - `manifest.levels.camera.<section>.fields.<field>` 对应 `level="camera"`；
+                 - 嵌套字段用点号，如 `alerts.required_zones`；
+                 - 特殊页面：`section="masksAndZones"`（必须 `level="camera"`，focus 取值见 `.vitepress/theme/components/FrigateConfigMock/helpers.js` 中的 `maskZoneLabels`，如 `zone.add`、`motionMask.canvas`）；`section="model"`（`level="global"`，检测器写法 `:values="{ detectors: { coral: { type: 'edgetpu', device: 'usb' } } }"`，可用类型见 `manifest.detectorTypes`）。
+                 - 若 `manifest.json` 不存在（例如该分支尚未包含 Mock UI 功能），则跳过本章节所有与 `<FrigateConfigMock>` 相关的新增工作，仅保留并翻译已有内容。
+              9. **文案要求**：`hint`、`label` 必须是简洁中文（一句话）；属性用双引号包裹，因此其内部字符串一律用单引号；避免在属性值中出现 `{{ }}`、反引号和未转义的双引号。
+
+              ### `<FrigateConfigMock>` 可用属性
+              - `section`（字符串，必填）、`level`（`global` 默认 / `camera`）
+              - `focus`（单个字段路径）、`hint`（该字段的说明）、`label`（步骤标题）
+              - `:fields="['a','b']"`（仅展示指定字段）、`:values="{ ... }"`（演示值）
+              - `:targets="[{ field: 'x', hint: '...' }]"`（同一页面依次高亮多个字段，也可简写为 `:targets="['x']"`）
+              - `:steps="[{ focus: 'zone.add', label: '...', hint: '...' }]"`（多步骤流程，可含 `section`/`level`/`values`/`targets`）
+              - `:auto-play="false"`（关闭自动播放）、`:show-navigation-steps="false"`（隐藏"打开设置/查找菜单"等导航步骤）
+              - `camera-image`（自定义预览图，默认 `/img/frigate-autotracking-example.gif`）
+
+              ### 典型写法
+              ~~~
+              <ConfigTabs>
+              <TabItem value="图形化配置">
+
+              <FrigateConfigMock
+                section="motion"
+                :fields="['threshold']"
+                :values="{ threshold: 30 }"
+                focus="threshold"
+                hint="像素亮度变化超过该阈值才会被视为运动，数值越大越不敏感。"
+              />
+
+              </TabItem>
+              <TabItem value="YAML配置文件">
+
+              ```yaml
+              motion:
+                threshold: 30
+              ```
+
+              </TabItem>
+              </ConfigTabs>
+              ~~~
+
+              ## 提交与 PR 规则（必须严格遵守）
+              1. **严禁向 `main` / `beta` 直接提交或推送**。`git push origin main`、`git push origin beta`、`git push`（当前分支为 main/beta 时）一律禁止。
+              2. 翻译前必须从目标分支创建**新的工作分支**，命名 `auto/translate-<target_branch>-<最新官方短hash>`（如已存在则追加 4 位随机后缀）：
+                 ~~~bash
+                 git checkout <target_branch>
+                 git pull origin <target_branch>
+                 git checkout -b auto/translate-<target_branch>-<short_hash>
+                 ~~~
+              3. 所有翻译改动提交在该工作分支上：
+                 ~~~bash
+                 git config user.name "cnb-translator"
+                 git config user.email "cnb-translator@cnb.cool"
+                 git add docs/
+                 git commit -m "docs: 更新文档至<最新官方短hash>"
+                 git push origin HEAD:refs/heads/auto/translate-<target_branch>-<short_hash>
+                 ~~~
+              4. 推送后**必须调用 CNB OpenAPI 创建合并请求**（head 为工作分支，base 为目标分支）：
+                 ~~~bash
+                 curl -sS -X POST "https://api.cnb.cool/${CNB_REPO_SLUG}/-/pulls" \
+                   -H "Authorization: Bearer ${CNB_TOKEN}" \
+                   -H "Content-Type: application/json" \
+                   -H "Accept: application/json" \
+                   -d '{"title":"docs: 同步官方文档至 <short_hash>","body":"<PR 描述>","head":"auto/translate-<target_branch>-<short_hash>","base":"<target_branch>"}'
+                 ~~~
+                 - `CNB_REPO_SLUG`、`CNB_TOKEN` 为流水线内置环境变量，直接引用，不要写死。
+                 - 接口返回非 2xx 时打印完整响应体并重试一次；仍失败则在日志中输出工作分支名和手动创建 PR 的地址，任务标记为失败，**不得**改用直接推送目标分支的方式规避。
+              5. PR 描述需包含：官方 commit 范围（基线→最新）、变更文件列表、主要更新摘要、Mock UI 组件处理情况（保留/新增/删除）、需人工确认的位置。
+              6. 任务结束前执行 `git rev-parse --abbrev-ref HEAD` 自检，确认当前不在 `main`/`beta` 上，且 `git log origin/<target_branch>..HEAD` 的提交仅存在于工作分支。
 
               ## 工作流程
               1. 根据 `target_branch` 确定官方目标分支（main→master，beta→dev）。
-              2. **先切换到本项目目标分支**（`git checkout <target_branch> && git pull origin <target_branch>`），后续所有本项目 Git 操作均在此分支上进行。
+              2. **先切换到本项目目标分支并拉取最新代码**（`git checkout <target_branch> && git pull origin <target_branch>`），随后立即按「提交与 PR 规则」第 2 条**创建工作分支**，后续所有改动都在工作分支上进行。
               3. 克隆/更新官方仓库 `https://github.com/blakeblackshear/frigate.git` 到 `workspace/upstream`，checkout 到对应官方分支。
               4. 从本项目当前分支（目标分支）的 Git 历史中查找最新一条 `docs: 更新文档至<short_hash>` 提交，提取基线 hash。
               5. 用 `git diff --name-only <基线>..origin/<官方分支> -- docs/` 获取变更文件列表，提取差异内容。
-              6. 对变更文件执行翻译，保存到本项目 `docs/` 目录，保持与官方相同的子目录结构。
-              7. 在目标分支上提交 `docs: 更新文档至<最新官方短hash>`，推送并创建 PR（PR base 为目标分支）。
+              6. **逐文件判断更新方式**：先检查本项目对应文件是否已包含 Mock UI 组件（`grep -n "ConfigTabs\|FrigateConfigMock\|NavPath" <文件>`）。
+                 - 已包含：采用合并式更新，仅替换上游实际变更的段落，完整保留组件块，并按「图形化 Mock UI 组件规则」第 6 条同步 UI 与 YAML。
+                 - 未包含：正常翻译；若上游该文件带有 `<ConfigTabs>`/`<TabItem>`/`<NavPath>`，按第 2、3、4 条本地化处理。
+              7. 对变更文件执行翻译，保存到本项目 `docs/` 目录，保持与官方相同的子目录结构。
+              8. **提交前自检**：对每个改动文件比对改动前后 `<FrigateConfigMock`、`<ConfigTabs>`、`<NavPath` 的出现次数，除上游删除对应章节外不得减少；确认文件中不残留 `@site/`、`@theme/` 的 import 行，且不存在 `value="ui"`、`value="yaml"` 的旧标签值。
+              9. 按「提交与 PR 规则」在工作分支上提交 `docs: 更新文档至<最新官方短hash>`，推送工作分支，并调用 CNB OpenAPI 创建 PR（base 为目标分支）。**未成功创建 PR 的任务视为失败**。
 
               ## 异常处理
               - 如官方无新变更，输出提示并终止。
-              - 若基线 commit 不存在，转为全量翻译。
+              - 若基线 commit 不存在，转为全量翻译（全量翻译同样必须保留已有 Mock UI 组件块）。
+              - 若无法确定某段 UI 说明对应的 section/字段，保留文字说明（`<NavPath>` 形式），并在 PR 描述中列出待人工补充的位置。
             maxTurns: 300
             userPrompt: |
               请更新「$target_branch」分支的翻译。
               分支映射关系：
               - main 分支 → 对应官方 master 分支
               - beta 分支 → 对应官方 dev 分支
-              请根据选择的目标分支，同步对应官方分支的文档变更，并将翻译结果提交到该分支。
+              请根据选择的目标分支，同步对应官方分支的文档变更。
+
+              提交方式：禁止直接向 `main`/`beta` 推送。必须从目标分支创建工作分支 `auto/translate-<目标分支>-<官方短hash>`，在其上提交并推送，然后调用 CNB OpenAPI（`POST https://api.cnb.cool/${CNB_REPO_SLUG}/-/pulls`，`Authorization: Bearer ${CNB_TOKEN}`）创建以目标分支为 base 的 PR。没有成功创建 PR 就算任务失败。
+
+              注意：本项目文档中含有官方原文没有的图形化 Mock UI 组件（`<ConfigTabs>`、`<TabItem value="图形化配置">`、`<TabItem value="YAML配置文件">`、`<FrigateConfigMock>`、`<NavPath>`）。
+              更新已有文件时必须采用合并式更新保留这些组件，上游 `value="ui"` / `value="yaml"` 需本地化为中文标签值，并删除 `@site/`、`@theme/` 的 import 行。
+              `<FrigateConfigMock>` 的 section/字段必须来自 `.vitepress/theme/components/FrigateConfigMock/manifest.json`，不确定时保留文字说明，不要臆造。
