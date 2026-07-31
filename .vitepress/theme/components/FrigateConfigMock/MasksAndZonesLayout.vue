@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onUnmounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import FieldHint from "./FieldHint.vue";
 import LcIcon from "./LcIcon.vue";
 import { maskZoneLabels, humanizeKey } from "./helpers.js";
@@ -55,29 +55,41 @@ const editorName = computed(() => {
 
 let timer;
 
+const scrollSidebarToTarget = () => {
+    const target = props.focusRef?.current;
+    const sidebar = target?.closest(".polygonSidebar");
+    if (!target || !sidebar) return;
+    const sidebarRect = sidebar.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const padding = 40;
+    const isCovered =
+        targetRect.top < sidebarRect.top + padding ||
+        targetRect.bottom > sidebarRect.bottom - padding;
+    if (!isCovered) return;
+
+    let scrollTarget = sidebar.scrollTop + targetRect.top - sidebarRect.top - padding;
+    const maxScroll = sidebar.scrollHeight - sidebar.clientHeight;
+    scrollTarget = Math.max(0, Math.min(scrollTarget, maxScroll));
+
+    sidebar.scrollTo({
+        top: scrollTarget,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "auto"
+            : "smooth",
+    });
+};
+
+onMounted(() => {
+    if (props.step.guidePhase === "field") {
+        timer = window.setTimeout(scrollSidebarToTarget, 40);
+    }
+});
+
 watch(
     () => [props.step.focus, props.step.guidePhase],
     () => {
         if (props.step.guidePhase !== "field") return;
-        timer = window.setTimeout(() => {
-            const target = props.focusRef?.current;
-            const sidebar = target?.closest(".polygonSidebar");
-            if (!target || !sidebar) return;
-            const sidebarRect = sidebar.getBoundingClientRect();
-            const targetRect = target.getBoundingClientRect();
-            if (
-                targetRect.top >= sidebarRect.top + 12 &&
-                targetRect.bottom <= sidebarRect.bottom - 12
-            ) {
-                return;
-            }
-            sidebar.scrollTo({
-                top: Math.max(0, sidebar.scrollTop + targetRect.top - sidebarRect.top - 18),
-                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                    ? "auto"
-                    : "smooth",
-            });
-        }, 40);
+        timer = window.setTimeout(scrollSidebarToTarget, 40);
     },
 );
 

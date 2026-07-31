@@ -2,7 +2,7 @@
 import { ref, useSlots, computed } from "vue";
 
 const props = defineProps({
-    defaultTab: { type: String, default: "ui" },
+    defaultTab: { type: String, default: "图形化配置" },
 });
 
 const slots = useSlots();
@@ -30,8 +30,8 @@ const tabItems = computed(() => {
         <div class="config-tabs">
             <button v-for="tab in tabItems" :key="tab.value" class="config-tab" :class="{
                 'config-tab-active': activeTab === tab.value,
-                'config-tab-ui': tab.value === 'ui',
-                'config-tab-yaml': tab.value === 'yaml',
+                'config-tab-ui': tab.value === '图形化配置',
+                'config-tab-yaml': tab.value === 'YAML配置文件',
             }" @click="activeTab = tab.value">
                 {{ tab.label }}
             </button>

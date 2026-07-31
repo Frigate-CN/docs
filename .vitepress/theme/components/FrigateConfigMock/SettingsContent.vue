@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onUnmounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import FieldRow from "./FieldRow.vue";
 import FieldHint from "./FieldHint.vue";
 import ReviewSettingsLayout from "./ReviewSettingsLayout.vue";
@@ -23,11 +23,53 @@ const pageRef = ref(null);
 
 let timer;
 
+const scrollToFocusedField = () => {
+    const viewport = viewportRef.value;
+    const target = focusRef.value.current;
+    if (!viewport || !target) return;
+
+    const viewportRect = viewport.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const padding = 40;
+    const isCovered =
+        targetRect.top < viewportRect.top + padding ||
+        targetRect.bottom > viewportRect.bottom - padding;
+    if (!isCovered) return;
+
+    const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const targetIsTall = targetRect.height > viewportRect.height - padding * 2;
+
+    let scrollTarget;
+    if (targetIsTall) {
+        scrollTarget = viewport.scrollTop + targetRect.top - viewportRect.top - padding;
+    } else {
+        scrollTarget =
+            viewport.scrollTop +
+            targetRect.top -
+            viewportRect.top -
+            (viewport.clientHeight / 2 - targetRect.height / 2);
+    }
+    const maxScroll = viewport.scrollHeight - viewport.clientHeight;
+    scrollTarget = Math.max(0, Math.min(scrollTarget, maxScroll));
+
+    viewport.scrollTo({
+        top: scrollTarget,
+        behavior: reduceMotion ? "auto" : "smooth",
+    });
+};
+
+onMounted(() => {
+    if (props.step.guidePhase === "field") {
+        timer = window.setTimeout(scrollToFocusedField, 40);
+    }
+});
+
 watch(
     () => props.step,
     () => {
         const viewport = viewportRef.value;
-        const target = focusRef.value.current;
         if (!viewport) return;
 
         const page = `${props.step.level}:${props.step.section}`;
@@ -36,30 +78,8 @@ watch(
         if (pageChanged || props.step.guidePhase !== "field") {
             viewport.scrollTop = 0;
         }
-        if (props.step.guidePhase !== "field" || !target) return;
-        timer = window.setTimeout(() => {
-            const viewportRect = viewport.getBoundingClientRect();
-            const targetRect = target.getBoundingClientRect();
-            const outsideViewport =
-                targetRect.top < viewportRect.top + 24 ||
-                targetRect.bottom > viewportRect.bottom - 24;
-            if (!outsideViewport) return;
-
-            const targetIsTall = targetRect.height > viewportRect.height - 48;
-            const reduceMotion = window.matchMedia(
-                "(prefers-reduced-motion: reduce)",
-            ).matches;
-            viewport.scrollTo({
-                top:
-                    viewport.scrollTop +
-                    targetRect.top -
-                    viewportRect.top -
-                    (targetIsTall
-                        ? 24
-                        : viewport.clientHeight / 2 - targetRect.height / 2),
-                behavior: reduceMotion ? "auto" : "smooth",
-            });
-        }, 40);
+        if (props.step.guidePhase !== "field") return;
+        timer = window.setTimeout(scrollToFocusedField, 40);
     },
     { deep: true },
 );

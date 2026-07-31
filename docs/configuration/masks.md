@@ -22,7 +22,7 @@ title: 遮罩功能
 ## 使用遮罩创建工具 {#using-the-mask-creator}
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   level="camera"
@@ -40,7 +40,7 @@ title: 遮罩功能
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 配置文件将更新为遮罩/区域的相对坐标：
 

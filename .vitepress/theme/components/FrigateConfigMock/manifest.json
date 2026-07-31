@@ -338,6 +338,13 @@
               "error",
               "critical"
             ],
+            "enumLabels": {
+              "debug": "调试",
+              "info": "信息",
+              "warning": "警告",
+              "error": "错误",
+              "critical": "关键"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -348,6 +355,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -379,6 +387,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -389,6 +398,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -399,6 +409,7 @@
             "widget": "text",
             "default": "frigate_token",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -409,6 +420,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -419,6 +431,7 @@
             "widget": "number",
             "default": 86400,
             "enum": null,
+            "enumLabels": null,
             "minimum": 60,
             "maximum": null,
             "advanced": true
@@ -429,6 +442,7 @@
             "widget": "number",
             "default": 1800,
             "enum": null,
+            "enumLabels": null,
             "minimum": 30,
             "maximum": null,
             "advanced": true
@@ -439,6 +453,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -449,6 +464,7 @@
             "widget": "tags",
             "default": [],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -459,6 +475,7 @@
             "widget": "number",
             "default": 600000,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -480,6 +497,7 @@
             "widget": "text",
             "default": "/config/frigate.db",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -521,6 +539,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -531,6 +550,7 @@
             "widget": "text",
             "default": "",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -541,6 +561,7 @@
             "widget": "number",
             "default": 1883,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -551,6 +572,7 @@
             "widget": "text",
             "default": "frigate",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -561,6 +583,7 @@
             "widget": "text",
             "default": "frigate",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -571,6 +594,7 @@
             "widget": "number",
             "default": 60,
             "enum": null,
+            "enumLabels": null,
             "minimum": 15,
             "maximum": null,
             "advanced": true
@@ -581,6 +605,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -591,6 +616,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -601,6 +627,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -611,6 +638,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -621,6 +649,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -631,6 +660,7 @@
             "widget": "switch",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -641,6 +671,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -663,6 +694,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -673,6 +705,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -683,6 +716,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -702,6 +736,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -712,6 +747,7 @@
             "widget": "number",
             "default": 5000,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -722,6 +758,7 @@
             "widget": "number",
             "default": 8971,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -747,6 +784,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -757,6 +795,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -767,6 +806,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -777,6 +817,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -787,6 +828,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -797,6 +839,7 @@
             "widget": "text",
             "default": "viewer",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -807,6 +850,7 @@
             "widget": "text",
             "default": ",",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -830,6 +874,7 @@
             "widget": "tags",
             "default": [],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -840,6 +885,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -850,6 +896,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -860,6 +907,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -870,6 +918,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -880,6 +929,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -903,6 +953,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -926,6 +977,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -940,6 +992,11 @@
               "12hour",
               "24hour"
             ],
+            "enumLabels": {
+              "browser": "基于浏览器",
+              "12hour": "12 小时制",
+              "24hour": "24 小时制"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -953,6 +1010,10 @@
               "imperial",
               "metric"
             ],
+            "enumLabels": {
+              "imperial": "英制单位",
+              "metric": "公制单位"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -981,6 +1042,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -991,6 +1053,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1001,6 +1064,7 @@
             "widget": "number",
             "default": 320,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1011,6 +1075,7 @@
             "widget": "number",
             "default": 320,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1026,6 +1091,7 @@
               "hwnc",
               "hwcn"
             ],
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1040,6 +1106,7 @@
               "bgr",
               "yuv"
             ],
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1054,6 +1121,7 @@
               "float_denorm",
               "int"
             ],
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1071,6 +1139,7 @@
               "yolonas",
               "yolo-generic"
             ],
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1128,6 +1197,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1138,6 +1208,7 @@
             "widget": "number",
             "default": 30,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1148,6 +1219,7 @@
             "widget": "number",
             "default": 500,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1163,6 +1235,7 @@
               "yell"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1173,6 +1246,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1183,6 +1257,7 @@
             "widget": "number",
             "default": 2,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": null,
             "advanced": true
@@ -1212,6 +1287,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1226,6 +1302,11 @@
               "motion",
               "continuous"
             ],
+            "enumLabels": {
+              "objects": "基于目标",
+              "motion": "基于画面变动",
+              "continuous": "连续"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1236,6 +1317,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1246,6 +1328,7 @@
             "widget": "number",
             "default": 1280,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1256,6 +1339,7 @@
             "widget": "number",
             "default": 720,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1266,6 +1350,7 @@
             "widget": "range",
             "default": 8,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": 31,
             "advanced": true
@@ -1276,6 +1361,7 @@
             "widget": "number",
             "default": 30,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": true
@@ -1286,6 +1372,7 @@
             "widget": "range",
             "default": 2,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": 5,
             "advanced": false
@@ -1296,6 +1383,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1306,6 +1394,7 @@
             "widget": "range",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 10,
             "advanced": false
@@ -1355,6 +1444,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1365,6 +1455,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1375,6 +1466,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1385,6 +1477,7 @@
             "widget": "number",
             "default": 5,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1395,6 +1488,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 2,
             "maximum": null,
             "advanced": true
@@ -1405,6 +1499,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1415,6 +1510,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -1425,6 +1521,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": null,
             "advanced": false
@@ -1435,6 +1532,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": null,
             "advanced": false
@@ -1445,6 +1543,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1455,6 +1554,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1465,6 +1565,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1492,6 +1593,7 @@
             "widget": "text",
             "default": "default",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1508,6 +1610,7 @@
               "2"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1518,6 +1621,7 @@
             "widget": "text",
             "default": "auto",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1528,6 +1632,7 @@
             "widget": "text",
             "default": "preset-rtsp-generic",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1545,6 +1650,7 @@
               "yuv420p"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1555,6 +1661,7 @@
             "widget": "text",
             "default": "preset-record-generic-audio-aac",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1565,6 +1672,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1575,6 +1683,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1598,6 +1707,7 @@
             "widget": "number",
             "default": 720,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1608,6 +1718,7 @@
             "widget": "range",
             "default": 8,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": 31,
             "advanced": true
@@ -1616,7 +1727,7 @@
       },
       "motion": {
         "label": "画面变动检测",
-        "description": "应用于摄像头的默认动作检测设置，除非按摄像头覆盖。",
+        "description": "默认情况下，画面变动检测配置统一应用于各摄像头，除非对特定摄像头单独进行自定义。",
         "order": [
           "enabled",
           "threshold",
@@ -1652,10 +1763,11 @@
         "fields": {
           "enabled": {
             "label": "开启画面变动检测",
-            "description": "为所有摄像头启用或禁用动作检测；可按摄像头覆盖。",
+            "description": "为所有摄像头启用或禁用画面变动检测。可以给指定摄像头单独覆盖此设置。",
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1666,6 +1778,7 @@
             "widget": "range",
             "default": 30,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": 255,
             "advanced": false
@@ -1676,6 +1789,7 @@
             "widget": "range",
             "default": 0.8,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0.3,
             "maximum": 1,
             "advanced": true
@@ -1686,6 +1800,7 @@
             "widget": "range",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 1,
             "advanced": true
@@ -1696,6 +1811,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1706,26 +1822,29 @@
             "widget": "number",
             "default": 10,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
           },
           "delta_alpha": {
-            "label": "Delta alpha",
-            "description": "用于画面变动计算的帧差异中使用的 alpha 混合因子。",
+            "label": "变化量权重",
+            "description": "该值用于调节帧间差异计算时的混合比例，影响运动检测的灵敏度。",
             "widget": "number",
             "default": 0.2,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
           },
           "frame_alpha": {
-            "label": "画面 alpha 通道",
-            "description": "画面变动预处理时混合画面所使用的 alpha 值。",
+            "label": "背景更新速度",
+            "description": "该值在运动检测前对画面进行预处理，控制帧混合程度，影响后续检测的输入质量。",
             "widget": "number",
             "default": 0.01,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1736,6 +1855,7 @@
             "widget": "number",
             "default": 100,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1746,6 +1866,7 @@
             "widget": "number",
             "default": 30,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1789,6 +1910,7 @@
               "person"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1799,6 +1921,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1809,6 +1932,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1819,6 +1943,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1829,6 +1954,7 @@
             "widget": "text",
             "default": "Analyze the sequence of images containing the {label}. Focus on the likely intent or behavior of the {label} based on its actions and movement, rather than describing its appearance or the surroundings. Consider what the {label} is doing, why, and what it might do next.",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1839,6 +1965,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1849,6 +1976,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1859,6 +1987,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1869,6 +1998,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1879,6 +2009,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": null,
             "advanced": false
@@ -1924,6 +2055,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1934,6 +2066,7 @@
             "widget": "number",
             "default": 60,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -1944,6 +2077,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -1954,6 +2088,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -1964,6 +2099,7 @@
             "widget": "range",
             "default": 5,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 60,
             "advanced": false
@@ -1974,6 +2110,7 @@
             "widget": "number",
             "default": 5,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -1984,13 +2121,14 @@
             "widget": "number",
             "default": 10,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
           },
           "detections.retain.mode": {
             "label": "保留模式",
-            "description": "保留模式：all（保存所有片段）、motion（保存有动作的片段）或 active_objects（保存有活动目标的片段）。",
+            "description": "保留模式：全部（保存所有片段）、画面变动（保存有画面变动的片段）或 活动目标（保存有活动目标的片段）。",
             "widget": "select",
             "default": "motion",
             "enum": [
@@ -1998,6 +2136,11 @@
               "motion",
               "active_objects"
             ],
+            "enumLabels": {
+              "all": "全部",
+              "motion": "画面变动",
+              "active_objects": "活动目标"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2008,6 +2151,7 @@
             "widget": "range",
             "default": 5,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 60,
             "advanced": false
@@ -2018,6 +2162,7 @@
             "widget": "number",
             "default": 5,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -2028,13 +2173,14 @@
             "widget": "number",
             "default": 10,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
           },
           "alerts.retain.mode": {
             "label": "保留模式",
-            "description": "保留模式：all（保存所有片段）、motion（保存有动作的片段）或 active_objects（保存有活动目标的片段）。",
+            "description": "保留模式：全部（保存所有片段）、画面变动（保存有画面变动的片段）或 活动目标（保存有活动目标的片段）。",
             "widget": "select",
             "default": "motion",
             "enum": [
@@ -2042,6 +2188,11 @@
               "motion",
               "active_objects"
             ],
+            "enumLabels": {
+              "all": "全部",
+              "motion": "画面变动",
+              "active_objects": "活动目标"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2052,6 +2203,7 @@
             "widget": "text",
             "default": "auto",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2062,6 +2214,7 @@
             "widget": "number",
             "default": 3,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": null,
             "advanced": false
@@ -2078,6 +2231,13 @@
               "high",
               "very_high"
             ],
+            "enumLabels": {
+              "very_low": "非常低",
+              "low": "低",
+              "medium": "中等",
+              "high": "高",
+              "very_high": "非常高"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2102,6 +2262,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2115,6 +2276,7 @@
               "car"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2125,6 +2287,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2135,6 +2298,7 @@
             "widget": "number",
             "default": 40,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2145,6 +2309,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2155,6 +2320,7 @@
             "widget": "tags",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2165,6 +2331,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2175,6 +2342,7 @@
             "widget": "number",
             "default": 30,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2185,6 +2353,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2195,6 +2364,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2205,6 +2375,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2218,6 +2389,9 @@
               "preview",
               "recordings"
             ],
+            "enumLabels": {
+              "recordings": "录制"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2228,6 +2402,7 @@
             "widget": "tags",
             "default": [],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2238,6 +2413,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2248,6 +2424,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2258,6 +2435,7 @@
             "widget": "text",
             "default": "### Normal Activity Indicators (Level 0)\n- Known/verified people in any zone at any time\n- People with pets in residential areas\n- Routine residential vehicle access during daytime/evening (6 AM - 10 PM): entering, exiting, loading/unloading items — normal commute and travel patterns\n- Deliveries or services during daytime/evening (6 AM - 10 PM): carrying packages to doors/porches, placing items, leaving\n- Services/maintenance workers with visible tools, uniforms, or service vehicles during daytime\n- Activity confined to public areas only (sidewalks, streets) without entering property at any time\n\n### Suspicious Activity Indicators (Level 1)\n- **Checking or probing vehicle/building access**: trying handles without entering, peering through windows, examining multiple vehicles, or possessing break-in tools — Level 1\n- **Unidentified person in private areas (driveways, near vehicles/buildings) during late night/early morning (11 PM - 5 AM)** — ALWAYS Level 1 regardless of activity or duration\n- Taking items that don't belong to them (packages, objects from porches/driveways)\n- Climbing or jumping fences/barriers to access property\n- Attempting to conceal actions or items from view\n- Prolonged loitering: remaining in same area without visible purpose throughout most of the sequence\n\n### Critical Threat Indicators (Level 2)\n- Holding break-in tools (crowbars, pry bars, bolt cutters)\n- Weapons visible (guns, knives, bats used aggressively)\n- Forced entry in progress\n- Physical aggression or violence\n- Active property damage or theft in progress\n\n### Assessment Guidance\nEvaluate in this order:\n\n1. **If person is verified/known** → Level 0 regardless of time or activity\n2. **If person is unidentified:**\n   - Check time: If late night/early morning (11 PM - 5 AM) AND in private areas (driveways, near vehicles/buildings) → Level 1\n   - Check actions: If probing access (trying handles without entering, checking multiple vehicles), taking items, climbing → Level 1\n   - Otherwise, if daytime/evening (6 AM - 10 PM) with clear legitimate purpose (delivery, service, routine vehicle access) → Level 0\n3. **Escalate to Level 2 if:** Weapons, break-in tools, forced entry in progress, violence, or active property damage visible (escalates from Level 0 or 1)\n\nThe mere presence of an unidentified person in private areas during late night hours is inherently suspicious and warrants human review, regardless of what activity they appear to be doing or how brief the sequence is.",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2296,6 +2474,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2306,6 +2485,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2316,6 +2496,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2326,6 +2507,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2336,6 +2518,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2346,6 +2529,7 @@
             "widget": "number",
             "default": 10,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2356,6 +2540,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2366,6 +2551,7 @@
             "widget": "range",
             "default": 60,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 100,
             "advanced": true
@@ -2395,6 +2581,12 @@
               "bl",
               "br"
             ],
+            "enumLabels": {
+              "tl": "左上角",
+              "tr": "右上角",
+              "bl": "左下角",
+              "br": "右下角"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2405,6 +2597,7 @@
             "widget": "text",
             "default": "%m/%d/%Y %H:%M:%S",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2415,6 +2608,7 @@
             "widget": "range",
             "default": 255,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 255,
             "advanced": false
@@ -2425,6 +2619,7 @@
             "widget": "range",
             "default": 255,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 255,
             "advanced": false
@@ -2435,6 +2630,7 @@
             "widget": "range",
             "default": 255,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 255,
             "advanced": false
@@ -2445,6 +2641,7 @@
             "widget": "number",
             "default": 2,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2469,6 +2666,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2479,6 +2677,7 @@
             "widget": "text",
             "default": "en",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2492,6 +2691,7 @@
               "GPU",
               "CPU"
             ],
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2505,6 +2705,10 @@
               "small",
               "large"
             ],
+            "enumLabels": {
+              "small": "小型",
+              "large": "大型"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2524,6 +2728,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2534,6 +2739,7 @@
             "widget": "number",
             "default": 0.9,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 1,
             "advanced": false
@@ -2559,6 +2765,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2572,6 +2779,7 @@
               "jinav1",
               "jinav2"
             ],
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2585,6 +2793,10 @@
               "small",
               "large"
             ],
+            "enumLabels": {
+              "small": "小型",
+              "large": "大型"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2595,6 +2807,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2625,6 +2838,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2638,6 +2852,10 @@
               "small",
               "large"
             ],
+            "enumLabels": {
+              "small": "小型",
+              "large": "大型"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2648,6 +2866,7 @@
             "widget": "number",
             "default": 0.8,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 1,
             "advanced": true
@@ -2658,6 +2877,7 @@
             "widget": "number",
             "default": 0.7,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 1,
             "advanced": true
@@ -2668,6 +2888,7 @@
             "widget": "number",
             "default": 0.9,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 1,
             "advanced": true
@@ -2678,6 +2899,7 @@
             "widget": "number",
             "default": 750,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2688,6 +2910,7 @@
             "widget": "number",
             "default": 1,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 6,
             "advanced": true
@@ -2698,6 +2921,7 @@
             "widget": "number",
             "default": 200,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": true
@@ -2708,6 +2932,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2718,6 +2943,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2751,6 +2977,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2764,6 +2991,10 @@
               "small",
               "large"
             ],
+            "enumLabels": {
+              "small": "小型",
+              "large": "大型"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2774,6 +3005,7 @@
             "widget": "number",
             "default": 0.7,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 1,
             "advanced": true
@@ -2784,6 +3016,7 @@
             "widget": "number",
             "default": 1000,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2794,6 +3027,7 @@
             "widget": "number",
             "default": 0.9,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 1,
             "advanced": true
@@ -2804,6 +3038,7 @@
             "widget": "number",
             "default": 4,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2814,6 +3049,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2824,6 +3060,7 @@
             "widget": "number",
             "default": 1,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": true
@@ -2834,6 +3071,7 @@
             "widget": "object",
             "default": {},
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2844,6 +3082,7 @@
             "widget": "range",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 10,
             "advanced": true
@@ -2854,6 +3093,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2864,6 +3104,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2874,6 +3115,7 @@
             "widget": "tags",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2919,6 +3161,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2929,6 +3172,7 @@
             "widget": "number",
             "default": 30,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2939,6 +3183,7 @@
             "widget": "number",
             "default": 500,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -2954,6 +3199,7 @@
               "yell"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2964,6 +3210,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -2974,6 +3221,7 @@
             "widget": "number",
             "default": 2,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": null,
             "advanced": true
@@ -2998,6 +3246,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3021,6 +3270,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3035,6 +3285,11 @@
               "motion",
               "continuous"
             ],
+            "enumLabels": {
+              "objects": "基于目标",
+              "motion": "基于画面变动",
+              "continuous": "连续"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3084,6 +3339,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3094,6 +3350,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3104,6 +3361,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3114,6 +3372,7 @@
             "widget": "number",
             "default": 5,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3124,6 +3383,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 2,
             "maximum": null,
             "advanced": true
@@ -3134,6 +3394,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -3144,6 +3405,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -3154,6 +3416,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": null,
             "advanced": false
@@ -3164,6 +3427,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": null,
             "advanced": false
@@ -3174,6 +3438,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3184,6 +3449,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3194,6 +3460,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -3216,6 +3483,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3226,6 +3494,7 @@
             "widget": "number",
             "default": 750,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3264,6 +3533,7 @@
             "widget": "text",
             "default": "default",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -3280,6 +3550,7 @@
               "2"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -3290,6 +3561,7 @@
             "widget": "text",
             "default": "auto",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3300,6 +3572,7 @@
             "widget": "text",
             "default": "preset-rtsp-generic",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3317,6 +3590,7 @@
               "yuv420p"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3327,6 +3601,7 @@
             "widget": "text",
             "default": "preset-record-generic-audio-aac",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3337,6 +3612,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3347,6 +3623,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -3357,6 +3634,7 @@
             "widget": "tags",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3380,6 +3658,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3390,6 +3669,7 @@
             "widget": "number",
             "default": 720,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -3400,6 +3680,7 @@
             "widget": "range",
             "default": 8,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": 31,
             "advanced": true
@@ -3424,6 +3705,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3434,6 +3716,7 @@
             "widget": "number",
             "default": 1000,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3444,6 +3727,7 @@
             "widget": "range",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 10,
             "advanced": true
@@ -3492,6 +3776,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3502,6 +3787,7 @@
             "widget": "range",
             "default": 30,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": 255,
             "advanced": false
@@ -3512,6 +3798,7 @@
             "widget": "range",
             "default": 0.8,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0.3,
             "maximum": 1,
             "advanced": true
@@ -3522,6 +3809,7 @@
             "widget": "range",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 1,
             "advanced": true
@@ -3532,6 +3820,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3542,26 +3831,29 @@
             "widget": "number",
             "default": 10,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
           },
           "delta_alpha": {
-            "label": "Delta alpha",
-            "description": "用于画面变动计算的帧差异中使用的 alpha 混合因子。",
+            "label": "变化量权重",
+            "description": "该值用于调节帧间差异计算时的混合比例，影响运动检测的灵敏度。",
             "widget": "number",
             "default": 0.2,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
           },
           "frame_alpha": {
-            "label": "画面 alpha 通道",
-            "description": "画面变动预处理时混合画面所使用的 alpha 值。",
+            "label": "背景更新速度",
+            "description": "该值在运动检测前对画面进行预处理，控制帧混合程度，影响后续检测的输入质量。",
             "widget": "number",
             "default": 0.01,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -3572,6 +3864,7 @@
             "widget": "number",
             "default": 100,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -3582,6 +3875,7 @@
             "widget": "number",
             "default": 30,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -3625,6 +3919,7 @@
               "person"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3635,6 +3930,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3645,6 +3941,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3655,6 +3952,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3665,6 +3963,7 @@
             "widget": "text",
             "default": "Analyze the sequence of images containing the {label}. Focus on the likely intent or behavior of the {label} based on its actions and movement, rather than describing its appearance or the surroundings. Consider what the {label} is doing, why, and what it might do next.",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3675,6 +3974,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3685,6 +3985,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3695,6 +3996,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3705,6 +4007,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3715,6 +4018,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3725,6 +4029,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 1,
             "maximum": null,
             "advanced": false
@@ -3770,6 +4075,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3780,6 +4086,7 @@
             "widget": "number",
             "default": 60,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -3790,6 +4097,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -3800,6 +4108,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -3810,6 +4119,7 @@
             "widget": "range",
             "default": 5,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 60,
             "advanced": false
@@ -3820,6 +4130,7 @@
             "widget": "number",
             "default": 5,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -3830,13 +4141,14 @@
             "widget": "number",
             "default": 10,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
           },
           "detections.retain.mode": {
             "label": "保留模式",
-            "description": "保留模式：all（保存所有片段）、motion（保存有动作的片段）或 active_objects（保存有活动目标的片段）。",
+            "description": "保留模式：全部（保存所有片段）、画面变动（保存有画面变动的片段）或 活动目标（保存有活动目标的片段）。",
             "widget": "select",
             "default": "motion",
             "enum": [
@@ -3844,6 +4156,11 @@
               "motion",
               "active_objects"
             ],
+            "enumLabels": {
+              "all": "全部",
+              "motion": "画面变动",
+              "active_objects": "活动目标"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3854,6 +4171,7 @@
             "widget": "range",
             "default": 5,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 60,
             "advanced": false
@@ -3864,6 +4182,7 @@
             "widget": "number",
             "default": 5,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -3874,13 +4193,14 @@
             "widget": "number",
             "default": 10,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
           },
           "alerts.retain.mode": {
             "label": "保留模式",
-            "description": "保留模式：all（保存所有片段）、motion（保存有动作的片段）或 active_objects（保存有活动目标的片段）。",
+            "description": "保留模式：全部（保存所有片段）、画面变动（保存有画面变动的片段）或 活动目标（保存有活动目标的片段）。",
             "widget": "select",
             "default": "motion",
             "enum": [
@@ -3888,6 +4208,11 @@
               "motion",
               "active_objects"
             ],
+            "enumLabels": {
+              "all": "全部",
+              "motion": "画面变动",
+              "active_objects": "活动目标"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3898,6 +4223,7 @@
             "widget": "text",
             "default": "auto",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3914,6 +4240,13 @@
               "high",
               "very_high"
             ],
+            "enumLabels": {
+              "very_low": "非常低",
+              "low": "低",
+              "medium": "中等",
+              "high": "高",
+              "very_high": "非常高"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3938,6 +4271,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3951,6 +4285,7 @@
               "car"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3961,6 +4296,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3971,6 +4307,7 @@
             "widget": "number",
             "default": 40,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3981,6 +4318,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3991,6 +4329,7 @@
             "widget": "tags",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4001,6 +4340,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4011,6 +4351,7 @@
             "widget": "number",
             "default": 30,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4021,6 +4362,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4031,6 +4373,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4041,6 +4384,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4054,6 +4398,9 @@
               "preview",
               "recordings"
             ],
+            "enumLabels": {
+              "recordings": "录制"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4064,6 +4411,7 @@
             "widget": "tags",
             "default": [],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4074,6 +4422,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4084,6 +4433,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4094,6 +4444,7 @@
             "widget": "text",
             "default": "### Normal Activity Indicators (Level 0)\n- Known/verified people in any zone at any time\n- People with pets in residential areas\n- Routine residential vehicle access during daytime/evening (6 AM - 10 PM): entering, exiting, loading/unloading items — normal commute and travel patterns\n- Deliveries or services during daytime/evening (6 AM - 10 PM): carrying packages to doors/porches, placing items, leaving\n- Services/maintenance workers with visible tools, uniforms, or service vehicles during daytime\n- Activity confined to public areas only (sidewalks, streets) without entering property at any time\n\n### Suspicious Activity Indicators (Level 1)\n- **Checking or probing vehicle/building access**: trying handles without entering, peering through windows, examining multiple vehicles, or possessing break-in tools — Level 1\n- **Unidentified person in private areas (driveways, near vehicles/buildings) during late night/early morning (11 PM - 5 AM)** — ALWAYS Level 1 regardless of activity or duration\n- Taking items that don't belong to them (packages, objects from porches/driveways)\n- Climbing or jumping fences/barriers to access property\n- Attempting to conceal actions or items from view\n- Prolonged loitering: remaining in same area without visible purpose throughout most of the sequence\n\n### Critical Threat Indicators (Level 2)\n- Holding break-in tools (crowbars, pry bars, bolt cutters)\n- Weapons visible (guns, knives, bats used aggressively)\n- Forced entry in progress\n- Physical aggression or violence\n- Active property damage or theft in progress\n\n### Assessment Guidance\nEvaluate in this order:\n\n1. **If person is verified/known** → Level 0 regardless of time or activity\n2. **If person is unidentified:**\n   - Check time: If late night/early morning (11 PM - 5 AM) AND in private areas (driveways, near vehicles/buildings) → Level 1\n   - Check actions: If probing access (trying handles without entering, checking multiple vehicles), taking items, climbing → Level 1\n   - Otherwise, if daytime/evening (6 AM - 10 PM) with clear legitimate purpose (delivery, service, routine vehicle access) → Level 0\n3. **Escalate to Level 2 if:** Weapons, break-in tools, forced entry in progress, violence, or active property damage visible (escalates from Level 0 or 1)\n\nThe mere presence of an unidentified person in private areas during late night hours is inherently suspicious and warrants human review, regardless of what activity they appear to be doing or how brief the sequence is.",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4113,6 +4464,7 @@
             "widget": "object",
             "default": {},
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4151,6 +4503,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4161,6 +4514,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4171,6 +4525,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4181,6 +4536,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4191,6 +4547,7 @@
             "widget": "tags",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4201,6 +4558,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -4211,6 +4569,7 @@
             "widget": "number",
             "default": 10,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4221,6 +4580,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4231,6 +4591,7 @@
             "widget": "range",
             "default": 60,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 100,
             "advanced": true
@@ -4260,6 +4621,12 @@
               "bl",
               "br"
             ],
+            "enumLabels": {
+              "tl": "左上角",
+              "tr": "右上角",
+              "bl": "左下角",
+              "br": "右下角"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4270,6 +4637,7 @@
             "widget": "text",
             "default": "%m/%d/%Y %H:%M:%S",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4280,6 +4648,7 @@
             "widget": "range",
             "default": 255,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 255,
             "advanced": false
@@ -4290,6 +4659,7 @@
             "widget": "range",
             "default": 255,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 255,
             "advanced": false
@@ -4300,6 +4670,7 @@
             "widget": "range",
             "default": 255,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 255,
             "advanced": false
@@ -4310,6 +4681,7 @@
             "widget": "number",
             "default": 2,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4337,6 +4709,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4347,6 +4720,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4357,6 +4731,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4367,6 +4742,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4377,6 +4753,7 @@
             "widget": "number",
             "default": 270,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -4387,6 +4764,7 @@
             "widget": "tags",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4397,6 +4775,7 @@
             "widget": "range",
             "default": 70,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": 100,
             "advanced": true
@@ -4419,6 +4798,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4429,6 +4809,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -4457,6 +4838,7 @@
             "widget": "text",
             "default": "",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4467,6 +4849,7 @@
             "widget": "number",
             "default": 8000,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4477,6 +4860,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4487,6 +4871,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4497,6 +4882,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -4507,6 +4893,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4517,6 +4904,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4527,6 +4915,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4541,6 +4930,11 @@
               "absolute",
               "relative"
             ],
+            "enumLabels": {
+              "disabled": "关闭",
+              "absolute": "绝对",
+              "relative": "相对"
+            },
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4551,6 +4945,7 @@
             "widget": "range",
             "default": 0.3,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0.1,
             "maximum": 0.75,
             "advanced": false
@@ -4563,6 +4958,7 @@
               "person"
             ],
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4573,6 +4969,7 @@
             "widget": "tags",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4583,6 +4980,7 @@
             "widget": "text",
             "default": "home",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4593,6 +4991,7 @@
             "widget": "number",
             "default": 10,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4603,6 +5002,7 @@
             "widget": "switch",
             "default": false,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": true
@@ -4625,6 +5025,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4635,6 +5036,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false

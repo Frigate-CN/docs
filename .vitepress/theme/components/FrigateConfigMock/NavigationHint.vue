@@ -10,6 +10,13 @@ const props = defineProps({
 
 const hintRef = ref(null);
 const position = ref(null);
+const flipped = ref(false);
+
+const styleBinding = computed(() => {
+    const p = position.value;
+    if (!p) return undefined;
+    return { left: p.left + "px", top: p.top + "px" };
+});
 
 const section = computed(
     () => manifest.levels[props.step.level]?.[props.step.section],
@@ -19,6 +26,12 @@ const text = computed(() => {
     if (props.step.guidePhase === "settings") {
         return "打开系统菜单并选择设置。";
     }
+    if (props.step.guidePhase === "camera-switch") {
+        return "点击摄像头选择器切换至目标摄像头。";
+    }
+    if (props.step.guidePhase === "menu-collapsed") {
+        return `展开${props.step.guideDetail ?? "摄像头设置"}以查看子菜单。`;
+    }
     return `从${props.step.guideDetail ?? "设置"}中选择${section.value?.label ?? props.step.section}。`;
 });
 
@@ -26,23 +39,37 @@ let timer;
 
 const measure = () => {
     const hint = hintRef.value;
-    const container = hint?.closest(".appBody");
-    if (!hint || !container) return;
+    if (!hint) return;
 
-    const selector =
-        props.step.guidePhase === "settings"
-            ? ".systemMenuTarget"
-            : ".menuItem.navigationTarget";
-    const target = container.querySelector(selector);
+    let selector;
+    let targetContainer;
+    if (props.step.guidePhase === "camera-switch") {
+        selector = ".cameraSwitcherTarget";
+        targetContainer = hint.closest(".appFrame");
+    } else {
+        const container = hint.closest(".appBody");
+        if (!container) return;
+        if (props.step.guidePhase === "settings") {
+            selector = ".systemMenuTarget";
+        } else if (props.step.guidePhase === "menu-collapsed") {
+            selector = ".menuGroupLabel.navigationTarget";
+        } else {
+            selector = ".menuItem.navigationTarget";
+        }
+        targetContainer = container;
+    }
+    const target = targetContainer?.querySelector(selector);
     if (!target) return;
 
-    const containerRect = container.getBoundingClientRect();
+    const containerRect = targetContainer.getBoundingClientRect();
     const targetRect = target.getBoundingClientRect();
     const hintRect = hint.getBoundingClientRect();
     const gap = 12;
     let left = targetRect.right - containerRect.left + gap;
+    let isFlipped = false;
     if (left + hintRect.width > containerRect.width - gap) {
         left = targetRect.left - containerRect.left - hintRect.width - gap;
+        isFlipped = true;
     }
     const top = Math.max(
         gap,
@@ -55,6 +82,7 @@ const measure = () => {
         ),
     );
     position.value = { left, top };
+    flipped.value = isFlipped;
 };
 
 watch(
@@ -77,8 +105,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <aside class="fieldHint navigationHint" :class="{ navigationHintReady: position, fieldHintMeasuring: !position }"
-        ref="hintRef" :style="position ?? undefined">
+    <aside class="fieldHint navigationHint" :class="{ navigationHintReady: position, fieldHintMeasuring: !position, navigationHintFlipped: flipped }"
+        ref="hintRef" :style="styleBinding">
         <span class="fieldHintIcon">
             <LcIcon name="info" />
         </span>

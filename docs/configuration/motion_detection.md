@@ -38,7 +38,7 @@ Frigate 使用画面变动检测作为第一道检查，判断画面中是否有
 阈值决定了一个像素的亮度需要变化多少才会被视为运动。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   section="motion"
@@ -49,7 +49,7 @@ Frigate 使用画面变动检测作为第一道检查，判断画面中是否有
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 # 默认阈值

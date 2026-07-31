@@ -109,7 +109,7 @@ Edge TPU 设备可使用`"device"`属性指定，参考[TensorFlow Lite Python A
 ### 单个 USB Coral
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -119,7 +119,7 @@ Edge TPU 设备可使用`"device"`属性指定，参考[TensorFlow Lite Python A
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 detectors:
@@ -134,7 +134,7 @@ detectors:
 ### 多个 USB Coral
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -145,7 +145,7 @@ detectors:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 detectors:
@@ -165,7 +165,7 @@ detectors:
 _警告：`v0.9.x`版本后可能有[兼容性问题](https://github.com/blakeblackshear/frigate/issues/1706)_
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -176,7 +176,7 @@ _警告：`v0.9.x`版本后可能有[兼容性问题](https://github.com/blakebl
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 detectors:
@@ -191,7 +191,7 @@ detectors:
 ### 单个 PCIE/M.2 Coral
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -202,7 +202,7 @@ detectors:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 detectors:
@@ -217,7 +217,7 @@ detectors:
 ### 多个 PCIE/M.2 Coral
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -228,7 +228,7 @@ detectors:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 detectors:
@@ -246,7 +246,7 @@ detectors:
 ### 混合使用 Coral
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -257,7 +257,7 @@ detectors:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 detectors:

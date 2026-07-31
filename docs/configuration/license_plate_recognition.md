@@ -50,7 +50,7 @@ Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到
 车牌识别默认禁用，使用前必须先启用。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   section="lpr"
@@ -59,7 +59,7 @@ Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 lpr:
@@ -72,7 +72,7 @@ lpr:
 与其他 Frigate 增强功能一样，车牌识别**必须全局启用**。如果不想在某些摄像头上运行车牌识别，可在摄像头级别禁用：
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   section="lpr"
@@ -82,7 +82,7 @@ lpr:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
@@ -106,7 +106,7 @@ cameras:
 ### 检测
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :show-navigation-steps="false"
@@ -128,7 +128,7 @@ cameras:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 lpr:
@@ -161,7 +161,7 @@ lpr:
 ### 识别
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :show-navigation-steps="false"
@@ -171,7 +171,7 @@ lpr:
     enabled: true,
     recognition_threshold: 0.9,
     min_plate_length: 4,
-    format: '^[A-Z]{2}[0-9]{2} [A-Z]{3}$',
+    format: '^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1,2}$',
   }"
   :targets="[
     { field: 'recognition_threshold', hint: '将车牌作为识别的车牌或子标签添加所需的识别置信度分数。' },
@@ -181,14 +181,15 @@ lpr:
 />
 
 </TabItem>
-<TabItem value="yaml">
+
+<TabItem value="YAML配置文件">
 
 ```yaml
 lpr:
   enabled: true
   recognition_threshold: 0.9
   min_plate_length: 4
-  format: '^[A-Z]{2}[0-9]{2} [A-Z]{3}$'
+  format: '^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1,2}$'
 ```
 
 </TabItem>
@@ -207,7 +208,7 @@ lpr:
 ### 匹配 {#matching}
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
 :show-navigation-steps="false"
@@ -217,7 +218,7 @@ section="lpr"
 enabled: true,
 match_distance: 1,
 known_plates: {
-\"妻子的车\": ['ABC-1234'],
+'妻子的车': ['京A12345'],
 Johnny: ['J*N-*234'],
 },
 }"
@@ -228,7 +229,7 @@ Johnny: ['J*N-*234'],
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 lpr:
@@ -254,7 +255,7 @@ lpr:
 ### 图像增强
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :show-navigation-steps="false"
@@ -267,7 +268,7 @@ lpr:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 lpr:
@@ -291,7 +292,7 @@ lpr:
 这些规则必须在 `lpr` 配置的**全局层级**定义。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :show-navigation-steps="false"
@@ -311,7 +312,7 @@ lpr:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 lpr:
@@ -339,7 +340,7 @@ lpr:
 ### 调试
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :show-navigation-steps="false"
@@ -352,7 +353,7 @@ lpr:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 lpr:
@@ -372,7 +373,7 @@ lpr:
 这些配置参数可在配置的全局层级使用。唯一应在摄像头级别设置的可选参数是`enabled`、`min_area`和`enhancement`。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :show-navigation-steps="false"
@@ -398,7 +399,7 @@ lpr:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 lpr:

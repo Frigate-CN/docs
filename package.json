@@ -7,10 +7,10 @@
   },
   "scripts": {
     "docs:dev": "./script/download_weblate_translation.sh && npm run build:mock && vitepress dev --host 0.0.0.0",
-    "docs:build": "./script/download_weblate_translation.sh && git fetch --depth=10000 && npm run build:mock && vitepress build",
+    "docs:build": "./script/download_weblate_translation.sh && npm run clone-frigate && git fetch --depth=10000 && npm run build:mock && vitepress build",
     "docs:preview": "vitepress preview",
     "clone-frigate": "./script/clone-frigate.sh",
-    "build:mock": "./script/clone-frigate.sh && node script/generate-mock-manifest.mjs",
+    "build:mock": "node script/generate-mock-manifest.mjs",
     "check:mock": "node script/generate-mock-manifest.mjs --check"
   },
   "dependencies": {

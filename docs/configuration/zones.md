@@ -15,7 +15,7 @@ title: 监控区
 创建监控区的步骤与[创建"画面变动遮罩"](masks.md)类似，只需在网页界面使用创建区域的功能即可。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   level="camera"
@@ -29,7 +29,7 @@ title: 监控区
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 也可以直接在配置文件中定义区域：
 
@@ -50,7 +50,7 @@ cameras:
 通常你可能希望仅当目标进入关注区域时才创建`警报`。这可以通过设置`required_zones`来实现。例如，仅当目标进入整个院子区域时才创建警报：
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -62,7 +62,7 @@ cameras:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
@@ -83,7 +83,7 @@ cameras:
 你可能还想限定`检测`仅在目标进入次要关注区时创建。例如，当目标进入院子内部区域时触发警报，但进入院子边缘时就创建`检测记录`：
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -101,7 +101,7 @@ cameras:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
@@ -130,7 +130,7 @@ cameras:
 仅当目标进入特定区域（例如`entire_yard`区域）时才保存快照：
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -143,7 +143,7 @@ cameras:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
@@ -165,7 +165,7 @@ cameras:
 有时需要限制区只对特定目标类型生效，以便更精细地控制警报、检测和快照的保存。以下示例将限制一个区只对人有效，另一个区只对车辆有效。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -178,7 +178,7 @@ cameras:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
@@ -210,7 +210,7 @@ cameras:
 :::
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -223,7 +223,7 @@ cameras:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
@@ -243,7 +243,7 @@ cameras:
 为防止边界框判断误差导致误报，可以设置目标必须连续多帧位于区内才视为有效进入：
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -256,7 +256,7 @@ cameras:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
@@ -274,7 +274,7 @@ cameras:
 对于需要快速响应的场景（如车辆驶入车道），可将延迟设为 1：
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -287,7 +287,7 @@ cameras:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
@@ -313,7 +313,7 @@ Frigate 可以估算目标在区内的移动速度。此功能需要将区定义
 配置中需通过`distances`字段指定各点间的实际距离。最快且最准确的方式是通过 Frigate 界面的区域编辑器来配置：
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   level="camera"
@@ -326,7 +326,7 @@ Frigate 可以估算目标在区内的移动速度。此功能需要将区定义
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
@@ -345,7 +345,7 @@ cameras:
 距离单位由`ui`配置决定：
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -357,7 +357,7 @@ cameras:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 ui:
@@ -385,7 +385,7 @@ ui:
 可设置区的最小速度要求，只有达到该速度的目标才会被视为进入区。区域`distances`必须按上述方式定义：
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 <FrigateConfigMock
   :auto-play="false"
@@ -398,7 +398,7 @@ ui:
 />
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:

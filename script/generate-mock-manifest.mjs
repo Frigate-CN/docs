@@ -173,6 +173,57 @@ function extractGroups(source) {
   return fieldGroups;
 }
 
+/**
+ * Parse the `uiSchema` block from a section config source string and extract
+ * the `enumI18nPrefix` option for each field. Returns a map of
+ * { fieldName: "i18n.prefix" }.
+ *
+ * Handles both flat keys with dots (e.g. "alerts.retain.mode") and nested
+ * objects (e.g. preview: { quality: { "ui:options": { enumI18nPrefix: ... } } }).
+ */
+function extractEnumI18nPrefixes(source) {
+  const result = {};
+  const uiSchemaBlock = extractObjectBlock(source, "uiSchema");
+  if (!uiSchemaBlock) return result;
+
+  // 1. Flat keys with dots: "alerts.retain.mode": { ... enumI18nPrefix: ... }
+  for (const match of uiSchemaBlock.matchAll(
+    /"([\w.]+)"\s*:\s*\{[\s\S]*?enumI18nPrefix\s*:\s*["']([^"']+)["']/g,
+  )) {
+    result[match[1]] = match[2];
+  }
+
+  // 2. Simple word keys: fieldName: { "ui:options": { enumI18nPrefix: ... } }
+  for (const match of uiSchemaBlock.matchAll(
+    /^\s*(\w+)\s*:\s*\{/gm,
+  )) {
+    const fieldName = match[1];
+    if (result[fieldName]) continue;
+    const fieldBlock = extractObjectBlock(uiSchemaBlock, fieldName);
+    // Check if enumI18nPrefix is directly in this field's options
+    const directMatch = fieldBlock.match(
+      /enumI18nPrefix\s*:\s*["']([^"']+)["']/,
+    );
+    if (directMatch) {
+      result[fieldName] = directMatch[1];
+      continue;
+    }
+    // Check nested fields (e.g. preview -> quality)
+    for (const nestedMatch of fieldBlock.matchAll(
+      /^\s*(\w+)\s*:\s*\{/gm,
+    )) {
+      const nestedName = nestedMatch[1];
+      const nestedBlock = extractObjectBlock(fieldBlock, nestedName);
+      const nestedPrefix = nestedBlock.match(
+        /enumI18nPrefix\s*:\s*["']([^"']+)["']/,
+      );
+      if (nestedPrefix) result[`${fieldName}.${nestedName}`] = nestedPrefix[1];
+    }
+  }
+
+  return result;
+}
+
 function loadSectionHints(section, level) {
   const configPath = path.join(sectionConfigRoot, `${section}.ts`);
   if (!fs.existsSync(configPath)) return {};
@@ -195,6 +246,10 @@ function loadSectionHints(section, level) {
       ? extractGroups(override)
       : extractGroups(base),
     docs: base.match(/sectionDocs\s*:\s*["']([^"']+)["']/)?.[1] ?? null,
+    enumI18nPrefixes: {
+      ...extractEnumI18nPrefixes(base),
+      ...extractEnumI18nPrefixes(override),
+    },
   };
 }
 
@@ -204,6 +259,39 @@ function groupLabel(level, section, group) {
     translations.groups?.[section]?.[domain]?.[group] ??
     group.replaceAll("_", " ").replace(/^./, (value) => value.toUpperCase())
   );
+}
+
+/**
+ * Resolve localized labels for a field's enum values using the
+ * `enumI18nPrefix` from the section config uiSchema and the settings
+ * translations. Returns a { value: label } map, or null when no prefix
+ * or translations are found.
+ */
+function resolveEnumLabels(hints, fieldKey, enumValues) {
+  if (!Array.isArray(enumValues) || !enumValues.length) return null;
+  // The field key may be a dot-path (e.g. "detections.retain.mode"); the
+  // uiSchema key is the last segment (e.g. "mode") for nested fields.
+  const leafKey = fieldKey.split(".").at(-1);
+  const prefix =
+    hints.enumI18nPrefixes?.[fieldKey] ?? hints.enumI18nPrefixes?.[leafKey];
+  if (!prefix) return null;
+  const parts = prefix.split(".");
+  let current = settingsTranslations;
+  for (const part of parts) {
+    if (!current || typeof current !== "object") return null;
+    current = current[part];
+  }
+  if (!current || typeof current !== "object") return null;
+  const labels = {};
+  let hasAny = false;
+  for (const value of enumValues) {
+    const label = current[value];
+    if (label) {
+      labels[value] = label;
+      hasAny = true;
+    }
+  }
+  return hasAny ? labels : null;
 }
 
 function collectFields(level, section, sectionNode, hints) {
@@ -222,12 +310,15 @@ function collectFields(level, section, sectionNode, hints) {
     if (fieldPath.length === 0) return;
     const key = fieldPath.join(".");
     const localized = translationAt(level, section, fieldPath);
+    const enumValues = node.enum ?? null;
+    const enumLabels = resolveEnumLabels(hints, key, enumValues);
     fields[key] = {
       label: localized.label ?? node.title ?? fieldPath.at(-1),
       description: localized.description ?? node.description ?? "",
       widget: inferWidget(node),
       default: node.default ?? null,
-      enum: node.enum ?? null,
+      enum: enumValues,
+      enumLabels,
       minimum: node.minimum ?? node.exclusiveMinimum ?? null,
       maximum: node.maximum ?? node.exclusiveMaximum ?? null,
       advanced: hints.advanced?.includes(key) ?? false,

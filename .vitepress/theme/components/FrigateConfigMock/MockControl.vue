@@ -1,9 +1,20 @@
 <script setup>
+import { computed } from "vue";
 import { formatValue } from "./helpers.js";
+import LcIcon from "./LcIcon.vue";
 
 const props = defineProps({
     field: { type: Object, required: true },
     value: { type: [String, Number, Boolean, Array, Object], default: null },
+});
+
+const displayValue = computed(() => {
+    const raw = props.value ?? props.field.default;
+    const labels = props.field.enumLabels;
+    if (labels && typeof raw === "string" && raw in labels) {
+        return labels[raw];
+    }
+    return formatValue(raw);
 });
 </script>
 
@@ -30,7 +41,9 @@ const props = defineProps({
     </div>
 
     <span v-else class="input" aria-hidden="true">
-        {{ formatValue(value ?? field.default) }}
-        <span v-if="field.widget === 'select'" class="chevron">⌄</span>
+        {{ displayValue }}
+        <span v-if="field.widget === 'select'" class="chevron">
+            <LcIcon name="chevron-down" :size="14" />
+        </span>
     </span>
 </template>

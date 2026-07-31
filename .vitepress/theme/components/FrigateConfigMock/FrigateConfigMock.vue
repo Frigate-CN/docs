@@ -80,12 +80,27 @@ const guideSteps = computed(() =>
                     guideLabel: "打开设置",
                 });
             }
+            if (step.level === "camera") {
+                stages.push({
+                    ...step,
+                    guidePhase: "menu-collapsed",
+                    guideLabel: `查找${navigationGroup?.label ?? "摄像头设置"}`,
+                    guideDetail: navigationGroup?.label,
+                });
+            }
             stages.push({
                 ...step,
                 guidePhase: "menu",
                 guideLabel: `查找${navigationItem?.label ?? sectionData?.label ?? step.section}`,
                 guideDetail: navigationGroup?.label,
             });
+            if (step.level === "camera") {
+                stages.push({
+                    ...step,
+                    guidePhase: "camera-switch",
+                    guideLabel: "切换摄像头",
+                });
+            }
         }
         if (fieldLabel) {
             stages.push({

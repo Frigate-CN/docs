@@ -216,10 +216,42 @@
 }
 
 .appHeader {
+  position: relative;
   display: grid;
   height: 58px;
   grid-template-columns: 48px 220px minmax(0, 1fr);
   border-bottom: 1px solid var(--mock-border-soft);
+}
+
+.cameraSwitcher {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  color: #fff;
+  background: var(--mock-selected);
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: box-shadow 240ms ease;
+}
+
+.cameraSwitcher svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.cameraSwitcherTarget {
+  box-shadow: 0 0 0 2px var(--mock-selected), 0 0 0 5px rgb(82 111 245 / 18%);
+  animation: focus-breathe 2s ease-in-out infinite;
 }
 
 .logoCell {
@@ -1543,6 +1575,15 @@
   border-left: 1px solid #526ff5;
 }
 
+.navigationHintFlipped::before {
+  right: -6px;
+  left: auto;
+  border-top: 1px solid #526ff5;
+  border-right: 1px solid #526ff5;
+  border-bottom: 0;
+  border-left: 0;
+}
+
 .navigationHintReady {
   animation: hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -1732,6 +1773,9 @@
 }
 
 .chevron {
+  display: flex;
+  flex: none;
+  align-items: center;
   color: var(--mock-muted);
 }
 
@@ -1822,6 +1866,7 @@
   .focused::after,
   .navigationTarget,
   .systemMenuTarget,
+  .cameraSwitcherTarget,
   .fieldHint,
   .switch span {
     animation: none;

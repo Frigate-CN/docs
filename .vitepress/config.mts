@@ -34,7 +34,7 @@ const teekConfig = defineTeekConfig({
       defaultStyle: "under",
     },
     layoutSwitch: {
-      defaultMode: "sidebarWidthAdjustableOnly",
+      defaultMode: "bothWidthAdjustable",
     },
   },
   vitePlugins: {
