@@ -15,6 +15,12 @@ dist-ssr
 .vitepress/cache
 .vitepress/dist
 
+# Cloned official Frigate repo for manifest generation
+.frigate
+
+# Cloned official Frigate repo for manifest generation
+.frigate
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

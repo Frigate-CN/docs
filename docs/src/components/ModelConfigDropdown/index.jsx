@@ -157,10 +157,10 @@ export default function ModelConfigDropdown({ models }) {
         <div className={styles.step}>
           <h4 className={styles.stepTitle}>Step 3 — Configure the detector</h4>
           <ConfigTabs>
-            <TabItem value="ui">
+            <TabItem value="图形化配置">
               <Markdown>{selectedModel.ui}</Markdown>
             </TabItem>
-            <TabItem value="yaml">
+            <TabItem value="YAML配置文件">
               <CodeBlock language="yaml">{selectedModel.yaml}</CodeBlock>
             </TabItem>
           </ConfigTabs>

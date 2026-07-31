@@ -13,6 +13,10 @@ import DetailsCollapse from "./DetailsCollapse.vue";
 import InfoIcon from "./InfoIcon.vue";
 import LanguageSwitch from "./LanguageSwitch.vue";
 import ModelConfigDropdown from "./ModelConfigDropdown.vue";
+import FrigateConfigMock from "./components/FrigateConfigMock/FrigateConfigMock.vue";
+import ConfigTabs from "./components/ConfigTabs.vue";
+import TabItem from "./components/TabItem.vue";
+import NavPath from "./components/NavPath.vue";
 import { initComponent } from 'vitepress-plugin-legend/component';
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
@@ -38,6 +42,10 @@ export default {
     app.component('InfoIcon', InfoIcon)
     app.component('LanguageSwitch', LanguageSwitch)
     app.component('ModelConfigDropdown', ModelConfigDropdown)
+    app.component('FrigateConfigMock', FrigateConfigMock)
+    app.component('ConfigTabs', ConfigTabs)
+    app.component('TabItem', TabItem)
+    app.component('NavPath', NavPath)
   },
   extends: Teek,
   Layout: CustomLayout,

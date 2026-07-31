@@ -30,7 +30,7 @@ H265 编码的录制只能在 Chrome 108+、Edge 和 Safari 浏览器中能够�
 对于需要在没有检测到画面变动时也保存连续视频的环境，以下配置将保存 3 天内的所有视频。3 天后，只有**画面变动**的视频会保留 30 天，7 天后，只有包含画面变动且属于 [**核查**](../configuration/review.md) 中`警报`或`检测`的视频会保留 30 天。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 导航到 <NavPath path="设置 > 全局配置 > 录制" />。
 
@@ -43,7 +43,7 @@ H265 编码的录制只能在 Chrome 108+、Edge 和 Safari 浏览器中能够�
 - 将**检测保留 > 事件保留 > 保留模式**设为 `all`
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 record:
@@ -70,7 +70,7 @@ record:
 为了减少存储需求，可以调整配置**只保留检测到画面变动**和活动的视频。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 导航到 <NavPath path="设置 > 全局配置 > 录制" />。
 
@@ -82,7 +82,7 @@ record:
 - 将**检测保留 > 事件保留 > 保留模式**设为 `motion`
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 record:
@@ -107,7 +107,7 @@ record:
 如果只想保留检测追踪到的目标活动期间的视频，可以参考以下配置。不属于[核查](../configuration/review.md)中**警报**的视频将不会保留。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 导航到 <NavPath path="设置 > 全局配置 > 录制" />。
 
@@ -117,7 +117,7 @@ record:
 - 将**警报保留 > 事件保留 > 保留模式**设为 `motion`
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 record:
@@ -138,7 +138,7 @@ record:
 `pre_capture` 和 `post_capture` 设置控制在警报或检测之前和之后各包含多少秒的视频。这些参数可以为警报和检测独立配置，可以全局设置，也可以针对每个摄像头进行覆盖。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 导航到 <NavPath path="设置 > 全局配置 > 录制" /> 设置全局默认值，或导航到 <NavPath path="设置 > 摄像头配置 > （选择摄像头）> 录制" /> 为特定摄像头进行覆盖。
 
@@ -150,7 +150,7 @@ record:
 | **检测保留 > 后捕获秒数**                  | 在检测事件之后包含的视频秒数          |
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 record:
@@ -218,7 +218,7 @@ Frigate 支持连续录制和基于追踪`物体/目标`的录制，具有独立
 可以通过以下配置设置保留连续录制的天数（X 为数字），默认情况下连续录制被禁用。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 导航到 <NavPath path="设置 > 全局配置 > 录制" />。
 
@@ -229,7 +229,7 @@ Frigate 支持连续录制和基于追踪`物体/目标`的录制，具有独立
 | **画面变动保留 > 保留天数** | 保留画面变动录像的天数        |
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 record:
@@ -250,7 +250,7 @@ record:
 可以为分类为警报和检测的回放条目分别指定保留天数。
 
 <ConfigTabs>
-<TabItem value="ui">
+<TabItem value="图形化配置">
 
 导航到 <NavPath path="设置 > 全局配置 > 录制" />。
 
@@ -261,7 +261,7 @@ record:
 | **检测保留 > 事件保留 > 保留天数**             | 保留检测录制的天数          |
 
 </TabItem>
-<TabItem value="yaml">
+<TabItem value="YAML配置文件">
 
 ```yaml
 record:

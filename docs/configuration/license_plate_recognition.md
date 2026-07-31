@@ -47,22 +47,53 @@ Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到
 
 ## 配置
 
-车牌识别默认禁用。在配置文件中启用：
+车牌识别默认禁用，使用前必须先启用。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+<FrigateConfigMock
+  section="lpr"
+  :values="{ enabled: true }"
+  :targets="['enabled']"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 lpr:
-  enabled: True # [!code ++]
+  enabled: True
 ```
 
-与其他 Frigate 增强功能一样，车牌识别必须全局启用。但如果**不想在某些摄像头上运行**车牌识别，可在摄像头级别禁用：
+</TabItem>
+</ConfigTabs>
+
+与其他 Frigate 增强功能一样，车牌识别**必须全局启用**。如果不想在某些摄像头上运行车牌识别，可在摄像头级别禁用：
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+<FrigateConfigMock
+  section="lpr"
+  level="camera"
+  :values="{ enabled: false }"
+  :targets="[{ field: 'enabled', hint: '关闭该摄像头的车牌识别开关。' }]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
-  garage: # 例如在名叫“garage”的花园摄像头就不启用车牌识别
-    ... # 此处为省略的内容
-    lpr: # 加入高亮的这部分代码禁用该摄像头的车牌识别 [!code ++]
-      enabled: False # [!code ++]
+  garage:
+    ...
+    lpr:
+      enabled: False
 ```
+
+</TabItem>
+</ConfigTabs>
 
 对于非专用 LPR 摄像头，请确保摄像头配置为检测车辆（`car`）类型目标，且 Frigate 确实检测到了车辆。否则车牌识别不会运行。
 
@@ -73,6 +104,43 @@ cameras:
 在配置文件的全局层级下使用这些可选参数来微调车牌识别功能。需注意的是，只有部分参数（如：`enabled`、`min_area`和`enhancement`）能够在摄像头级别下设置。
 
 ### 检测
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+<FrigateConfigMock
+  :show-navigation-steps="false"
+  section="lpr"
+  :auto-play="false"
+  :values="{
+    enabled: true,
+    detection_threshold: 0.7,
+    min_area: 1000,
+    device: 'CPU',
+    model_size: 'small',
+  }"
+  :targets="[
+    { field: 'detection_threshold', hint: '运行识别前所需的车牌检测置信度分数。此字段仅适用于独立运行的车牌检测模型；对于自带车牌检测的目标检测模型（如 Frigate+）应使用 threshold 和 min_score 物体过滤器。' },
+    { field: 'min_area', hint: '运行识别前车牌的最小面积（像素单位）。这是面积测量（长 × 宽），1000 像素代表图像中约 32×32 像素的正方形。根据摄像头 detect 视频流的分辨率，可增加此值以忽略过小或过远的车牌。' },
+    { field: 'device', hint: '运行车牌检测和识别模型的设备。可以让 Frigate 自动选择或手动指定 CPU、GPU 或 GPU 的设备数字 ID。对于目标检测模型没有原生支持车牌检测的用户，使用 GPU 可能提高模型性能。' },
+    { field: 'model_size', hint: '用于识别车牌上文本区域的模型大小。小型模型能够识别拉丁字符和中文字符，国内用户请务必使用该选项。大型模型只能识别拉丁字符，使用增强的文本检测器，但更慢。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+lpr:
+  enabled: True
+  detection_threshold: 0.7
+  min_area: 1000
+  device: CPU
+  model_size: small
+```
+
+</TabItem>
+</ConfigTabs>
 
 - **`detection_threshold`**: 运行识别前所需的车牌检测分数
   - 默认: `0.7`
@@ -92,6 +160,41 @@ cameras:
 
 ### 识别
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+<FrigateConfigMock
+  :show-navigation-steps="false"
+  section="lpr"
+  :auto-play="false"
+  :values="{
+    enabled: true,
+    recognition_threshold: 0.9,
+    min_plate_length: 4,
+    format: '^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1,2}$',
+  }"
+  :targets="[
+    { field: 'recognition_threshold', hint: '将车牌作为识别的车牌或子标签添加所需的识别置信度分数。' },
+    { field: 'min_plate_length', hint: '指定检测到的车牌至少需要多少字符数才能添加至识别的车牌或子标签。用于过滤短、不完整或不正确的检测。' },
+    { field: 'format', hint: '定义预期车牌格式的正则表达式。不匹配此格式的车牌将被丢弃。可使用 regex101.com 等网站测试正则表达式。' },
+  ]"
+/>
+
+</TabItem>
+
+<TabItem value="YAML配置文件">
+
+```yaml
+lpr:
+  enabled: true
+  recognition_threshold: 0.9
+  min_plate_length: 4
+  format: '^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1,2}$'
+```
+
+</TabItem>
+</ConfigTabs>
+
 - **`recognition_threshold`**: 将车牌作为识别的车牌（`recognized_license_plate`）或子标签（`sub_label`）添加所需的识别置信度分数
   - 默认: `0.9`
 - **`min_plate_length`**: 指定检测到的车牌至少需要多少字符数才能添加至识别的车牌（`recognized_license_plate`）或子标签（`sub_label`）
@@ -104,6 +207,44 @@ cameras:
 
 ### 匹配 {#matching}
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+<FrigateConfigMock
+:show-navigation-steps="false"
+section="lpr"
+:auto-play="false"
+:values="{
+enabled: true,
+match_distance: 1,
+known_plates: {
+'妻子的车': ['京A12345'],
+Johnny: ['J*N-*234'],
+},
+}"
+:targets="[
+{ field: 'match_distance', hint: '允许在匹配检测到的车牌与已知车牌时有微小变化（缺失/错误字符）。例如设置为 1 允许车牌 ABCDE 匹配 ABCBE 或 ABCD。此参数不适用于定义为正则表达式的已知车牌。' },
+{ field: 'known_plates', hint: '当识别到的车牌匹配已知值时，为车辆目标分配自定义子标签。这些标签会显示在页面、过滤器和通知中。未知车牌仍会保存，但只会添加到识别的车牌字段而非子标签。' },
+]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+lpr:
+  enabled: True
+  match_distance: 1
+  known_plates:
+    妻子的车:
+      - 'ABC-1234'
+    Johnny:
+      - 'J*N-*234'
+```
+
+</TabItem>
+</ConfigTabs>
+
 - **`known_plates`**: 字符串或正则表达式列表，当识别到的车牌匹配已知值时，为该车辆目标分配自定义子标签（`sub_label`）
   - 这些标签会显示在页面、过滤器和通知中
   - 未知车牌仍会保存，但只会添加到识别的车牌（`recognized_license_plate`）字段而非子标签（`sub_label`）
@@ -112,6 +253,31 @@ cameras:
   - 此参数不适用于定义为正则表达式的已知车牌。要使用`match_distance`，应在`known_plates`中定义车牌的完整字符串
 
 ### 图像增强
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+<FrigateConfigMock
+  :show-navigation-steps="false"
+  section="lpr"
+  :auto-play="false"
+  :values="{ enabled: true, enhancement: 1 }"
+  :targets="[
+    { field: 'enhancement', hint: '0 到 10 之间的值，调整在识别前对捕获车牌应用的图像增强级别。较高值会增加对比度、锐化细节并减少噪点，但过度增强会使字符模糊或失真。如果在多个摄像头上运行车牌识别，最好在摄像头级别下单独调整此设置。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+lpr:
+  enabled: True
+  enhancement: 1
+```
+
+</TabItem>
+</ConfigTabs>
 
 - **`enhancement`**: 0 到 10 之间的值，调整在识别前对捕获车牌应用的图像增强级别。此预处理步骤有时可提高准确性但也可能适得其反
   - 默认: `0`(无增强)
@@ -125,20 +291,46 @@ cameras:
 
 这些规则必须在 `lpr` 配置的**全局层级**定义。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+<FrigateConfigMock
+  :show-navigation-steps="false"
+  section="lpr"
+  :auto-play="false"
+  :values="{
+    replace_rules: [
+      { pattern: '[%#*?]', replacement: '' },
+      { pattern: '[= ]', replacement: '-' },
+      { pattern: 'O', replacement: '0' },
+      { pattern: 'I', replacement: '1' },
+    ],
+  }"
+  :targets="[
+    { field: 'replace_rules', hint: '添加正则规则来归一化检测到的车牌字符串。规则按顺序执行。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 lpr:
   replace_rules:
-    - pattern: "[%#*?]" # 移除噪声符号
-      replacement: ""
-    - pattern: "[= ]" # 将 = 或空格规范化为短横线 -
-      replacement: "-"
-    - pattern: "O" # 将 'O' 替换为 '0'（常见 OCR 错误）
-      replacement: "0"
-    - pattern: "I" # 将 'I' 替换为 '1'
-      replacement: "1"
+    - pattern: '[%#*?]' # 移除噪声符号
+      replacement: ''
+    - pattern: '[= ]' # 将 = 或空格规范化为短横线 -
+      replacement: '-'
+    - pattern: 'O' # 将 'O' 替换为 '0'（常见 OCR 错误）
+      replacement: '0'
+    - pattern: 'I' # 将 'I' 替换为 '1'
+      replacement: '1'
     - pattern: '(\w{3})(\w{3})' # 将 6 个字符分成两组（例如 ABC123 → ABC-123）—— 使用单引号保留反斜杠
       replacement: '\1-\2'
 ```
+
+</TabItem>
+</ConfigTabs>
 
 - **规则按顺序执行**：在上面的例子中，先清理噪声，再处理分隔符，然后进行字符替换，最后进行分组拆分。
 - **反向引用**（`\1`、`\2`）可实现动态替换（例如捕获组）。
@@ -146,6 +338,31 @@ lpr:
 - **小贴士**：你可以使用 regex101.com 等工具测试正则表达式模式。
 
 ### 调试
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+<FrigateConfigMock
+  :show-navigation-steps="false"
+  section="lpr"
+  :auto-play="false"
+  :values="{ enabled: true, debug_save_plates: true }"
+  :targets="[
+    { field: 'debug_save_plates', hint: '设为开启以保存检测到的车牌文字图像用于调试。这些图像存储在 /media/frigate/clips/lpr，基于捕获时间戳命名。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+lpr:
+  enabled: True
+  debug_save_plates: True
+```
+
+</TabItem>
+</ConfigTabs>
 
 - **`debug_save_plates`**: 设为`True`保存检测到的车牌文字图像用于调试。这些图像存储在`/media/frigate/clips/lpr`，按`<摄像头>/<事件ID>`创建子目录，基于捕获时间戳命名
   - 这些保存的图像不是完整车牌而是检测到的文字区域。文字检测模型有时会在车牌上找到多个文字区域是正常的。用它们分析 Frigate 识别了什么文字以及图像增强如何影响检测
@@ -155,22 +372,54 @@ lpr:
 
 这些配置参数可在配置的全局层级使用。唯一应在摄像头级别设置的可选参数是`enabled`、`min_area`和`enhancement`。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+<FrigateConfigMock
+  :show-navigation-steps="false"
+  section="lpr"
+  :auto-play="false"
+  :values="{
+    enabled: true,
+    min_area: 1500,
+    min_plate_length: 4,
+    known_plates: {
+      '妻子的车': ['ABC-1234', 'ABC-I234'],
+      Johnny: ['J*N-*234'],
+      Sally: ['[S5]LL 1234'],
+      '工作货车': ['EMP-[0-9]{3}[A-Z]'],
+    },
+  }"
+  :targets="[
+    { field: 'enabled', hint: '设为开启。' },
+    { field: 'min_area', hint: '设为 1500 以忽略面积小于 1500 像素的车牌。' },
+    { field: 'min_plate_length', hint: '设为 4 以仅识别 4 个或更多字符的车牌。' },
+    'known_plates',
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 lpr:
   enabled: True
-  format: ^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1,2}$ # 适配中国大陆地区车牌的正则 [!code ++]
+  format: ^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1,2}$ # 适配中国大陆地区车牌的正则
   min_area: 1500 # 忽略面积小于1500像素的车牌
   min_plate_length: 4 # 仅识别4个或更多字符的车牌
   known_plates:
     老婆的车辆:
-      - "京AC1234"
+      - '京AC1234'
     大儿子:
-      - "京*567" # 能同时匹配 京AA4567 和 京BCH567 注意"*"将匹配任意数量字符
+      - '京*567' # 能同时匹配 京AA4567 和 京BCH567 注意"*"将匹配任意数量字符
     我的车:
-      - "京A[S5]3334" # 同时匹配 京AS3334和 京A53334
+      - '京A[S5]3334' # 同时匹配 京AS3334和 京A53334
     货车:
-      - "黑C1[0-9]{3}[A-Z]" # 同时匹配 黑C1123A, 黑C1456Z 的车牌
+      - '黑C1[0-9]{3}[A-Z]' # 同时匹配 黑C1123A, 黑C1456Z 的车牌
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ```yaml
 lpr:
@@ -180,15 +429,15 @@ lpr:
   format: ^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1,2}$ # 适配中国大陆地区车牌的正则 [!code ++]
   match_distance: 1 # 允许车牌匹配中一个字符的变化
   replace_rules: # [!code ++]
-    - pattern: "[·]" # 移除噪声符号 [!code ++]
-      replacement: "" # [!code ++]
+    - pattern: '[·]' # 移除噪声符号 [!code ++]
+      replacement: '' # [!code ++]
     - pattern: I # 将 'I' 替换为 '1' # [!code ++]
-      replacement: "1" # [!code ++]
-    - pattern: "O" # [!code ++]
-      replacement: "0" # [!code ++]
+      replacement: '1' # [!code ++]
+    - pattern: 'O' # [!code ++]
+      replacement: '0' # [!code ++]
   known_plates:
     老婆的车:
-      - "京AC1234"
+      - '京AC1234'
 ```
 
 :::note
@@ -232,7 +481,7 @@ lpr:
 # 专用LPR摄像头配置
 cameras:
   dedicated_lpr_camera:
-    type: "lpr" # 必需以使用专用LPR摄像头模式
+    type: 'lpr' # 必需以使用专用LPR摄像头模式
     ffmpeg: ... # 添加你的流
     detect:
       enabled: True
@@ -286,7 +535,7 @@ lpr:
 # 专用LPR摄像头配置
 cameras:
   dedicated_lpr_camera:
-    type: "lpr" # 必需以使用专用LPR摄像头模式
+    type: 'lpr' # 必需以使用专用LPR摄像头模式
     lpr:
       enabled: True
       enhancement: 3 # 可选，在尝试识别字符前增强图像
