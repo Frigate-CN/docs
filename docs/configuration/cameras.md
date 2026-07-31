@@ -3,6 +3,49 @@ id: cameras
 title: 摄像头配置
 ---
 
+## 使用添加摄像头向导添加摄像头
+
+添加摄像头向导是添加摄像头的推荐方式。点击 <NavPath path="Settings > Global configuration > Camera management" /> 中的 **Add Camera**。该向导会连接你的摄像头、测试每个流并为你生成摄像头配置，包括 [go2rtc](go2rtc.md) 转流和实时视图流映射，因此标准设置无需手动编写 YAML。
+
+### 步骤 1：命名与连接
+
+输入摄像头名称以及主机或 IP 地址和凭证，然后选择向导如何查找摄像头的流：
+
+- **探测摄像头（Probe camera）**通过 ONVIF 查询摄像头（ONVIF 端口通常为 80 或 8080），并获取其流 URL。某些摄像头使用独立的 ONVIF/服务账号而非设备管理员用户，部分还要求启用**使用摘要认证（Use digest authentication）**。
+- **手动选择（Manual selection）**根据你选择的摄像头品牌模板构建流 URL（Dahua/Amcrest/EmpireTech、Hikvision/Uniview/Annke、Ubiquiti、Reolink、Axis、TP-Link 或 Foscam）。选择 **Other** 直接输入自定义 RTSP URL。非 RTSP 流类型必须[手动配置](#设置摄像头输入源)。
+
+你输入的名称会被转为小写，空格变为下划线。如果结果仍不是有效的配置键，向导会生成一个安全名称，并将你输入的内容保存为 `friendly_name`。
+
+### 步骤 2：探测或截图
+
+在探测模式下，向导会报告摄像头返回的信息（制造商、型号、固件、配置文件数量以及是否支持 PTZ、预置位和[自动追踪](autotracking.md)）以及发现的 RTSP URL。测试每个候选流，查看其分辨率、帧率和编解码器以及截图，然后选择你想使用的流。
+
+在手动模式下，向导会测试模板 URL 并显示相同的元数据和截图。
+
+如果未找到 RTSP URL，可能是凭证错误或摄像头不支持 ONVIF。返回并使用手动选择。
+
+### 步骤 3：流配置
+
+为流分配[功能角色](#设置摄像头输入源)，并使用**添加另一个流（Add Another Stream）**添加摄像头的其他流，例如用于 `detect` 的子流与用于 `record` 的主流。至少有一个流必须具有 `detect` 角色才能继续。
+
+**减少摄像头连接（Reduce connections to camera）**通过 go2rtc 转流路由输入，使 Frigate 和实时视图共享一个到摄像头的连接，而不是各自打开独立连接。详见[转流](restream.md)。
+
+### 步骤 4：验证与测试
+
+连接每个流以获取实时预览、预估带宽数值和验证结果列表。向导会检查最常见的错误配置，包括：
+
+- 检测分辨率过高（增加资源消耗）或过低导致无法可靠检测，或根本无法探测
+- 标记为 `record` 的流的音频编解码器不是 AAC，或完全没有音频
+- 标记为 `audio` 的流不包含音频流
+- 对 `record` 角色使用转流输入
+- 品牌特定问题，例如 Reolink 摄像头的 RTSP 流应使用 http-flv，或为 `detect` 选择了 Dahua/Hikvision 的子流
+
+**使用流兼容模式（Use stream compatibility mode）**通过 go2rtc 的 ffmpeg 模块传递流。如果流在多次尝试后仍无法加载，请启用它。注意，这还会阻止该流的[双向通话](/configuration/live#two-way-talk)被检测到。
+
+**保存新摄像头（Save New Camera）**会写入配置并立即启动摄像头，无需重启。
+
+其他功能（包括[硬件加速](hardware_acceleration_video.md)、[双向通话](/configuration/live#two-way-talk)和音频转码）在摄像头添加后进行配置。有关摄像头型号的特定问题，请参阅[摄像头特定](camera_specific.md)文档。
+
 ## 设置摄像头输入源
 
 可以为每个摄像头配置多个输入源，并根据需求混合搭配每个输入源的功能。这样你可以使用低分辨率视频流进行物体检测，同时使用高分辨率视频流进行录像，反之亦然。
@@ -47,7 +90,13 @@ cameras: # [!code highlight]
 
 :::
 
-接下来你只需在配置文件的`cameras`条目下按照上面的例子**添加更多摄像头**即可。
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+导航到 <NavPath path="Settings > Global configuration > Camera management" /> 并使用[添加摄像头向导](#使用添加摄像头向导添加摄像头)配置每个额外的摄像头。
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 mqtt: ...
@@ -55,8 +104,10 @@ cameras:
   back: ...
   front: ...
   side: ...
-# 上面的back、front、side均为不同的摄像头名字，后面的省略号为文档省略的内容，根据实际情况添加
 ```
+
+</TabItem>
+</ConfigTabs>
 
 :::note
 
@@ -76,18 +127,33 @@ cameras:
 
 :::
 
-在配置文件的摄像头部分添加 onvif 配置：
+为摄像头配置 ONVIF 连接以启用 PTZ 控制。
 
-```yaml
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+1. 导航到 <NavPath path="Settings > Camera configuration > ONVIF" /> 并选择你的摄像头。
+   - 将 **ONVIF 主机（ONVIF host）**设置为摄像头的 IP 地址，例如：`10.0.10.10`
+   - 将 **ONVIF 端口（ONVIF port）**设置为摄像头的 ONVIF 端口，例如：`8000`
+   - 将 **ONVIF 用户名（ONVIF username）**设置为摄像头的 ONVIF 用户名，例如：`admin`
+   - 将 **ONVIF 密码（ONVIF password）**设置为摄像头的 ONVIF 密码，例如：`password`
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml {4-8}
 cameras:
-  back: # <- 为名为back的摄像头配置ONVIF
-    ffmpeg: ... # 省略号为文档省略部分，不代表后面没内容
-    onvif: # [!code ++]
-      host: 10.0.10.10 # [!code ++]
-      port: 8000 # [!code ++]
-      user: admin # [!code ++]
-      password: password # [!code ++]
+  back:
+    ffmpeg: ...
+    onvif:
+      host: 10.0.10.10
+      port: 8000
+      user: admin
+      password: password
 ```
+
+</TabItem>
+</ConfigTabs>
 
 如果 ONVIF 连接成功，PTZ 控制将在摄像头的 Web 界面中可用。
 
@@ -106,9 +172,9 @@ cameras:
 
 如果你的 ONVIF 摄像头不需要认证凭据，你可能仍需要为`user`和`password`指定空字符串，例如：`user: ""`和`password: ""`。
 
-需要注意的是，Frigate 只会使用 `ONVIF` 的 `PTZ控制`功能，如果需要使用 ONVIF 的视频流，请使用 go2rtc 进行转流。
-
 :::
+
+如果你的摄像头有多个 ONVIF 配置文件，你可以使用 `profile` 选项指定用于 PTZ 控制的配置文件，按令牌或名称匹配。未设置时，Frigate 会选择第一个具有有效 PTZ 配置的配置文件。查看 Frigate 调试日志（`frigate.ptz.onvif: debug`）以查看摄像头的可用配置文件名称和令牌。
 
 支持视野(FOV)内相对移动的 ONVIF 摄像头还可以配置为自动追踪移动物体并将其保持在画面中央。关于自动追踪的设置，请参阅[自动追踪](autotracking.md)文档。
 
@@ -124,14 +190,16 @@ cameras:
 | Amcrest ASH21                |    ✅    |    ❌    | ONVIF 服务端口: 80                                                                                                                                                                                                         |
 | Amcrest IP4M-S2112EW-AI      |    ✅    |    ❌    | 不支持 FOV 相对移动。                                                                                                                                                                                                      |
 | Amcrest IP5M-1190EW          |    ✅    |    ❌    | ONVIF 端口: 80。不支持 FOV 相对移动。                                                                                                                                                                                      |
-| Annke CZ504                  |    ✅    |    ✅    | 安克（Annke）官方支持提供了专用固件版本（[V5.7.1 build 250227](https://github.com/pierrepinon/annke_cz504/raw/refs/heads/main/digicap_V5-7-1_build_250227.dav)）以修复 ONVIF 协议中"TranslationSpaceFov"参数的兼容性问题。 |
+| Annke CZ504                  |    ✅    |    ✅    | 安克（Annke）官方支持提供了专用固件版本（[V5.7.1 build 250227](https://github.com/pierrepinon/annke_cz504/raw/refs/heads/main/digicap_V5-7-1_build_250227.dav)）以修复 ONVIF "TranslationSpaceFov" 问题 |
 | Axis Q-6155E                 |    ✅    |    ❌    | ONVIF 服务端口：80；该摄像机不支持 MoveStatus 功能。                                                                                                                                                                       |
 | Ctronics PTZ                 |    ✅    |    ❌    |                                                                                                                                                                                                                            |
-| Dahua                        |    ✅    |    ✅    | 据用户反馈，部分低端大华摄像头（尤其是 Lite 系列等入门机型）存在 ​​ 不支持自动追踪功能 ​​ 的情况。                                                                                                                         |
+| Dahua                        |    ✅    |    ✅    | 部分低端大华（lite 系列、picoo 系列等）据报告不支持自动追踪。这些型号通常没有四位数字型号加机箱前缀和选项后缀（例如 DH-P5AE-PV vs DH-SD49825GB-HNR）。 |
 | Dahua DH-SD2A500HB           |    ✅    |    ❌    |                                                                                                                                                                                                                            |
 | Dahua DH-SD49825GB-HNR       |    ✅    |    ✅    |                                                                                                                                                                                                                            |
 | Dahua DH-P5AE-PV             |    ❌    |    ❌    |                                                                                                                                                                                                                            |
+| Foscam                       |    ✅    |    ❌    | 一般支持 PTZ，但不支持相对移动。ONVIF 合规产品数据库中没有官方 ONVIF 认证和测试。                                                                                                                                           |
 | Foscam R5                    |    ✅    |    ❌    |                                                                                                                                                                                                                            |
+| Foscam SD4                   |    ✅    |    ❌    |                                                                                                                                                                                                                            |
 | Hanwha XNP-6550RH            |    ✅    |    ❌    |                                                                                                                                                                                                                            |
 | Hikvision                    |    ✅    |    ❌    | ONVIF 支持不完整(即使是最新固件 MoveStatus 也不会更新) - 在 HWP-N4215IH-DE 和 DS-2DE3304W-DE 型号上报告，但可能还有其他型号                                                                                                |
 | Hikvision DS-2DE3A404IWG-E/W |    ✅    |    ✅    |                                                                                                                                                                                                                            |
@@ -145,24 +213,29 @@ cameras:
 
 ## 设置摄像头分组
 
-:::tip
+摄像头分组让你可以将摄像头组织在一起，使用共享的名称和图标，方便查看和筛选。始终会有一个包含所有摄像头的默认分组。
 
-建议直接在页面上设置摄像头分组。
+<ConfigTabs>
+<TabItem value="图形化配置">
 
-:::
+在实时监控面板上，按下主导航中的**铅笔图标**添加新的摄像头分组。配置分组名称、选择要包含的摄像头、选择图标并设置显示顺序。
 
-摄像头可以分组并分配名称和图标，这样可以一起查看和筛选。始终会有一个包含所有摄像头的默认分组。
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 camera_groups:
-  front: # <- 分组名称，暂时只支持英文数字和下划线
+  front:
     cameras:
-      - driveway_cam # <- 摄像头名称
-      - garage_cam # <- 摄像头名称
+      - driveway_cam
+      - garage_cam
     icon: LuCar
     order: 0
 ```
 
-## 双向通话
+</TabItem>
+</ConfigTabs>
 
-更多信息请查看[向导](./live.md#two-way-talk)
+## 双向音频
+
+请参阅[此处](/configuration/live/#two-way-talk)的指南

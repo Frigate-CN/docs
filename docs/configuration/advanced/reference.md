@@ -11,6 +11,8 @@ title: 完整配置参考
 
 :::
 
+标记为 `# 注意：可以在摄像头级别重写` 的部分可以在全局设置，然后按摄像头调整。有关工作原理，请参见[全局配置与摄像头级配置](../config_overrides.md)。
+
 ```yaml
 mqtt:
   # 可选：启用mqtt服务器（默认值：如下所示）
@@ -159,13 +161,14 @@ model:
   # 有效值为 rgb、bgr 或 yuv（默认值：如下所示）
   input_pixel_format: rgb
   # 必需：物体/目标检测模型输入张量格式
-  # 有效值为 nhwc 或 nchw（默认值：如下所示）
+  # 有效值为 nhwc、nchw、hwnc 或 hwcn（默认值：如下所示）
   input_tensor: nhwc
   # 可选：模型输入张量的数据类型
   # 有效值为 float、float_denorm 或 int（默认值：如下所示）
   input_dtype: int
-  # 必需：物体/目标检测模型类型，目前仅用于OpenVINO检测器
-  # 有效值为 ssd、yolox、yolonas（默认值：如下所示）
+  # 必需：物体/目标检测模型架构，供支持多种
+  # 模型类型的检测器使用（openvino、onnx、rknn、memryx、axengine、synaptics 等）
+  # 有效值为 ssd、yolox、yolonas、yolo-generic、rfdetr、dfine（默认值：如下所示）
   model_type: ssd
   # 必需：标签名称修改。这些会合并到标准标签映射中。
   labelmap:
@@ -423,7 +426,8 @@ review:
     detections: False
     # 可选：行为场景提示词，用于告知大模型哪些行为属于可疑行为、哪些不属于。
     # 提示词务必做到表述直接且内容详尽。默认提示词模板可查阅官方文档。
-    activity_context_prompt: """定义可疑与非可疑行为范畴"""
+    activity_context_prompt: |
+      定义可疑与非可疑行为范畴
     # 可选：大模型的图像来源（默认值：preview）
     # 可选值："preview"（使用缓存的预览帧，分辨率约 180p）或 "recordings"（从录像中提取帧，分辨率 480p）
     # 选择 "recordings" 可获得更高的图像质量，但每张图像会占用更多的 tokens 额度。
@@ -754,7 +758,8 @@ classification:
         cameras:
           camera_name:
             # 必填项：该摄像头画面中用于运行分类功能的图像裁剪区域
-            crop: [0, 180, 220, 400]
+            # [x1, y1, x2, y2] 以 0 到 1 之间的小数表示，相对于检测分辨率
+            crop: [0.0, 0.25, 0.3, 0.85]
         # 可选：是否在裁剪区域检测到移动物体时运行分类（默认值：如下所示）
         motion: False
         # 可选：分类功能的运行时间间隔（单位：秒，默认值：如下所示）
@@ -906,7 +911,9 @@ cameras:
       # 可选：调整摄像头在UI中的排序。数字越大显示越靠后（默认值：如下所示）
       # 默认情况下摄像头按字母顺序排序。
       order: 0
-      # 可选：是否在Frigate UI中显示该摄像头（默认值：如下所示）
+      # 可选：是否在默认的「所有摄像头」实时监控面板中显示该摄像头。
+      # 该摄像头在其他所有地方仍然可用，包括摄像头分组和设置
+      # （默认值：如下所示）
       dashboard: True
 
     # 可选：连接到ONVIF摄像头

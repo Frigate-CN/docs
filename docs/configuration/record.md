@@ -3,10 +3,6 @@ id: record
 title: 录制功能
 ---
 
-import ConfigTabs from "@site/src/components/ConfigTabs";
-import TabItem from "@theme/TabItem";
-import NavPath from "@site/src/components/NavPath";
-
 启用录制功能后，视频将存储在容器的`/media/frigate/recordings`目录下（主机的实际路径为你 Docker 设置挂载`/media/frigate`对应的路径）。录制的文件结构为`YYYY-MM-DD/HH/<摄像头名称>/MM.SS.mp4`（使用 UTC 时间）。这些录制直接从摄像头流写入，不经过重新编码。每个摄像头支持可配置的保留策略。当决定是否删除录制时，Frigate 会选择**录制保留**和**追踪物体/目标**中最大的保留周期值。
 
 新的录制片段会从摄像头流写入缓存，只有符合设置的录制保留策略时才会移动到硬盘存储。

@@ -10,7 +10,7 @@ title: MQTT
 ### `frigate/available`
 
 设计用于作为 Home Assistant 的可用性主题。可能的消息有：
-"online"：Frigate 运行时发布（启动时）
+"online"：在 Frigate 运行并发布其初始状态后发布。请注意，此消息在每次连接到代理时都会发布，因此如果代理重启或连接断开并恢复，它会重新发布，而 Frigate 本身并不会重启。
 "offline"：Frigate 停止后发布
 
 ### `frigate/restart`

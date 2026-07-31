@@ -137,3 +137,7 @@ review:
 核查报告可以通过[API](/integrations/api/generate-review-summary-review-summarize-start-start-ts-end-end-ts-post)请求，方法是将 POST 请求发送到`/api/review/summarize/start/{start_ts}/end/{end_ts}`，其中`start_ts`和`end_ts`是 Unix 时间戳。
 
 对于 Home Assistant 用户，有一个内置服务（`frigate.review_summarize`），可以轻松请求作为自动化或脚本一部分的核查报告。这允许你根据你的特定需求自动生成每日总结、度假报告或自定义时间段报告。
+
+## 故障排除
+
+如果摘要未生成，或生成的摘要不符合预期，请参阅[如何调试 GenAI 问题？](/configuration/genai/genai_config#如何调试-genai-问题)。

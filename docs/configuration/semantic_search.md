@@ -97,6 +97,53 @@ semantic_search:
 
 :::
 
+### GenAI 提供者
+
+Frigate 可以在 GenAI 提供者具有 `embeddings` 角色时，使用该提供者进行语义搜索嵌入。目前，仅 **llama.cpp** 支持多模态嵌入（同时支持文本和图片）。
+
+要使用 llama.cpp 进行语义搜索：
+
+1. 配置一个 `roles` 中包含 `embeddings` 的 GenAI 提供者。
+2. 将语义搜索模型设置为 GenAI 配置键（例如 `default`）。
+3. 使用 `--embeddings` 和 `--mmproj` 启动 llama.cpp 服务器以支持图片。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+导航到 <NavPath path="Settings > Enrichments > Semantic search" />。
+
+| 字段 | 描述 |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **语义搜索模型或 GenAI 提供者名称** | 设置为 GenAI 配置键（例如 `default`），以使用已配置的 GenAI 提供者进行嵌入 |
+
+GenAI 提供者还必须在 <NavPath path="Settings > Enrichments > Generative AI" /> 下配置 `embeddings` 角色。
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+genai:
+  default:
+    provider: llamacpp
+    base_url: http://localhost:8080
+    model: your-model-name
+    roles:
+      - embeddings
+      - descriptions
+      - chat
+
+semantic_search:
+  enabled: True
+  model: default
+```
+
+</TabItem>
+</ConfigTabs>
+
+llama.cpp 服务器必须使用 `--embeddings` 启动以启用嵌入 API，并使用多模态嵌入模型。详细信息请参阅 [llama.cpp 服务器文档](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md)。
+
+:::
+
 ### GPU 加速
 
 CLIP 模型以 ONNX 格式下载，当可用时，`large`模型可以使用 GPU 硬件加速。这取决于使用的 Docker 构建版本。你也可以在安装了多个 GPU 的情况下指定使用特定设备。

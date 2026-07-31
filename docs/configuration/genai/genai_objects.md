@@ -50,9 +50,10 @@ Analyze the sequence of images containing the {label}. Focus on the likely inten
 
 ```yaml
 genai:
-  provider: ollama
-  base_url: http://localhost:11434
-  model: qwen3-vl:8b-instruct
+  my_provider:
+    provider: ollama
+    base_url: http://localhost:11434
+    model: qwen3-vl:8b-instruct
 
 objects:
   genai:
@@ -96,3 +97,7 @@ cameras:
 
 - 千问 - [阿里百炼](https://bailian.console.aliyun.com/)
 - 豆包 - [火山引擎](https://console.volcengine.com/ark)
+
+## 故障排除
+
+如果描述未生成，或生成的描述不符合预期，请参阅[如何调试 GenAI 问题？](/configuration/genai/genai_config#如何调试-genai-问题)。
