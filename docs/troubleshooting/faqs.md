@@ -43,17 +43,17 @@ ffmpeg:
     record: preset-record-generic-audio-aac # [!code ++]
 ```
 
-### 为什么实时监控中没有声音？
+### 为什么实时监控中没有声音？ {#how-can-i-get-sound-in-live-view}
 
 仅当配置了go2rtc时实时监控才能有声音，详见[实时监控文档](../configuration/live.md)。
 
-### 无法在Web界面查看录像
+### 无法在Web界面查看录像 {#i-cant-view-recordings-in-the-web-ui}
 
 请确保摄像头发送的是h264编码视频，或[进行转码](/configuration/restream.md)。
 
 可在Chrome浏览器打开`chrome://media-internals/`页面尝试播放，该页面会显示播放失败的具体原因。
 
-### 摄像头子码流质量不佳怎么办？
+### 摄像头子码流质量不佳怎么办？ {#what-do-i-do-if-my-cameras-sub-stream-is-not-good-enough}
 
 Frigate通常[推荐使用可配置子码流的摄像头](/frigate/hardware.md)。若子码流分辨率不合适，可对主码流进行缩放处理。
 
@@ -64,37 +64,37 @@ Frigate通常[推荐使用可配置子码流的摄像头](/frigate/hardware.md)�
 
 正确配置后，GPU将负责解码和缩放，CPU占用仅小幅增加但效果更佳。
 
-### MJPEG流或快照显示异常绿色画面
+### MJPEG流或快照显示异常绿色画面 {#my-mjpeg-stream-or-snapshots-look-green-and-crazy}
 
 这通常表示摄像头配置的分辨率(width/height)不正确。请使用VLC等播放器确认实际分辨率，并检查宽高值是否颠倒。
 
 ![分辨率不匹配](/img/mismatched-resolution-min.jpg)
 
-### 日志中出现"[mov,mp4,m4a,3gp,3g2,mj2 @ 0x5639eeb6e140] moov atom not found"
+### 日志中出现"[mov,mp4,m4a,3gp,3g2,mj2 @ 0x5639eeb6e140] moov atom not found" {#movmp4m4a3gp3g2mj2-0x5639eeb6e140-moov-atom-not-found}
 
 某些情况下出现此日志信息是正常的。Frigate会在存储前检查录像文件完整性，偶尔这些缓存文件会无效并自动清理。
 
-### 日志中重复出现"On connect called"
+### 日志中重复出现"On connect called" {#mqtt-connected-repeats-in-the-logs}
 
 若日志频繁出现"On connect called"信息，请检查是否有多个Frigate实例。当多个容器使用相同`client_id`连接MQTT时会出现此情况。
 
-### 错误：Database Is Locked
+### 错误：Database Is Locked {#error-database-is-locked}
 
 SQLite在网络共享存储上运行不佳。若`/media`目录映射到网络共享，请按照[此指南](../configuration/advanced/system.md#database)将数据库移至内部存储。
 
-### 无法发布到MQTT：客户端未连接
+### 无法发布到MQTT：客户端未连接 {#unable-to-publish-to-mqtt-client-is-not-connected}
 
 在Docker中使用MQTT时，请使用MQTT服务器的实际IP地址，而非`localhost`、`127.0.0.1`或`mosquitto.ix-mosquitto.svc.cluster.local`。
 
 因为Frigate容器不在host网络模式下运行，localhost指向的是容器自身而非宿主机网络。
 
-### 如何判断摄像头是否离线
+### 如何判断摄像头是否离线 {#how-do-i-know-if-my-camera-is-offline}
 
 可通过MQTT或/api/stats接口检测，离线摄像头的camera_fps会显示为0。
 
 此外，当摄像头离线时，Home Assistant会将其标记为不可用状态。
 
-### 如何不通过Web界面查看Frigate日志？
+### 如何不通过Web界面查看Frigate日志？ {#how-can-i-view-the-frigate-log-files-without-using-the-web-ui}
 
 Frigate既会内部管理日志，也会直接输出到Docker标准输出。通过CLI查看日志的步骤如下：
 
@@ -129,7 +129,7 @@ docker run -d \
   docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
-### RTSP流在VLC中正常播放，但在Frigate配置中使用相同URL却失败，这是bug吗？
+### RTSP流在VLC中正常播放，但在Frigate配置中使用相同URL却失败，这是bug吗？ {#my-rtsp-stream-works-fine-in-vlc-but-it-does-not-work-when-i-put-the-same-url-in-my-frigate-config-is-this-a-bug}
 
 不是。Frigate使用TCP协议连接RTSP流，而VLC会根据网络条件自动切换UDP/TCP协议。VLC能播放而Frigate失败，很可能是因为VLC选择了UDP协议。
 
@@ -138,7 +138,7 @@ TCP能确保数据包有序到达，这对视频录制、解码和流处理至�
 如需使用UDP协议，可通过ffmpeg输入参数或`preset-rtsp-udp`预设配置，详见[ffmpeg预设文档](/configuration/ffmpeg_presets)。
 
 
-### 默认登录密码是什么？/我忘记登录后台密码了怎么办？
+### 默认登录密码是什么？/我忘记登录后台密码了怎么办？ {#frigate-is-slow-to-start-up-with-a-probing-detect-stream-message-in-the-logs}
 在首次安装Frigate的时候，会在日志里生成账号密码，请打开容器日志进行查看。
 
 如果已经重启导致日志丢失的话，有两个方法可以重置密码：
@@ -154,7 +154,7 @@ TCP能确保数据包有序到达，这对视频录制、解码和流处理至�
 
 :::
 
-### 为什么 Frigate 不断为我的停放汽车创建新的被追踪目标？
+### 为什么 Frigate 不断为我的停放汽车创建新的被追踪目标？ {#why-does-frigate-keep-creating-new-tracked-objects-for-my-parked-car}
 
 静止追踪旨在**防止**这种情况：一辆停放的汽车应保持为一个单一的被追踪目标，而不是生成新的目标。如果你不断为同一辆车获得新的被追踪目标，那么 Frigate 很可能丢失了该目标并重新将其检测为新目标。
 
@@ -170,7 +170,7 @@ TCP能确保数据包有序到达，这对视频录制、解码和流处理至�
 
 参见[目标过滤器](../configuration/object_filters.md)了解更多关于调整 `min_score` 和 `threshold` 的信息。注意将它们提得太高会使这个问题更严重。
 
-### 当 Frigate 将某物检测为错误目标时，如何纠正？
+### 当 Frigate 将某物检测为错误目标时，如何纠正？ {#how-do-i-correct-frigate-when-it-detects-something-as-the-wrong-object}
 
 Frigate 的目标检测依赖机器学习[模型](../frigate/glossary.md#model)，而随 Frigate 提供的免费 [COCO 训练](https://cocodataset.org/#explore)模型可能在其未训练的场境中误识别目标。有两种处理方法：
 

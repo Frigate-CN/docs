@@ -5,9 +5,9 @@ title: Home Assistant集成
 
 与Home Assistant集成的最佳方式是使用[官方集成](https://github.com/blakeblackshear/frigate-hass-integration)。
 
-## 安装
+## 安装 {#installation}
 
-### 准备工作
+### 准备工作 {#preparation}
 
 在设置集成之前，必须先安装并运行 Frigate 本身。详情请参阅[安装文档](../frigate/installation.md)。
 
@@ -17,7 +17,7 @@ Frigate集成需要先安装并手动配置`mqtt`集成。
 
 此外，必须在Frigate配置文件中启用MQTT，并且Frigate必须连接到与Home Assistant相同的MQTT服务器，这样集成创建的许多实体才能正常工作。
 
-### 集成安装
+### 集成安装 {#integration-installation}
 
 可通过HACS作为默认仓库获取。安装步骤：
 
@@ -36,19 +36,19 @@ Home Assistant > 设置 > 设备和服务 > 添加集成 > Frigate
 
 注意：你还需要在Home Assistant配置中启用[media_source](https://www.home-assistant.io/integrations/media_source/)才能显示媒体浏览器。
 
-### （可选）Lovelace卡片安装
+### （可选）Lovelace卡片安装 {#optional-lovelace-card-installation}
 
 要安装可选的配套Lovelace卡片，请参见该卡片的[单独安装说明](https://github.com/dermotduffy/frigate-hass-card)。
 
-## 配置
+## 配置 {#configuration}
 
 配置集成时，你需要提供Frigate实例的`URL`，可以指向内部未认证端口（`5000`）或认证端口（`8971`）。URL可能看起来像`http://<host>:5000/`。
 
-### Docker Compose示例
+### Docker Compose示例 {#docker-compose-examples}
 
 如果你在同一设备上使用Docker Compose运行Home Assistant和Frigate，这里有一些示例。
 
-#### Home Assistant使用主机网络运行
+#### Home Assistant使用主机网络运行 {#home-assistant-running-with-host-networking}
 
 不建议在主机网络模式下运行Frigate。在此示例中，配置集成时应使用`http://172.17.0.1:5000`或`http://172.17.0.1:8971`。
 
@@ -67,7 +67,7 @@ services:
       ...
 ```
 
-#### Home Assistant不使用主机网络运行或在单独的compose文件中
+#### Home Assistant不使用主机网络运行或在单独的compose文件中 {#home-assistant-not-running-with-host-networking-or-in-a-separate-compose-file}
 
 在此示例中，建议连接到认证端口，例如配置集成时使用`http://frigate:8971`。无需为Frigate容器映射端口。
 
@@ -97,11 +97,11 @@ services:
 | Frigate Beta               | `http://ccab4aaf-frigate-beta:5000`       |
 | Frigate Beta (完全访问)    | `http://ccab4aaf-frigate-fa-beta:5000`    |
 
-### Frigate在单独的机器上运行
+### Frigate在单独的机器上运行 {#frigate-running-on-a-separate-machine}
 
 如果你在本地网络内的单独设备上运行Frigate，Home Assistant将需要访问端口8971。
 
-#### 本地网络
+#### 本地网络 {#local-network}
 
 使用`http://<frigate_device_ip>:8971`作为集成的URL，以便需要认证。
 
@@ -123,7 +123,7 @@ services:
       ...
 ```
 
-#### Tailscale或其他私有网络
+#### Tailscale或其他私有网络 {#tailscale-or-other-private-networking}
 
 使用`http://<frigate_device_tailscale_ip>:5000`作为集成的URL。
 
@@ -137,7 +137,7 @@ services:
       ...
 ```
 
-## 选项
+## 选项 {#options}
 
 ```
 Home Assistant > 配置 > 集成 > Frigate > 选项
@@ -147,7 +147,7 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | RTSP URL模板      | 用于覆盖标准RTSP流URL的[jinja2](https://jinja.palletsprojects.com/)模板（例如，用于反向代理）。此选项仅对启用了[高级模式](https://www.home-assistant.io/blog/2019/07/17/release-96/#advanced-mode)的用户显示。参见下方的[RTSP流](#rtsp-stream)。                                                                                      |
 
-## 提供的实体
+## 提供的实体 {#entities-provided}
 
 | 平台            | 描述                                                                         |
 | --------------- | ------------------------------------------------------------------------------- |
@@ -157,7 +157,7 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 | `switch`        | 用于切换检测、录制和快照的开关实体                                              |
 | `binary_sensor` | 每个摄像头/区域/对象的"画面变动"二进制传感器实体                                    |
 
-## 媒体浏览器支持
+## 媒体浏览器支持 {#media-browser-support}
 
 该集成提供：
 
@@ -167,7 +167,7 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 
 可以通过Home Assistant左侧菜单面板中的"媒体浏览器"访问。
 
-## 将剪辑投射到媒体设备
+## 将剪辑投射到媒体设备 {#casting-clips-to-media-devices}
 
 该集成支持将剪辑和摄像头流投射到支持的媒体设备。
 
@@ -180,7 +180,7 @@ Home Assistant > 配置 > 集成 > Frigate > 选项
 
 <a name="api"></a>
 
-## 摄像头API
+## 摄像头API {#camera-api}
 
 关闭摄像头（暂停 Frigate 对流的处理；不会在 Frigate 重启后保持；参见[摄像头状态](/configuration/live#camera-state)）：
 
@@ -208,7 +208,7 @@ target:
 :::
 
 
-## 通知API
+## 通知API {#notification-api}
 
 许多人不想将Frigate暴露给网络，因此该集成创建了一些可用于通知的公共API接口。
 
@@ -256,17 +256,17 @@ https://HA_URL/api/frigate/notifications/<review-id>/<camera>/review_thumbnail.w
 
 <a name="streams"></a>
 
-## RTSP流
+## RTSP流 {#rtsp-stream}
 
 为了使实时流能够正常工作，需要在RTSP端口（默认：`8554`）上的`<frigatehost>:8554`访问它们。当查看实时摄像头时，Home Assistant将直接连接到该流媒体端口。
 
-#### RTSP URL模板
+#### RTSP URL模板 {#rtsp-url-template}
 
 对于高级用例，可以使用[RTSP URL模板](#options)选项更改此行为。设置后，此字符串将覆盖从上述默认行为派生的默认流地址。此选项支持[jinja2模板](https://jinja.palletsprojects.com/)，并且有来自[Frigate API](/integrations/api/frigate-http-api)的`camera`字典变量可用于模板。注意，模板中没有Home Assistant状态可用，只有来自Frigate的摄像头字典。
 
 当Frigate位于反向代理后面，和/或当默认流端口因其他原因（例如防火墙规则）无法访问Home Assistant时，这可能很有用。
 
-###### RTSP URL模板示例
+###### RTSP URL模板示例 {#rtsp-url-template-examples}
 
 使用不同的端口号：
 
@@ -286,11 +286,11 @@ rtsp://<frigate_host>:2000/{{ name }}
 rtsp://<frigate_host>:2000/{{ name|lower }}
 ```
 
-## 多实例支持
+## 多实例支持 {#multiple-instance-support}
 
 Frigate集成无缝支持使用多个Frigate服务器。
 
-### 多实例要求
+### 多实例要求 {#requirements-for-multiple-instances}
 
 为了使多个Frigate实例正常工作，每个服务器必须设置不同的`topic_prefix`和`client_id`参数。
 有关如何设置这些参数，请参见[MQTT配置](mqtt)。
@@ -307,16 +307,16 @@ https://HA_URL/api/frigate/<client-id>/notifications/<event-id>/thumbnail.jpg
 https://HA_URL/api/frigate/<client-id>/clips/front_door-1624599978.427826-976jaa.mp4
 ```
 
-#### 默认处理
+#### 默认处理 {#default-treatment}
 
 配置单个Frigate实例时，URL/标识符中不需要指定`client-id`参数 - 假定使用该单个实例。配置多个Frigate实例时，用户**必须**明确指定他们要引用哪个服务器。
 
-## 常见问题
+## 常见问题 {#faq}
 
-#### 如果我检测多个对象，如何在HomeKit中将正确的`binary_sensor`分配给摄像头？
+#### 如果我检测多个对象，如何在HomeKit中将正确的`binary_sensor`分配给摄像头？ {#if-i-am-detecting-multiple-objects-how-do-i-assign-the-correct-binarysensor-to-the-camera-in-homekit}
 
 [HomeKit集成](https://www.home-assistant.io/integrations/homekit/)随机链接Home Assistant中与摄像头设备分组的二进制传感器（画面变动传感器实体）之一。你可以在Home Assistant的[HomeKit配置](https://www.home-assistant.io/integrations/homekit/#linked_motion_sensor)中为每个摄像头指定`linked_motion_sensor`。
 
-#### 我基于占用传感器设置了自动化。有时传感器打开时自动化运行了，但当我查看Frigate时找不到触发传感器的对象。这是bug吗？
+#### 我基于占用传感器设置了自动化。有时传感器打开时自动化运行了，但当我查看Frigate时找不到触发传感器的对象。这是bug吗？ {#i-have-set-up-automations-based-on-the-occupancy-sensors-sometimes-the-automation-runs-because-the-sensors-are-turned-on-but-then-i-look-at-frigate-i-cant-find-the-object-that-triggered-the-sensor-is-this-a-bug}
 
 不是。占用传感器的检查较少，因为它们通常用于需要尽可能低延迟的事情，如开灯。因此这些传感器有时会被误报触发。如果你想要误报过滤，应该使用`frigate/events`或`frigate/reviews`主题上的mqtt传感器。

@@ -7,7 +7,7 @@ Frigate 可以为每个检测到的对象保存快照图片到`/media/frigate/cl
 
 快照是捕捉追踪目标最佳时刻的单张静止图像——即 Frigate 在场景中跟随该目标时看到的最清晰帧。与连续视频的[录制](./record.md)不同，快照是每个追踪目标在追踪结束后保存的一张代表性图像。
 
-启用快照后，Frigate 会为每个追踪目标保存一张图像到 `/media/frigate/clips`，命名为 `<camera>-<id>-clean.webp`。干净图像始终无任何标注（无时间戳、边界框或裁剪）地存储，因此你拥有原始帧的未修改副本。边界框和时间戳等标注在通过 [HTTP API](/integrations/api/event-snapshot-events-event-id-snapshot-jpg-get.api.mdx) 请求快照时按需应用——参见下文[渲染](#干净快照)。
+启用快照后，Frigate 会为每个追踪目标保存一张图像到 `/media/frigate/clips`，命名为 `<camera>-<id>-clean.webp`。干净图像始终无任何标注（无时间戳、边界框或裁剪）地存储，因此你拥有原始帧的未修改副本。边界框和时间戳等标注在通过 [HTTP API](/integrations/api/event-snapshot-events-event-id-snapshot-jpg-get.api.mdx) 请求快照时按需应用——参见下文[渲染](#rendering)。
 
 几点需要注意：
 
@@ -17,13 +17,13 @@ Frigate 可以为每个检测到的对象保存快照图片到`/media/frigate/cl
 - 如果只想保存进入特定区域的对象的快照，请参阅[区域文档](./zones.md#restricting-snapshots-to-specific-zones)中的相关说明。
 - 通过 MQTT 发送的快照配置可以在[配置文件](https://docs.frigate.video/configuration/)中的`cameras -> your_camera -> mqtt`部分设置。
 
-## 帧选择
+## 帧选择 {#frame-selection}
 
 Frigate 不会保存每一帧 —— 它会为每个被跟踪的对象选择一个"最佳"帧，并将其用于快照和干净快照。当对象在帧之间被跟踪时，Frigate 会根据检测置信度、对象大小以及是否存在面部或车牌等关键属性，持续评估当前帧是否优于之前的最佳帧。对象触及画面边缘的帧会被降低优先级。跟踪结束后，快照会使用被确定为最佳的帧写入磁盘。
 
 MQTT 快照发布频率更高 —— 在跟踪期间每次发现更好的缩略图帧时，或者当前最佳图像超过 `best_image_timeout`（默认：60秒）时发布。这些使用在 `cameras -> your_camera -> mqtt` 下配置的独立标注设置。
 
-## 干净快照
+## 干净快照 {#rendering}
 
 Frigate 可以为每个事件生成最多两个快照文件，分别用于不同的场景：
 

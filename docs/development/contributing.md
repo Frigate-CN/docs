@@ -3,9 +3,9 @@ id: contributing
 title: 向主代码库贡献代码
 ---
 
-## 获取源代码
+## 获取源代码 {#getting-the-source}
 
-### 核心、Web界面、Docker和文档
+### 核心、Web界面、Docker和文档 {#core-web-docker-and-documentation}
 
 这个仓库包含了主要的Frigate应用程序及其所有依赖项。
 
@@ -13,9 +13,9 @@ title: 向主代码库贡献代码
 
 从这里，按照以下指南进行操作：
 
-- [核心](#核心)
-- [Web界面](#web界面)
-- [文档](#文档)
+- [核心](#core)
+- [Web界面](#web-interface)
+- [文档](#documentation)
 
 ### Frigate Home Assistant App
 
@@ -23,15 +23,15 @@ title: 向主代码库贡献代码
 
 将[blakeblackshear/frigate-hass-addons](https://github.com/blakeblackshear/frigate-hass-addons)复制到你自己的GitHub账户，然后将复制的仓库克隆到你的本地机器。
 
-### Frigate Home Assistant集成
+### Frigate Home Assistant集成 {#frigate-home-assistant-integration}
 
 这个仓库包含了自定义集成，可以让你的Home Assistant安装自动为Frigate实例创建实体，无论你是将Frigate作为独立的Docker容器运行还是作为[Home Assistant App](#frigate-home-assistant-app)运行。
 
 将[blakeblackshear/frigate-hass-integration](https://github.com/blakeblackshear/frigate-hass-integration)复制到你自己的GitHub账户，然后将复制的仓库克隆到你的本地机器。
 
-## 核心
+## 核心 {#core}
 
-### 前提条件
+### 前提条件 {#prerequisites}
 
 - GNU make
 - Docker (包括buildx插件)
@@ -43,9 +43,9 @@ title: 向主代码库贡献代码
 
 :::
 
-### 设置
+### 设置 {#setup}
 
-#### 1. 使用Visual Studio Code打开仓库
+#### 1. 使用Visual Studio Code打开仓库 {#1-open-the-repo-with-visual-studio-code}
 
 打开后，你应该在VSCode右下收到在远程容器中打开项目的提示。
 ![VSCode提醒](/img/dev-container.png)
@@ -78,7 +78,7 @@ services:
 ```
 :::
 
-#### 2. 修改本地配置文件以进行测试
+#### 2. 修改本地配置文件以进行测试 {#2-modify-your-local-config-file-for-testing}
 
 将文件放在仓库根目录的`config/config.yml`中。
 
@@ -100,11 +100,11 @@ cameras:
 
 这些输入参数告诉ffmpeg以无限循环方式读取mp4文件。你可以在这里使用任何有效的ffmpeg输入。
 
-#### 3. 收集一些mp4文件用于测试
+#### 3. 收集一些mp4文件用于测试 {#3-gather-some-mp4-files-for-testing}
 
 在仓库根目录创建一个`debug`文件夹并放入这些文件。如果你启用了录制功能，录制的文件也会保存在这里。更新上面步骤2中的配置以指向正确的文件。你可以查看仓库中的`docker-compose.yml`文件来了解卷的映射方式。
 
-#### 4. 从命令行运行Frigate
+#### 4. 从命令行运行Frigate {#4-run-frigate-from-the-command-line}
 
 VS Code会为你启动Docker Compose文件并打开一个连接到`frigate-dev`的终端窗口。
 
@@ -112,13 +112,13 @@ VS Code会为你启动Docker Compose文件并打开一个连接到`frigate-dev`�
 - 运行`python3 -m frigate`启动后端。
 - 在VS Code的另一个终端窗口中，切换到`web`目录并运行`npm install && npm run dev`启动前端。
 
-#### 5. 清理
+#### 5. 清理 {#5-teardown}
 
 关闭VS Code后，可能仍有容器在运行。要关闭所有内容，只需运行`docker-compose down -v`来清理所有容器。
 
-### 测试
+### 测试 {#testing}
 
-#### 单元测试
+#### 单元测试 {#unit-tests}
 
 GitHub 会在新的 PR 上执行单元测试。你必须确保所有测试通过。
 
@@ -126,7 +126,7 @@ GitHub 会在新的 PR 上执行单元测试。你必须确保所有测试通过
 python3 -u -m unittest
 ```
 
-#### FFMPEG硬件加速
+#### FFMPEG硬件加速 {#ffmpeg-hardware-acceleration}
 
 以下命令在容器内部使用，以确保硬件加速正常工作。
 
@@ -162,7 +162,7 @@ ffmpeg -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 -hwaccel_output_format
 ffmpeg -c:v h264_qsv -re -stream_loop -1 -i https://streams.videolan.org/ffmpeg/incoming/720p60.mp4 -f rawvideo -pix_fmt yuv420p pipe: > /dev/null
 ```
 
-### 提交 Pull Request
+### 提交 Pull Request {#submitting-a-pull-request}
 
 代码必须经过格式化、lint 检查和类型测试。GitHub 会在 PR 上运行这些检查，因此建议你在提交前先运行它们。
 
@@ -184,40 +184,40 @@ ruff check frigate migrations docker *.py
 python3 -u -m mypy --config-file frigate/mypy.ini frigate
 ```
 
-## Web界面
+## Web界面 {#web-interface}
 
-### 前提条件
+### 前提条件 {#prerequisites-1}
 
 - 所有[核心](#core)前提条件 _或_ 另一个本地可用的运行中的Frigate实例
 - Node.js 20
 
-### 进行更改
+### 进行更改 {#making-changes}
 
-#### 1. 设置Frigate实例
+#### 1. 设置Frigate实例 {#1-set-up-a-frigate-instance}
 
 Web UI需要一个Frigate实例来交互以获取所有数据。你可以在本地运行一个实例(推荐)或连接到网络上可访问的独立实例。
 
 要运行本地实例，请按照[核心](#core)开发说明进行操作。
 
-如果你不会对Frigate HTTP API进行任何更改，可以将web开发服务器连接到网络上的任何Frigate实例。跳过这一步，直接转到[3a](#3a-针对非本地实例运行开发服务器)。
+如果你不会对Frigate HTTP API进行任何更改，可以将web开发服务器连接到网络上的任何Frigate实例。跳过这一步，直接转到[3a](#3a-run-the-development-server-against-a-non-local-instance)。
 
-#### 2. 安装依赖项
+#### 2. 安装依赖项 {#2-install-dependencies}
 
 ```console
 cd web && npm install
 ```
 
-#### 3. 运行开发服务器
+#### 3. 运行开发服务器 {#3-run-the-development-server}
 
 ```console
 cd web && npm run dev
 ```
 
-##### 3a. 针对非本地实例运行开发服务器
+##### 3a. 针对非本地实例运行开发服务器 {#3a-run-the-development-server-against-a-non-local-instance}
 
 要针对非本地实例运行开发服务器，你需要将`vite.config.ts`中的`localhost`值替换为非本地后端服务器的IP地址。
 
-#### 4. 进行更改
+#### 4. 进行更改 {#4-making-changes}
 
 Web UI使用[Vite](https://vitejs.dev/)、[Preact](https://preactjs.com)和[Tailwind CSS](https://tailwindcss.com)构建。
 
@@ -240,21 +240,21 @@ npm run test
 
 - 在不同浏览器中测试。Firefox、Chrome和Safari都有使它们成为独特目标的不同特性。
 
-## 文档
+## 文档 {#documentation}
 
-### 前提条件
+### 前提条件 {#prerequisites-2}
 
 - Node.js 20
 
-### 进行更改
+### 进行更改 {#making-changes-1}
 
-#### 1. 安装
+#### 1. 安装 {#1-installation}
 
 ```console
 cd docs && npm install
 ```
 
-#### 2. 本地开发
+#### 2. 本地开发 {#2-local-development}
 
 ```console
 npm run start
@@ -264,7 +264,7 @@ npm run start
 
 文档使用[Docusaurus v3](https://docusaurus.io)构建。请参阅Docusaurus文档以获取有关如何修改Frigate文档的更多信息。
 
-#### 3. 构建(可选)
+#### 3. 构建(可选) {#3-build-optional}
 
 ```console
 npm run build
@@ -272,7 +272,7 @@ npm run build
 
 此命令将静态内容生成到`build`目录中，可以使用任何静态内容托管服务来提供服务。
 
-## 官方构建
+## 官方构建 {#official-builds}
 
 设置buildx进行多架构构建
 
@@ -284,7 +284,7 @@ docker buildx inspect builder --bootstrap
 make push
 ```
 
-## 其他
+## 其他 {#other}
 
 ### Nginx
 
@@ -294,7 +294,7 @@ make push
 sudo cp docker/main/rootfs/usr/local/nginx/conf/* /usr/local/nginx/conf/ && sudo /usr/local/nginx/sbin/nginx -s reload
 ```
 
-## 贡献Web UI的翻译
+## 贡献Web UI的翻译 {#contributing-translations-of-the-web-ui}
 
 Frigate使用[Weblate](https://weblate.org)来管理Web UI的翻译。要贡献翻译，请在Weblate注册一个账户并导航到Frigate NVR项目：
 

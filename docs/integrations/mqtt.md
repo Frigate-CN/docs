@@ -5,7 +5,7 @@ title: MQTT
 
 这些是 Frigate 生成的 MQTT 消息。默认的 topic_prefix 是 `frigate`，但可以在配置文件中更改。
 
-## 通用 Frigate 主题
+## 通用 Frigate 主题 {#general-frigate-topics}
 
 ### `frigate/available`
 
@@ -122,7 +122,7 @@ title: MQTT
 
 为被追踪目标元数据的更新发布的消息，例如：
 
-#### 生成式 AI 描述更新
+#### 生成式 AI 描述更新 {#generative-ai-description-update}
 
 ```json
 {
@@ -132,7 +132,7 @@ title: MQTT
 }
 ```
 
-#### 人脸识别更新
+#### 人脸识别更新 {#face-recognition-update}
 
 ```json
 {
@@ -145,7 +145,7 @@ title: MQTT
 }
 ```
 
-#### 车牌识别更新
+#### 车牌识别更新 {#license-plate-recognition-update}
 
 ```json
 {
@@ -159,7 +159,7 @@ title: MQTT
 }
 ```
 
-#### 目标分类更新
+#### 目标分类更新 {#object-classification-update}
 
 当 [目标分类](/configuration/custom_classification/object_classification) 对分类结果达成共识时发布的消息。
 
@@ -278,7 +278,7 @@ title: MQTT
 
 包含通知当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
-## Frigate 摄像机主题
+## Frigate 摄像机主题 {#frigate-camera-topics}
 
 ### `frigate/<camera_name>/status/<role>`
 

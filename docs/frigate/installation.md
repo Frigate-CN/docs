@@ -308,7 +308,7 @@ MemryX MX3 加速卡采用 M.2 2280 规格（与 NVMe 固态硬盘尺寸一致�
 - 香橙派 5 Plus/Max
 - 多盘位 M.2 PCIe 扩展板
 
-#### 安装 {#installation-1}
+#### 安装 {#installation-2}
 
 如需为你的设备完成 MX3 硬件初始化配置，请参考 [硬件安装指南](https://developer.memryx.com/2p1/get_started/install_hardware.html)。
 
@@ -325,7 +325,7 @@ MemryX MX3 加速卡采用 M.2 2280 规格（与 NVMe 固态硬盘尺寸一致�
 
 :::
 
-#### 设置 {#setup-1}
+#### 设置 {#setup-2}
 
 按照默认安装说明设置 Frigate，例如：`docker.cnb.cool/frigate-cn/frigate:stable`
 
@@ -374,7 +374,7 @@ volumes:
 
 </DetailsCollapse>
 
-#### 配置 {#configuration-1}
+#### 配置 {#configuration-2}
 
 最后，配置[硬件目标检测](/configuration/object_detectors#memryx-mx3)以完成设置。
 
@@ -393,7 +393,7 @@ RKNPU driver: v0.9.2 # 或更高版本
 
 如果你的开发板受支持，推荐使用 [Armbian](https://www.armbian.com/download/?arch=aarch64)。
 
-#### 设置 {#setup-2}
+#### 设置 {#setup-3}
 
 按照 Frigate 的默认安装说明进行操作，但使用带有 `-rk` 后缀的 Docker 镜像，例如 `docker.cnb.cool/frigate-cn/frigate:stable-rk`。
 
@@ -427,7 +427,7 @@ volumes:
 --volume /sys/:/sys/:ro
 ```
 
-#### 配置 {#configuration-2}
+#### 配置 {#configuration-3}
 
 接下来，你应该配置[硬件目标检测](/configuration/object_detectors#rockchip-platform)和[硬件视频处理](/configuration/hardware_acceleration_video#rockchip-platform)。
 
@@ -435,7 +435,7 @@ volumes:
 
 - SL1680
 
-#### 设置 {#setup-3}
+#### 设置 {#setup-4}
 
 按照 Frigate 的默认安装说明进行操作，但使用带有 `-synaptics` 后缀的 Docker 镜像，例如 `docker.cnb.cool/frigate-cn/frigate:stable-synaptics`。
 
@@ -458,7 +458,7 @@ devices:
 --device /dev/video1
 ```
 
-#### 配置 {#configuration-3}
+#### 配置 {#configuration-4}
 
 接下来，你应该配置[硬件目标检测](/configuration/object_detectors#synaptics)和[硬件视频处理](/configuration/hardware_acceleration_video#synaptics)。
 
@@ -466,7 +466,7 @@ devices:
 
 AXERA 加速器采用 M.2 外形尺寸，兼容树莓派和香橙派。该外形尺寸也在 x86 平台上成功测试，是各种计算环境的通用选择。
 
-#### 安装 {#installation-2}
+#### 安装 {#installation-3}
 
 使用 AXERA 加速器需要安装 AXCL 驱动程序。我们提供了一个便捷的 Linux 脚本来完成此安装。
 
@@ -476,7 +476,7 @@ AXERA 加速器采用 M.2 外形尺寸，兼容树莓派和香橙派。该外形
 2. 执行命令赋予脚本执行权限：`sudo chmod +x user_installation.sh`
 3. 运行脚本：`./user_installation.sh`
 
-#### 设置 {#setup-4}
+#### 设置 {#setup-5}
 
 按照默认安装说明设置 Frigate，例如：`docker.cnb.cool/frigate-cn/frigate:stable`
 
@@ -494,7 +494,7 @@ volumes:
 
 如果你使用 `docker run`，请在命令中添加此选项：`--device /dev/axcl_host --device /dev/ax_mmb_dev --device /dev/msg_userdev`
 
-#### 配置 {#configuration-4}
+#### 配置 {#configuration-5}
 
 最后，配置[硬件目标检测](/configuration/object_detectors#axera)以完成设置。
 
@@ -743,7 +743,7 @@ macOS 上的 Docker 容器可通过 [Docker Desktop](https://docs.docker.com/des
 
 若要让 Frigate 调用 Apple Silicon 的神经引擎/处理单元（NPU），主机必须运行 [Apple Silicon Detector](../configuration/object_detectors.md#apple-silicon-detector)（需在 Docker 外部的主机环境中运行）。
 
-#### Docker Compose 配置示例
+#### Docker Compose 配置示例 {#docker-compose-example}
 
 ```yaml
 services:

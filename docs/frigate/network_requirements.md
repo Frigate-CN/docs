@@ -7,7 +7,7 @@ title: 网络要求
 
 Frigate 设计为本地运行，核心功能不需要持久的互联网连接。但某些功能在初始设置或持续运行中需要互联网访问。本页面描述哪些功能连接互联网、何时连接以及如何控制。
 
-## Frigate 如何使用互联网
+## Frigate 如何使用互联网 {#how-frigate-uses-the-internet}
 
 Frigate 的互联网使用分为三类：
 
@@ -21,7 +21,7 @@ Frigate 的互联网使用分为三类：
 
 :::
 
-## 一次性模型下载
+## 一次性模型下载 {#one-time-model-downloads}
 
 以下模型在首次启用其关联功能时自动下载。一旦缓存在 `/config/model_cache/` 中，不再需要互联网。
 
@@ -34,7 +34,7 @@ Frigate 的互联网使用分为三类：
 | [自定义分类](/configuration/custom_classification/state_classification)（训练） | MobileNetV2 ImageNet 基础权重 | Google 存储 |
 | [音频转写](/configuration/advanced/system) | Whisper 或 Sherpa-ONNX 流媒体模型 | HuggingFace / OpenAI |
 
-### 硬件特定检测器模型
+### 硬件特定检测器模型 {#hardware-specific-detector-models}
 
 如果你使用以下硬件检测器之一且未提供自己的模型文件，将在首次启动时下载默认模型：
 
@@ -50,7 +50,7 @@ Frigate 的互联网使用分为三类：
 
 :::
 
-### 阻止模型下载
+### 阻止模型下载 {#preventing-model-downloads}
 
 如果你已下载所有所需模型并希望阻止 Frigate 尝试任何出站连接，设置以下环境变量：
 
@@ -66,7 +66,7 @@ environment:
 
 :::
 
-### 镜像支持
+### 镜像支持 {#mirror-support}
 
 如果你的 Frigate 实例有受限的互联网访问，可以使用环境变量将模型下载指向内部镜像：
 
@@ -79,7 +79,7 @@ environment:
 
 > **中国大陆用户**：我们提供了国内下载加速镜像，详见[通过 Docker 安装](/frigate/installation.md#docker)教程中的 `environment` 配置。
 
-## 可选的云服务
+## 可选的云服务 {#optional-cloud-services}
 
 以下功能在正常操作期间连接到外部服务，活动时需要互联网。
 
@@ -89,7 +89,7 @@ environment:
 
 详见 [Frigate+](/integrations/plus)。
 
-### 生成式 AI
+### 生成式 AI {#generative-ai}
 
 | 提供商 | 是否需要互联网 |
 | --- | --- |
@@ -99,7 +99,7 @@ environment:
 | Ollama | 通常本地，可为远程 |
 | llama.cpp | 不需要 |
 
-### 版本检查
+### 版本检查 {#version-check}
 
 启动时查询 `https://api.github.com`。可禁用：
 
@@ -108,7 +108,7 @@ telemetry:
   version_check: false
 ```
 
-### 推送通知
+### 推送通知 {#push-notifications}
 
 需要 Frigate 服务器到浏览器厂商推送服务的互联网访问。
 
@@ -116,7 +116,7 @@ telemetry:
 
 如果配置了 MQTT 代理，通常为局域网连接；云托管 MQTT 需要互联网。
 
-## 不需要互联网的功能
+## 不需要互联网的功能 {#what-does-not-require-internet}
 
 - **目标检测**：CPU、EdgeTPU、OpenVINO 模型已打包。
 - **录制和回放**：全部本地。
@@ -125,7 +125,7 @@ telemetry:
 - **自定义分类推理**：训练后完全本地。
 - **音频检测**：YAMNet 模型已打包。
 
-## 离线运行 Frigate
+## 离线运行 Frigate {#running-frigate-offline}
 
 1. **预下载模型**：在线启动一次，模型缓存到 `/config/model_cache/`。
 2. **禁用版本检查**：`telemetry.version_check: false`。

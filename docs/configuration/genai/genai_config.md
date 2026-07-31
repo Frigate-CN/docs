@@ -12,24 +12,41 @@ title: 配置生成式 AI
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-1. 导航到 <NavPath path="Settings > Enrichments > Generative AI" />。
-   - 点击**添加（Add）**并输入**提供者名称（Provider name）**。接受字母、数字、连字符和下划线的任意名称，但创建后无法从界面更改。
-   - 将**提供者（Provider）**设置为你使用的服务（例如 `ollama`）
-   - 根据提供者要求设置**基础 URL（Base URL）**、**API 密钥（API key）**和**模型（Model）**
-   - 设置**角色（Roles）**为该提供者应处理的角色。
+<FrigateConfigMock
+  section="genai"
+  level="global"
+  :show-navigation-steps="false"
+  :values="{
+    'my_provider.provider': 'ollama',
+    'my_provider.base_url': 'http://localhost:11434',
+    'my_provider.model': 'qwen3-vl:4b',
+    'my_provider.roles': ['descriptions', 'embeddings', 'chat'],
+  }"
+  :targets="[
+    { field: 'my_provider.provider', hint: '将 **提供商** 设置为你使用的服务（例如 ollama）。' },
+    { field: 'my_provider.api_key', hint: '部分提供商需要填写 **API 密钥**（也可通过环境变量设置）。' },
+    { field: 'my_provider.base_url', hint: '根据提供者要求设置 **基础 URL**，例如 Ollama 本地实例地址。' },
+    { field: 'my_provider.model', hint: '设置用于生成描述或摘要的 **模型**。' },
+    { field: 'my_provider.roles', hint: '设置 **功能** 为该提供者应处理的角色（描述、嵌入、对话）。' },
+  ]"
+/>
 
-2. 然后配置使用该提供者的具体功能（核查描述、目标描述等）。
+:::tip 提供者名称
+`my_provider` 是你自定义的提供者名称，接受字母、数字、连字符和下划线，但创建后无法从界面更改。导航路径：<NavPath path="设置 > 增强功能 > 生成式 AI" />。
+:::
+
+然后配置使用该提供者的具体功能（核查描述、目标描述等）。
 
 </TabItem>
 <TabItem value="YAML配置文件">
 
 ```yaml
 genai:
-  my_provider: # 任意你喜欢的名称
-    provider: ollama
+  my_provider: # [!code highlight]
+    provider: ollama # [!code highlight]
     base_url: http://localhost:11434
     model: qwen3-vl:4b
-    roles:
+    roles: # [!code highlight]
       - descriptions
       - embeddings
       - chat
@@ -40,24 +57,24 @@ genai:
 
 ## 常见问题
 
-### 如何调试 GenAI 问题？
+### 如何调试生成式 AI 问题？
 
 Frigate 的生成式 AI 功能是分别配置和启用的。[核查描述与摘要](/configuration/genai/genai_review)位于 `review.genai` 下，[目标描述](/configuration/genai/genai_objects)位于 `objects.genai` 下。在本页面配置提供者并不会启用任一功能，启用一个也不意味着启用了另一个。确定哪个功能不起作用，然后按以下步骤排查。
 
 1. 确认提供者可用并拥有 `descriptions` 角色。
-   - 核查描述、核查摘要和目标描述都使用在 <NavPath path="Settings > Enrichments > Generative AI > Roles" />（`genai.<provider>.roles`）中分配了 `descriptions` 角色的提供者。
+   - 核查描述、核查总结和目标描述都使用在 <NavPath path="设置 > 增强功能 > 生成式 AI > 功能" />（`genai.<provider>.roles`）中分配了 `descriptions` 角色的提供者。
    - 提供者在其某个角色第一次实际使用时才会被联系。持有语义搜索 `embeddings` 角色的提供者在启动时初始化，而 `descriptions` 提供者直到第一次描述请求时才初始化，这可能远在启动之后。
-   - 在 <NavPath path="Settings > Enrichments > Generative AI" /> 中，使用模型字段旁的**刷新模型（Refresh models）**。它会查询提供者的模型列表，是验证基础 URL、API 密钥以及 Frigate 与提供者之间网络路径是否正确的快速方法。
+   - 在 <NavPath path="设置 > 增强功能 > 生成式 AI" /> 中，使用模型字段旁的 **刷新模型列表**。它会查询提供者的模型列表，是验证基础 URL、API 密钥以及 Frigate 与提供者之间网络路径是否正确的快速方法。
 
 2. 确认你期望的功能实际已启用。
-   - 目标描述默认禁用。在全局或每个摄像头下打开 <NavPath path="Settings > Global configuration > Objects > GenAI object config > Enable GenAI" />（`objects.genai.enabled`）。这是自定义提示看起来被忽略而核查摘要仍在生成的最常见原因。
-   - 核查描述默认禁用。打开 <NavPath path="Settings > Global configuration > Review > GenAI config > Enable GenAI descriptions" />（`review.genai.enabled`）。一旦启用，警报默认会被描述，但检测不会，因此仅检测的核查项永远不会获得摘要，除非**启用 GenAI 检测（Enable GenAI for detections）**（`review.genai.detections`）也开启。
+   - 目标描述默认禁用。在全局或每个摄像头下打开 <NavPath path="设置 > 全局配置 > 目标 > 生成式 AI 目标配置 > 开启生成式 AI" />（`objects.genai.enabled`）。这是自定义提示看起来被忽略而核查总结仍在生成的最常见原因。
+   - 核查描述默认禁用。打开 <NavPath path="设置 > 全局配置 > 核查 > 生成式 AI 配置 > 开启生成式 AI 描述" />（`review.genai.enabled`）。一旦启用，警报默认会被描述，但检测不会，因此仅检测的核查项永远不会获得摘要，除非 **为检测开启生成式 AI**（`review.genai.detections`）也开启。
 
 3. 如果目标描述从未被请求，检查跳过生成的过滤器。
-   - <NavPath path="Settings > Global configuration > Objects > GenAI object config > GenAI objects" />（`objects.genai.objects`）限制生成到特定标签，**必需区域（Required zones）**（`objects.genai.required_zones`）要求目标进入其中一个区域。如果设置了但未匹配，Frigate 会静默跳过请求。
+   - <NavPath path="设置 > 全局配置 > 目标 > 生成式 AI 目标配置 > 生成式 AI 目标" />（`objects.genai.objects`）限制生成到特定标签，**必需区域**（`objects.genai.required_zones`）要求目标进入其中一个区域。如果设置了但未匹配，Frigate 会静默跳过请求。
    - 缩略图仅在目标移动时收集。提前静止的目标贡献的帧更少。
-   - **使用快照（Use snapshots）**（`objects.genai.use_snapshot`）要求为摄像头启用快照。如果无法读取快照，Frigate 会记录 `Cannot load snapshot for <id>, file not found` 且不生成描述。
-   - **结束发送（Send on end）**（`objects.genai.send_triggers.tracked_object_end`）默认开启。如果你关闭了它而使用**提前 GenAI 触发器（Early GenAI trigger）**（`objects.genai.send_triggers.after_significant_updates`），描述仅在该更新次数达到后才被请求。
+   - **使用快照**（`objects.genai.use_snapshot`）要求为摄像头启用快照。如果无法读取快照，Frigate 会记录 `Cannot load snapshot for <id>, file not found` 且不生成描述。
+   - **结束时发送**（`objects.genai.send_triggers.tracked_object_end`）默认开启。如果你关闭了它而使用 **生成式 AI 提前触发**（`objects.genai.send_triggers.after_significant_updates`），描述仅在该更新次数达到后才被请求。
 
 4. 启用调试日志查看 Frigate 实际在做什么。此更改后重启 Frigate。下一步也需要重启，所以同时开启两者以避免重启两次。
 
@@ -73,11 +90,11 @@ Frigate 的生成式 AI 功能是分别配置和启用的。[核查描述与摘�
    ```
 
 5. 保存发送给提供者的确切图像和提示词。
-   - 为正在调试的功能开启**保存缩略图（Save thumbnails）**（`review.genai.debug_save_thumbnails` 或 `objects.genai.debug_save_thumbnails`）。两个功能都写入 `/media/frigate/clips/genai-requests/`，这些文件仅限管理员访问。
+   - 为正在调试的功能开启 **保存缩略图**（`review.genai.debug_save_thumbnails` 或 `objects.genai.debug_save_thumbnails`）。两个功能都写入 `/media/frigate/clips/genai-requests/`，这些文件仅限管理员访问。
    - 核查描述写入 `genai-requests/<review_id>/`，包含发送的编号帧，以及 `prompt.txt` 和 `response.txt`（包含确切的提示词和原始、未解析的模型响应）。
-   - 核查摘要报告写入 `genai-requests/<start_ts>-<end_ts>/prompt.txt` 和 `response.txt`。不涉及图像，因为报告汇总现有的核查描述。
+   - 核查总结报告写入 `genai-requests/<start_ts>-<end_ts>/prompt.txt` 和 `response.txt`。不涉及图像，因为报告汇总现有的核查描述。
    - 目标描述写入 `genai-requests/<event_id>/`，包含编号的缩略图。目标描述的提示词不写入文件，仅在步骤 4 的调试日志中可见。
-   - 在责怪模型之前先查看保存的图像。如果目标很小、模糊或在画面外，再好的提示词也无法修复结果。对于目标描述，考虑开启**使用快照**（`objects.genai.use_snapshot`）发送更高质量的图像。对于核查项，考虑将**核查图像源（Review image source）**（`review.genai.image_source`）设置为 `recordings` 以获取 480p 帧，而不是较低分辨率的预览帧。
+   - 在责怪模型之前先查看保存的图像。如果目标很小、模糊或在画面外，再好的提示词也无法修复结果。对于目标描述，考虑开启 **使用快照**（`objects.genai.use_snapshot`）发送更高质量的图像。对于核查项，考虑将 **核查图像来源**（`review.genai.image_source`）设置为 `recordings` 以获取 480p 帧，而不是较低分辨率的预览帧。
 
 <ConfigTabs>
 <TabItem value="图形化配置">
@@ -87,7 +104,7 @@ Frigate 的生成式 AI 功能是分别配置和启用的。[核查描述与摘�
   section="review"
   focus="genai.debug_save_thumbnails"
   :values="{ 'genai.debug_save_thumbnails': true }"
-  hint="开启保存缩略图以调试核查描述。对于目标描述，同样在 Objects > GenAI object config > Save thumbnails 中开启。"
+  hint="开启保存缩略图以调试核查描述。对于目标描述，同样在 对象 > 生成式 AI 目标配置 > 保存缩略图 中开启。"
 />
 
 </TabItem>
@@ -111,13 +128,13 @@ objects:
 </ConfigTabs>
 
 6. 验证提示词是否如你所想。
-   - 目标描述提示词是你直接控制的。摄像头级别的 <NavPath path="Settings > Camera configuration > Objects > GenAI object config > Caption prompt" />（`objects.genai.prompt`）覆盖全局的，**目标提示词（Object prompts）**（`objects.genai.object_prompts`）中某个标签的条目会覆盖该标签的两者。只有 `{label}`、`{sub_label}` 和 `{camera}` 会被替换。
-   - 核查描述提示词由 Frigate 构建并请求结构化 JSON 响应，因此不可完全替换。你控制的部分是 <NavPath path="Settings > Global configuration > Review > GenAI config > Activity context prompt" />（`review.genai.activity_context_prompt`）和**额外关注事项（Additional concerns）**（`review.genai.additional_concerns`）。保持活动上下文提示词通用，因为过于具体的规则会影响模型的威胁级别评分。
+   - 目标描述提示词是你直接控制的。摄像头级别的 <NavPath path="设置 > 摄像头设置 > 目标 > 生成式 AI 目标配置 > 字幕提示" />（`objects.genai.prompt`）覆盖全局的，**目标提示**（`objects.genai.object_prompts`）中某个标签的条目会覆盖该标签的两者。只有 `{label}`、`{sub_label}` 和 `{camera}` 会被替换。
+   - 核查描述提示词由 Frigate 构建并请求结构化 JSON 响应，因此不可完全替换。你控制的部分是 <NavPath path="设置 > 全局配置 > 核查 > 生成式 AI 配置 > 活动上下文提示" />（`review.genai.activity_context_prompt`）和 **额外关注事项**（`review.genai.additional_concerns`）。保持活动上下文提示词通用，因为过于具体的规则会影响模型的威胁级别评分。
 
 7. 如果描述生成但结果不佳或不一致，检查模型和上下文窗口。
-   - 空字段、缺失 `shortSummary` 值或 `Failed to parse review description` 错误通常意味着模型未遵循请求的 JSON 结构。较小的模型在结构化输出方面有困难。尝试更大的参数量或[推荐模型](#推荐本地模型)之一。
-   - Frigate 根据提供者报告的上下文大小计算要发送多少帧。如果你的服务器报告的值与实际运行的值不同，帧将被截断或请求失败。通过在 <NavPath path="Settings > Enrichments > Generative AI > Provider options" />（`genai.<provider>.provider_options`）中添加 `context_size` 来固定该值，对于 Ollama 还确认 `options.num_ctx` 与配置的上下文匹配。
-   - 在 <NavPath path="System metrics > Enrichments" /> 中查看**核查描述速度（Review Description Speed）**和**目标描述速度（Object Description Speed）**。如果推理需要数十秒，请求会相互排队，描述会看似停止。对于 Ollama，检查 `OLLAMA_NUM_PARALLEL`、`OLLAMA_MAX_QUEUE` 和 `OLLAMA_MAX_LOADED_MODELS`，确保 Frigate 的并发请求按预期处理。
+   - 空字段、缺失 `shortSummary` 值或 `Failed to parse review description` 错误通常意味着模型未遵循请求的 JSON 结构。较小的模型在结构化输出方面有困难。尝试更大的参数量或[推荐模型](#recommended-local-models)之一。
+   - Frigate 根据提供者报告的上下文大小计算要发送多少帧。如果你的服务器报告的值与实际运行的值不同，帧将被截断或请求失败。通过在 <NavPath path="设置 > 增强功能 > 生成式 AI > 提供商选项" />（`genai.<provider>.provider_options`）中添加 `context_size` 来固定该值，对于 Ollama 还确认 `options.num_ctx` 与配置的上下文匹配。
+   - 在 <NavPath path="系统指标 > 增强功能" /> 中查看 **核查总结速度** 和 **目标描述速度**。如果推理需要数十秒，请求会相互排队，描述会看似停止。对于 Ollama，检查 `OLLAMA_NUM_PARALLEL`、`OLLAMA_MAX_QUEUE` 和 `OLLAMA_MAX_LOADED_MODELS`，确保 Frigate 的并发请求按预期处理。
 
 本页面的例子都使用 `my_provider`，但名称是任意的，仅用于在配置的其他地方引用该提供者（例如 `semantic_search.model`）。
 
@@ -165,12 +182,12 @@ objects:
 
 ### 模型类型：指令型与思考型 {#model-types-instruct-vs-thinking}
 
-视觉-语言模型有**指令型（instruct）**变体（经过微调以遵循指令并简洁回复）、**思考型（thinking）**变体（经过微调用于自由格式、推测性推理）以及支持按请求切换两种模式的**混合型（hybrid）**变体。大多数现代视觉-语言模型都是混合型的。
+视觉-语言模型有 **指令型（instruct）** 变体（经过微调以遵循指令并简洁回复）、 **思考型（thinking）** 变体（经过微调用于自由格式、推测性推理）以及支持按请求切换两种模式的 **混合型（hybrid）** 变体。大多数现代视觉-语言模型都是混合型的。
 
 Frigate 会按任务自动管理推理模式：
 
-- **描述任务**（目标描述、核查描述、核查摘要）仅涉及综合生成，受益于简洁、直接的输出，因此当模型支持按请求切换时，Frigate 会在这些调用中禁用思考模式。
-- **聊天**功能允许你在配置的模型支持时，从编辑器中切换思考模式的开启或关闭。
+- **描述任务**（目标描述、核查描述、核查总结）仅涉及综合生成，受益于简洁、直接的输出，因此当模型支持按请求切换时，Frigate 会在这些调用中禁用思考模式。
+- **聊天** 功能允许你在配置的模型支持时，从编辑器中切换思考模式的开启或关闭。
 
 你可以在 Frigate 中使用纯指令型、混合型或支持思考型的模型——无需额外配置即可为描述禁用思考模式。
 
@@ -352,7 +369,7 @@ OpenAI 没有为其 API 提供免费等级。随着 gpt-4o 的发布，价格已
 
 :::warning
 
-请注意，如果你的摄像头位于公共领域（例如过道）等会检测过多目标的地方，过多的目标可能会很快耗尽你的资源包。请**务必不要开启**后付费模式！
+请注意，如果你的摄像头位于公共领域（例如过道）等会检测过多目标的地方，过多的目标可能会很快耗尽你的资源包。请 **务必不要开启** 后付费模式！
 
 :::
 
@@ -362,7 +379,7 @@ OpenAI 没有为其 API 提供免费等级。随着 gpt-4o 的发布，价格已
 
 :::note
 
-如果你选择国内兼容 OpenAI API 的大模型提供商，请注意选择支持**图生文**的模型。例如腾讯云的 `hunyuan-vision` 模型。DeepSeek 官方目前未提供其图生文 [`DeepSeek-VL2`](https://github.com/deepseek-ai/DeepSeek-VL2) 模型的 API，但可以在第三方服务商处获取由他们部署的版本。
+如果你选择国内兼容 OpenAI API 的大模型提供商，请注意选择支持 **图生文** 的模型。例如腾讯云的 `hunyuan-vision` 模型。DeepSeek 官方目前未提供其图生文 [`DeepSeek-VL2`](https://github.com/deepseek-ai/DeepSeek-VL2) 模型的 API，但可以在第三方服务商处获取由他们部署的版本。
 
 :::
 
@@ -382,7 +399,7 @@ genai:
 
 :::note
 
-要使用兼容 OpenAI API 的其他服务商（例如阿里云和腾讯云等国内云厂商），需要设置**环境变量** `OPENAI_BASE_URL` 为你的服务商的 API 端点。
+要使用兼容 OpenAI API 的其他服务商（例如阿里云和腾讯云等国内云厂商），需要设置 **环境变量** `OPENAI_BASE_URL` 为你的服务商的 API 端点。
 
 例如腾讯云请设置为 `https://api.hunyuan.cloud.tencent.com/v1`
 

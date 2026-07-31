@@ -5,7 +5,7 @@ title: 内存占用
 
 Frigate 内置了基于 [memray](https://bloomberg.github.io/memray/) 的内存分析功能，可用于排查内存相关问题。该功能支持对 Frigate 指定模块进行内存分析，从而定位内存泄漏、内存过度分配或其他内存异常问题。
 
-## 开启内存分析功能
+## 开启内存分析功能 {#enabling-memory-profiling}
 
 内存分析功能由环境变量 `FRIGATE_MEMRAY_MODULES` 控制。将该变量的值设为需要分析的模块名称列表，多个模块名称用英文逗号分隔即可：
 
@@ -25,7 +25,7 @@ docker run -e FRIGATE_MEMRAY_MODULES="frigate.embeddings" \
    --name frigate <frigate_image>
 ```
 
-### 模块名称说明
+### 模块名称说明 {#module-names}
 
 Frigate 的各类进程均采用基于模块的命名规则。常用的模块名称如下：
 
@@ -45,7 +45,7 @@ FRIGATE_MEMRAY_MODULES=frigate.capture:front_door
 
 当你填写某一模块名（如 `frigate.capture`）时，所有以此模块名作为前缀的进程都会被纳入分析范围。例如，配置 `frigate.capture` 会对所有摄像头的视频采集进程进行内存分析。
 
-## 工作原理
+## 工作原理 {#how-it-works}
 
 1. **二进制文件生成**：开启内存分析后，memray 会在 `/config/memray_reports/` 目录下生成二进制文件（`.bin` 格式），该文件会随着进程的运行实时、持续更新数据。
 
@@ -56,12 +56,12 @@ FRIGATE_MEMRAY_MODULES=frigate.capture:front_door
 
 3. **崩溃数据留存**：若进程发生崩溃（如触发 SIGKILL 信号、程序段错误等），对应的二进制文件会被完整保留，文件内包含进程崩溃前的所有内存数据。你可以基于该二进制文件手动生成 HTML 分析报告。
 
-## 查看分析报告
+## 查看分析报告 {#viewing-reports}
 
-### 自动生成的报告
+### 自动生成的报告 {#automatic-reports}
 当进程正常退出后，你可在 `/config/memray_reports/` 目录中找到对应的 HTML 报告文件。直接在浏览器中打开该文件，即可查看交互式火焰图，直观展示内存占用的变化规律。
 
-### 手动生成报告
+### 手动生成报告 {#manual-report-generation}
 若进程发生崩溃，或需要基于已有的二进制文件生成报告，可通过以下方式手动创建 HTML 分析报告：
 
 - 在 Frigate 容器内执行 memray 命令：
@@ -77,7 +77,7 @@ docker cp <容器名称或容器ID>:/config/memray_reports/<module_name>.bin /tm
 memray flamegraph /tmp/<module_name>.bin
 ```
 
-## 报告解读
+## 报告解读 {#understanding-the-reports}
 
 memray 生成的火焰图可展示以下核心信息：
 - **内存分配时序**：查看代码中内存分配的具体位置
@@ -91,7 +91,7 @@ memray 生成的火焰图可展示以下核心信息：
 - 查看内存分配的详细数据
 - 导出报告数据用于深度分析
 
-## 最佳实践
+## 最佳实践 {#best-practices}
 
 1. **按需开启分析**：仅在出现内存异常问题时开启该功能，无需长期启用，内存分析会产生少量性能开销。
 2. **精准指定模块**：无需对所有模块进行分析，仅针对你怀疑存在问题的模块开启即可。
@@ -99,20 +99,20 @@ memray 生成的火焰图可展示以下核心信息：
 4. **检查二进制文件**：若 HTML 报告未自动生成（如进程崩溃后），请前往 `/config/memray_reports/` 目录检查是否存在 `.bin` 文件，并基于该文件手动生成报告。
 5. **对比多份报告**：在不同时间节点生成分析报告，对比内存占用规律，以此识别内存变化趋势。
 
-## 故障排查
+## 故障排查 {#troubleshooting}
 
-### 未生成任何分析报告
+### 未生成任何分析报告 {#no-reports-generated}
 - 检查环境变量的配置是否正确
 - 确认填写的模块名称完全匹配（名称区分大小写）
 - 查看日志中是否存在 memray 相关报错信息
 - 确保 `/config/memray_reports/` 目录已创建且具备写入权限
 
-### 进程崩溃，未完成报告生成
+### 进程崩溃，未完成报告生成 {#process-crashed-before-report-generation}
 - 前往 `/config/memray_reports/` 目录查找对应的 `.bin` 文件
 - 执行命令手动生成 HTML 报告：`memray flamegraph <file>.bin`
 - 该二进制文件中包含了进程崩溃前的全部内存数据
 
-### 报告中无任何数据
+### 报告中无任何数据 {#reports-show-no-data}
 - 确认进程已运行足够长的时间，能够生成有效分析数据
 - 检查 memray 是否已正常安装（Frigate 镜像中已默认集成）
 - 核实目标进程是否成功启动并正常运行（查看进程日志）

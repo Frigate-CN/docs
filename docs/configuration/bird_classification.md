@@ -5,15 +5,15 @@ title: 鸟类识别功能 <Badge type="tip" text="0.16.0 和 以上版本" />
 
 鸟类识别功能使用量化Tensorflow模型识别已知鸟类品种。当识别到已知鸟类时，其通用名称将作为`sub_label`(子标签)添加。该信息会显示在用户界面、过滤器以及通知中。
 
-## 最低系统要求
+## 最低系统要求 {#minimum-system-requirements}
 
 鸟类识别在CPU上运行轻量级tflite模型，系统要求与运行Frigate本身无显著差异。
 
-## 识别模型
+## 识别模型 {#model}
 
 使用的分类模型是MobileNet INat鸟类识别模型，[可识别物种列表见此](https://raw.githubusercontent.com/google-coral/test_data/master/inat_bird_labels.txt)。
 
-## 基础配置
+## 基础配置 {#configuration}
 
 鸟类识别功能默认禁用，需在配置文件中启用。此为全局配置选项。
 
@@ -23,7 +23,7 @@ classification:
     enabled: true  # 启用鸟类识别
 ```
 
-## 高级配置选项
+## 高级配置选项 {#advanced-configuration}
 
 可通过以下参数微调识别精度：
 

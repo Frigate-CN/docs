@@ -5,11 +5,11 @@ title: Frigate 配置
 
 Frigate 可以通过**设置界面**或直接编辑 YAML 配置文件来配置。推荐使用设置界面——它提供验证和引导式体验，覆盖所有配置选项。
 
-## 使用设置界面
+## 使用设置界面 {#using-the-settings-ui}
 
 设置界面将每个配置选项分组到左侧菜单中列出的各个部分。每个部分都提供带验证的引导式表单，因此你无需记住 YAML 的结构或手动查找选项名称。
 
-### 全局配置与摄像头级配置
+### 全局配置与摄像头级配置 {#global-vs-camera-level-configuration}
 
 设置分为两个范围：
 
@@ -25,7 +25,7 @@ Frigate 可以通过**设置界面**或直接编辑 YAML 配置文件来配置�
 
 重置会要求确认，且一旦应用不可撤销。
 
-### 保存更改和全部保存按钮
+### 保存更改和全部保存按钮 {#saving-changes-and-the-save-all-button}
 
 编辑在你保存之前不会应用。一旦你更改了值，界面会将其跟踪为待保存更改：
 
@@ -34,13 +34,13 @@ Frigate 可以通过**设置界面**或直接编辑 YAML 配置文件来配置�
 
 由于待保存更改可能跨越多个部分——以及多个摄像头——页眉提供了**全部保存**按钮，可一次性写入所有待保存更改。旁边的**查看待保存更改**会打开一个摘要，列出每个待保存编辑及其范围（全局或特定摄像头）、受影响的字段和新值，以便你在提交前确认将要写入的内容。**全部撤销**会放弃所有部分的待保存更改。
 
-### 需要重启的指示器
+### 需要重启的指示器 {#restart-required-indicators}
 
 大多数设置会立即生效，但有些需要重启 Frigate 才能应用。需要重启的字段会在字段标签旁边标记一个小重启图标和**需要重启**提示。
 
 当你保存涉及这些字段的更改时，Frigate 会确认保存并提醒你需要重启（例如，_"设置已成功保存。重启 Frigate 以应用你的更改。"_）。通知包含一键**重启 Frigate**操作，让你可以立即应用更改，也可以继续编辑稍后重启。
 
-### 摄像头配置菜单中的彩色圆点
+### 摄像头配置菜单中的彩色圆点 {#the-colored-dots-in-the-camera-configuration-menu}
 
 当你在设置 > 摄像头配置下工作时，菜单中部分名称旁可能出现小彩色圆点。它们为你提供所选摄像头该部分状态的一览摘要：
 
@@ -50,7 +50,7 @@ Frigate 可以通过**设置界面**或直接编辑 YAML 配置文件来配置�
 
 将鼠标悬停在任何圆点上可查看描述其含义的提示。打开部分可查看具体覆盖了哪些字段——部分标题会指出有多少字段与全局（或基础）配置不同。
 
-## 配置文件位置
+## 配置文件位置 {#configuration-file-location}
 
 对于偏好直接编辑 YAML 配置文件的用户，建议从最小配置开始，按照[本指南](../guides/getting_started.md)中的描述添加内容。
 
@@ -83,11 +83,11 @@ cameras:
 
 例如，如果你正在运行标准 App 变体并使用[VS Code App](https://github.com/hassio-addons/addon-vscode)浏览文件，你可以点击*文件* > *打开文件夹...*并导航到`/addon_configs/ccab4aaf_frigate`来访问 Frigate 的`/config`目录并编辑`config.yaml`文件。你也可以使用 Frigate UI 中内置的文件编辑器来编辑配置文件。
 
-## VS Code 配置模式
+## VS Code 配置模式 {#vs-code-configuration-schema}
 
 VS Code 支持 JSON 模式来自动验证配置文件。你可以通过在配置文件开头添加`# yaml-language-server: $schema=http://frigate_host:5000/api/config/schema.json`来启用此功能。将`frigate_host`替换为你的 Frigate 服务器的 IP 地址或主机名。如果你同时使用 VS Code 和 Frigate 作为 App，你应该使用`ccab4aaf-frigate`。当从另一台机器上的 VS Code 访问配置时，确保暴露内部未认证端口`5000`。
 
-## 环境变量替换
+## 环境变量替换 {#environment-variable-substitution}
 
 Frigate 仅在[参考配置](./advanced/reference.md)中特别指出的地方支持使用以`FRIGATE_`开头的环境变量。例如，以下值可以在运行时通过使用环境变量替换：
 
@@ -127,7 +127,7 @@ genai:
 
 以下是一些常见的入门配置示例。有关所有配置值的详细信息，请参阅[参考配置](./advanced/reference.md)。
 
-### 带 USB Coral 的树莓派 Home Assistant App
+### 带 USB Coral 的树莓派 Home Assistant App {#raspberry-pi-home-assistant-app-with-usb-coral}
 
 - 单个摄像头，720p，5fps 检测流
 - MQTT 连接到 Home Assistant Mosquitto App
@@ -186,7 +186,7 @@ cameras:
         - 0.000,0.427,0.002,0.000,0.999,0.000,0.999,0.781,0.885,0.456,0.700,0.424,0.701,0.311,0.507,0.294,0.453,0.347,0.451,0.400
 ```
 
-### 带 USB Coral 的独立 Intel 迷你 PC
+### 带 USB Coral 的独立 Intel 迷你 PC {#standalone-intel-mini-pc-with-usb-coral}
 
 - 单个摄像头，720p，5fps 检测流
 - MQTT 禁用（未与 home assistant 集成）
@@ -243,7 +243,7 @@ cameras:
         - 0.000,0.427,0.002,0.000,0.999,0.000,0.999,0.781,0.885,0.456,0.700,0.424,0.701,0.311,0.507,0.294,0.453,0.347,0.451,0.400
 ```
 
-### 带 OpenVino 的 Home Assistant 集成 Intel 迷你 PC
+### 带 OpenVino 的 Home Assistant 集成 Intel 迷你 PC {#home-assistant-integrated-intel-mini-pc-with-openvino}
 
 - 单个摄像头，720p，5fps 检测流
 - MQTT 连接到与 home assistant 相同的 mqtt 服务器

@@ -13,21 +13,21 @@ title: 入门指南
 
 :::
 
-## 硬件设置
+## 硬件设置 {#setting-up-hardware}
 
 本节将指导你如何在服务器上安装 Debian Bookworm 并安装 Docker。
 
-### 安装 Debian 12 (Bookworm)
+### 安装 Debian 12 (Bookworm) {#install-debian-12-bookworm}
 
 关于如何安装 Debian 服务器有很多指南，所以这里只提供简略指南。将临时显示器和键盘连接到你的设备，以便安装一个没有桌面环境的最小化服务器。
 
-#### 准备安装媒介
+#### 准备安装媒介 {#prepare-installation-media}
 
 1. 从[Debian 网站](https://www.debian.org/distrib/netinst)下载小型安装镜像
 1. 将 ISO 写入 USB 设备（推荐使用[balena Etcher](https://etcher.balena.io/)工具）
 1. 从 USB 启动你的设备
 
-#### 安装并设置 Debian 以进行远程访问
+#### 安装并设置 Debian 以进行远程访问 {#install-and-setup-debian-for-remote-access}
 
 1. 确保你的设备已连接到网络，以便可以安装更新和软件
 1. 如果没有连接鼠标，选择非图形化安装选项，但两种安装方式都可以正常工作
@@ -49,7 +49,7 @@ title: 入门指南
 
 此时，你可以将设备安装到永久位置。剩余步骤可以通过 SSH 从另一台设备完成。如果你没有 SSH 客户端，可以安装[Visual Studio Code 文档](https://code.visualstudio.com/docs/remote/troubleshooting#_installing-a-supported-ssh-client)中列出的选项之一。
 
-#### 通过 SSH 完成设置
+#### 通过 SSH 完成设置 {#finish-setup-via-ssh}
 
 1. 通过 SSH 连接并使用安装时创建的非 root 用户登录
 1. 设置无密码 sudo，这样就不用每次执行 sudo 命令时都输入密码（将下面命令中的`blake`改为你的用户名）
@@ -73,7 +73,7 @@ title: 入门指南
 
 现在你有了一个需要很少维护的最小化 Debian 服务器。
 
-### 安装 Docker
+### 安装 Docker {#install-docker}
 
 1. 使用[官方文档](https://docs.docker.com/engine/install/debian/)安装 Docker Engine（不是 Docker Desktop）
    1. 具体来说，按照[使用 apt 仓库安装](https://docs.docker.com/engine/install/debian/#install-using-the-repository)部分的步骤操作
@@ -83,7 +83,7 @@ title: 入门指南
 
 本节展示如何在 Debian 上为 Docker 安装创建最小目录结构。如果你已经通过 Home Assistant App 或其他方式安装了 Frigate，可以继续[配置 Frigate](#configuring-frigate)部分。
 
-### 设置目录
+### 设置目录 {#setup-directories}
 
 如果配置文件在初始启动时不存在，Frigate 将创建一个配置文件。以下目录结构是开始所需的最低要求。一旦 Frigate 运行起来，你可以使用内置的配置编辑器，它支持配置验证。
 
@@ -150,15 +150,15 @@ services:
 
 本节假设你已经按照[安装](/frigate/installation)中的说明设置了环境。你还应该根据[摄像头设置指南](/frigate/camera_setup)配置你的摄像头。特别注意选择检测分辨率的部分。
 
-### 步骤 1：启动 Frigate
+### 步骤 1：启动 Frigate {#step-1-start-frigate}
 
 此时你应该能够启动 Frigate，基本配置将自动创建。
 
-### 步骤 2：添加摄像头
+### 步骤 2：添加摄像头 {#step-2-add-a-camera}
 
-点击 <NavPath path="Settings > Global configuration > Camera management" /> 中的 **Add Camera** 按钮，使用摄像头设置向导将你的第一个摄像头添加到 Frigate 中。有关每个步骤的详细说明，请参见[使用添加摄像头向导添加摄像头](../configuration/cameras.md#使用添加摄像头向导添加摄像头)。
+点击 <NavPath path="设置 > 全局配置 > 摄像头管理" /> 中的 **Add Camera** 按钮，使用摄像头设置向导将你的第一个摄像头添加到 Frigate 中。有关每个步骤的详细说明，请参见[使用添加摄像头向导添加摄像头](../configuration/cameras.md#使用添加摄像头向导添加摄像头)。
 
-### 步骤 3：配置硬件加速（推荐）
+### 步骤 3：配置硬件加速（推荐） {#step-3-configure-hardware-acceleration-recommended}
 
 现在你已经有了一个工作正常的摄像头配置，你需要设置硬件加速以**减少解码视频流所需的 CPU**。查看[硬件加速](../configuration/hardware_acceleration_video.md)配置参考，了解适用于你的硬件的示例。
 
@@ -200,7 +200,7 @@ cameras:
 
 :::
 
-### 步骤 4：配置检测器
+### 步骤 4：配置检测器 {#step-4-configure-detectors}
 
 默认情况下，Frigate 将使用单个 CPU 检测器。
 
@@ -276,7 +276,7 @@ cameras:
 
 重启 Frigate，你应该就能开始看到人（`person`）的检测结果。如果你想追踪其他目标/物体，可以阅读[检测的目标/物体配置](/configuration/objects)添加其他追踪的目标/物体。
 
-### 步骤 5：设置画面变动遮罩
+### 步骤 5：设置画面变动遮罩 {#step-5-setup-motion-masks}
 
 现在你已经优化了解码视频流的配置，你需要检查在哪里实现画面变动遮罩。你可以直接在设置页面的`遮罩/ 区域`选项卡中来设置遮罩。更多关于遮罩的信息可以在[这里](../configuration/masks.md)找到。
 
@@ -309,7 +309,7 @@ cameras:
         - 0,461,3,0,1919,0,1919,843,1699,492,1344,458,1346,336,973,317,869,375,866,432 # [!code ++] [!code focus]
 ```
 
-### 步骤 6：启用录制
+### 步骤 6：启用录制 {#step-6-enable-recordings}
 
 为了在 Frigate 页面中查看事件和回放，需要启用录制。
 
@@ -359,14 +359,14 @@ cameras:
 
 默认情况下，Frigate 会保留所有追踪目标的视频 10 天。完整的录制选项可以在[这里](/configuration/record)找到。
 
-### 步骤 7：完整配置
+### 步骤 7：完整配置 {#step-7-complete-config}
 
 此时你已经有了一个具有基本功能的完整配置。
 
 - 查看[常见配置示例](../configuration/config.md#common-configuration-examples)获取常见配置示例列表。
 - 查看[完整配置参考](../configuration/advanced/reference.md)获取完整的配置选项列表。
 
-### 后续步骤
+### 后续步骤 {#follow-up}
 
 现在你已经有了一个可工作的安装，你可以使用以下文档了解其他功能：
 

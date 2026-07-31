@@ -175,7 +175,7 @@ face_recognition:
 
 ## 常见问题 {#faq}
 
-### 让识别开始工作
+### 让识别开始工作 {#getting-recognition-working}
 
 ::: collapse 如何调试人脸识别问题？
 请从[使用方法](#usage)说明章节开始，并重新阅读上方[模型要求](#model-requirements)的说明。
@@ -217,7 +217,7 @@ face_recognition:
 3. 运动清晰度比额外像素重要得多，过度压缩和运动模糊对结果的影响比分辨率更大。
 :::
 
-### 提高准确性和训练
+### 提高准确性和训练 {#improving-accuracy-and-training}
 
 ::: collapse 模糊的画面会影响检测效果吗？
 检测精度确实会随着摄像头/视频流质量的提升而改善。
@@ -274,7 +274,7 @@ face_recognition:
 Frigate 会考虑每个人物目标的所有识别尝试的分数。分数会根据人脸区域持续加权，只有当一个人物被持续自信地识别时，才会为其分配子标签。这避免了单次高置信度识别影响结果的情况。
 :::
 
-### 兼容性和维护
+### 兼容性和维护 {#compatibility-and-maintenance}
 
 ::: collapse 可以同时使用其他人脸识别软件(如 DoubleTake)和内置的人脸识别吗？
 不可以，使用其他人脸识别服务会干扰 Frigate 内置的人脸识别。当使用 double-take 时，如果还希望使用内置的人脸识别功能，必须禁用 sub_label 功能。

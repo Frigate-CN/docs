@@ -23,7 +23,7 @@ Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到
 - 可通过浏览中的**更多筛选项**菜单进行过滤
 - 通过 MQTT 主题`frigate/events`发布，作为`car`追踪目标的`sub_label`(已知)或`recognized_license_plate`(未知)
 
-## 模型要求
+## 模型要求 {#model-requirements}
 
 - 如果你的**目标/物体检测模型**（例如收费的 **Frigate+** 模型或者其他自己训练的模型）支持检测车牌（`license_plate`），则应该在[追踪标签列表](/plus/index#label-attributes)中添加`license_plate`标签；可以是全局设置或针对特定摄像头设置。这将提高车牌识别模型的准确性和性能。
 
@@ -37,15 +37,15 @@ Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到
 
 :::note
 
-在默认模式下，Frigate 的车牌识别需要先检测到车辆（`car`）后才能识别车牌。如果你使用**专业的车牌识别摄像头**并且画面会放大到无法检测出车辆（`car`）的程度，也可以运行车牌识别，但配置参数与默认模式不同。详见下文[专用 LPR 摄像头](#专用lpr摄像头)部分。
+在默认模式下，Frigate 的车牌识别需要先检测到车辆（`car`）后才能识别车牌。如果你使用**专业的车牌识别摄像头**并且画面会放大到无法检测出车辆（`car`）的程度，也可以运行车牌识别，但配置参数与默认模式不同。详见下文[专用 LPR 摄像头](#dedicated-lpr-cameras)部分。
 
 :::
 
-## 最低系统要求
+## 最低系统要求 {#minimum-system-requirements}
 
 车牌识别功能通过在你的系统本地运行 AI 模型实现。其中 `YOLOv9` 车牌检测模型和 `OCR` 识别模型（[PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)）均为轻量化设计，可根据你的系统配置选择在 `CPU` 或 `GPU` 上运行。该功能至少需要 `4GB` 内存支持，且 CPU 需支持 AVX + AVX2 指令集。
 
-## 配置
+## 配置 {#configuration}
 
 车牌识别默认禁用，使用前必须先启用。
 
@@ -99,11 +99,11 @@ cameras:
 
 与其他实时处理视频流的功能一样，车牌识别运行在配置了`detect`功能（`roles`）的摄像头流上。为确保最佳性能，请在摄像头固件中选择适合你场景和需求的分辨率。
 
-## 高级配置
+## 高级配置 {#advanced-configuration}
 
 在配置文件的全局层级下使用这些可选参数来微调车牌识别功能。需注意的是，只有部分参数（如：`enabled`、`min_area`和`enhancement`）能够在摄像头级别下设置。
 
-### 检测
+### 检测 {#detection}
 
 <ConfigTabs>
 <TabItem value="图形化配置">
@@ -158,7 +158,7 @@ lpr:
   - 大型模型（`large`）只能识别拉丁字符。模型使用增强的文本检测器，能更准确地找到车牌上的文字，但比`small`模型更慢。
   - 如果你的国家或地区不使用多行车牌，应使用小型模型（`small`），因为它在单行车牌上的性能要好得多。
 
-### 识别
+### 识别 {#recognition}
 
 <ConfigTabs>
 <TabItem value="图形化配置">
@@ -252,7 +252,7 @@ lpr:
   - 例如设置`match_distance: 1`允许车牌`ABCDE`匹配`ABCBE`或`ABCD`
   - 此参数不适用于定义为正则表达式的已知车牌。要使用`match_distance`，应在`known_plates`中定义车牌的完整字符串
 
-### 图像增强
+### 图像增强 {#image-enhancement}
 
 <ConfigTabs>
 <TabItem value="图形化配置">
@@ -285,7 +285,7 @@ lpr:
   - 如果在多个摄像头上运行车牌识别，最好在摄像头级别下单独调整此设置
   - 如果 Frigate 已能正确识别车牌，保持此设置为默认值`0`。但如果经常遇到字符问题或车牌识别不完整，而你自己能够轻松认出车牌，可尝试从 5 开始逐步增加此值。你应使用`debug_save_plates`配置选项，观察不同增强级别对车牌的影响（见下文）
 
-### 归一化规则
+### 归一化规则 {#normalization-rules}
 
 - **`replace_rules`**：用于归一化检测到的车牌的正则替换规则列表。这些规则会按顺序依次应用，并且在指定 `format` 正则之前执行。每条规则必须包含：`pattern`（可以是字符串或正则表达式）以及`replacement`（字符串，也支持 [backrefs](https://docs.python.org/3/library/re.html#re.sub)，例如 `\1`）。这些规则可用于处理常见的 OCR 问题，如噪声字符、分隔符或易混淆字符（例如将 `'O'` 替换为 `'0'`）。
 
@@ -337,7 +337,7 @@ lpr:
 - 规则所做的任何改动都会打印到 LPR 调试日志中。
 - **小贴士**：你可以使用 regex101.com 等工具测试正则表达式模式。
 
-### 调试
+### 调试 {#debugging}
 
 <ConfigTabs>
 <TabItem value="图形化配置">
@@ -368,7 +368,7 @@ lpr:
   - 这些保存的图像不是完整车牌而是检测到的文字区域。文字检测模型有时会在车牌上找到多个文字区域是正常的。用它们分析 Frigate 识别了什么文字以及图像增强如何影响检测
   - 注意: Frigate **不会自动删除**这些调试图像。一旦车牌识别正常运行，应禁用此选项并手动删除保存的文件以释放存储空间
 
-## 配置示例
+## 配置示例 {#configuration-examples}
 
 这些配置参数可在配置的全局层级使用。唯一应在摄像头级别设置的可选参数是`enabled`、`min_area`和`enhancement`。
 
@@ -454,7 +454,7 @@ cameras:
 
 :::
 
-## 专用 LPR 摄像头
+## 专用 LPR 摄像头 {#dedicated-lpr-cameras}
 
 专用 LPR 摄像头是具有强大光学变焦的单用途摄像头，用于捕捉远处车辆的车牌，通常具有精细调校的设置以在夜间捕捉车牌。
 
@@ -466,7 +466,7 @@ Frigate 的车牌识别（LPR）专用模式专为窄视角摄像头优化设计
 
 用户可根据是否使用 Frigate+(或原生`license_plate`检测)模型以两种不同方式配置 Frigate 的专用 LPR 模式：
 
-### 使用 Frigate+（或能支持车牌检测的）目标检测模型
+### 使用 Frigate+（或能支持车牌检测的）目标检测模型 {#using-a-frigate-or-native-licenseplate-detecting-model}
 
 使用 Frigate+ 模型（或任何能原生支持检测`license_plate`的模型）的用户可利用`license_plate`检测功能。这使得车牌在专用 LPR 模式下被视为标准物体/目标，意味着警报、检测、快照、区域和其他 Frigate 功能正常工作，车牌通过配置的物体/目标检测器高效检测。
 
@@ -519,7 +519,7 @@ cameras:
 - 调试页面会显示`license_plate`边界框
 - 如果使用 Frigate+模型并想提交专用 LPR 摄像头图像用于模型训练和微调，在 Frigate+网站上标注快照中的`car`和`license_plate`，即使车辆几乎不可见
 
-### 使用次级 LPR 管道(无 Frigate+)
+### 使用次级 LPR 管道(无 Frigate+) {#using-the-secondary-lpr-pipeline-without-frigate}
 
 如果没有使用 Frigate+模型，可使用 Frigate 内置的次级专用 LPR 管道。在此模式下，Frigate 绕过标准物体/目标检测管道，在检测到运动时对全帧运行本地车牌检测器模型。
 
@@ -572,7 +572,7 @@ cameras:
 - 车牌快照在得分最高时刻保存并出现在 Explore 中
 - 调试页面不显示`license_plate`边界框
 
-### 总结
+### 总结 {#summary}
 
 | 功能                  | 原生`license_plate`检测模型(如 Frigate+) | 次级管道(无原生模型或 Frigate+)           |
 | --------------------- | ---------------------------------------- | ----------------------------------------- |
@@ -585,7 +585,7 @@ cameras:
 
 通过选择适当的配置，用户可根据是否使用 Frigate+模型或次级 LPR 管道优化专用 LPR 摄像头。
 
-### 使用专用 LPR 摄像头模式的最佳实践
+### 使用专用 LPR 摄像头模式的最佳实践 {#best-practices-for-using-dedicated-lpr-camera-mode}
 
 - 调整画面变动检测并增加`contour_area`，直到只有车辆通过时创建较大的运动框(对于 1920×1080 检测流可能在 50-90 之间)。增加`contour_area`过滤小的运动区域，防止在没有车辆通过的帧中寻找车牌浪费资源
 - 禁用`improve_contrast`运动设置，特别是在夜间运行 LPR 且画面大部分黑暗时。这将防止小像素变化和小的运动区域触发车牌检测
@@ -593,7 +593,7 @@ cameras:
 - 对于非 Frigate+用户，可能需要更改摄像头设置以获得更清晰的图像，或如果夜间车牌识别不准确，降低全局`recognition_threshold`配置
 - 次级管道模式在 CPU 或 GPU(取决于`device`配置)上运行本地 AI 模型检测车牌。增加检测`fps`将按比例增加资源使用
 
-## 常见问题
+## 常见问题 {#faq}
 
 ### 为什么我的车牌没有被检测和识别？ {#why-isnt-my-license-plate-being-detected-and-recognized}
 
@@ -608,29 +608,29 @@ cameras:
 
 如果你仍然遇到检测车牌的问题，请从基本配置开始，并参见下面的调试提示。
 
-### 我可以在不检测车辆的情况下运行车牌识别吗？
+### 我可以在不检测车辆的情况下运行车牌识别吗？ {#can-i-run-lpr-without-detecting-car-or-motorcycle-objects}
 
 在默认的车牌识别模式下，Frigate 需要先检测到车辆，才能识别车牌。如果你有专用的车牌识别摄像头，你可以将摄像头类型（`type`）更改为 `"lpr"` 以使用专用车牌识别摄像头算法。但需要注意，请务必参阅上面的专用 LPR 摄像头部分。
 
-### 如何提高检测准确性？
+### 如何提高检测准确性？ {#how-can-i-improve-detection-accuracy}
 
 - 使用具有良好分辨率的高质量摄像头
 - 调整 `detection_threshold` 和 `recognition_threshold` 值
 - 定义 `format` 正则表达式以过滤掉无效的检测
 
-### 车牌识别能在夜间工作吗？
+### 车牌识别能在夜间工作吗？ {#does-lpr-work-at-night}
 
 是的，但性能取决于摄像头质量、照明和红外功能。确保你的摄像头能在夜间捕获清晰的车牌图像。
 
-### 我可以限制在特定区域执行车牌识别吗？
+### 我可以限制在特定区域执行车牌识别吗？ {#can-i-limit-lpr-to-specific-zones}
 
 车牌识别与其他 Frigate 功能增强一样，是在摄像头级别而不是区域级别运行。虽然你不能直接将车牌识别限制在特定区域，但你可以通过设置 `min_area` 值来过滤掉较小的检测，从而控制何时运行识别。
 
-### 如何匹配具有轻微变化的已知车牌？
+### 如何匹配具有轻微变化的已知车牌？ {#how-can-i-match-known-plates-with-minor-variations}
 
 使用 `match_distance` 允许少量的字符不匹配。或者在 `known_plates` 中定义多个变体。
 
-### 如何调试车牌识别问题？
+### 如何调试车牌识别问题？ {#how-do-i-debug-lpr-issues}
 
 - 首先查阅 [为什么我的车牌没有被检测和识别](#why-isnt-my-license-plate-being-detected-and-recognized)。如果问题仍然存在，请按照以下步骤排查： 1.启用调试日志以查看 Frigate 的具体运行情况
 
@@ -672,13 +672,13 @@ logger:
 
 - 启用`debug_save_plates`将检测到的车牌文本图像保存到剪辑目录(`/media/frigate/clips/lpr`)。确保这些图像可读且文本清晰。
 - 查看调试页面以实时查看车牌识别情况。对于非专用 LPR 摄像头，当 LPR 启用并正常工作时，car 或 motorcycle 标签将变为识别出的车牌。
-- 根据[上文](#高级配置)的建议调整`recognition_threshold`设置。
+- 根据[上文](#advanced-configuration)的建议调整`recognition_threshold`设置。
 
-### 车牌识别会减慢我的系统吗？
+### 车牌识别会减慢我的系统吗？ {#will-lpr-slow-down-my-system}
 
 车牌识别的性能影响取决于你的硬件。确保你至少有 4GB RAM 和能够胜任的 CPU 或 GPU 以获得最佳结果。如果你运行的是专用 LPR 摄像头模式，与运行原生检测车牌的模型的用户相比，资源使用量会更高。为你的专用车牌识别摄像头调整画面变动检测设置，以便车牌检测模型仅在必要时运行。
 
-### 我在功能增强指标中看到 YOLOv9 车牌检测指标，但我有 Frigate+ 或可以检测 `license_plate` 的自定义模型。为什么 YOLOv9 模型在运行？
+### 我在功能增强指标中看到 YOLOv9 车牌检测指标，但我有 Frigate+ 或可以检测 `license_plate` 的自定义模型。为什么 YOLOv9 模型在运行？ {#i-am-seeing-a-yolov9-plate-detection-metric-in-enrichment-metrics-but-i-have-a-frigate-or-custom-model-that-detects-license_plate-why-is-the-yolov9-model-running}
 
 如果你启用了车牌识别但没有在全局或摄像头级别将 `license_plate` 定义为要追踪的目标（`objects.track`），则会使用额外的 YOLOv9 车牌检测模型。
 
@@ -686,7 +686,7 @@ logger:
 
 如果你确实想在这些摄像头上运行 LPR，请确保将 `license_plate` 定义为要追踪的目标。
 
-### 看起来 Frigate 将我的摄像头时间戳识别为车牌。如何防止这种情况？
+### 看起来 Frigate 将我的摄像头时间戳识别为车牌。如何防止这种情况？ {#it-looks-like-frigate-picked-up-my-cameras-timestamp-or-overlay-text-as-the-license-plate-how-can-i-prevent-this}
 
 如果车辆靠近摄像头的时间戳行驶，可能会发生这种情况。你可以通过摄像头固件移动时间戳，或在 Frigate 中为其应用遮罩。
 
@@ -694,6 +694,6 @@ logger:
 
 如果你使用的是专用 LPR 摄像头模式，只需要在时间戳上添加**画面变动遮罩**。
 
-### 日志中出现“Error running ... model”，或推理耗时过长，该如何解决？
+### 日志中出现“Error running ... model”，或推理耗时过长，该如何解决？ {#i-see-error-running--model-in-my-logs-or-my-inference-time-is-very-high-how-can-i-fix-this}
 
 这种问题通常出现在显卡无法编译、也无法调用任一车牌识别模型的情况下。你可以将配置中的`device`参数设为`CPU`后重新尝试。显卡硬件加速仅能带来小幅性能提升，而这类车牌识别模型本身轻量化程度较高，在绝大多数处理器上都能无压力运行。

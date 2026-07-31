@@ -7,6 +7,7 @@ import RulesFieldRow from "./RulesFieldRow.vue";
 import TrackFieldRow from "./TrackFieldRow.vue";
 import LabelSwitchesFieldRow from "./LabelSwitchesFieldRow.vue";
 import FiltersFieldRow from "./FiltersFieldRow.vue";
+import GenaiRolesFieldRow from "./GenaiRolesFieldRow.vue";
 import { humanizeKey } from "./helpers.js";
 
 const props = defineProps({
@@ -50,6 +51,8 @@ const isObjectArray = computed(
 );
 
 const isObject = computed(() => props.field.widget === "object");
+
+const isGenaiRoles = computed(() => props.field.widget === "genaiRoles");
 </script>
 
 <template>
@@ -66,6 +69,9 @@ const isObject = computed(() => props.field.widget === "object");
         :focus-ref="focusRef" />
 
     <ObjectFieldRow v-else-if="isObject" :field="field" :field-key="fieldKey" :step="step" :navigation="navigation"
+        :focus-ref="focusRef" />
+
+    <GenaiRolesFieldRow v-else-if="isGenaiRoles" :field="field" :field-key="fieldKey" :step="step" :navigation="navigation"
         :focus-ref="focusRef" />
 
     <div v-else class="field" :class="{ focused: focused }"

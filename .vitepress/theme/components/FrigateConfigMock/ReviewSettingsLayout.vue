@@ -31,10 +31,25 @@ const zones = computed(() =>
         : defaultZones,
 );
 
-const configGroups = [
-    { title: "警报配置", fields: ["alerts.enabled", "alerts.labels"] },
-    { title: "检测配置", fields: ["detections.enabled", "detections.labels"] },
-];
+// Data-driven config groups: derived from the manifest section.groups so
+// that new fields / groups added upstream are picked up automatically
+// without manual maintenance here.
+const configGroups = computed(() =>
+    (props.section.groups ?? []).map((group) => {
+        const allFields = [
+            ...group.fields,
+            ...(group.subGroups ?? []).flatMap((sg) => sg.fields),
+        ];
+        return {
+            title: group.label,
+            description: group.description ?? "",
+            docsLink: group.key === "genai",
+            fields: allFields.filter(
+                (key) => props.section.fields?.[key] && !key.endsWith(".required_zones"),
+            ),
+        };
+    }),
+);
 </script>
 
 <template>
@@ -100,7 +115,10 @@ const configGroups = [
             <div class="reviewConfigHeader">
                 <div>
                     <strong>{{ group.title }}</strong>
-                    <small>配置此摄像头的核查生成和保留。</small>
+                    <small>{{ group.description }}</small>
+                    <span v-if="group.docsLink" class="docsLink">阅读文档
+                        <LcIcon name="external-link" :size="12" />
+                    </span>
                 </div>
                 <span>
                     <LcIcon name="chevron-down" :size="14" />

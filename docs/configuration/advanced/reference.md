@@ -3,7 +3,7 @@ id: reference
 title: 完整配置参考
 ---
 
-### 完整配置参考：
+### 完整配置参考： {#full-configuration-reference}
 
 :::warning
 

@@ -28,6 +28,10 @@ const reviewLabelOptions = [
   "person",
 ];
 
+// Roles offered by every GenAI provider; values are config keys and must
+// match the enum the provider schema accepts.
+const genaiRoleOptions = ["descriptions", "embeddings", "chat"];
+
 const maskZoneLabels = {
   zones: "区域",
   "zone.add": "添加区域",
@@ -83,6 +87,7 @@ export {
   manifest,
   objectLabelOptions,
   reviewLabelOptions,
+  genaiRoleOptions,
   maskZoneLabels,
   humanizeKey,
   formatValue,

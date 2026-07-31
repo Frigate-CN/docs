@@ -11,7 +11,7 @@ title: 摄像头自动追踪
 
 自动追踪示例(含变焦)
 
-## 自动追踪行为
+## 自动追踪行为 {#autotracking-behavior}
 
 当 Frigate 确认目标不是误报且已进入指定区域后，自动追踪器会移动 PTZ 摄像头将目标保持在画面中央，直到目标移出画面、PTZ 无法继续移动或 Frigate 丢失追踪目标。
 
@@ -19,7 +19,7 @@ title: 摄像头自动追踪
 
 追踪结束后，摄像头会返回配置中`return_preset`指定的预设位置。
 
-## 检查 ONVIF 摄像头支持
+## 检查 ONVIF 摄像头支持 {#checking-onvif-camera-support}
 
 Frigate 自动追踪功能需要 PTZ 摄像头支持视野内相对移动(符合[ONVIF 规范](https://www.onvif.org/specs/srv/ptz/ONVIF-PTZ-Service-Spec-v1712.pdf)中的`RelativePanTiltTranslationSpace`和`TranslationSpaceFov`条目)。
 
@@ -29,7 +29,7 @@ Frigate 自动追踪功能需要 PTZ 摄像头支持视野内相对移动(符合
 
 你可以在[这里](cameras.md)查看用户反馈的支持 Frigate 自动追踪的摄像头品牌和型号列表。
 
-## 配置方法
+## 配置方法 {#configuration}
 
 首先在摄像头固件中设置 PTZ 预设位置并命名。如果不确定如何操作，请参考摄像头厂商的固件文档。常见品牌教程：[Amcrest](https://www.youtube.com/watch?v=lJlE9-krmrM)、[Reolink](https://www.youtube.com/watch?v=VAnxHUY5i5w)、[Dahua](https://www.youtube.com/watch?v=7sNbc5U-k54)。
 
@@ -92,7 +92,7 @@ cameras:
         movement_weights: [] 
 ```
 
-## 校准流程
+## 校准流程 {#calibration}
 
 PTZ 电机运行速度各不相同。执行校准会让 Frigate 测量各种移动的速度，用这些测量值更好地预测保持自动追踪目标在画面中央所需的移动量。
 
@@ -116,7 +116,7 @@ PTZ 电机运行速度各不相同。执行校准会让 Frigate 测量各种移�
 
 如果初始校准时禁用变焦，之后启用变焦，也应重新校准。
 
-## 最佳实践与注意事项
+## 最佳实践与注意事项 {#best-practices-and-considerations}
 
 每款 PTZ 摄像头都不同，自动追踪可能无法在所有情况下理想工作。此实验性功能最初基于 EmpireTech/Dahua SD1A404XB-GNR 开发。
 
@@ -130,7 +130,7 @@ Frigate 中的目标追踪器会估算 PTZ 移动，在摄像头移动时保持�
 
 部分用户发现调整区域`inertia`值有帮助。详见[配置参考](advanced/reference.md)。
 
-## 变焦功能
+## 变焦功能 {#zooming}
 
 变焦是非常实验性的功能，追踪目标时可能比仅平移/倾斜消耗更多 CPU 资源。
 
@@ -142,19 +142,19 @@ Frigate 中的目标追踪器会估算 PTZ 移动，在摄像头移动时保持�
 
 此参数范围 0.1 到 0.75。默认值 0.3 较为保守，适合多数用户。由于每款 PTZ 和场景不同，你应实验确定最佳值。
 
-## 应用场景
+## 应用场景 {#usage-applications}
 
 安防监控中，常将"观察"摄像头与 PTZ 配合使用。当固定观察摄像头检测到目标时，可通过 Home Assistant 等自动化平台将 PTZ 移动到特定预设位置，使 Frigate 开始自动追踪。例如：住宅东西两侧安装固定摄像头监控街道，当西侧观察摄像头检测到人员时，Home Assistant 自动化可将 PTZ 转向西方预设位置。目标进入指定区域后，Frigate 自动追踪器可继续追踪离开固定摄像头视野的人员。
 
-## 故障排除与常见问题
+## 故障排除与常见问题 {#troubleshooting-and-faq}
 
-### 摄像头兼容性
+### 摄像头兼容性 {#camera-compatibility}
 
 ::: collapse 我应该使用哪款 PTZ 摄像头进行自动追踪？
 参见社区维护的 [ONVIF PTZ 摄像头推荐列表](cameras.md#onvif-ptz-camera-recommendations)。Dahua / EmpireTech PTZ 是用户反馈最持续有效的。Frigate 的自动追踪功能是基于 Dahua SD1A404XB-GNR（现为 EmpireTech PTZ1A4M-4X-S2）开发的。
 
 比较型号时：
-- 首先验证 ONVIF 支持。参见上方[检查 ONVIF 摄像头支持](#检查-onvif-摄像头支持)。
+- 首先验证 ONVIF 支持。参见上方[检查 ONVIF 摄像头支持](#checking-onvif-camera-support)。
 - 优先选择 PTZ 电机快速的摄像头。电机较慢的摄像头可能无法通过校准，难以跟上快速移动的目标。
 :::
 
@@ -170,7 +170,7 @@ Frigate 中的目标追踪器会估算 PTZ 移动，在摄像头移动时保持�
 部分摄像头固件报告支持 FOV RelativeMove，但实际不支持。Uniview IPC672LR-AX4DUPK 就是这样的例子——它实际移动的是变焦电机而非平移/倾斜，完全不符合 ONVIF 标准。
 :::
 
-### 校准问题
+### 校准问题 {#calibration-issues}
 
 ::: collapse 尝试校准摄像头，但日志显示卡在 0% 且 Frigate 无法启动
 通常原因同上——由于摄像头固件 bug，`MoveStatus` ONVIF 参数未变化。另请注意：校准过程中 Frigate 网页界面和其他摄像头无响应是正常现象。但如果日志中未每隔几秒显示校准进度，则你的摄像头不兼容自动追踪功能。
@@ -196,7 +196,7 @@ Frigate 中的目标追踪器会估算 PTZ 移动，在摄像头移动时保持�
 记得在更改 `return_preset`、更改 detect `fps` 值或在禁用变焦校准后启用变焦时重新校准。
 :::
 
-### 追踪行为
+### 追踪行为 {#tracking-behavior}
 
 ::: collapse 自动追踪丢失目标，为什么？
 可能原因很多。如果使用实验性变焦，`zoom_factor` 值可能过高、目标移动过快、场景太暗、场景细节不足等。
@@ -215,5 +215,5 @@ PTZ 移动时，整个帧同时发生变化。Frigate 的画面变动检测会�
 :::
 
 ::: collapse 我可以自动开关自动追踪吗？
-可以。自动追踪可以通过 MQTT 的 [`frigate/<camera_name>/ptz_autotracker/set`](../integrations/mqtt.md#frigatecamera_nameptz_autotrackerset) 主题在运行时按摄像头切换，[Home Assistant 集成](../integrations/home-assistant.md)也为其提供了一个开关。这很适合与上方[应用场景](#应用场景)中描述的"观察"摄像头自动化配合使用，例如仅在夜间或家中无人时启用自动追踪。
+可以。自动追踪可以通过 MQTT 的 [`frigate/<camera_name>/ptz_autotracker/set`](../integrations/mqtt.md#frigatecamera_nameptz_autotrackerset) 主题在运行时按摄像头切换，[Home Assistant 集成](../integrations/home-assistant.md)也为其提供了一个开关。这很适合与上方[应用场景](#usage-applications)中描述的"观察"摄像头自动化配合使用，例如仅在夜间或家中无人时启用自动追踪。
 :::

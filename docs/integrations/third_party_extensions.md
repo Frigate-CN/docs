@@ -13,7 +13,7 @@ title: 第三方扩展
 
 :::
 
-## [摄像头卡片增强（原名 Frigate 卡片）](https://card.camera/#/README)
+## [摄像头卡片增强（原名 Frigate 卡片）](https://card.camera/#/README) {#advanced-camera-card-formerly-known-as-frigate-card}
 
 [摄像头卡片增强](https://card.camera/#/README) 是一款与 Frigate 深度集成的 Home Assistant 仪表盘组件。
 
@@ -39,7 +39,7 @@ title: 第三方扩展
 
 [Periscope](https://github.com/maksz42/periscope)是一款轻量级 Android 应用，可将旧设备改造为 Frigate NVR 的实时监控查看器。该应用支持 Android 2.2 及以上系统（包括 Android TV），提供身份验证和 HTTPS 安全连接功能。
 
-## [Scrypted - Frigate 桥接插件](https://github.com/apocaliss92/scrypted-frigate-bridge)
+## [Scrypted - Frigate 桥接插件](https://github.com/apocaliss92/scrypted-frigate-bridge) {#scrypted---frigate-bridge-plugin}
 
 [Scrypted - Frigate 桥接插件](https://github.com/apocaliss92/scrypted-frigate-bridge)是一款可将 Frigate 的检测结果、移动侦测数据、视频片段接入 Scrypted 的插件，同时还提供模板，用于导出 Frigate 上的转播配置。
 

@@ -41,7 +41,7 @@ go2rtc:
     exec: trace
 ```
 
-### `environment_vars` {#environment_vars}
+### `environment_vars` {#environmentvars}
 
 此配置项适用于无法直接修改容器环境的情况（如 Home Assistant OS）。Docker 用户应在 `docker run` 命令（`-e FRIGATE_MQTT_PASSWORD=secret`）或 `docker-compose.yml` 文件（`environment:` 部分）中设置环境变量。注意，此处设置的值以明文形式存储在配置文件中，因此如果目的是保护凭据安全，请改用 Docker 环境变量或 Docker secrets。
 
@@ -146,7 +146,7 @@ model:
 
 ## 网络配置 {#network-configuration}
 
-Frigate 公开了一些网络选项。IPv6 和监听端口在 `networking` 配置中设置（或从设置界面设置）；更高级的更改需要[自定义内置 Nginx 配置](#自定义-nginx-配置)。
+Frigate 公开了一些网络选项。IPv6 和监听端口在 `networking` 配置中设置（或从设置界面设置）；更高级的更改需要[自定义内置 Nginx 配置](#customizing-the-nginx-configuration)。
 
 ### 启用 IPv6 {#enabling-ipv6}
 
@@ -175,7 +175,7 @@ networking:
 
 :::
 
-### 自定义 Nginx 配置
+### 自定义 Nginx 配置 {#customizing-the-nginx-configuration}
 
 更高级的内部网络配置更改可以通过将你自己的 `nginx.conf` 绑定挂载到容器中来完成：
 

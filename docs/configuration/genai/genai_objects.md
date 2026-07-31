@@ -100,4 +100,4 @@ cameras:
 
 ## 故障排除
 
-如果描述未生成，或生成的描述不符合预期，请参阅[如何调试 GenAI 问题？](/configuration/genai/genai_config#如何调试-genai-问题)。
+如果描述未生成，或生成的描述不符合预期，请参阅[如何调试生成式 AI 问题？](/configuration/genai/genai_config#如何调试-genai-问题)。

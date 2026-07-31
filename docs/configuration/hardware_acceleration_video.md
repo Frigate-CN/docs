@@ -340,7 +340,7 @@ done
 
 # 社区支持 {#community-supported}
 
-## NVIDIA Jetson <Badge text="社区支持" type="warning" />
+## NVIDIA Jetson <Badge text="社区支持" type="warning" /> {#nvidia-jetson}
 
 提供 Jetson 设备专用 Docker 镜像。它们包含使用 Jetson 专用媒体引擎的 `ffmpeg` 构建。如果你的 Jetson 主机运行 Jetpack 6.0+，请使用 `stable-tensorrt-jp6` 标签镜像。注意，Orin Nano 没有视频编码器，因此 frigate 将在此平台上使用软件编码，但该镜像仍然允许硬件解码和 tensorrt 物体/目标检测。
 
@@ -468,11 +468,11 @@ cameras:
 
 Synaptics SL 系列 SoC 支持硬件加速的视频编解码。
 
-### 前提条件
+### 前提条件 {#prerequisites-1}
 
 请确保按照 [Synaptics 安装说明](../frigate/installation.md#synaptics)进行操作。
 
-### 配置
+### 配置 {#configuration-1}
 
 在你的 `config.yml` 中添加以下任意一个 FFmpeg 预设，以启用硬件视频处理：
 

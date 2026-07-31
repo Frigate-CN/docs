@@ -3,20 +3,20 @@ id: cameras
 title: 摄像头配置
 ---
 
-## 使用添加摄像头向导添加摄像头
+## 使用添加摄像头向导添加摄像头 {#adding-a-camera-with-the-add-camera-wizard}
 
-添加摄像头向导是添加摄像头的推荐方式。点击 <NavPath path="Settings > Global configuration > Camera management" /> 中的 **Add Camera**。该向导会连接你的摄像头、测试每个流并为你生成摄像头配置，包括 [go2rtc](go2rtc.md) 转流和实时视图流映射，因此标准设置无需手动编写 YAML。
+添加摄像头向导是添加摄像头的推荐方式。点击 <NavPath path="设置 > 全局配置 > 摄像头管理" /> 中的 **Add Camera**。该向导会连接你的摄像头、测试每个流并为你生成摄像头配置，包括 [go2rtc](go2rtc.md) 转流和实时视图流映射，因此标准设置无需手动编写 YAML。
 
-### 步骤 1：命名与连接
+### 步骤 1：命名与连接 {#step-1-name-and-connection}
 
 输入摄像头名称以及主机或 IP 地址和凭证，然后选择向导如何查找摄像头的流：
 
 - **探测摄像头（Probe camera）**通过 ONVIF 查询摄像头（ONVIF 端口通常为 80 或 8080），并获取其流 URL。某些摄像头使用独立的 ONVIF/服务账号而非设备管理员用户，部分还要求启用**使用摘要认证（Use digest authentication）**。
-- **手动选择（Manual selection）**根据你选择的摄像头品牌模板构建流 URL（Dahua/Amcrest/EmpireTech、Hikvision/Uniview/Annke、Ubiquiti、Reolink、Axis、TP-Link 或 Foscam）。选择 **Other** 直接输入自定义 RTSP URL。非 RTSP 流类型必须[手动配置](#设置摄像头输入源)。
+- **手动选择（Manual selection）**根据你选择的摄像头品牌模板构建流 URL（Dahua/Amcrest/EmpireTech、Hikvision/Uniview/Annke、Ubiquiti、Reolink、Axis、TP-Link 或 Foscam）。选择 **Other** 直接输入自定义 RTSP URL。非 RTSP 流类型必须[手动配置](#setting-up-camera-inputs)。
 
 你输入的名称会被转为小写，空格变为下划线。如果结果仍不是有效的配置键，向导会生成一个安全名称，并将你输入的内容保存为 `friendly_name`。
 
-### 步骤 2：探测或截图
+### 步骤 2：探测或截图 {#step-2-probe-or-snapshot}
 
 在探测模式下，向导会报告摄像头返回的信息（制造商、型号、固件、配置文件数量以及是否支持 PTZ、预置位和[自动追踪](autotracking.md)）以及发现的 RTSP URL。测试每个候选流，查看其分辨率、帧率和编解码器以及截图，然后选择你想使用的流。
 
@@ -24,13 +24,13 @@ title: 摄像头配置
 
 如果未找到 RTSP URL，可能是凭证错误或摄像头不支持 ONVIF。返回并使用手动选择。
 
-### 步骤 3：流配置
+### 步骤 3：流配置 {#step-3-stream-configuration}
 
-为流分配[功能角色](#设置摄像头输入源)，并使用**添加另一个流（Add Another Stream）**添加摄像头的其他流，例如用于 `detect` 的子流与用于 `record` 的主流。至少有一个流必须具有 `detect` 角色才能继续。
+为流分配[功能角色](#setting-up-camera-inputs)，并使用**添加另一个流（Add Another Stream）**添加摄像头的其他流，例如用于 `detect` 的子流与用于 `record` 的主流。至少有一个流必须具有 `detect` 角色才能继续。
 
 **减少摄像头连接（Reduce connections to camera）**通过 go2rtc 转流路由输入，使 Frigate 和实时视图共享一个到摄像头的连接，而不是各自打开独立连接。详见[转流](restream.md)。
 
-### 步骤 4：验证与测试
+### 步骤 4：验证与测试 {#step-4-validation-and-testing}
 
 连接每个流以获取实时预览、预估带宽数值和验证结果列表。向导会检查最常见的错误配置，包括：
 
@@ -46,7 +46,7 @@ title: 摄像头配置
 
 其他功能（包括[硬件加速](hardware_acceleration_video.md)、[双向通话](/configuration/live#two-way-talk)和音频转码）在摄像头添加后进行配置。有关摄像头型号的特定问题，请参阅[摄像头特定](camera_specific.md)文档。
 
-## 设置摄像头输入源
+## 设置摄像头输入源 {#setting-up-camera-inputs}
 
 可以为每个摄像头配置多个输入源，并根据需求混合搭配每个输入源的功能。这样你可以使用低分辨率视频流进行物体检测，同时使用高分辨率视频流进行录像，反之亦然。
 
@@ -93,7 +93,7 @@ cameras: # [!code highlight]
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-导航到 <NavPath path="Settings > Global configuration > Camera management" /> 并使用[添加摄像头向导](#使用添加摄像头向导添加摄像头)配置每个额外的摄像头。
+导航到 <NavPath path="设置 > 全局配置 > 摄像头管理" /> 并使用[添加摄像头向导](#adding-a-camera-with-the-add-camera-wizard)配置每个额外的摄像头。
 
 </TabItem>
 <TabItem value="YAML配置文件">
@@ -119,7 +119,7 @@ cameras:
 
 关于特定摄像头型号的设置，请查看[摄像头特定](camera_specific.md)信息。
 
-## 设置摄像头 PTZ 控制
+## 设置摄像头 PTZ 控制 {#setting-up-camera-ptz-controls}
 
 :::warning
 
@@ -132,11 +132,17 @@ cameras:
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-1. 导航到 <NavPath path="Settings > Camera configuration > ONVIF" /> 并选择你的摄像头。
-   - 将 **ONVIF 主机（ONVIF host）**设置为摄像头的 IP 地址，例如：`10.0.10.10`
-   - 将 **ONVIF 端口（ONVIF port）**设置为摄像头的 ONVIF 端口，例如：`8000`
-   - 将 **ONVIF 用户名（ONVIF username）**设置为摄像头的 ONVIF 用户名，例如：`admin`
-   - 将 **ONVIF 密码（ONVIF password）**设置为摄像头的 ONVIF 密码，例如：`password`
+<FrigateConfigMock
+  level="camera"
+  section="onvif"
+  :values="{ host: '10.0.10.10', port: 8000, user: 'admin', password: 'password' }"
+  :targets="[
+    { field: 'host', hint: '填写摄像头的 IP 地址，例如 10.0.10.10。' },
+    { field: 'port', hint: '填写摄像头的 ONVIF 端口，例如 8000。' },
+    { field: 'user', hint: '填写摄像头的 ONVIF 用户名，例如 admin。' },
+    { field: 'password', hint: '填写摄像头的 ONVIF 密码。' },
+  ]"
+/>
 
 </TabItem>
 <TabItem value="YAML配置文件">
@@ -178,7 +184,7 @@ cameras:
 
 支持视野(FOV)内相对移动的 ONVIF 摄像头还可以配置为自动追踪移动物体并将其保持在画面中央。关于自动追踪的设置，请参阅[自动追踪](autotracking.md)文档。
 
-## ONVIF PTZ 摄像头推荐
+## ONVIF PTZ 摄像头推荐 {#onvif-ptz-camera-recommendations}
 
 以下工作与非工作 PTZ 摄像头列表基于用户反馈。如果你想反馈某厂商或某款摄像头存在的特定特性或问题，且这些问题对其他用户会有帮助，你可以发起一个拉取请求（pull request），将这些信息添加到此列表中。
 
@@ -211,7 +217,7 @@ cameras:
 | Uniview IPC6612SR-X33-VG     |    ✅    |    ✅    | 保持`calibrate_on_startup`为`False`。有用户报告使用`absolute`缩放是有效的。                                                                                                                                                |
 | Vikylin PTZ-2804X-I2         |    ❌    |    ❌    | ONVIF 支持不完整                                                                                                                                                                                                           |
 
-## 设置摄像头分组
+## 设置摄像头分组 {#setting-up-camera-groups}
 
 摄像头分组让你可以将摄像头组织在一起，使用共享的名称和图标，方便查看和筛选。始终会有一个包含所有摄像头的默认分组。
 
@@ -236,6 +242,6 @@ camera_groups:
 </TabItem>
 </ConfigTabs>
 
-## 双向音频
+## 双向音频 {#two-way-audio}
 
 请参阅[此处](/configuration/live/#two-way-talk)的指南

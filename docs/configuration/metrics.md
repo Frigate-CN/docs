@@ -15,14 +15,14 @@ Prometheus 指标通过遥测配置暴露。启用或配置遥测以控制指标
 
 ## 可用指标 {#available-metrics}
 
-### 系统指标
+### 系统指标 {#system-metrics}
 
 - `frigate_cpu_usage_percent{pid="", name="", process="", type="", cmdline=""}` - 进程 CPU 使用率百分比
 - `frigate_mem_usage_percent{pid="", name="", process="", type="", cmdline=""}` - 进程内存使用率百分比
 - `frigate_gpu_usage_percent{gpu_name=""}` - GPU 利用率百分比
 - `frigate_gpu_mem_usage_percent{gpu_name=""}` - GPU 显存使用率百分比
 
-### 摄像头指标
+### 摄像头指标 {#camera-metrics}
 
 - `frigate_camera_fps{camera_name=""}` - 摄像头帧率
 - `frigate_detection_fps{camera_name=""}` - 每秒检测次数
@@ -32,12 +32,12 @@ Prometheus 指标通过遥测配置暴露。启用或配置遥测以控制指标
 - `frigate_audio_dBFS{camera_name=""}` - 音频 dBFS 值
 - `frigate_audio_rms{camera_name=""}` - 音频 RMS 值
 
-### 检测器指标
+### 检测器指标 {#detector-metrics}
 
 - `frigate_detector_inference_speed_seconds{name=""}` - 目标检测耗时（秒）
 - `frigate_detection_start{name=""}` - 检测器启动时间（Unix 时间戳）
 
-### 存储指标
+### 存储指标 {#storage-metrics}
 
 - `frigate_storage_free_bytes{storage=""}` - 存储剩余空间（字节）
 - `frigate_storage_total_bytes{storage=""}` - 存储总容量（字节）
@@ -46,13 +46,13 @@ Prometheus 指标通过遥测配置暴露。启用或配置遥测以控制指标
 
 这些指标报告的是操作系统对整个文件系统的统计值（与 `df` 的数据相同），而非 Frigate 自身的录制占用量。有关此值与界面中显示的录制用量的区别，请参阅[理解存储用量](/configuration/record#understanding-storage-usage)。
 
-### 服务指标
+### 服务指标 {#service-metrics}
 
 - `frigate_service_uptime_seconds` - 服务运行时间（秒）
 - `frigate_service_last_updated_timestamp` - 指标更新时间（Unix 时间戳）
 - `frigate_device_temperature{device=""}` - 设备温度
 
-### 事件指标
+### 事件指标 {#event-metrics}
 
 - `frigate_camera_events{camera="", label=""}` - 自指标收集器启动以来的摄像头事件计数
 

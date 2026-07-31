@@ -775,7 +775,18 @@
           "default_role",
           "separator"
         ],
-        "groups": [],
+        "groups": [
+          {
+            "key": "header_map",
+            "label": "请求头映射",
+            "fields": [
+              "header_map.user",
+              "header_map.role",
+              "header_map.role_map"
+            ],
+            "description": "将传入的代理请求头映射到 Frigate 用户和权限组字段，用于基于代理的身份验证。"
+          }
+        ],
         "docs": "/configuration/authentication#proxy",
         "fields": {
           "header_map.user": {
@@ -865,7 +876,19 @@
           "stats",
           "version_check"
         ],
-        "groups": [],
+        "groups": [
+          {
+            "key": "stats",
+            "label": "系统统计",
+            "fields": [
+              "stats.amd_gpu_stats",
+              "stats.intel_gpu_stats",
+              "stats.network_bandwidth",
+              "stats.intel_gpu_device"
+            ],
+            "description": "用于启用/禁用各种系统和 GPU 统计信息收集的选项。"
+          }
+        ],
         "docs": "/configuration/advanced/reference",
         "fields": {
           "network_interfaces": {
@@ -1020,6 +1043,53 @@
           }
         }
       },
+      "detectors": {
+        "label": "检测器硬件",
+        "description": "目标检测器（CPU、GPU、ONNX 后端）的配置以及任何检测器特定的模型设置。",
+        "order": [
+          "my_provider.type",
+          "my_provider.model",
+          "my_provider.model_path"
+        ],
+        "groups": [],
+        "docs": "/configuration/object_detectors",
+        "fields": {
+          "my_provider.type": {
+            "label": "类型",
+            "description": "用于目标检测的检测器类型（例如 'cpu'、'edgetpu'、'openvino'）。",
+            "widget": "text",
+            "default": "cpu",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.model": {
+            "label": "检测器特定的模型配置",
+            "description": "检测器特定的模型配置选项（路径、输入尺寸等）。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.model_path": {
+            "label": "检测器专用模型路径",
+            "description": "所选检测器需要时，需填写其模型文件的路径。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        },
+        "multiInstance": {
+          "instanceKey": "my_provider",
+          "instanceLabel": "my_provider"
+        }
+      },
       "model": {
         "label": "检测模型",
         "description": "用于配置自定义目标检测模型及其输入形状的设置。",
@@ -1160,6 +1230,428 @@
           }
         }
       },
+      "genai": {
+        "label": "生成式 AI 配置",
+        "description": "用于生成目标描述和核查摘要的集成生成式 AI 提供商设置。",
+        "order": [
+          "my_provider.provider",
+          "my_provider.api_key",
+          "my_provider.base_url",
+          "my_provider.model",
+          "my_provider.provider_options",
+          "my_provider.runtime_options",
+          "my_provider.roles"
+        ],
+        "groups": [],
+        "docs": "/configuration/genai/genai_config",
+        "fields": {
+          "my_provider.provider": {
+            "label": "提供商",
+            "description": "要使用的生成式 AI 提供商（例如：ollama、gemini、openai 等。国产大模型厂商可使用 openai 接口）。",
+            "widget": "select",
+            "default": null,
+            "enum": [
+              "openai",
+              "azure_openai",
+              "gemini",
+              "ollama",
+              "llamacpp"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.api_key": {
+            "label": "API 密钥",
+            "description": "某些提供商要求的 API 密钥（也可以通过环境变量设置）。",
+            "widget": "password",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.base_url": {
+            "label": "基础 URL",
+            "description": "自托管或兼容提供商的基础 URL（例如 Ollama 实例）。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.model": {
+            "label": "模型",
+            "description": "用于生成描述或摘要的提供商模型。",
+            "widget": "genaiModel",
+            "default": "",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.provider_options": {
+            "label": "提供商选项",
+            "description": "要传递给生成式 AI 客户端的、与服务提供商相关的额外配置项。",
+            "widget": "DictAsYamlField",
+            "default": {},
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.runtime_options": {
+            "label": "运行时选项",
+            "description": "每次推理调用时传递给提供商的运行时选项。",
+            "widget": "DictAsYamlField",
+            "default": {},
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.roles": {
+            "label": "功能",
+            "description": "生成式 AI 功能（对话、描述、嵌入）；每个功能单独一个提供商。",
+            "widget": "genaiRoles",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        },
+        "multiInstance": {
+          "instanceKey": "my_provider",
+          "instanceLabel": "my_provider"
+        }
+      },
+      "cameras": {
+        "label": "Cameras",
+        "description": "Cameras",
+        "order": [
+          "my_provider.name",
+          "my_provider.friendly_name",
+          "my_provider.enabled",
+          "my_provider.audio",
+          "my_provider.audio_transcription",
+          "my_provider.birdseye",
+          "my_provider.detect",
+          "my_provider.face_recognition",
+          "my_provider.ffmpeg",
+          "my_provider.live",
+          "my_provider.lpr",
+          "my_provider.motion",
+          "my_provider.objects",
+          "my_provider.record",
+          "my_provider.review",
+          "my_provider.semantic_search",
+          "my_provider.snapshots",
+          "my_provider.timestamp_style",
+          "my_provider.best_image_timeout",
+          "my_provider.mqtt",
+          "my_provider.notifications",
+          "my_provider.onvif",
+          "my_provider.type",
+          "my_provider.ui",
+          "my_provider.webui_url",
+          "my_provider.profiles",
+          "my_provider.zones",
+          "my_provider.enabled_in_config"
+        ],
+        "groups": [],
+        "docs": null,
+        "fields": {
+          "my_provider.name": {
+            "label": "Camera name",
+            "description": "Camera name is required",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.friendly_name": {
+            "label": "Friendly name",
+            "description": "Camera friendly name used in the Frigate UI",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.enabled": {
+            "label": "Enabled",
+            "description": "Enabled",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.audio": {
+            "label": "Audio detection",
+            "description": "Settings for audio-based event detection for this camera.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.audio_transcription": {
+            "label": "Audio transcription",
+            "description": "Settings for live and speech audio transcription used for events and live captions.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.birdseye": {
+            "label": "Birdseye",
+            "description": "Settings for the Birdseye composite view that composes multiple camera feeds into a single layout.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.detect": {
+            "label": "Object Detection",
+            "description": "Settings for the detection/detect role used to run object detection and initialize trackers.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.face_recognition": {
+            "label": "Face recognition",
+            "description": "Settings for face detection and recognition for this camera.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.ffmpeg": {
+            "label": "Streams (FFmpeg)",
+            "description": "Camera stream inputs and FFmpeg options, including binary path, args, hwaccel, and per-role output args.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.live": {
+            "label": "Live playback",
+            "description": "Settings used by the Web UI to control live stream selection, resolution and quality.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.lpr": {
+            "label": "License Plate Recognition",
+            "description": "License plate recognition settings including detection thresholds, formatting, and known plates.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.motion": {
+            "label": "Motion detection",
+            "description": "Default motion detection settings for this camera.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.objects": {
+            "label": "Objects",
+            "description": "Object tracking defaults including which labels to track and per-object filters.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.record": {
+            "label": "Recording",
+            "description": "Recording and retention settings for this camera.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.review": {
+            "label": "Review",
+            "description": "Settings that control alerts, detections, and GenAI review summaries used by the UI and storage for this camera.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.semantic_search": {
+            "label": "Semantic Search",
+            "description": "Settings for semantic search which builds and queries object embeddings to find similar items.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.snapshots": {
+            "label": "Snapshots",
+            "description": "Settings for API-generated snapshots of tracked objects for this camera.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.timestamp_style": {
+            "label": "Timestamp style",
+            "description": "Styling options for timestamps applied to snapshots and Debug view.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.best_image_timeout": {
+            "label": "Best image timeout",
+            "description": "How long to wait for the image with the highest confidence score.",
+            "widget": "number",
+            "default": 60,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.mqtt": {
+            "label": "MQTT",
+            "description": "MQTT image publishing settings.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.notifications": {
+            "label": "Notifications",
+            "description": "Settings to enable and control notifications for this camera.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.onvif": {
+            "label": "ONVIF",
+            "description": "ONVIF connection and PTZ autotracking settings for this camera.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.type": {
+            "label": "Camera type",
+            "description": "Camera Type",
+            "widget": "select",
+            "default": "generic",
+            "enum": [
+              "generic",
+              "lpr"
+            ],
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.ui": {
+            "label": "Camera UI",
+            "description": "Display ordering and visibility for this camera in the UI. Ordering affects the default dashboard. For more granular control, use camera groups.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.webui_url": {
+            "label": "Camera URL",
+            "description": "URL to visit the camera directly from system page",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.profiles": {
+            "label": "Profiles",
+            "description": "Named config profiles with partial overrides that can be activated at runtime.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.zones": {
+            "label": "Zones",
+            "description": "Zones allow you to define a specific area of the frame so you can determine whether or not an object is within a particular area.",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.enabled_in_config": {
+            "label": "Original camera state",
+            "description": "Keep track of original state of camera.",
+            "widget": "switch",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        },
+        "multiInstance": {
+          "instanceKey": "my_provider",
+          "instanceLabel": "my_provider"
+        }
+      },
       "audio": {
         "label": "音频检测",
         "description": "所有摄像头的基于音频的事件检测设置；可按摄像头覆盖。",
@@ -1278,7 +1770,17 @@
           "inactivity_threshold",
           "idle_heartbeat_fps"
         ],
-        "groups": [],
+        "groups": [
+          {
+            "key": "layout",
+            "label": "布局",
+            "fields": [
+              "layout.scaling_factor",
+              "layout.max_cameras"
+            ],
+            "description": "鸟瞰图合成的布局选项。"
+          }
+        ],
         "docs": "/configuration/birdseye",
         "fields": {
           "enabled": {
@@ -1584,7 +2086,17 @@
           "apple_compatibility",
           "gpu"
         ],
-        "groups": [],
+        "groups": [
+          {
+            "key": "output_args",
+            "label": "输出参数",
+            "fields": [
+              "output_args.detect",
+              "output_args.record"
+            ],
+            "description": "用于不同 FFmpeg 功能（如检测、录制）的默认输出参数。"
+          }
+        ],
         "docs": "/configuration/ffmpeg_presets",
         "fields": {
           "path": {
@@ -1887,9 +2399,7 @@
             "key": "tracking",
             "label": "全局追踪",
             "fields": [
-              "track",
-              "alert",
-              "detect"
+              "track"
             ]
           },
           {
@@ -2033,17 +2543,71 @@
           {
             "key": "retention",
             "label": "全局保留",
-            "fields": [
-              "continuous",
-              "motion"
+            "fields": [],
+            "subGroups": [
+              {
+                "key": "continuous",
+                "label": "持续保留",
+                "description": "无论是否有追踪目标或画面变动，保留录像的天数。如果只想保留警报和检测的录制，请设置为 0。",
+                "fields": [
+                  "continuous.days"
+                ]
+              },
+              {
+                "key": "motion",
+                "label": "画面变动录制保留",
+                "description": "无论是否有追踪目标，只要画面变动触发保存的录制保留天数。如果只想保留警报和检测的录制，请设置为 0。",
+                "fields": [
+                  "motion.days"
+                ]
+              }
             ]
           },
           {
             "key": "events",
             "label": "全局事件",
-            "fields": [
-              "alerts",
-              "detections"
+            "fields": [],
+            "subGroups": [
+              {
+                "key": "alerts",
+                "label": "警报保留",
+                "description": "警报事件的录像保留设置，包括前后捕获时长。",
+                "fields": [
+                  "alerts.pre_capture",
+                  "alerts.post_capture"
+                ],
+                "subGroups": [
+                  {
+                    "key": "alerts.retain",
+                    "label": "事件保留",
+                    "description": "检测事件录像的保留设置。",
+                    "fields": [
+                      "alerts.retain.days",
+                      "alerts.retain.mode"
+                    ]
+                  }
+                ]
+              },
+              {
+                "key": "detections",
+                "label": "检测保留",
+                "description": "检测事件的录像保留设置，包括前后捕获时长。",
+                "fields": [
+                  "detections.pre_capture",
+                  "detections.post_capture"
+                ],
+                "subGroups": [
+                  {
+                    "key": "detections.retain",
+                    "label": "事件保留",
+                    "description": "检测事件录像的保留设置。",
+                    "fields": [
+                      "detections.retain.days",
+                      "detections.retain.mode"
+                    ]
+                  }
+                ]
+              }
             ]
           }
         ],
@@ -2253,7 +2817,45 @@
           "genai",
           "genai.enabled"
         ],
-        "groups": [],
+        "groups": [
+          {
+            "key": "alerts",
+            "label": "警报配置",
+            "fields": [
+              "alerts.enabled",
+              "alerts.labels",
+              "alerts.required_zones",
+              "alerts.cutoff_time"
+            ],
+            "description": "哪些追踪目标生成警报以及如何保留警报的设置。"
+          },
+          {
+            "key": "detections",
+            "label": "检测配置",
+            "fields": [
+              "detections.enabled",
+              "detections.labels",
+              "detections.required_zones",
+              "detections.cutoff_time"
+            ],
+            "description": "用于设置哪些追踪目标会生成检测记录（非警报类），以及检测记录的保留方式。"
+          },
+          {
+            "key": "genai",
+            "label": "生成式 AI 配置",
+            "fields": [
+              "genai.enabled",
+              "genai.alerts",
+              "genai.detections",
+              "genai.image_source",
+              "genai.additional_concerns",
+              "genai.debug_save_thumbnails",
+              "genai.preferred_language",
+              "genai.activity_context_prompt"
+            ],
+            "description": "控制使用生成式 AI 为核查项生成描述和摘要。"
+          }
+        ],
         "docs": "/configuration/review",
         "fields": {
           "alerts.enabled": {
@@ -2567,7 +3169,18 @@
           "thickness",
           "color"
         ],
-        "groups": [],
+        "groups": [
+          {
+            "key": "color",
+            "label": "时间戳颜色",
+            "fields": [
+              "color.red",
+              "color.green",
+              "color.blue"
+            ],
+            "description": "时间戳文本的 RGB 颜色值（所有值 0-255）。"
+          }
+        ],
         "docs": "/configuration/advanced/reference",
         "fields": {
           "position": {
@@ -3121,6 +3734,78 @@
             "advanced": true
           }
         }
+      },
+      "camera_groups": {
+        "label": "摄像头分组",
+        "description": "用于在页面中组织摄像头的命名摄像头分组配置。",
+        "order": [
+          "my_provider.cameras",
+          "my_provider.icon",
+          "my_provider.order"
+        ],
+        "groups": [],
+        "docs": null,
+        "fields": {
+          "my_provider.cameras": {
+            "label": "摄像头列表",
+            "description": "此分组中包含的摄像头名称数组。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.icon": {
+            "label": "分组图标",
+            "description": "在页面中代表摄像头分组的图标。",
+            "widget": "text",
+            "default": "generic",
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.order": {
+            "label": "排序顺序",
+            "description": "用于在页面中对摄像头分组进行排序的数字顺序；数值越大越靠后。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        },
+        "multiInstance": {
+          "instanceKey": "my_provider",
+          "instanceLabel": "my_provider"
+        }
+      },
+      "profiles": {
+        "label": "配置模板",
+        "description": "带有别名的命名配置模板定义。摄像头配置模板必须引用此处定义的名称。",
+        "order": [
+          "my_provider.friendly_name"
+        ],
+        "groups": [],
+        "docs": null,
+        "fields": {
+          "my_provider.friendly_name": {
+            "label": "别名",
+            "description": "在界面中显示的此配置模板名称，可以使用中文。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        },
+        "multiInstance": {
+          "instanceKey": "my_provider",
+          "instanceLabel": "my_provider"
+        }
       }
     },
     "camera": {
@@ -3520,8 +4205,18 @@
             "label": "摄像头特定的 FFmpeg 参数",
             "fields": [
               "input_args",
-              "hwaccel_args",
-              "output_args"
+              "hwaccel_args"
+            ],
+            "subGroups": [
+              {
+                "key": "output_args",
+                "label": "输出参数",
+                "description": "用于不同 FFmpeg 功能（如检测、录制）的默认输出参数。",
+                "fields": [
+                  "output_args.detect",
+                  "output_args.record"
+                ]
+              }
             ]
           }
         ],
@@ -3896,9 +4591,7 @@
             "key": "tracking",
             "label": "追踪",
             "fields": [
-              "track",
-              "alert",
-              "detect"
+              "track"
             ]
           },
           {
@@ -4053,17 +4746,71 @@
           {
             "key": "retention",
             "label": "保留",
-            "fields": [
-              "continuous",
-              "motion"
+            "fields": [],
+            "subGroups": [
+              {
+                "key": "continuous",
+                "label": "持续保留",
+                "description": "无论是否有追踪目标或画面变动，保留录像的天数。如果只想保留警报和检测的录制，请设置为 0。",
+                "fields": [
+                  "continuous.days"
+                ]
+              },
+              {
+                "key": "motion",
+                "label": "画面变动录制保留",
+                "description": "无论是否有追踪目标，只要画面变动触发保存的录制保留天数。如果只想保留警报和检测的录制，请设置为 0。",
+                "fields": [
+                  "motion.days"
+                ]
+              }
             ]
           },
           {
             "key": "events",
             "label": "事件",
-            "fields": [
-              "alerts",
-              "detections"
+            "fields": [],
+            "subGroups": [
+              {
+                "key": "alerts",
+                "label": "警报保留",
+                "description": "警报事件的录像保留设置，包括前后捕获时长。",
+                "fields": [
+                  "alerts.pre_capture",
+                  "alerts.post_capture"
+                ],
+                "subGroups": [
+                  {
+                    "key": "alerts.retain",
+                    "label": "事件保留",
+                    "description": "检测事件录像的保留设置。",
+                    "fields": [
+                      "alerts.retain.days",
+                      "alerts.retain.mode"
+                    ]
+                  }
+                ]
+              },
+              {
+                "key": "detections",
+                "label": "检测保留",
+                "description": "检测事件的录像保留设置，包括前后捕获时长。",
+                "fields": [
+                  "detections.pre_capture",
+                  "detections.post_capture"
+                ],
+                "subGroups": [
+                  {
+                    "key": "detections.retain",
+                    "label": "事件保留",
+                    "description": "检测事件录像的保留设置。",
+                    "fields": [
+                      "detections.retain.days",
+                      "detections.retain.mode"
+                    ]
+                  }
+                ]
+              }
             ]
           }
         ],
@@ -4262,7 +5009,45 @@
           "genai",
           "genai.enabled"
         ],
-        "groups": [],
+        "groups": [
+          {
+            "key": "alerts",
+            "label": "警报配置",
+            "fields": [
+              "alerts.enabled",
+              "alerts.labels",
+              "alerts.required_zones",
+              "alerts.cutoff_time"
+            ],
+            "description": "哪些追踪目标生成警报以及如何保留警报的设置。"
+          },
+          {
+            "key": "detections",
+            "label": "检测配置",
+            "fields": [
+              "detections.enabled",
+              "detections.labels",
+              "detections.required_zones",
+              "detections.cutoff_time"
+            ],
+            "description": "用于设置哪些追踪目标会生成检测记录（非警报类），以及检测记录的保留方式。"
+          },
+          {
+            "key": "genai",
+            "label": "生成式 AI 配置",
+            "fields": [
+              "genai.enabled",
+              "genai.alerts",
+              "genai.detections",
+              "genai.image_source",
+              "genai.additional_concerns",
+              "genai.debug_save_thumbnails",
+              "genai.preferred_language",
+              "genai.activity_context_prompt"
+            ],
+            "description": "控制使用生成式 AI 为核查项生成描述和摘要。"
+          }
+        ],
         "docs": "/configuration/review",
         "fields": {
           "alerts.enabled": {
@@ -4607,7 +5392,18 @@
           "thickness",
           "color"
         ],
-        "groups": [],
+        "groups": [
+          {
+            "key": "color",
+            "label": "时间戳颜色",
+            "fields": [
+              "color.red",
+              "color.green",
+              "color.blue"
+            ],
+            "description": "时间戳文本的 RGB 颜色值（所有值 0-255）。"
+          }
+        ],
         "docs": "/configuration/advanced/reference",
         "fields": {
           "position": {
@@ -4829,7 +5625,23 @@
           "ignore_time_mismatch",
           "autotracking"
         ],
-        "groups": [],
+        "groups": [
+          {
+            "key": "autotracking",
+            "label": "自动追踪",
+            "fields": [
+              "autotracking.enabled",
+              "autotracking.calibrate_on_startup",
+              "autotracking.zooming",
+              "autotracking.zoom_factor",
+              "autotracking.track",
+              "autotracking.required_zones",
+              "autotracking.return_preset",
+              "autotracking.timeout"
+            ],
+            "description": "使用 PTZ 摄像头移动自动追踪移动目标并使其保持在画面中心。"
+          }
+        ],
         "docs": "/configuration/cameras#setting-up-camera-ptz-controls",
         "fields": {
           "host": {
@@ -5041,6 +5853,287 @@
             "maximum": null,
             "advanced": false
           }
+        }
+      },
+      "profiles": {
+        "label": "配置模板",
+        "description": "可在运行时切换指定命名的配置模板，支持局部覆盖参数。",
+        "order": [
+          "my_provider.enabled",
+          "my_provider.audio",
+          "my_provider.birdseye",
+          "my_provider.detect",
+          "my_provider.face_recognition",
+          "my_provider.lpr",
+          "my_provider.motion",
+          "my_provider.notifications",
+          "my_provider.objects",
+          "my_provider.record",
+          "my_provider.review",
+          "my_provider.snapshots",
+          "my_provider.zones"
+        ],
+        "groups": [],
+        "docs": null,
+        "fields": {
+          "my_provider.enabled": {
+            "label": "Enabled",
+            "description": "",
+            "widget": "switch",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.audio": {
+            "label": "AudioConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.birdseye": {
+            "label": "BirdseyeCameraConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.detect": {
+            "label": "DetectConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.face_recognition": {
+            "label": "CameraFaceRecognitionConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.lpr": {
+            "label": "CameraLicensePlateRecognitionConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.motion": {
+            "label": "MotionConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.notifications": {
+            "label": "NotificationConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.objects": {
+            "label": "ObjectConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.record": {
+            "label": "RecordConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.review": {
+            "label": "ReviewConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.snapshots": {
+            "label": "SnapshotsConfig",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.zones": {
+            "label": "Zones",
+            "description": "",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        },
+        "multiInstance": {
+          "instanceKey": "my_provider",
+          "instanceLabel": "my_provider"
+        }
+      },
+      "zones": {
+        "label": "区域",
+        "description": "区域允许您定义帧的特定区域，以便确定目标是否在特定区域内。",
+        "order": [
+          "my_provider.friendly_name",
+          "my_provider.enabled",
+          "my_provider.enabled_in_config",
+          "my_provider.filters",
+          "my_provider.coordinates",
+          "my_provider.distances",
+          "my_provider.inertia",
+          "my_provider.loitering_time",
+          "my_provider.speed_threshold",
+          "my_provider.objects"
+        ],
+        "groups": [],
+        "docs": null,
+        "fields": {
+          "my_provider.friendly_name": {
+            "label": "区域名称",
+            "description": "区域的友好名称，显示在 Frigate 页面中。如果未设置，将使用区域名称的格式化版本。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.enabled": {
+            "label": "开启",
+            "description": "开启或关闭此区域。禁用的区域在运行时将被忽略。",
+            "widget": "switch",
+            "default": true,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.enabled_in_config": {
+            "label": "保持区域原始状态的跟踪。",
+            "description": "",
+            "widget": "switch",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.filters": {
+            "label": "区域过滤器",
+            "description": "应用于此区域内目标的过滤器。用于减少误报或限制哪些目标被认为存在于区域内。",
+            "widget": "object",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.coordinates": {
+            "label": "坐标",
+            "description": "定义区域区域的多边形坐标。可以是逗号分隔的字符串或坐标字符串列表。坐标应该是相对的（0-1）或绝对的（传统）。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.distances": {
+            "label": "真实世界距离",
+            "description": "区域四边形每边的可选真实世界距离，用于速度或距离计算。如果设置，必须恰好有 4 个值。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.inertia": {
+            "label": "惯性帧数",
+            "description": "目标必须在区域内被连续检测多少帧才能被认为存在。有助于过滤掉短暂检测。",
+            "widget": "number",
+            "default": 3,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.loitering_time": {
+            "label": "徘徊秒数",
+            "description": "目标必须在区域内停留多少秒才能被视为徘徊。设置为 0 可禁用徘徊检测。",
+            "widget": "number",
+            "default": 0,
+            "enum": null,
+            "minimum": 0,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.speed_threshold": {
+            "label": "最小速度",
+            "description": "目标被认为存在于区域所需的最小速度（如果设置了距离，则为真实世界单位）。用于基于速度的区域触发器。",
+            "widget": "number",
+            "default": null,
+            "enum": null,
+            "minimum": 0.1,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.objects": {
+            "label": "触发目标",
+            "description": "可以触发此区域的目标类型列表（来自标签映射）。可以是字符串或字符串列表。如果为空，则考虑所有目标。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          }
+        },
+        "multiInstance": {
+          "instanceKey": "my_provider",
+          "instanceLabel": "my_provider"
         }
       }
     }

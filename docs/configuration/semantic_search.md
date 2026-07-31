@@ -97,14 +97,14 @@ semantic_search:
 
 :::
 
-### GenAI 提供者
+###生成式 AI 提供者
 
-Frigate 可以在 GenAI 提供者具有 `embeddings` 角色时，使用该提供者进行语义搜索嵌入。目前，仅 **llama.cpp** 支持多模态嵌入（同时支持文本和图片）。
+Frigate 可以在生成式 AI 提供者具有 `embeddings` 角色时，使用该提供者进行语义搜索嵌入。目前，仅 **llama.cpp** 支持多模态嵌入（同时支持文本和图片）。
 
 要使用 llama.cpp 进行语义搜索：
 
-1. 配置一个 `roles` 中包含 `embeddings` 的 GenAI 提供者。
-2. 将语义搜索模型设置为 GenAI 配置键（例如 `default`）。
+1. 配置一个 `roles` 中包含 `embeddings` 的生成式 AI 提供者。
+2. 将语义搜索模型设置为生成式 AI 配置键（例如 `default`）。
 3. 使用 `--embeddings` 和 `--mmproj` 启动 llama.cpp 服务器以支持图片。
 
 <ConfigTabs>
@@ -115,7 +115,7 @@ Frigate 可以在 GenAI 提供者具有 `embeddings` 角色时，使用该提供
   section="semantic_search"
   focus="model"
   :values="{ model: 'default' }"
-  hint="将语义搜索模型设置为 GenAI 配置键（例如 default），以使用已配置的 GenAI 提供者进行嵌入。GenAI 提供者还必须在 Settings > Enrichments > Generative AI 下配置 embeddings 角色。"
+  hint="将语义搜索模型设置为生成式 AI 配置键（例如 default），以使用已配置的生成式 AI 提供者进行嵌入。GenAI 提供者还必须在 Settings > Enrichments > Generative AI 下配置 embeddings 角色。"
 />
 
 </TabItem>
@@ -144,7 +144,7 @@ llama.cpp 服务器必须使用 `--embeddings` 启动以启用嵌入 API，并�
 
 :::
 
-### GPU 加速
+### GPU 加速 {#gpu-acceleration}
 
 CLIP 模型以 ONNX 格式下载，当可用时，`large`模型可以使用 GPU 硬件加速。这取决于使用的 Docker 构建版本。你也可以在安装了多个 GPU 的情况下指定使用特定设备。
 
@@ -167,11 +167,11 @@ semantic_search:
 
 :::
 
-## 使用方法和最佳实践
+## 使用方法和最佳实践 {#usage-and-best-practices}
 
 有关从语义搜索中获得最佳结果的技巧——在缩略图和描述搜索之间选择、有效表述查询以及将搜索与其他浏览筛选器结合——请参阅使用文档中的[使用与最佳实践](/usage/explore#usage-and-best-practices)。
 
-## 触发器
+## 触发器 {#triggers}
 
 触发器利用语义搜索在追踪目标匹配指定图片或描述时自动执行动作。可以配置触发器，使 Frigate 在追踪目标的图片或描述基于相似度阈值匹配预定义图片或文本时执行特定动作。触发器按摄像头管理，可以通过 Frigate 用户界面在设置页面的触发器选项卡中进行配置。
 
@@ -181,13 +181,13 @@ semantic_search:
 
 :::
 
-### 配置
+### 配置 {#configuration-1}
 
 触发器在你的 Frigate 配置文件中的每个摄像头的`semantic_search`配置内定义，或通过用户界面定义。每个触发器包含一个`friendly_name`、一个`type`（`thumbnail`或`description`）、一个`data`字段（参考图片事件 ID 或文本）、用于相似度匹配的`threshold`，以及触发器触发时要执行的`actions`列表 - `notification`、`sub_label`和`attribute`。
 
 最好通过 Frigate 用户界面配置触发器。
 
-#### 在用户界面中管理触发器
+#### 在用户界面中管理触发器 {#managing-triggers-in-the-ui}
 
 1. 导航到**设置**页面并选择**触发器**选项卡。
 2. 从下拉菜单中选择一个摄像头以查看或管理其触发器。
@@ -207,7 +207,7 @@ semantic_search:
 
 当触发器触发时，用户界面会用蓝点高亮显示触发器 3 秒钟以便于识别。此外，用户界面将显示激活你的触发器的最后日期/时间和追踪目标 ID。最后触发的时间戳不会保存到数据库中或在 Frigate 重启后持久化。
 
-### 使用方法和最佳实践
+### 使用方法和最佳实践 {#usage-and-best-practices-1}
 
 1. **缩略图触发器**：从浏览页面选择与你要检测的目标密切匹配的代表性图片（事件 ID）。为获得最佳结果，选择目标突出并占据画面大部分的图片。
 2. **描述触发器**：编写简洁、具体的文本描述（例如，"Person in a red jacket"），与追踪目标的描述保持一致。避免模糊术语以提高匹配准确性。
@@ -215,15 +215,15 @@ semantic_search:
 4. **使用浏览**：在浏览的网格视图中使用上下文菜单或右键/长按追踪目标，以基于追踪目标的缩略图快速添加触发器。
 5. **编辑触发器**：为获得最佳体验，应通过用户界面编辑触发器。但是，Frigate 将确保在配置中编辑的触发器与在用户界面中创建和编辑的触发器同步。
 
-### 注意事项
+### 注意事项 {#notes}
 
 - 触发器依赖于用于语义搜索的相同 Jina AI CLIP 模型（V1 或 V2）。确保启用了`semantic_search`并正确配置。
 - 重新索引嵌入（通过用户界面或`reindex: True`）不会影响触发器配置，但可能更新用于匹配的嵌入。
 - 为获得最佳性能，请使用具有足够内存（最少 8GB，建议 16GB）和 GPU 的系统，并使用`large`模型配置。
 
-### 常见问题
+### 常见问题 {#faq}
 
-#### 为什么我不能通过某些文本（如“穿蓝衬衫的人”）创建缩略图触发器，让它在检测到穿蓝色衬衫的人时触发？
+#### 为什么我不能通过某些文本（如“穿蓝衬衫的人”）创建缩略图触发器，让它在检测到穿蓝色衬衫的人时触发？ {#why-cant-i-create-a-trigger-on-thumbnails-for-some-text-like-person-with-a-blue-shirt-and-have-it-trigger-when-a-person-with-a-blue-shirt-is-detected}
 
 简而言之：不支持文本到图片触发器，是因为 CLIP 可能混淆相似图片并给出不一致的分数，使自动化不可靠。相同的词到图片对可能给出不同的分数，且分数范围可能太接近而无法设置清晰的截止点。
 

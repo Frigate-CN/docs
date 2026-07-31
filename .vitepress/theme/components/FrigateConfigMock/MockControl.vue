@@ -40,6 +40,16 @@ const displayValue = computed(() => {
             :key="String(item)">{{ String(item) }}</span>
     </div>
 
+    <textarea v-else-if="field.widget === 'DictAsYamlField'" class="yamlField" readonly aria-hidden="true"
+        placeholder="key: value"></textarea>
+
+    <span v-else-if="field.widget === 'password'" class="input" aria-hidden="true">
+        <span class="passwordValue">{{ value ? '已保存 — 留空则保留当前设置' : displayValue }}</span>
+        <span class="passwordIcon">
+            <LcIcon name="eye" :size="14" />
+        </span>
+    </span>
+
     <span v-else class="input" aria-hidden="true">
         {{ displayValue }}
         <span v-if="field.widget === 'select'" class="chevron">

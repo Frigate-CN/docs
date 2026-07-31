@@ -1,11 +1,24 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import LcIcon from "./LcIcon.vue";
 
 const props = defineProps({
     navigation: { type: Object, required: true },
     title: { type: String, default: "" },
     text: { type: String, default: "" },
+});
+
+// Render a very small subset of Markdown (bold via `**`) and inline code
+// (`code`) so hint copy can reference UI terms. Escape user-supplied HTML
+// first to keep things safe inside `v-html`.
+const renderedText = computed(() => {
+    const escaped = props.text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    return escaped
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/`([^`]+)`/g, "<code>$1</code>");
 });
 
 const hintRef = ref(null);
@@ -69,7 +82,7 @@ onUnmounted(() => {
         </span>
         <div>
             <strong>{{ title }}</strong>
-            <p>{{ text }}</p>
+            <p v-html="renderedText" />
             <div class="fieldHintNavigation">
                 <button type="button" aria-label="上一步" :disabled="navigation.current === 0"
                     @click="navigation.previous">

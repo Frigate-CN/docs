@@ -7,7 +7,7 @@ title: 物体/目标检测器
 import objectDetectorsModels from '../data/object_detectors_models.json';
 </script>
 
-### 支持的硬件
+### 支持的硬件 {#supported-hardware}
 
 目标检测是 Frigate 用来识别摄像头视野中*什么*内容——人、车、动物等——的能力，而非仅仅对像素变化做出反应。当 Frigate 的画面变动检测在一帧中发现活动时，该区域会被发送到**目标检测器**，检测器返回它识别到的目标及其位置和置信度分数。这些检测结果驱动追踪目标、警报、检测和通知。
 
@@ -74,7 +74,7 @@ Frigate 支持多种不同类型的检测器，可在不同硬件上运行：
 
 :::
 
-### 选择模型大小
+### 选择模型大小 {#choosing-a-model-size}
 
 除了为你的硬件选择检测器外，你还需要选择模型的**输入分辨率**（如 `320x320` 或 `640x640`），以及对于 YOLOv9 等模型系列，还需选择**变体大小**（`tiny`、`small` 等）。两者都会影响准确性与你的硬件所能承受的推理时间之间的平衡。
 
@@ -106,7 +106,7 @@ Edge TPU 设备可使用`"device"`属性指定，参考[TensorFlow Lite Python A
 
 :::
 
-### 单个 USB Coral
+### 单个 USB Coral {#single-usb-coral}
 
 <ConfigTabs>
 <TabItem value="图形化配置">
@@ -131,7 +131,7 @@ detectors:
 </TabItem>
 </ConfigTabs>
 
-### 多个 USB Coral
+### 多个 USB Coral {#multiple-usb-corals}
 
 <ConfigTabs>
 <TabItem value="图形化配置">
@@ -160,7 +160,7 @@ detectors:
 </TabItem>
 </ConfigTabs>
 
-### 原生 Coral（开发板）
+### 原生 Coral（开发板） {#native-coral-dev-board}
 
 _警告：`v0.9.x`版本后可能有[兼容性问题](https://github.com/blakeblackshear/frigate/issues/1706)_
 
@@ -188,7 +188,7 @@ detectors:
 </TabItem>
 </ConfigTabs>
 
-### 单个 PCIE/M.2 Coral
+### 单个 PCIE/M.2 Coral {#single-pciem2-coral}
 
 <ConfigTabs>
 <TabItem value="图形化配置">
@@ -214,7 +214,7 @@ detectors:
 </TabItem>
 </ConfigTabs>
 
-### 多个 PCIE/M.2 Coral
+### 多个 PCIE/M.2 Coral {#multiple-pciem2-corals}
 
 <ConfigTabs>
 <TabItem value="图形化配置">
@@ -243,7 +243,7 @@ detectors:
 </TabItem>
 </ConfigTabs>
 
-### 混合使用 Coral
+### 混合使用 Coral {#mixing-corals}
 
 <ConfigTabs>
 <TabItem value="图形化配置">
@@ -272,7 +272,7 @@ detectors:
 </TabItem>
 </ConfigTabs>
 
-### 配置
+### 配置 {#configuration-edgetpu}
 
 <ModelConfigDropdown detectorTitle="EdgeTPU" :models="objectDetectorsModels.edgeTPU.models" />
 
@@ -290,7 +290,7 @@ Hailo-8 检测器支持 Hailo-8 和 Hailo-8L AI 加速模块。该集成会自�
 
 :::
 
-### 配置
+### 配置 {#configuration-hailo}
 
 配置 Hailo 检测器时，你有两种指定模型的方式：本地**路径**或**URL**。
 如果同时提供两者，检测器将首先检查给定的本地路径。如果未找到文件，则会从指定的 URL 下载模型。模型文件缓存在`/config/model_cache/hailo`目录下。
@@ -331,7 +331,7 @@ detectors:
 
 :::
 
-### 配置
+### 配置 {#configuration-openvino}
 
 <ModelConfigDropdown detectorTitle="OpenVINO" :models="objectDetectorsModels.openvino.models" />
 
@@ -341,12 +341,12 @@ detectors:
 
 Apple Silicon 中的 NPU 无法从容器内访问，因此必须先设置[Apple Silicon 检测器客户端](https://github.com/frigate-nvr/apple-silicon-detector)。建议使用带有`-standard-arm64`后缀的 Frigate docker 镜像，例如 `ghcr.io/blakeblackshear/frigate:stable-standard-arm64`。
 
-### 设置
+### 设置 {#setup-apple-silicon}
 
 1. 下载并配置安装[Apple Silicon 检测器客户端](https://github.com/frigate-nvr/apple-silicon-detector)并运行客户端。
 2. 在 Frigate 中配置检测器并启动 Frigate。
 
-### 配置
+### 配置 {#configuration-apple-silicon}
 
 使用下面的检测器配置将连接到客户端：
 
@@ -356,11 +356,11 @@ Apple Silicon 中的 NPU 无法从容器内访问，因此必须先设置[Apple 
 
 ## AMD/ROCm GPU 检测器 {#amdrocm-gpu-detector}
 
-### 设置
+### 设置 {#setup-rocm}
 
 AMD GPU 的支持通过[ONNX 检测器](#onnx)提供。要使用 AMD GPU 进行物体/目标检测，请使用带有`-rocm`后缀的 Frigate docker 镜像，例如 `ghcr.io/blakeblackshear/frigate:stable-rocm`。
 
-### Docker GPU 访问设置
+### Docker GPU 访问设置 {#docker-settings-for-gpu-access}
 
 ROCm 需要访问`/dev/kfd`和`/dev/dri`设备。当 docker 或 frigate 不以 root 身份运行时，还应添加`video`（可能还有`render`和`ssl/_ssl`）组。
 
@@ -384,7 +384,7 @@ services:
 
 有关推荐设置的参考，请参阅[在 Docker 中运行 ROCm/pytorch](https://rocm.docs.amd.com/projects/install-on-linux/en/develop/how-to/3rd-party/pytorch-install.html#using-docker-with-pytorch-pre-installed)。
 
-### 覆盖 GPU 芯片组的 Docker 设置
+### 覆盖 GPU 芯片组的 Docker 设置 {#docker-settings-for-overriding-the-gpu-chipset}
 
 你的 GPU 可能无需特殊配置即可正常工作，但在许多情况下需要手动调整一些配置。因为 AMD/ROCm 自带的 GPU 驱动程序集并不完整，对于较新或缺失的型号，你需要将芯片组版本覆盖为较旧/通用版本才能使其工作。
 
@@ -420,13 +420,13 @@ services:
 4. 用相关值覆盖`HSA_OVERRIDE_GFX_VERSION`
 5. 如果仍然无法工作，请检查 frigate docker 日志
 
-#### 检查 AMD/ROCm 是否正常工作并找到你的 GPU
+#### 检查 AMD/ROCm 是否正常工作并找到你的 GPU {#figuring-out-if-amdrocm-is-working-and-found-your-gpu}
 
 ```bash
 $ docker exec -it frigate /opt/rocm/bin/rocminfo
 ```
 
-#### 确定你的 AMD GPU 芯片组版本
+#### 确定你的 AMD GPU 芯片组版本 {#figuring-out-your-amd-gpu-chipset-version}
 
 我们取消设置`HSA_OVERRIDE_GFX_VERSION`以防止现有覆盖干扰结果：
 
@@ -434,7 +434,7 @@ $ docker exec -it frigate /opt/rocm/bin/rocminfo
 $ docker exec -it frigate /bin/bash -c '(unset HSA_OVERRIDE_GFX_VERSION && /opt/rocm/bin/rocminfo |grep gfx)'
 ```
 
-### 配置
+### 配置 {#configuration-rocm}
 
 :::tip
 
@@ -490,7 +490,7 @@ detectors:
 
 :::
 
-### 配置
+### 配置 {#configuration-onnx}
 
 <ModelConfigDropdown detectorTitle="ONNX" :models="objectDetectorsModels.onnx.models" />
 
@@ -510,23 +510,23 @@ CPU 检测器类型运行 TensorFlow Lite 模型，使用 CPU 进行处理而不
 
 容器中提供了位于`/cpu_model.tflite`的 TensorFlow Lite 模型，默认情况下此检测器类型使用该模型。要提供自己的模型，请将文件绑定挂载到容器中，并通过`model.path`提供路径。
 
-### 配置
+### 配置 {#configuration-cpu}
 
 <ModelConfigDropdown detectorTitle="CPU" :models="objectDetectorsModels.cpu.models" />
 
 使用 CPU 检测器时，可以为每个摄像头添加一个 CPU 检测器。添加比摄像头数量更多的检测器不会提高性能。
 
-## Deepstack / CodeProject.AI 服务器检测器
+## Deepstack / CodeProject.AI 服务器检测器 {#deepstack-codeprojectai-server-detector}
 
 Frigate 的 Deepstack/CodeProject.AI 服务器检测器允许你将 Deepstack 和 CodeProject.AI 的物体/目标检测功能集成到 Frigate 中。CodeProject.AI 和 DeepStack 是开源 AI 平台，可以在各种设备上运行，如树莓派、NVIDIA Jetson 和其他兼容硬件。需要注意的是，集成是通过网络进行的，因此推理时间可能不如原生 Frigate 检测器快，但它仍然为物体/目标检测和追踪提供了高效可靠的解决方案。
 
-### 设置
+### 设置 {#setup-deepstack}
 
 要开始使用 CodeProject.AI，请访问其[官方网站](https://www.codeproject.com/Articles/5322557/CodeProject-AI-Server-AI-the-easy-way)，按照说明在你选择的设备上下载并安装 AI 服务器。CodeProject.AI 的详细设置说明不在 Frigate 文档范围内。
 
 要将 CodeProject.AI 集成到 Frigate 中，请按以下方式配置检测器：
 
-### 配置
+### 配置 {#configuration-deepstack}
 
 <ModelConfigDropdown detectorTitle="DeepStack" :models="objectDetectorsModels.deepstack.models" />
 
@@ -544,15 +544,15 @@ Frigate 的 Deepstack/CodeProject.AI 服务器检测器允许你将 Deepstack �
 
 要配置 MemryX 检测器，只需将`type`属性设置为`memryx`并按照下面的配置指南。
 
-### 配置
+### 配置 {#configuration-memryx}
 
 <ModelConfigDropdown detectorTitle="MemryX" :models="objectDetectorsModels.memryx.models" />
 
-#### 使用自定义模型
+#### 使用自定义模型 {#using-a-custom-model}
 
 要使用你自己的自定义模型，首先需要将其编译为 [.dfp](https://developer.memryx.com/2p1/specs/files.html#dataflow-program) 文件，这是 MemryX 使用的格式。
 
-#### 编译模型
+#### 编译模型 {#compile-the-model}
 
 自定义模型必须使用 **MemryX SDK 2.1** 编译。
 
@@ -570,7 +570,7 @@ mx_nc -m yolonas.onnx -c 4 --autocrop -v --dfp_fname yolonas.dfp
 
 有关编译模型的详细说明，请参阅 [MemryX 编译器](https://developer.memryx.com/2p1/tools/neural_compiler.html#usage) 文档和[教程](https://developer.memryx.com/2p1/tutorials/tutorials.html)。
 
-#### 打包编译好的模型
+#### 打包编译好的模型 {#package-the-compiled-model}
 
 1.  将编译好的模型打包成 `.zip` 文件。
 
@@ -602,7 +602,7 @@ mx_nc -m yolonas.onnx -c 4 --autocrop -v --dfp_fname yolonas.dfp
 
 英伟达 Jetson 设备可使用 TensorRT 库进行目标检测。由于附加库的大小问题，此检测器仅在带有`-tensorrt-jp6`标签后缀的镜像中提供，例如 `ghcr.io/blakeblackshear/frigate:stable-tensorrt-jp6`。此检测器旨在与用于目标检测的 Yolo 模型配合使用。
 
-### 生成模型
+### 生成模型 {#generate-models}
 
 用于 TensorRT 的模型必须在其运行的同一硬件平台上进行预处理。这意味着每个用户都必须执行额外的设置，为 TensorRT 库生成模型文件。其中包含一个脚本，可构建几种常见的模型。
 
@@ -659,7 +659,7 @@ frigate:
     - USE_FP16=false
 ```
 
-### 配置参数
+### 配置参数 {#configuration-parameters}
 
 通过将`tensorrt`指定为模型类型，可以选择 TensorRT 检测器。需要使用[硬件加速](hardware_acceleration_video.md#nvidia-gpu)部分所述的相同方法，将 GPU 透传到 Docker 容器。如果透传多个 GPU，可以使用`device`配置参数选择检测器使用哪个 GPU。`device`参数是 GPU 索引的整数值，可在容器内通过`nvidia-smi`查看。
 
@@ -681,7 +681,7 @@ TensorRT 检测器默认使用位于`/config/model_cache/tensorrt`中的`.trt`�
 
 有关配置 SL 系列 NPU 硬件的信息，请参阅[安装文档](../frigate/installation.md#synaptics)。
 
-### 配置
+### 配置 {#configuration-synaptics}
 
 配置 Synap 检测器时，你必须指定模型：本地**路径**。
 
@@ -721,7 +721,7 @@ detectors:
 
 :::
 
-### 前提条件
+### 前提条件 {#prerequisites}
 
 请确保按照[Rockchip 特定安装说明](/frigate/installation#rockchip-platform)进行操作。
 
@@ -736,7 +736,7 @@ $ cat /sys/kernel/debug/rknpu/load
 
 :::
 
-### RockChip 支持的模型
+### RockChip 支持的模型 {#rockchip-supported-models}
 
 以下`config.yml`展示了配置检测器的所有相关选项并加以说明。除两处外，所有显示的值均为默认值。标记为"required"的行是使用检测器至少需要的配置，其他行均为可选。
 
@@ -756,7 +756,7 @@ $ cat /sys/kernel/debug/rknpu/load
 
 <ModelConfigDropdown detectorTitle="RKNN" :models="objectDetectorsModels.rknn.models" />
 
-### 将自定义 onnx 模型转换为 rknn 格式
+### 将自定义 onnx 模型转换为 rknn 格式 {#converting-your-own-onnx-model-to-rknn-format}
 
 要使用[rknn-toolkit2](https://github.com/airockchip/rknn-toolkit2/)将 onnx 模型转换为 rknn 格式，你需要：
 
@@ -794,9 +794,9 @@ config:
 
 DeGirum 可以使用[其网站](https://hub.degirum.com)上列出的任何类型硬件的检测器。DeGirum 可以通过 DeGirum AI 服务器或使用 `@local` 与本地硬件一起使用。你也可以直接连接到 DeGirum 的 AI Hub 来运行推理。**请注意：**此检测器*不能*用于商业目的。
 
-### 配置
+### 配置 {#configuration-degirum}
 
-#### AI 服务器推理
+#### AI 服务器推理 {#ai-server-inference}
 
 在开始本部分的配置文件之前，你必须首先启动一个 AI 服务器。DeGirum 提供了一个可用的 AI 服务器作为 docker 容器。将此添加到你的 `docker-compose.yml` 以开始：
 
@@ -831,7 +831,7 @@ model:
   input_pixel_format: rgb/bgr # 查看 model.json 以确定在这里放置哪个
 ```
 
-#### 本地推理
+#### 本地推理 {#local-inference}
 
 也可以不使用 AI 服务器而直接运行硬件。这种方法的好处是没有将预测结果从 AI 服务器 docker 容器传输到 frigate 容器时产生的任何瓶颈。但是，实现本地推理的方法对每个设备和硬件组合都不同，所以通常得不偿失。实现这一目标的一般指南是：
 
@@ -851,7 +851,7 @@ model:
   input_pixel_format: rgb/bgr # 查看 model.json 以确定在这里放置哪个
 ```
 
-#### AI Hub 云推理
+#### AI Hub 云推理 {#ai-hub-cloud-inference}
 
 如果你不具备想要运行的硬件，也可以选择运行云推理。请注意，你的检测 fps 可能需要降低，因为网络延迟确实会显著减慢这种检测方法。对于与 Frigate 一起使用，我们强烈建议使用如上所述的本地 AI 服务器。要设置云推理，
 
@@ -888,7 +888,7 @@ AXEngine 检测器会在首次启动时从 HuggingFace 下载默认模型。缓�
 
 :::
 
-### 配置
+### 配置 {#configuration-axengine}
 
 配置 AXEngine 检测器时，你必须指定模型名称。
 

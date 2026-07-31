@@ -3,7 +3,7 @@ id: recordings
 title: 录制故障排除
 ---
 
-## 为什么我的录制不工作？（录制列表为空，"No recordings found for this time"）
+## 为什么我的录制不工作？（录制列表为空，"No recordings found for this time"） {#why-are-my-recordings-not-working-empty-recordings-no-recordings-found-for-this-time}
 
 如果 Frigate 显示实时视频但历史视图为空，或者你看到"No recordings found for this time"（未找到此时间段的录制），原因几乎总是以下三类之一。片段首先写入 RAM 缓存，只有在满足保留策略（retention）_且_摄像头的 `record` 流产生有效、可存储的视频时，才会移动到磁盘。按顺序排查：保留策略配置是迄今为止最常见的原因。
 
@@ -17,9 +17,9 @@ logger:
 
 正常工作的摄像头会记录类似 `Copied /media/frigate/recordings/{segment_path} in 0.2 seconds` 的日志行。如果你从未看到这些日志，说明没有片段到达磁盘，问题指向摄像头/流或存储部分。
 
-### 保留策略配置问题
+### 保留策略配置问题 {#retention-configuration-issues}
 
-#### 录制已启用，但没有任何内容被保存
+#### 录制已启用，但没有任何内容被保存 {#recording-is-enabled-but-nothing-is-saved}
 
 这是最常见的原因。仅设置 `record.enabled: True` **不会**保存任何录像：**连续录制默认是禁用的**，缓存中的片段只有在匹配已配置的保留策略时才会被移动到磁盘。你必须至少配置 `continuous`、`motion`、`alerts` 或 `detections` 保留策略之一。
 
@@ -34,7 +34,7 @@ record:
 
 参见[录制](/configuration/record)了解完整的常用配置选项，包括减少存储和仅警报的配置方案。
 
-#### 画面变动或事件录制保存的内容比你预期的少
+#### 画面变动或事件录制保存的内容比你预期的少 {#motion-or-event-only-recording-keeps-less-than-you-expect}
 
 如果你只配置了 `motion`、`alerts` 或 `detections` 保留策略（没有 `continuous`），Frigate 会根据保留策略的 `mode` 选择性保留录像：
 
@@ -44,20 +44,20 @@ record:
 
 如果你期望连续录像但只配置了画面变动/事件保留策略，请按上述方式添加 `continuous` 保留期。要验证画面变动是否真的被检测到，请在调试视图或界面的 Motion Tuner（画面变动调节器）中观察画面变动框。
 
-#### 警报和检测录制需要正常工作的目标检测
+#### 警报和检测录制需要正常工作的目标检测 {#alert-and-detection-recordings-require-working-object-detection}
 
 `alerts` 和 `detections` 保留策略只保留与被追踪目标时间重叠的录像，因此它们依赖目标检测正常运行：
 
 - **检测必须启用。** 如果 `detect: enabled: False`，则永远不会创建警报或检测，因此警报/检测保留策略不保留任何内容。（连续和画面变动录制在检测禁用时仍然工作。）
 - **目标必须被你的模型支持。** 如果你追踪你的模型不支持的 targets（例如默认模型下的 `deer` 或 `license_plate`），Frigate 永远不会检测到它，也永远不会为其录制。检查日志中的警告并移除不支持的目标或切换到包含它们的模型（例如 [Frigate+](/plus/)）。
 
-#### 你在使用过时的教程
+#### 你在使用过时的教程 {#youre-following-an-outdated-guide}
 
 配置键在主版本之间会变化。例如，旧的 `clips` 配置已经很久不存在了。如果你从旧的博客文章或视频中复制了配置，请根据当前的[参考配置](/configuration/advanced/reference)验证每一个键。
 
-### 摄像头和流问题
+### 摄像头和流问题 {#camera-and-stream-issues}
 
-#### 不兼容的音频编解码器（录制静默失败无法保存）
+#### 不兼容的音频编解码器（录制静默失败无法保存） {#incompatible-audio-codec-recordings-silently-fail-to-save}
 
 Frigate 将录像存储在 MP4 容器中，某些摄像头的音频编解码器（最常见的是 `pcm_alaw`、`pcm_mulaw` 或其他 G.711 变体）**无法放入 MP4 容器**。当发生这种情况时，ffmpeg 无法写入片段，不会保存任何录像，即使实时画面正常。这是 Tapo、TP-Link VIGI 和某些 Reolink 摄像头的常见原因。
 
@@ -72,7 +72,7 @@ cameras:
         # 或 preset-record-generic 以录制无音频的视频
 ```
 
-#### 录制流无法连接
+#### 录制流无法连接 {#the-record-stream-isnt-connecting}
 
 类似 `No new recording segments were created for <camera> in the last 120s` 的消息意味着 ffmpeg 无法读取 `record` 流。诊断方法：
 
@@ -85,15 +85,15 @@ cameras:
 
 Frigate 直接复制 `record` 流而不重新编码，因此回放取决于你的浏览器是否支持摄像头的编解码器。H265/HEVC 录像可能在某些浏览器中无法播放。如果录像显示为仅音频或黑屏，你的摄像头可能在发送你的浏览器无法解码的编解码器。配置摄像头输出 **H264** 以获得最大的兼容性。
 
-如果回放失败并出现明确的 `PIPELINE_ERROR_DECODE` 或 `Media failed to decode` 错误，请参见下文[录制无法回放："PIPELINE_ERROR_DECODE"](#录制无法回放-pipeline-error-decode或-media-failed-to-decode)。
+如果回放失败并出现明确的 `PIPELINE_ERROR_DECODE` 或 `Media failed to decode` 错误，请参见下文[录制无法回放："PIPELINE_ERROR_DECODE"](#pipeline-error-decode)。
 
-#### 片段仅约 1 秒长
+#### 片段仅约 1 秒长 {#segments-are-only-1-second-long}
 
 如果录制流使用"Smart Codec"/H.264+ 模式或在流传输中途更改编码参数，损坏的时间戳会导致片段被过于频繁地分割并填满缓存。这会产生"Too many unprocessed recording segments"警告。参见[下方问题](#i-see-the-message-warning--too-many-unprocessed-recording-segments-in-cache-for-camera-this-likely-indicates-an-issue-with-the-detect-stream)了解完整诊断。
 
-### 存储和挂载问题
+### 存储和挂载问题 {#storage-and-mounting-issues}
 
-#### 存储卷未正确挂载
+#### 存储卷未正确挂载 {#the-storage-volume-isnt-mounted-correctly}
 
 如果录制卷（`/media/frigate`）指向错误位置、不可写，或网络/加密挂载在启动时挂载失败，Frigate 无法保存录制，或者会静默写入到启动驱动器，然后因为驱动器看起来远小于预期而激进地清除。
 
@@ -104,9 +104,9 @@ Frigate 直接复制 `record` 流而不重新编码，因此回放取决于你�
 
 如果录制确实正在写入但复制太慢无法跟上，参见下方["无法跟上录制片段"](#i-see-the-message-warning--unable-to-keep-up-with-recording-segments-in-cache-for-camera-keeping-the-5-most-recent-segments-out-of-6-and-discarding-the-rest)问题。
 
-## 录制无法回放
+## 录制无法回放 {#recordings-wont-play-back}
 
-### 录制无法回放："PIPELINE_ERROR_DECODE"（或 "Media failed to decode"）
+### 录制无法回放："PIPELINE_ERROR_DECODE"（或 "Media failed to decode"） {#pipeline-error-decode}
 
 当某段录制在 Frigate 界面中无法播放，并出现类似 `Failed to play recordings (error 3): PIPELINE_ERROR_DECODE` 的错误时，这条信息来自**你的浏览器**，而非 Frigate。`PIPELINE_ERROR_DECODE` 仅由**基于 Chromium 的浏览器**（Chrome、Edge、Brave、Vivaldi、Opera、Arc 以及许多应用内浏览器使用的 Android WebView）的媒体管线在无法解码录像中的某个视频或音频包时发出。WebKit 浏览器（Safari）对同一底层问题会给出不同的信息，通常是 `Media failed to decode` 或 `DECODER_ERROR_NOT_SUPPORTED`。
 
@@ -118,11 +118,11 @@ Frigate 将 `record` 流**不重新编码**地直接写入磁盘，因此浏览�
 
 :::
 
-#### 第 1 步：确认是浏览器问题
+#### 第 1 步：确认是浏览器问题 {#step-1-confirm-it-is-a-browser-issue}
 
 在 **Firefox** 或 **Safari** 中打开同一段录制。Firefox 和 Safari 都使用不同的媒体引擎，不会产生 `PIPELINE_ERROR_DECODE`，因此如果在那里能播放，就确认了这是客户端的编解码器或解码器问题，而非录制损坏。更换浏览器只是权宜之计，并非修复；后续步骤针对根本原因，让 Chromium 浏览器也能正常工作。
 
-#### 第 2 步：排除 H.265 / HEVC
+#### 第 2 步：排除 H.265 / HEVC {#step-2-rule-out-h265-hevc}
 
 浏览器对 H.265（HEVC）的支持有限，且取决于操作系统、GPU、硬件加速和浏览器版本，因此它是此错误最常见的原因。按可靠性排序的选项：
 
@@ -158,7 +158,7 @@ Frigate 将 `record` 流**不重新编码**地直接写入磁盘，因此浏览�
 
   你可能还需在浏览器中启用 HEVC 和硬件解码（例如 Chrome 的"设置 → 系统 → 在可用时使用硬件加速"）。HEVC 的硬件支持因 GPU、操作系统和浏览器版本而异。
 
-#### 第 3 步：清理摄像头产生的损坏包
+#### 第 3 步：清理摄像头产生的损坏包 {#step-3-clean-up-damaged-packets-from-the-camera}
 
 如果错误是**间歇性**的（同一段录制刷新页面后能播放，或播放一段时间后才失败），摄像头很可能在偶尔发出损坏或畸形的包。某些摄像头型号比其他型号更易出现此问题。通过 go2rtc 的 `ffmpeg` 模块转发流通常足以"清理"流，让浏览器能解码，即使不更改编解码器：
 
@@ -169,29 +169,29 @@ go2rtc:
       - "ffmpeg:rtsp://user:password@CAMERA_IP:554/stream#video=h264#audio=aac"
 ```
 
-#### 第 4 步：修复不兼容或损坏的音频
+#### 第 4 步：修复不兼容或损坏的音频 {#step-4-fix-incompatible-or-corrupt-audio}
 
-音频是最常见的元凶之一，音频轨道解码失败会导致整段录制失败。确保摄像头输出 **AAC** 音频、用 go2rtc 将音频转码为 AAC（`#audio=aac`），或完全去除音频。基于预设的做法参见[不兼容的音频编解码器](#不兼容的音频编解码器录制静默失败无法保存)。
+音频是最常见的元凶之一，音频轨道解码失败会导致整段录制失败。确保摄像头输出 **AAC** 音频、用 go2rtc 将音频转码为 AAC（`#audio=aac`），或完全去除音频。基于预设的做法参见[不兼容的音频编解码器](#incompatible-audio-codec-recordings-silently-fail-to-save)。
 
-#### 第 5 步：避免"智能"/"+"编解码器并检查关键帧间隔
+#### 第 5 步：避免"智能"/"+"编解码器并检查关键帧间隔 {#step-5-avoid-smart-codecs-and-check-the-keyframe-interval}
 
-- 禁用摄像头上的任何 **"Smart Codec"**、**"H.264+"** 或 **"H.265+"** 功能。这些非标准模式会丢弃关键帧并在流中途更改编码参数，恰好产生浏览器拒绝解码的那类包。（它们也会导致[短录制片段](#片段仅约-1-秒长)。）
+- 禁用摄像头上的任何 **"Smart Codec"**、**"H.264+"** 或 **"H.265+"** 功能。这些非标准模式会丢弃关键帧并在流中途更改编码参数，恰好产生浏览器拒绝解码的那类包。（它们也会导致[短录制片段](#segments-are-only-1-second-long)。）
 - 将摄像头的 **I 帧（关键帧）间隔设置为等于帧率**（例如 20 fps 的流设为 `20`）。过长的关键帧间隔会拖慢播放启动并使解码错误更易发生。
 
-#### 第 6 步：考虑码率和客户端硬件
+#### 第 6 步：考虑码率和客户端硬件 {#step-6-consider-bitrate-and-the-client-hardware}
 
 浏览器在本地解码视频，因此过于吃力的流可能在一台设备上失败而在另一台上正常：
 
 - **极高的码率或分辨率**（例如 4K/8MP 的 HEVC 主流）可能压垮低功耗的平板、手机或单板计算机并使解码器停滞。在同一台录制在台式机上测试；如果台式机能播放，则降低摄像头码率或录制较低分辨率的配置档。
 - 指名客户端 GPU 解码器的错误，如 `VaapiVideoDecoder: failed Initialize()ing the frame pool`，表明是浏览器硬件解码问题。切换浏览器的"使用硬件加速"设置（开或关）通常能解决。
 
-### 录制回放无视频（或完全无法播放）
+### 录制回放无视频（或完全无法播放） {#recordings-play-back-with-no-video-or-wont-play-at-all}
 
 Frigate 将 `record` 流直接复制而不重新编码，因此回放取决于你的浏览器是否支持摄像头的编解码器。H265/HEVC 录制在某些浏览器中可能无法播放。如果录制显示为仅有音频或黑屏，你的摄像头很可能发送了浏览器无法解码的编解码器。将摄像头配置为输出 **H264** 以获得最大兼容性。
 
-如果回放失败并出现明确的 `PIPELINE_ERROR_DECODE` 或 `Media failed to decode` 错误，请参见上文的[录制无法回放："PIPELINE_ERROR_DECODE"](#录制无法回放-pipeline-error-decode或-media-failed-to-decode)。
+如果回放失败并出现明确的 `PIPELINE_ERROR_DECODE` 或 `Media failed to decode` 错误，请参见上文的[录制无法回放："PIPELINE_ERROR_DECODE"](#pipeline-error-decode)。
 
-## 我已将 Frigate 配置为仅在有画面变动时录制，但即使没有画面变动也似乎在录制。为什么？
+## 我已将 Frigate 配置为仅在有画面变动时录制，但即使没有画面变动也似乎在录制。为什么？ {#i-have-frigate-configured-for-motion-recording-only-but-it-still-seems-to-be-recording-even-with-no-motion-why}
 
 你需要：
 
@@ -199,11 +199,11 @@ Frigate 将 `record` 流直接复制而不重新编码，因此回放取决于�
 - 如果启用了音频检测，请记住任何高于`min_volume`的音频都会被视为画面变动。
 - 通过编辑配置文件或使用UI中的画面变动调节器来[调整你的画面变动检测设置](../configuration/motion_detection.md)。
 
-## 我看到警告信息：WARNING : Unable to keep up with recording segments in cache for camera. Keeping the 5 most recent segments out of 6 and discarding the rest...（无法跟上摄像头录制片段的缓存。保留6个中最新的5个片段，丢弃其余部分...）
+## 我看到警告信息：WARNING : Unable to keep up with recording segments in cache for camera. Keeping the 5 most recent segments out of 6 and discarding the rest...（无法跟上摄像头录制片段的缓存。保留6个中最新的5个片段，丢弃其余部分...） {#i-see-the-message-warning--unable-to-keep-up-with-recording-segments-in-cache-for-camera-keeping-the-5-most-recent-segments-out-of-6-and-discarding-the-rest}
 
 这个警告意味着录制维护程序无法足够快地将录制片段从 RAM 缓存移动到磁盘。当缓存填满时，Frigate 会丢弃最旧的片段以避免内存耗尽和崩溃，因此你会丢失录制的录像。这几乎总是存储吞吐量或系统资源问题。按以下步骤排查原因。
 
-#### 第 1 步：启用录制调试日志
+#### 第 1 步：启用录制调试日志 {#step-1-enable-recording-debug-logging}
 
 第一步是测量每个片段从 RAM 缓存移动到磁盘所需的时间。为录制维护程序启用调试日志：
 
@@ -221,30 +221,30 @@ DEBUG   : Copied /media/frigate/recordings/{segment_path} in 0.2 seconds.
 
 让它运行直到警告开始出现，这样你可以确认在错误发生时磁盘是否确实在变慢。
 
-#### 第 2 步：解读复制时间
+#### 第 2 步：解读复制时间 {#step-2-interpret-the-copy-times}
 
 复制耗时告诉你该朝哪个方向调查：
 
 - **持续长于约 1 秒**：你的存储无法跟上传入的录制。继续第 3-5 步诊断慢存储。
 - **持续远低于 1 秒**：存储足够快，问题更有可能是 CPU 或资源争用。跳到第 6 步。
 
-#### 第 3 步：检查内存、交换空间、缓存和磁盘利用率
+#### 第 3 步：检查内存、交换空间、缓存和磁盘利用率 {#step-3-check-ram-swap-cache-and-disk-utilization}
 
 如果 CPU、内存、磁盘吞吐量或总线 I/O 不足，Frigate 内部的任何设置都无法帮助。在警告发生时检查每个可用系统资源的方面。
 
-#### 第 4 步：检查你的存储类型
+#### 第 4 步：检查你的存储类型 {#step-4-check-your-storage-type}
 
 挂载网络共享是存储录制的流行选择，但这可能导致复制时间减慢并造成问题。一些用户发现使用 `NFS` 而不是 `SMB` 可以显著减少复制时间并解决问题。同时确保运行 Frigate 的设备与网络共享之间的网络连接稳定且快速也很重要。饱和或不可靠的链路会阻塞复制。
 
-#### 第 5 步：检查你的挂载选项
+#### 第 5 步：检查你的挂载选项 {#step-5-check-your-mount-options}
 
 一些用户发现通过 `fstab` 使用 `sync` 选项挂载驱动器会导致性能大幅下降并引发此问题。使用 `async` 替代可以大大减少复制时间。
 
-#### 第 6 步：排除 CPU 负载
+#### 第 6 步：排除 CPU 负载 {#step-6-rule-out-cpu-load}
 
 如果复制时间持续低于 1 秒但你仍看到警告，机器的 CPU 负载可能太高，导致 Frigate 没有足够的资源来跟上。尝试暂时关闭其他服务和任何资源密集型的 Frigate 功能，看看问题是否改善。
 
-## 我看到警告信息：WARNING : Too many unprocessed recording segments in cache for camera. This likely indicates an issue with the detect stream...（缓存中未处理的录制片段过多，这通常表明检测流存在问题...）
+## 我看到警告信息：WARNING : Too many unprocessed recording segments in cache for camera. This likely indicates an issue with the detect stream...（缓存中未处理的录制片段过多，这通常表明检测流存在问题...） {#i-see-the-message-warning--too-many-unprocessed-recording-segments-in-cache-for-camera-this-likely-indicates-an-issue-with-the-detect-stream}
 
 这个警告意味着受影响摄像头的检测流已落后或停止处理帧。Frigate 的录制缓存保存着等待检测器分析的片段。当堆积超过 6 个片段时，Frigate 会丢弃最旧的片段以防止缓存填满。
 
@@ -254,11 +254,11 @@ DEBUG   : Copied /media/frigate/recordings/{segment_path} in 0.2 seconds.
 
 :::
 
-#### 第 1 步：获取完整日志
+#### 第 1 步：获取完整日志 {#step-1-get-the-full-logs}
 
 收集从 Frigate 启动到错误首次出现的完整日志。查找在"Too many unprocessed"消息**之前**出现的错误或警告。根因就在那里。
 
-#### 第 2 步：检查缓存目录
+#### 第 2 步：检查缓存目录 {#step-2-check-the-cache-directory}
 
 进入 Frigate 容器并检查录制缓存：
 
@@ -268,7 +268,7 @@ docker exec -it frigate ls -la /tmp/cache
 
 每个摄像头应该只有少量 `.mp4` 片段文件。如果某个摄像头的文件数量明显多于其他摄像头，该摄像头就是问题来源。单个摄像头的问题可能连锁反应导致所有摄像头出现此错误。
 
-#### 第 3 步：验证片段时长
+#### 第 3 步：验证片段时长 {#step-3-verify-segment-duration}
 
 录制片段应该大约 10 秒长。对缓存中的片段运行 `ffprobe` 检查：
 
@@ -290,7 +290,7 @@ docker exec -it frigate ffprobe -v error -show_entries format=duration -of defau
 
 :::
 
-#### 第 4 步：检查检测器是否卡住
+#### 第 4 步：检查检测器是否卡住 {#step-4-check-for-a-stuck-detector}
 
 如果检测流不处理帧，片段将堆积。常见原因：
 
@@ -299,7 +299,7 @@ docker exec -it frigate ffprobe -v error -show_entries format=duration -of defau
 - **模型过大**：使用较小的模型变体（例如 YOLO `s` 或 `t` 尺寸，而非 `e` 或 `x`）。使用 320x320 输入尺寸而非 640x640，除非你拥有强大的专用检测器。
 - **虚拟化**：在虚拟机中运行 Frigate（尤其是 Proxmox）可能导致检测器挂起或停顿。这是虚拟化环境中 GPU/TPU 直通的已知问题，不是 Frigate 能修复的。推荐在裸机上以 Docker 方式运行 Frigate。
 
-#### 第 5 步：检查 GPU 是否挂起
+#### 第 5 步：检查 GPU 是否挂起 {#step-5-check-for-gpu-hangs}
 
 在宿主机上，检查 `dmesg` 中是否有 GPU 相关错误：
 
@@ -309,7 +309,7 @@ dmesg | grep -i -E "gpu|drm|reset|hang"
 
 类似 `trying reset from guc_exec_queue_timedout_job` 的消息或其他 GPU 重置/挂起消息表示驱动或硬件问题。确保你的内核和 GPU 驱动（尤其是 Intel）是最新的。
 
-#### 第 6 步：验证硬件加速配置
+#### 第 6 步：验证硬件加速配置 {#step-6-verify-hardware-acceleration-configuration}
 
 不正确的 `hwaccel_args` 预设可能导致 ffmpeg 静默失败或消耗过多 CPU，使检测器资源不足。
 
@@ -317,11 +317,11 @@ dmesg | grep -i -E "gpu|drm|reset|hang"
 - 对于 h265 摄像头，使用对应的 h265 预设（例如 `preset-intel-qsv-h265`）。
 - 注意 `hwaccel_args` 仅与检测流相关。Frigate 不解码录制流。
 
-#### 第 7 步：验证 go2rtc 流配置
+#### 第 7 步：验证 go2rtc 流配置 {#step-7-verify-go2rtc-stream-configuration}
 
 确保 go2rtc 配置中的 ffmpeg 源名称与正确的摄像头流匹配。配置错误的流名称（例如在摄像头之间复制配置时忘记更新流引用）将导致使用错误的流或流完全失败。
 
-#### 第 8 步：检查系统资源
+#### 第 8 步：检查系统资源 {#step-8-check-system-resources}
 
 如果以上都不适用，问题可能是一般性资源限制。在宿主机上监控以下内容：
 
@@ -332,7 +332,7 @@ dmesg | grep -i -E "gpu|drm|reset|hang"
 
 尝试暂时禁用资源密集型功能如 `genai` 和 `face_recognition`，看问题是否解决。这可以帮助判断检测器是否被占用资源。
 
-## 我看到错误信息：ERROR : Error occurred when attempting to maintain recording cache（尝试维护录制缓存时发生错误）
+## 我看到错误信息：ERROR : Error occurred when attempting to maintain recording cache（尝试维护录制缓存时发生错误） {#i-see-the-message-error--error-occurred-when-attempting-to-maintain-recording-cache}
 
 此消息意味着录制维护程序在将片段从缓存移动到磁盘时遇到了错误。这是一个**通用包装器**：实际原因总是记录在**紧接的下一行**。Frigate 通常会恢复并继续运行，但任何受影响的片段都会丢失，所以值得解决。
 
@@ -345,16 +345,16 @@ dmesg | grep -i -E "gpu|drm|reset|hang"
 
 由于这些是操作系统级别的错误，必须在**宿主机**上解决，而不是在 Frigate 的配置中。下面是常见的底层错误。
 
-#### [Errno 28] No space left on device（设备空间不足）
+#### [Errno 28] No space left on device（设备空间不足） {#errno-28-no-space-left-on-device}
 
 Frigate 正在写入的文件系统已满。需要检查的事项：
 
 - **录制卷确实已满。** 用 `df -h` 检查映射到 `/media/frigate` 的路径在宿主机上的可用空间，并查看 Frigate 界面中的**存储**页面。
-- **磁盘显示有可用空间但仍然是"满的"。** 这通常意味着文件系统的 **inode** 已用完（用 `df -i` 检查），或者由于不正确的绑定挂载，录制落到了与你预期不同的、更小的文件系统上。参见上方[存储卷未正确挂载](#存储卷未正确挂载)。
+- **磁盘显示有可用空间但仍然是"满的"。** 这通常意味着文件系统的 **inode** 已用完（用 `df -i` 检查），或者由于不正确的绑定挂载，录制落到了与你预期不同的、更小的文件系统上。参见上方[存储卷未正确挂载](#the-storage-volume-isnt-mounted-correctly)。
 - **`/tmp/cache` 已满。** 如果你将 `/tmp/cache` 挂载为小的 `tmpfs`，积压的片段会填满它。增加 tmpfs 大小，或者解决导致片段堆积的原因（参见上方[缓存中未处理的录制片段过多](#i-see-the-message-warning--too-many-unprocessed-recording-segments-in-cache-for-camera-this-likely-indicates-an-issue-with-the-detect-stream)问题）。
 - **宿主机在 Frigate 能清除之前阻止写入。** 在某些系统上（例如 Unraid 有填充阈值），宿主机在 Frigate 的紧急清理能运行之前就停止写入。在卷上留出更多余量，或降低保留策略让 Frigate 更快清除。
 
-#### [Errno 17] File exists（文件已存在，伴随 ffmpeg "Error writing trailer" 或 "unable to re-open output file"）
+#### [Errno 17] File exists（文件已存在，伴随 ffmpeg "Error writing trailer" 或 "unable to re-open output file"） {#errno-17-file-exists-with-ffmpeg-error-writing-trailer-or-unable-to-re-open-output-file}
 
 类似 `[Errno 17] File exists: '/media/frigate/recordings/.../<camera>'` 的错误，经常伴随 ffmpeg 错误如 `Unable to re-open ... output file for shifting data` 或 `Error writing trailer: No such file or directory`，这是**不可靠的网络共享**（NFS 或 SMB）的标志。挂载正在断开、提供过时的目录条目或处理文件锁定有误。
 
@@ -363,14 +363,14 @@ Frigate 正在写入的文件系统已满。需要检查的事项：
 - 检查你的 `fstab`/挂载选项中影响一致性或性能的设置（参见上方第 5 步中的 `sync` vs `async` 说明）。
 - 启用 `frigate.record.maintainer` 调试日志以确认错误是否与共享不可用的时间点吻合。
 
-#### 错误引用了你手动重命名或删除的摄像头名称
+#### 错误引用了你手动重命名或删除的摄像头名称 {#errors-referencing-a-camera-you-manually-renamed-or-removed}
 
 如果下一行错误引用了一个在你的配置中不再存在的摄像头名称，那么是来自重命名或删除操作的孤立数据留在了持久化的 `/tmp/cache` 卷中。
 
 - 按[安装文档](/frigate/installation#storage)中推荐的，为 `/tmp/cache` 使用 `tmpfs` 挂载，可以防止旧摄像头名称下的过期缓存文件在重启后依然存在，从而完全避免此问题。
 - 如果错误持续存在，停止 Frigate 并从 `/tmp/cache` 中删除旧摄像头名称的任何残留片段。
 
-### 重启 Frigate 或重新创建容器后，时间轴预览画面变成黑色了。这是为什么？
+### 重启 Frigate 或重新创建容器后，时间轴预览画面变成黑色了。这是为什么？ {#my-timeline-previews-are-black-after-restarting-frigate-or-recreating-the-container}
 
 拖拽预览（拖动历史时间轴时显示的时间压缩片段、副摄像头预览以及悬停核查卡片时播放的预览）并非连续录制。Frigate 在每小时期间将低分辨率预览帧缓存到 `/tmp/cache` 中，仅在**整点时刻**才将它们组装成完整的预览片段。
 

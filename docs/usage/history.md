@@ -62,7 +62,7 @@ title: 历史记录
 
 你还可以捕获当前帧的即时快照，并直接从播放器向 [Frigate+](/integrations/plus) 提交一帧（仅限管理员）。
 
-## AI 核查摘要 {#ai-review-summaries}
+## AI 核查总结 {#ai-review-summaries}
 
 当配置了[生成式 AI 核查](/configuration/genai/genai_review)后，Frigate 可以为核查项生成标题、描述和威胁分类，并在你拖动历史记录时显示它们。具有 AI 摘要的核查项会在几个地方展示其详情：
 

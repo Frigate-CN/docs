@@ -28,15 +28,27 @@ H265 编码的录制只能在 Chrome 108+、Edge 和 Safari 浏览器中能够�
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-导航到 <NavPath path="设置 > 全局配置 > 录制" />。
-
-- 将**启用录制**设为开启
-- 将**连续保留 > 保留天数**设为 `3`
-- 将**画面变动保留 > 保留天数**设为 `7`
-- 将**警报保留 > 事件保留 > 保留天数**设为 `30`
-- 将**警报保留 > 事件保留 > 保留模式**设为 `all`
-- 将**检测保留 > 事件保留 > 保留天数**设为 `30`
-- 将**检测保留 > 事件保留 > 保留模式**设为 `all`
+<FrigateConfigMock
+  section="record"
+  :values="{
+    enabled: true,
+    'continuous.days': 3,
+    'motion.days': 7,
+    'alerts.retain.days': 30,
+    'alerts.retain.mode': 'all',
+    'detections.retain.days': 30,
+    'detections.retain.mode': 'all',
+  }"
+  :targets="[
+    { field: 'enabled', hint: '打开录制总开关，所有摄像头都会开始录制。' },
+    { field: 'continuous.days', hint: '连续录像保留 3 天，这段时间内不管有没有画面变动都会保存。' },
+    { field: 'motion.days', hint: '画面变动录像保留 7 天，3 天之后就只剩下有画面变动的片段了。' },
+    { field: 'alerts.retain.days', hint: '警报对应的录像保留 30 天。' },
+    { field: 'alerts.retain.mode', hint: '保留模式选择“全部”，警报时间范围内的所有片段都会保留。' },
+    { field: 'detections.retain.days', hint: '检测对应的录像保留 30 天。' },
+    { field: 'detections.retain.mode', hint: '保留模式选择“全部”，检测时间范围内的所有片段都会保留。' },
+  ]"
+/>
 
 </TabItem>
 <TabItem value="YAML配置文件">
@@ -68,14 +80,27 @@ record:
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-导航到 <NavPath path="设置 > 全局配置 > 录制" />。
-
-- 将**启用录制**设为开启
-- 将**画面变动保留 > 保留天数**设为 `3`
-- 将**警报保留 > 事件保留 > 保留天数**设为 `30`
-- 将**警报保留 > 事件保留 > 保留模式**设为 `motion`
-- 将**检测保留 > 事件保留 > 保留天数**设为 `30`
-- 将**检测保留 > 事件保留 > 保留模式**设为 `motion`
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="record"
+  :values="{
+    enabled: true,
+    'motion.days': 3,
+    'alerts.retain.days': 30,
+    'alerts.retain.mode': 'motion',
+    'detections.retain.days': 30,
+    'detections.retain.mode': 'motion',
+  }"
+  :targets="[
+    { field: 'enabled', hint: '打开录制总开关。' },
+    { field: 'motion.days', hint: '只保留 3 天的画面变动录像，没有画面变动的片段不会落盘。' },
+    { field: 'alerts.retain.days', hint: '警报对应的录像保留 30 天。' },
+    { field: 'alerts.retain.mode', hint: '保留模式选择“画面变动”，只保留警报窗口内有画面变动的片段。' },
+    { field: 'detections.retain.days', hint: '检测对应的录像保留 30 天。' },
+    { field: 'detections.retain.mode', hint: '保留模式选择“画面变动”，只保留检测窗口内有画面变动的片段。' },
+  ]"
+/>
 
 </TabItem>
 <TabItem value="YAML配置文件">
@@ -105,12 +130,23 @@ record:
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-导航到 <NavPath path="设置 > 全局配置 > 录制" />。
-
-- 将**启用录制**设为开启
-- 将**连续保留 > 保留天数**设为 `0`
-- 将**警报保留 > 事件保留 > 保留天数**设为 `30`
-- 将**警报保留 > 事件保留 > 保留模式**设为 `motion`
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="record"
+  :values="{
+    enabled: true,
+    'continuous.days': 0,
+    'alerts.retain.days': 30,
+    'alerts.retain.mode': 'motion',
+  }"
+  :targets="[
+    { field: 'enabled', hint: '打开录制总开关。' },
+    { field: 'continuous.days', hint: '保留天数设为 0，完全关闭连续录制。' },
+    { field: 'alerts.retain.days', hint: '警报对应的录像保留 30 天，其余内容不保留。' },
+    { field: 'alerts.retain.mode', hint: '保留模式选择“画面变动”，只保留警报窗口内有画面变动的片段。' },
+  ]"
+/>
 
 </TabItem>
 <TabItem value="YAML配置文件">
@@ -129,21 +165,42 @@ record:
 </TabItem>
 </ConfigTabs>
 
-## 预捕获和后捕获
+## 预捕获和后捕获 {#pre-capture-and-post-capture}
 
 `pre_capture` 和 `post_capture` 设置控制在警报或检测之前和之后各包含多少秒的视频。这些参数可以为警报和检测独立配置，可以全局设置，也可以针对每个摄像头进行覆盖。
 
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-导航到 <NavPath path="设置 > 全局配置 > 录制" /> 设置全局默认值，或导航到 <NavPath path="设置 > 摄像头配置 > （选择摄像头）> 录制" /> 为特定摄像头进行覆盖。
+先在全局配置中设置默认值，需要时再到对应摄像头下覆盖：
 
-| 字段                                       | 说明                                  |
-| ------------------------------------------ | ------------------------------------- |
-| **警报保留 > 预捕获秒数**                  | 在警报事件之前包含的视频秒数          |
-| **警报保留 > 后捕获秒数**                  | 在警报事件之后包含的视频秒数          |
-| **检测保留 > 预捕获秒数**                  | 在检测事件之前包含的视频秒数          |
-| **检测保留 > 后捕获秒数**                  | 在检测事件之后包含的视频秒数          |
+<FrigateConfigMock
+  :auto-play="false"
+  section="record"
+  :values="{
+    'alerts.pre_capture': 5,
+    'alerts.post_capture': 5,
+    'detections.pre_capture': 5,
+    'detections.post_capture': 5,
+  }"
+  :steps="[
+    {
+      level: 'global',
+      targets: [
+        { field: 'alerts.pre_capture', hint: '在警报事件之前额外包含的视频秒数。' },
+        { field: 'alerts.post_capture', hint: '在警报事件之后额外包含的视频秒数。' },
+        { field: 'detections.pre_capture', hint: '在检测事件之前额外包含的视频秒数。' },
+        { field: 'detections.post_capture', hint: '在检测事件之后额外包含的视频秒数。' },
+      ],
+    },
+    {
+      level: 'camera',
+      focus: 'alerts.pre_capture',
+      label: '按摄像头覆盖',
+      hint: '在摄像头配置的录像页面中调整同名字段，即可为单个摄像头覆盖全局默认值。',
+    },
+  ]"
+/>
 
 </TabItem>
 <TabItem value="YAML配置文件">
@@ -166,7 +223,7 @@ record:
 - **预捕获最大值**：60 秒。
 - 这些设置按核查类别（警报和检测）应用，而非按目标类型。
 
-### 预/后捕获如何与保留模式交互
+### 预/后捕获如何与保留模式交互 {#how-prepost-capture-interacts-with-retention-mode}
 
 `pre_capture` 和 `post_capture` 值定义了核查项前后的**时间窗口**，但实际保留在磁盘上的录制片段还必须匹配配置的**保留模式**。
 
@@ -195,7 +252,7 @@ record:
 
 :::
 
-### 在哪里查看预/后捕获录像
+### 在哪里查看预/后捕获录像 {#where-to-view-prepost-capture-footage}
 
 预捕获和后捕获的录像包含在**录制时间线**中，可在历史记录视图中查看。注意，预/后捕获设置仅影响哪些录制片段被**保留在磁盘上**——它们不会改变界面中显示的起止时间点。历史记录视图仍将以核查项的实际时间范围为中心，但你可以在时间线上前后拖动浏览已保留的预/后捕获录像。浏览视图显示的是按追踪目标实际可见时间裁剪的特定目标片段，因此预/后捕获时间不会反映在那里。
 
@@ -216,13 +273,17 @@ Frigate 支持连续录制和基于追踪`物体/目标`的录制，具有独立
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-导航到 <NavPath path="设置 > 全局配置 > 录制" />。
-
-| 字段                       | 说明                          |
-| -------------------------- | ----------------------------- |
-| **启用录制**               | 为所有摄像头启用或禁用录制    |
-| **连续保留 > 保留天数**    | 保留连续录制的天数            |
-| **画面变动保留 > 保留天数** | 保留画面变动录像的天数        |
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="record"
+  :values="{ enabled: true, 'continuous.days': 1, 'motion.days': 2 }"
+  :targets="[
+    { field: 'enabled', hint: '为所有摄像头启用或禁用录制。' },
+    { field: 'continuous.days', hint: '保留连续录制的天数，默认为 0（即关闭连续录制）。' },
+    { field: 'motion.days', hint: '保留画面变动录像的天数。' },
+  ]"
+/>
 
 </TabItem>
 <TabItem value="YAML配置文件">
@@ -248,13 +309,17 @@ record:
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-导航到 <NavPath path="设置 > 全局配置 > 录制" />。
-
-| 字段                                           | 说明                        |
-| ---------------------------------------------- | --------------------------- |
-| **启用录制**                                   | 为所有摄像头启用或禁用录制  |
-| **警报保留 > 事件保留 > 保留天数**             | 保留警报录制的天数          |
-| **检测保留 > 事件保留 > 保留天数**             | 保留检测录制的天数          |
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="record"
+  :values="{ enabled: true, 'alerts.retain.days': 10, 'detections.retain.days': 10 }"
+  :targets="[
+    { field: 'enabled', hint: '为所有摄像头启用或禁用录制。' },
+    { field: 'alerts.retain.days', hint: '保留警报录制的天数。' },
+    { field: 'detections.retain.days', hint: '保留检测录制的天数。' },
+  ]"
+/>
 
 </TabItem>
 <TabItem value="YAML配置文件">
@@ -275,7 +340,7 @@ record:
 
 此配置将保留与警报和检测重叠的录制片段 10 天。由于多个追踪 物体/目标 可能引用相同的录制片段，这样可以避免存储重复内容并减少总体存储需求。
 
-## 可以只在特定时间进行"连续"录制吗？
+## 可以只在特定时间进行"连续"录制吗？ {#can-i-have-continuous-recordings-but-only-at-certain-times}
 
 通过 Frigate 页面、Home Assistant 或 MQTT，可以设置摄像头只在特定情况或时间进行录制。
 
@@ -283,7 +348,7 @@ record:
 
 可以通过在**核查**页面中右键点击（电脑）或长按（手机）回放条目，或在**历史**页面中点击导出按钮来导出录制。导出的录制会通过主导航栏中的导出页面进行管理和搜索。
 
-### 使用 FFmpeg 参数自定义导出
+### 使用 FFmpeg 参数自定义导出 {#custom-export-with-ffmpeg-arguments}
 
 对于高级用例，[自定义导出 HTTP API](../integrations/api/export-recording-custom-export-custom-camera-name-start-start-time-end-end-time-post.api.mdx) 允许你在导出录制时传递自定义 FFmpeg 参数：
 
@@ -302,7 +367,7 @@ POST /export/custom/{camera_name}/start/{start_time}/end/{end_time}
 }
 ```
 
-#### CPU 回退
+#### CPU 回退 {#cpu-fallback}
 
 如果配置了硬件加速且导出失败（例如 GPU 不可用），在请求体中设置 `cpu_fallback: true` 可自动使用软件编码重试。
 
@@ -356,13 +421,13 @@ POST /export/custom/{camera_name}/start/{start_time}/end/{end_time}
 
 Frigate 报告的存储用量不会与操作系统使用 `df` 或 `du` 报告的完全一致。这是正常现象，不是 bug。以下各节解释了 Frigate 如何得出其存储数据，以及为什么它们与磁盘自身的统计不同。
 
-### Frigate 如何测量录制用量
+### Frigate 如何测量录制用量 {#how-frigate-measures-recording-usage}
 
 存储指标页面（<NavPath path="系统 > 存储" />）上的**录制内容**值——以及每个摄像头的**摄像头存储**明细——是 Frigate 已写入的录制片段大小的总和，数据取自 Frigate 的数据库。它**不是**通过扫描磁盘计算得出的。Frigate 以这种方式追踪用量是出于设计考虑：反复遍历整个磁盘来统计大小会使硬盘保持旋转状态并增加不必要的 I/O。
 
 旁边显示的磁盘**总量**，以及 Frigate 用于决定何时删除录制的可用空间数据，则来自操作系统对挂载在 `/media/frigate` 的整个文件系统的报告。因此，页面上的**未使用**值是_磁盘总容量减去 Frigate 的录制内容_——而非磁盘的实际可用空间，当磁盘上存储了其他任何内容时，实际可用空间会更低。
 
-### 哪些计入用量——以及为什么与 `df` 不一致
+### 哪些计入用量——以及为什么与 `df` 不一致 {#what-counts-toward-usage-and-why-it-wont-match-df}
 
 只有**录制片段**（`/media/frigate/recordings`）包含在录制存储总量中。许多其他内容会消耗实际的磁盘空间，但**不属于**该数值：
 
@@ -380,7 +445,7 @@ Frigate 报告的存储用量不会与操作系统使用 `df` 或 `du` 报告的
 
 :::
 
-### 可用空间与 `/media/frigate` 挂载
+### 可用空间与 `/media/frigate` 挂载 {#free-space-and-the-mediafrigate-mount}
 
 Frigate 报告的是**在容器内**实际挂载在 `/media/frigate` 的文件系统的容量和可用空间。如果外部驱动器或网络共享并未真正挂载在那里——缺少 `/etc/fstab` 条目、容器启动时共享离线，或主机未传递该路径——容器将回退到主机的操作系统磁盘，Frigate 将正确报告那个较小的磁盘，而非你预期的驱动器。
 
@@ -393,11 +458,11 @@ docker exec -it frigate mount | grep media
 
 有关卷的预期配置方式，请参阅[存储挂载布局](/frigate/installation#storage)。
 
-### `/tmp/cache` 区域是独立的
+### `/tmp/cache` 区域是独立的 {#the-tmpcache-area-is-separate}
 
 录制片段首先写入 `/tmp/cache`——一个小型内存（`tmpfs`）区域——然后经过检查再移动到 `/media/frigate/recordings`。由于它是独立的且容量较小，`/tmp/cache` 可能会被填满并产生 `No space left on device` 错误，即使录制磁盘有大量空间——它们是不同的存储区域。请参阅[录制故障排除](/troubleshooting/recordings)以诊断缓存和慢速存储问题。
 
-### 当指标与磁盘上的内容不匹配时
+### 当指标与磁盘上的内容不匹配时 {#when-the-metrics-dont-match-whats-on-disk}
 
 由于用量是在数据库中追踪的，直接在磁盘上删除录制文件——或升级后遗留的文件——不会更新报告的用量，甚至可能使其超过 100%。Frigate 不会感知它未录制的文件，也不会自动计数或删除它们。使用[同步媒体文件与磁盘](#syncing-media-files-with-disk)来协调数据库与磁盘上的实际内容。
 
