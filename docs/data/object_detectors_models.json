@@ -306,44 +306,5 @@
         "yaml": "detectors:\n  axengine:\n    type: axengine\n\nmodel:\n  path: frigate-yolov9-tiny\n  model_type: yolo-generic\n  width: 320\n  height: 320\n  input_dtype: int\n  input_pixel_format: bgr\n  labelmap_path: /labelmap/coco-80.txt"
       }
     ]
-  },
-  "degirumAiServer": {
-    "title": "DeGirum AI Server",
-    "models": [
-      {
-        "key": "ai-server-inference",
-        "label": "AI Server Inference",
-        "recommended": true,
-        "download": "将 DeGirum AI 服务器作为 Docker 容器启动，然后让检测器指向它。将以下内容添加到你的 `docker-compose.yml`：\n\n```yaml\ndegirum_detector:\n  container_name: degirum\n  image: degirum/aiserver:latest\n  privileged: true\n  ports:\n    - \"8778:8778\"\n```\n\n将 `location` 设为服务名、容器名或 `host:port`。",
-        "ui": "Navigate to **Settings > System > Detectors and model** and select **DeGirum** from the detector type dropdown and click **Add**.\n\n| Field | Value |\n| --- | --- |\n| **Location** | `degirum` |\n| **Zoo** | `degirum/public` |\n| **Token** | your AI Hub token (optional for the public zoo) |\n",
-        "yaml": "degirum_detector:\n  type: degirum\n  location: degirum\n  zoo: degirum/public\n  token: dg_example_token\n"
-      }
-    ]
-  },
-  "degirumLocal": {
-    "title": "DeGirum Local",
-    "models": [
-      {
-        "key": "local-inference",
-        "label": "Local Inference",
-        "recommended": true,
-        "download": "使用 `@local` 在 Frigate 容器内直接运行硬件，省去 AI 服务器的中转。容器中必须安装匹配的设备运行时（如 Hailo 运行时）；可用 `degirum sys-info` 确认。",
-        "ui": "Navigate to **Settings > System > Detectors and model** and select **DeGirum** from the detector type dropdown and click **Add**.\n\n| Field | Value |\n| --- | --- |\n| **Location** | `@local` |\n| **Zoo** | `degirum/public` |\n| **Token** | your AI Hub token (optional for the public zoo) |\n",
-        "yaml": "degirum_detector:\n  type: degirum\n  location: @local\n  zoo: degirum/public\n  token: dg_example_token\n"
-      }
-    ]
-  },
-  "degirumCloud": {
-    "title": "DeGirum AI Hub Cloud",
-    "models": [
-      {
-        "key": "ai-hub-cloud-inference",
-        "label": "AI Hub Cloud Inference",
-        "recommended": true,
-        "download": "使用 `@cloud` 在 DeGirum 的 [AI Hub](https://hub.degirum.com) 云端运行推理。注册账号、创建访问令牌，并将其设为 `token`。网络延迟可能需要降低检测 fps。",
-        "ui": "Navigate to **Settings > System > Detectors and model** and select **DeGirum** from the detector type dropdown and click **Add**.\n\n| Field | Value |\n| --- | --- |\n| **Location** | `@cloud` |\n| **Zoo** | `degirum/public` |\n| **Token** | your AI Hub token (optional for the public zoo) |\n",
-        "yaml": "degirum_detector:\n  type: degirum\n  location: @cloud\n  zoo: degirum/public\n  token: dg_example_token\n"
-      }
-    ]
   }
 }
