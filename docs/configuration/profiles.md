@@ -106,7 +106,7 @@ cameras:
 
 ## 激活模板 {#activating-profiles}
 
-可以从 Frigate 界面、[MQTT](/integrations/mqtt#frigateprofileset) 或 Home Assistant 集成激活和停用模板。
+可以从 Frigate 界面、[MQTT](/integrations/mqtt#frigateprofileset)、[HTTP API](../integrations/api/camera-set-camera-camera-name-set-feature-sub-command-put.api.mdx) 或 Home Assistant 集成激活和停用模板。
 
 在 Frigate 界面中，打开设置齿轮，从子菜单中选择**配置模板**查看所有已定义的模板。你可以激活任何模板或停用当前模板。活动模板会在界面中显示，让你始终知道当前生效的是哪个模板。
 

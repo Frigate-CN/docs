@@ -90,9 +90,17 @@ SQLite在网络共享存储上运行不佳。若`/media`目录映射到网络共
 
 ### 如何判断摄像头是否离线 {#how-do-i-know-if-my-camera-is-offline}
 
-可通过MQTT或/api/stats接口检测，离线摄像头的camera_fps会显示为0。
+Frigate 将每个角色的健康状态发布到 [`frigate/<camera_name>/status/<role>`](/integrations/mqtt#frigatecamera_namestatusrole)，其中 `<role>` 是摄像头上每个已启用的角色（`detect`、`record` 和 `audio`）。发布的值是以下之一：
 
-此外，当摄像头离线时，Home Assistant会将其标记为不可用状态。
+- `online`：Frigate 对该角色的进程正常运行
+- `offline`：进程已停止，Frigate 正在重启它
+- `disabled`：摄像头已关闭，无论是在运行时还是在配置文件中
+
+这些状态反映的是 Frigate 对该角色的进程状态，而非摄像头的可达性。因此，一个无法访问的摄像头会在看门狗重启 ffmpeg 时在 `offline` 和 `online` 之间交替。应等待状态稳定（例如使用 Home Assistant 的 `for:`），而不是在收到单条消息时立即处理。
+
+由于状态是按角色区分的，摄像头子码流正常但录制码流失联时，`detect` 会报告 `online`，而 `record` 会报告 `offline`。状态发生变化时会重新发布。
+
+你也可以通过 `/api/stats` 检测离线摄像头，其中 `camera_fps` 将为 0。
 
 ### 如何不通过Web界面查看Frigate日志？ {#how-can-i-view-the-frigate-log-files-without-using-the-web-ui}
 

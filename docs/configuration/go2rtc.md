@@ -53,4 +53,6 @@ go2rtc:
 
 ## Homekit 配置 {#homekit-configuration}
 
-要将摄像头流添加到 Homekit，必须在 Docker 中将 Frigate 配置为使用 `host` 网络模式。完成后，你可以使用 go2rtc Web 界面（通过端口 1984 访问，默认禁用）将摄像头共享导出到 Homekit。所做的任何更改都会自动保存到 `/config/go2rtc_homekit.yml`。
+要将摄像头流导出到 HomeKit，必须在 Docker 中将 Frigate 配置为使用 `host` 网络模式。HomeKit 设置存储在 `/config/go2rtc_homekit.yml` 中，而不是你的 Frigate 配置中，并且通过 go2rtc 配置编辑器在 `http://<frigate_host>:1984/editor.html` 编辑。配对信息会自动保存回该文件。
+
+有关完整配置，包括 HomeKit 对视频流和音频的要求，请参阅 [HomeKit 集成文档](/integrations/homekit)。

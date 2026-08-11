@@ -13,6 +13,12 @@ title: 目标分类 <Badge type="tip" text="0.17.0 和 以上版本" />
 
 目标分类功能允许你训练一个自定义的`MobileNetV2`分类模型，该模型可运行在被追踪的目标（如人员、车辆、动物等）后，从而为这些目标识别出更精细的类别或属性。能够在浏览中的追踪目标详细信息窗口中、`frigate/tracked_object_details` MQTT主题、官方 Home Assistant `Frigate 集成` 的 传感器中，或者通过 HTTP API 中的事件接口查看分类结果。
 
+:::info
+
+训练自定义目标分类模型需要联网下载 MobileNetV2 基础权重。默认情况下这些权重不会缓存在 `/config/` 中，因此容器重建后需要重新下载。一旦训练完成，模型将完全离线运行。详见[网络要求](/frigate/network_requirements#one-time-model-downloads)。
+
+:::
+
 ## 最低系统要求 {#minimum-system-requirements}
 
 目标分类模型非常轻量级，在 CPU 上运行速度非常快。

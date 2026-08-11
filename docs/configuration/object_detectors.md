@@ -330,6 +330,14 @@ detectors:
 
 :::
 
+### Intel NPU 主机要求 {#intel-npu-requirements}
+
+NPU 固件由宿主机内核加载，不包含在 Frigate 镜像中。NPU 需要的其他所有内容都已捆绑在容器中，因此绝不应挂载宿主机 NPU 库。
+
+Frigate 捆绑了特定版本的 Intel [linux-npu-driver](https://github.com/intel/linux-npu-driver/releases)，宿主机固件必须来自该版本或更高版本。固件版本旧于捆绑的驱动可能导致 `MAPPED_INFERENCE_VERSION is NOT compatible with the ELF` 错误，其中 `Expected` 是固件支持的版本，`received` 是捆绑编译器生成的版本。发行版通常打包的固件比 Frigate 自带的驱动更旧，请使用 `sudo dmesg | grep -i vpu` 检查宿主机上的构建日期并在需要时更新。
+
+Intel NPU 无法在 Home Assistant OS 下使用，因为该系统不包含 NPU 固件。
+
 ### 配置 {#configuration-openvino}
 
 <ModelConfigDropdown detectorTitle="OpenVINO" :models="objectDetectorsModels.openvino.models" />
