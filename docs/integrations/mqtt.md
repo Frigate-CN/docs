@@ -288,6 +288,8 @@ title: MQTT
 - `offline`：流处于离线状态并正在重启
 - `disabled`：摄像头当前已关闭（通过 `enabled/set` 主题在运行时关闭，或通过配置文件永久禁用）。参见[摄像头状态](/configuration/live#camera-state)了解区别。
 
+这些状态反映的是 Frigate 对该角色的进程状态，而非摄像头的可达性。因此，一个无法访问的摄像机会在看门狗重启 ffmpeg 时在 `offline` 和 `online` 之间交替。应等待状态稳定（例如使用 Home Assistant 的 `for:`），而不是在收到单条消息时立即处理。
+
 ### `frigate/<camera_name>/<object_name>`
 
 发布摄像机的目标计数，用作 Home Assistant 中的传感器。
@@ -366,6 +368,18 @@ title: MQTT
 ### `frigate/<camera_name>/audio/state`
 
 包含摄像机音频检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
+
+### `frigate/<camera_name>/audio_transcription/set`
+
+用于打开和关闭摄像机[实时音频转写](/configuration/audio_detectors#live-transcription)的主题。期望值为 `ON` 和 `OFF`。转写文本发布到 `frigate/<camera_name>/audio/transcription`。
+
+`ON` 仅在摄像机的配置中启用了音频转写时生效。与其他摄像头开关不同，此开关不会在 Frigate 重启后保持。
+
+**注意：**需要启用音频检测和转写
+
+### `frigate/<camera_name>/audio_transcription/state`
+
+包含摄像机实时音频转写当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/recordings/set`
 

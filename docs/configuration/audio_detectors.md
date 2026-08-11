@@ -195,7 +195,7 @@ cameras:
 
 ### 实时转录 {#live-transcription}
 
-Frigate 网页的单摄像头实时预览页面支持对定义了 `audio` 功能的视频流进行实时音频转录。使用 **启用/禁用实时音频转录** 按钮或开关来切换转录处理。当检测到语音时，网页会在摄像头画面上覆盖一个黑色文本框并显示文字。  
+Frigate 网页的单摄像头实时预览页面支持对定义了 `audio` 功能的视频流进行实时音频转录。使用 **启用/禁用实时音频转录** 按钮或开关来切换转录处理，也可以在界面之外通过 [`frigate/<camera_name>/audio_transcription/set`](/integrations/mqtt#frigatecamera_nameaudio_transcriptionset) MQTT 主题或 HTTP API 来切换。当检测到语音时，网页会在摄像头画面上覆盖一个黑色文本框并显示文字。  
 MQTT 主题 `frigate/<camera_name>/audio/transcription` 也会实时更新转录文本。
 
 结果可能因以下因素出现误差：

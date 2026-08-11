@@ -13,6 +13,12 @@ title: 状态分类 <Badge type="tip" text="0.17.0 和 以上版本" />
 
 状态分类功能允许你在摄像头画面的固定区域内训练一个自定义的 MobileNetV2 分类模型，以确定该区域的当前状态。该模型可配置为按计划运行和/或当该区域检测到画面变动时运行。能够在`frigate/<camera_name>/classification/<model_name>` MQTT主题、官方 Home Assistant `Frigate 集成` 的 传感器中查看分类结果。
 
+:::info
+
+训练自定义状态分类模型需要联网下载 MobileNetV2 基础权重。默认情况下这些权重不会缓存在 `/config/` 中，因此容器重建后需要重新下载。一旦训练完成，模型将完全离线运行。详见[网络要求](/frigate/network_requirements#one-time-model-downloads)。
+
+:::
+
 ## 最低系统要求 {#minimum-system-requirements}
 
 状态分类模型轻量级，在 CPU 上运行速度非常快。

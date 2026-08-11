@@ -34,6 +34,12 @@ Frigate 的互联网使用分为三类：
 | [自定义分类](/configuration/custom_classification/state_classification)（训练） | MobileNetV2 ImageNet 基础权重 | Google 存储 |
 | [音频转写](/configuration/advanced/system) | Whisper 或 Sherpa-ONNX 流媒体模型 | HuggingFace / OpenAI |
 
+:::note
+
+MobileNetV2 基础权重是 `/config/model_cache/` 规则的唯一例外。它们也是唯一不在功能启用时下载的条目：Frigate 在训练运行实际开始时才会获取它们。
+
+:::
+
 ### 硬件特定检测器模型 {#hardware-specific-detector-models}
 
 如果你使用以下硬件检测器之一且未提供自己的模型文件，将在首次启动时下载默认模型：
@@ -75,7 +81,7 @@ environment:
 | `HF_ENDPOINT` | `https://huggingface.co` | 语义搜索、Sherpa-ONNX、AXEngine 模型 |
 | `GITHUB_ENDPOINT` | `https://github.com` | 人脸识别、LPR、RKNN 模型 |
 | `GITHUB_RAW_ENDPOINT` | `https://raw.githubusercontent.com` | 鸟类分类 |
-| `TF_KERAS_MOBILENET_V2_WEIGHTS_URL` | Google 存储（Keras 默认） | 自定义分类训练 |
+| `TF_KERAS_MOBILENET_V2_WEIGHTS_URL` | 未设置（Keras 使用自己的默认值） | 自定义分类训练 |
 
 > **中国大陆用户**：我们提供了国内下载加速镜像，详见[通过 Docker 安装](/frigate/installation.md#docker)教程中的 `environment` 配置。
 
@@ -128,9 +134,23 @@ telemetry:
 ## 离线运行 Frigate {#running-frigate-offline}
 
 1. **预下载模型**：在线启动一次，模型缓存到 `/config/model_cache/`。
-2. **禁用版本检查**：`telemetry.version_check: false`。
-3. **阻止出站请求**：`HF_HUB_OFFLINE=1`、`TRANSFORMERS_OFFLINE=1`。
-4. **避免云功能**：不配置 Frigate+、云 AI、云 MQTT。
-5. **使用本地镜像**：设置镜像环境变量。
+2. **预下载训练基础权重**：如果计划训练自定义分类模型，在训练前设置 `TF_KERAS_MOBILENET_V2_WEIGHTS_URL`，然后在线运行一次训练任务。如果不设置此变量，基础权重会缓存到 `/config/` 之外，容器重建后即丢失，后续离线训练将失败。如果机器永无互联网访问，请按下文说明手动拷贝权重。
+3. **禁用版本检查**：`telemetry.version_check: false`。
+4. **阻止出站请求**：`HF_HUB_OFFLINE=1`、`TRANSFORMERS_OFFLINE=1`。
+5. **避免云功能**：不配置 Frigate+、云 AI、云 MQTT。
+6. **使用本地镜像**：如有受限互联网，设置 `HF_ENDPOINT`、`GITHUB_ENDPOINT`、`GITHUB_RAW_ENDPOINT` 和 `TF_KERAS_MOBILENET_V2_WEIGHTS_URL` 环境变量指向本地镜像。
 
 完成这些步骤后，Frigate 将无出站互联网连接运行。
+
+### 手动拷贝训练基础权重 {#manually-copying-the-training-base-weights}
+
+在有互联网访问的机器上下载权重：
+
+```bash
+curl -L -o mobilenet_v2_weights.h5 \
+  "https://storage.googleapis.com/tensorflow/keras-applications/mobilenet_v2/mobilenet_v2_weights_tf_dim_ordering_tf_kernels_0.35_224_no_top.h5"
+```
+
+将文件拷贝到你的 Frigate 配置卷中作为 `/config/model_cache/MobileNet/mobilenet_v2_weights.h5`，保持该精确文件名，然后在 Docker Compose 文件中设置环境变量 `TF_KERAS_MOBILENET_V2_WEIGHTS_URL` 为上述 URL 并重启 Frigate。
+
+必须设置该变量，即使该 URL 永远不会被访问。如果未设置，Frigate 将忽略拷贝的文件，并要求 Keras 重新下载权重。

@@ -173,6 +173,10 @@ networking:
 
 此设置面向高级用户。对于大多数用例，建议更改 Docker Compose 文件的 `ports` 部分或使用 Docker `run` 的 `--publish` 选项，例如 `-p 443:8971`。更改 Frigate 的端口可能会导致某些集成失效。
 
+内部端口和外部端口必须是不同的端口号，否则 Frigate 将拒绝启动。通过内部端口到达的请求会被视为已认证的管理员，因此将两者指向同一端口会移除外部端口的认证。
+
+Nginx 在启动时绑定这些端口，因此端口更改仅在 Frigate 重启后生效。
+
 :::
 
 ### 自定义 Nginx 配置 {#customizing-the-nginx-configuration}
