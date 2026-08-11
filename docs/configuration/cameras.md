@@ -52,17 +52,17 @@ title: 摄像头配置
 
 :::warning
 
-删除摄像头会永久移除其录像、追踪目标和配置。如果只想停止处理某个摄像头，请在 <NavPath path="设置 > 全局配置 > 摄像头管理" /> 中将其状态设为**关闭**或**禁用**。参见[摄像头状态](/configuration/live#camera-state)。
+删除摄像头会永久移除其录制内容、追踪目标和配置。如果只想停止处理某个摄像头，请在 <NavPath path="设置 > 全局配置 > 摄像头管理" /> 中将其状态设为**关闭**或**禁用**。参见[摄像头状态](/configuration/live#camera-state)。
 
 :::
 
 删除摄像头会移除：
 
 - 摄像头在配置文件中的部分，以及在任何[角色](authentication.md#user-roles)摄像头列表中的条目。没有任何摄像头的自定义角色也会被移除。
-- 摄像头在数据库中的所有记录：追踪目标、审阅项目、录像、预览、时间线条目、保存的区域网格以及[触发器](semantic_search.md#triggers)。
-- 摄像头的所有媒体文件：录像、快照、缩略图和预览片段。
+- 摄像头在数据库中的所有记录：追踪目标、审阅项目、录制内容、预览、时间线条目、保存的区域网格以及[触发器](semantic_search.md#triggers)。
+- 摄像头的所有媒体文件：录制内容、快照、缩略图和预览片段。
 
-[导出](/usage/exports)默认保留，因此已保存的录像在删除源摄像头后仍然保留。在确认步骤中打开**同时删除此摄像头的导出**以一并移除。
+[导出](/usage/exports)默认保留，因此已保存的录制内容在删除源摄像头后仍然保留。在确认步骤中打开**同时删除此摄像头的导出**以一并移除。
 
 摄像头的进程会停止，更改立即生效，无需重启。如果生成的配置无法解析，Frigate 会恢复之前的配置并报告错误，而不会使 Frigate 处于损坏状态。
 
@@ -73,7 +73,7 @@ title: 摄像头配置
 
 ## 设置摄像头输入源 {#setting-up-camera-inputs}
 
-可以为每个摄像头配置多个输入源，并根据需求混合搭配每个输入源的功能。这样你可以使用低分辨率视频流进行物体检测，同时使用高分辨率视频流进行录像，反之亦然。
+可以为每个摄像头配置多个输入源，并根据需求混合搭配每个输入源的功能。这样你可以使用低分辨率视频流进行物体检测，同时使用高分辨率视频流进行录制，反之亦然。
 
 默认情况下摄像头是启用的，但可以通过设置`enabled: False`来禁用。通过配置文件禁用的摄像头不会出现在 Frigate 用户界面中，也不会消耗系统资源。
 
@@ -103,7 +103,7 @@ cameras: # [!code highlight]
         # 可以考虑使用go2rtc，请参考文档后面的说明
         - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/live # [!code ++]
           roles: # [!code ++]
-            - record # <- 用于录像的视频流 [!code ++]
+            - record # <- 用于录制的视频流 [!code ++]
     detect: # [!code highlight]
       width: 1280 # <- 可选，默认Frigate会尝试自动检测分辨率 [!code highlight]
       height: 720 # <- 可选，默认Frigate会尝试自动检测分辨率 [!code highlight]
@@ -138,7 +138,7 @@ cameras:
 
 如果你摄像头下只有一个视频流输入（`input`）且没有为其配置检测（`detect`）功能，Frigate 也会自动启动检测（`detect`）功能。即使你在配置中`detect`设置`enabled: False`禁用了物体/目标检测，Frigate **仍会解码视频流**以支持画面变动检测、鸟瞰图、API 图像和其他功能。
 
-如果你打算 Frigate 只是拿来录像不进行物体/目标识别，仍建议设置一个低分辨率视频流并设置该视频流使用检测（`detect`）功能，以减少所需视频流解码的资源消耗。
+如果你打算 Frigate 只是拿来录制不进行物体/目标识别，仍建议设置一个低分辨率视频流并设置该视频流使用检测（`detect`）功能，以减少所需视频流解码的资源消耗。
 
 :::
 
@@ -222,7 +222,7 @@ cameras:
 | Amcrest IP4M-S2112EW-AI      |    ✅    |    ❌    | 不支持 FOV 相对移动。                                                                                                                                                                                                      |
 | Amcrest IP5M-1190EW          |    ✅    |    ❌    | ONVIF 端口: 80。不支持 FOV 相对移动。                                                                                                                                                                                      |
 | Annke CZ504                  |    ✅    |    ✅    | 安克（Annke）官方支持提供了专用固件版本（[V5.7.1 build 250227](https://github.com/pierrepinon/annke_cz504/raw/refs/heads/main/digicap_V5-7-1_build_250227.dav)）以修复 ONVIF "TranslationSpaceFov" 问题 |
-| Axis Q-6155E                 |    ✅    |    ❌    | ONVIF 服务端口：80；该摄像机不支持 MoveStatus 功能。                                                                                                                                                                       |
+| Axis Q-6155E                 |    ✅    |    ❌    | ONVIF 服务端口：80；该摄像头不支持 MoveStatus 功能。                                                                                                                                                                       |
 | Ctronics PTZ                 |    ✅    |    ❌    |                                                                                                                                                                                                                            |
 | Dahua                        |    ✅    |    ✅    | 部分低端大华（lite 系列、picoo 系列等）据报告不支持自动追踪。这些型号通常没有四位数字型号加机箱前缀和选项后缀（例如 DH-P5AE-PV vs DH-SD49825GB-HNR）。 |
 | Dahua DH-SD2A500HB           |    ✅    |    ❌    |                                                                                                                                                                                                                            |
