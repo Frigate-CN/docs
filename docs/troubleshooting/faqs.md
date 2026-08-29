@@ -64,6 +64,20 @@ Frigate通常[推荐使用可配置子码流的摄像头](/frigate/hardware.md)�
 
 正确配置后，GPU将负责解码和缩放，CPU占用仅小幅增加但效果更佳。
 
+### 如何旋转摄像头的视频画面？ {#how-can-i-rotate-my-cameras-video-feed}
+
+旋转最好在摄像头的固件设置中完成（通常称为 rotate、flip 或 corridor mode），这样视频到达时已经旋转好了，无需额外处理。请先检查摄像头固件。
+
+如果你的摄像头不支持旋转，go2rtc 的 ffmpeg 模块可以通过 `#rotate` 参数旋转流（`90`、`180`、`270` 或 `-90`），但不推荐这样做：旋转需要转码（重新编码）视频，会显著增加 CPU 使用率，尤其是高分辨率流。
+
+```yaml
+go2rtc:
+  streams:
+    my_camera: "ffmpeg:rtsp://user:password@192.168.1.10:554/stream#video=h264#hardware#rotate=90"
+```
+
+将摄像头的输入指向重组流，如[重组文档](/configuration/restream.md)所述，并交换 `detect -> width` 和 `detect -> height` 以匹配旋转后的分辨率。
+
 ### MJPEG流或快照显示异常绿色画面 {#my-mjpeg-stream-or-snapshots-look-green-and-crazy}
 
 这通常表示摄像头配置的分辨率(width/height)不正确。请使用VLC等播放器确认实际分辨率，并检查宽高值是否颠倒。
@@ -161,6 +175,12 @@ TCP能确保数据包有序到达，这对视频录制、解码和流处理至�
 如果你的系统已经占用了5000端口（例如群晖的管理页面），你可以将容器的5000端口映射至其他任意空闲端口。
 
 :::
+
+### 我的配置文件中的 `version` 键是什么？ {#what-is-the-version-key-in-my-config-file}
+
+`version` 记录你的配置最后一次迁移到的配置格式。启动时 Frigate 将其与运行版本期望的格式进行比较，如果较旧，则会将你的配置复制到 `/config/backup_config.yaml`，以新格式重写，并在最后一步更新 `version`。没有 `version` 键的配置被认为早于 0.14，并会从该版本开始迁移。
+
+Frigate 会为你管理此键，因此不要设置或编辑它。提高该值会使 Frigate 跳过你的配置仍需要的迁移，降低该值会对已转换的配置重新运行迁移。任何一种都可能导致配置不再通过验证。
 
 ### 为什么 Frigate 不断为我的停放汽车创建新的被追踪目标？ {#why-does-frigate-keep-creating-new-tracked-objects-for-my-parked-car}
 

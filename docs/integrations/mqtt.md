@@ -272,7 +272,9 @@ title: MQTT
 
 ### `frigate/notifications/set`
 
-用于打开和关闭通知的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭所有摄像头通知的主题。期望值为 `ON` 和 `OFF`。
+
+仅在配置中启用通知时可用。不会在 Frigate 重启后保留。
 
 ### `frigate/notifications/state`
 
@@ -520,16 +522,20 @@ _注意：将值从 `CONTINUOUS` 更改为 `MOTION | OBJECTS` 将需要最多 30
 
 ### `frigate/<camera_name>/notifications/set`
 
-用于打开和关闭通知的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭某个摄像头通知的主题。期望值为 `ON` 和 `OFF`。
+
+除非摄像头的配置中启用了通知，否则 `ON` 会被忽略。此设置不会在 Frigate 重启后保留。它与界面中标记为 **暂停至重启** 的控制是同一个功能。
 
 ### `frigate/<camera_name>/notifications/state`
 
-包含通知当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含通知当前状态的主题。发布的值为 `ON` 和 `OFF`。这是判断摄像头是否会发送通知的权威主题。
 
 ### `frigate/<camera_name>/notifications/suspend`
 
-用于暂停通知一定分钟数的主题。期望值为整数。
+用于暂停通知一定分钟数的主题。期望值为整数。与 `notifications/set` 相互独立：它不会改变 `notifications/state`，并且在通知关闭时会被忽略。
 
 ### `frigate/<camera_name>/notifications/suspended`
 
-包含通知暂停到的时间戳的主题。发布的值为 UNIX 时间戳，如果未暂停通知则为 0。
+包含通知暂停到的时间戳的主题。发布的值为 UNIX 时间戳，如果没有定时暂停则为 0。
+
+`0` 不表示通知已启用：`notifications/set` 设为 `OFF` 会清除定时暂停，因此当 `notifications/state` 为 `OFF` 时，此主题会发布 `0`。

@@ -11,7 +11,7 @@ title: 车牌识别(LPR) <Badge type="tip" text="0.16.0 和 以上版本" />
 
 :::
 
-Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到**识别的车牌**字段，或将[已知名称](#matching)作为子标签添加到车辆类型的追踪目标中。常见用例包括识别驶入车道的车辆或街道上经过车辆的车牌。
+Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到**识别的车牌**字段，或将[已知名称](#matching)作为子标签添加到车辆类型的追踪目标中（包括 `car`、`motorcycle`、`bus`、`truck`、`school_bus` 或 `garbage_truck`，具体取决于你的模型检测到的标签）。常见用例包括识别驶入车道的车辆或街道上经过车辆的车牌。
 
 当车牌清晰可见时，车牌识别的效果最佳。对于移动车辆，Frigate 会持续识别来优化识别结果，然后保留置信度最高的结果。当车辆停稳后，车牌识别功能仍会在短时间内继续运行，并尝试识别车牌。
 
@@ -21,7 +21,7 @@ Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到
 - 在核查的**核查项细节**面板中可见
 - 在浏览的**目标追踪详情**面板中可见（子标签 和 识别的车牌）
 - 可通过浏览中的**更多筛选项**菜单进行过滤
-- 通过 MQTT 主题`frigate/events`发布，作为`car`追踪目标的`sub_label`(已知)或`recognized_license_plate`(未知)
+- 通过 MQTT 主题`frigate/events`发布，作为车辆追踪目标的`sub_label`(已知)或`recognized_license_plate`(未知)
 
 ## 模型要求 {#model-requirements}
 
@@ -37,7 +37,7 @@ Frigate 能够识别车辆上的车牌，并自动将检测到的字符添加到
 
 :::note
 
-在默认模式下，Frigate 的车牌识别需要先检测到车辆（`car`）后才能识别车牌。如果你使用**专业的车牌识别摄像头**并且画面会放大到无法检测出车辆（`car`）的程度，也可以运行车牌识别，但配置参数与默认模式不同。详见下文[专用 LPR 摄像头](#dedicated-lpr-cameras)部分。
+在默认模式下，Frigate 的车牌识别需要先检测到车辆后才能识别车牌。如果你使用**专业的车牌识别摄像头**并且画面会放大到无法检测出车辆的程度，也可以运行车牌识别，但配置参数与默认模式不同。详见下文[专用 LPR 摄像头](#dedicated-lpr-cameras)部分。
 
 :::
 
@@ -95,7 +95,7 @@ cameras:
 </TabItem>
 </ConfigTabs>
 
-对于非专用 LPR 摄像头，请确保摄像头配置为检测车辆（`car`）类型目标，且 Frigate 确实检测到了车辆。否则车牌识别不会运行。
+对于非专用 LPR 摄像头，请确保摄像头配置为检测车辆类型目标，且 Frigate 确实检测到了车辆。否则车牌识别不会运行。可携带车牌的目标类型由你的模型的 `attributes_map` 定义，因此如果你的模型检测到其他车辆标签，可以在其中添加。
 
 与其他实时处理视频流的功能一样，车牌识别运行在配置了`detect`功能（`roles`）的摄像头流上。为确保最佳性能，请在摄像头固件中选择适合你场景和需求的分辨率。
 
@@ -442,7 +442,7 @@ lpr:
 
 :::note
 
-如果你某个摄像头配置了检测汽车（`car`）或摩托车（`motorcycle`），但你又不想让 Frigate 为该摄像头运行车牌识别，可以在摄像头级别单独禁用该功能：
+如果你某个摄像头配置了检测车辆，但你又不想让 Frigate 为该摄像头运行车牌识别，可以在摄像头级别单独禁用该功能：
 
 ```yaml
 cameras:
@@ -517,7 +517,7 @@ cameras:
 - 快照上会有车牌边界框
 - MQTT 主题`frigate/events`会发布追踪目标更新
 - 调试页面会显示`license_plate`边界框
-- 如果使用 Frigate+模型并想提交专用 LPR 摄像头图像用于模型训练和微调，在 Frigate+网站上标注快照中的`car`和`license_plate`，即使车辆几乎不可见
+- 如果使用 Frigate+模型并想提交专用 LPR 摄像头图像用于模型训练和微调，在 Frigate+网站上标注快照中的车辆和`license_plate`，即使车辆几乎不可见
 
 ### 使用次级 LPR 管道(无 Frigate+) {#using-the-secondary-lpr-pipeline-without-frigate}
 
@@ -671,7 +671,7 @@ logger:
 4. 确保检测到的车牌上的字符被**识别**
 
 - 启用`debug_save_plates`将检测到的车牌文本图像保存到剪辑目录(`/media/frigate/clips/lpr`)。确保这些图像可读且文本清晰。
-- 查看调试页面以实时查看车牌识别情况。对于非专用 LPR 摄像头，当 LPR 启用并正常工作时，car 或 motorcycle 标签将变为识别出的车牌。
+- 查看调试页面以实时查看车牌识别情况。对于非专用 LPR 摄像头，当 LPR 启用并正常工作时，车辆标签将变为识别出的车牌。
 - 根据[上文](#advanced-configuration)的建议调整`recognition_threshold`设置。
 
 ### 车牌识别会减慢我的系统吗？ {#will-lpr-slow-down-my-system}
@@ -688,7 +688,7 @@ logger:
 
 ### 看起来 Frigate 将我的摄像头时间戳识别为车牌。如何防止这种情况？ {#it-looks-like-frigate-picked-up-my-cameras-timestamp-or-overlay-text-as-the-license-plate-how-can-i-prevent-this}
 
-如果车辆靠近摄像头的时间戳行驶，可能会发生这种情况。你可以通过摄像头固件移动时间戳，或在 Frigate 中为其应用遮罩。
+如果车辆靠近摄像头的时间戳或叠加文字行驶，可能会发生这种情况。你可以通过摄像头固件移动文字，或在 Frigate 中为其应用遮罩。
 
 如果你使用的是原生检测 `license_plate` 的模型，请在时间戳上添加 `license_plate` 类型的**目标遮罩**和**画面变动遮罩**。
 

@@ -182,7 +182,7 @@ go2rtc:
 
 要解决此问题，你需要配置两个独立的流实例：
 1.  第一个流实例添加 `#backchannel=0` 参数，用于 Frigate 的实时查看、录像和检测功能（此参数可阻止 go2rtc 建立会造成阻塞的反向通道）
-2.  第二个流实例不添加 `#backchannel=0` 参数，专门用于双向语音功能（可供 Frigate 的 WebRTC 查看器或其他应用使用）
+2.  第二个流实例不添加任何 `#` 参数，专门用于双向语音功能（可供 Frigate 的 WebRTC 查看器或其他应用使用）
 
 配置示例如下：
 ```yaml
@@ -197,6 +197,8 @@ go2rtc:
 本配置的作用说明：
 - `front_door` 流用于 Frigate 的实时查看、录像和检测。`#backchannel=0` 参数可阻止 go2rtc 建立音频输出反向通道，避免占用双向语音的资源。
 - `front_door_twoway` 流用于双向语音功能。当启用双向语音后，该流可被 Frigate 的 WebRTC 查看器调用，也能供其他需要访问摄像头音频输出通道的应用（如 Home Assistant 高级摄像头卡片）使用。
+
+裸 `rtsp://` 源上的任何 `#` 参数都会禁用反向通道，除非 URL 中明确包含 `#backchannel=1`。如果双向语音流带有 `#video=h264` 等参数，双向音频会静默丢失，Frigate 也会报告该流的双向语音不可用。
 
 ## 安全限制：受管控的流源 {#security-restricted-stream-sources}
 

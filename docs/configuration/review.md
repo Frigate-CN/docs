@@ -79,6 +79,31 @@ cameras:
         labels: []
 ```
 
+## 手动事件分类 {#categorizing-manual-events}
+
+通过[创建手动事件 API](../integrations/api/create-event-events-camera-name-label-create-post.api.mdx)创建的事件使用相同的标签列表进行分类，并使用请求路径中的标签：
+
+1. 如果启用了警报且标签在 `review -> alerts -> labels` 中，则核查条目为警报。
+2. 否则，如果启用了检测且标签在 `review -> detections -> labels` 中，则核查条目为检测。
+3. 如果标签不在任一列表中，则核查条目为警报；如果警报被禁用，则不创建核查条目。
+
+这意味着手动事件默认为警报，除非你明确将其标签列为检测标签。例如，要让 PIR 传感器创建检测而不是警报，请向 `/api/events/front_door/pir_sensor/create` 发起请求，并配置如下：
+
+```yaml {5-7}
+cameras:
+  front_door:
+    review:
+      detections:
+        labels:
+          - pir_sensor
+```
+
+:::note
+
+必需区域不适用于手动事件，因为手动事件是通过 API 创建的，而非由目标跟踪器创建。将 `review -> alerts -> labels` 设置为空列表也不会阻止手动事件成为警报，因为标签不在任一列表中时仍会回退为警报。
+
+:::
+
 ## 将核查条目限制在特定区域 {#restricting-review-items-to-specific-zones}
 
 默认情况下，如果在摄像头画面的任何位置检测到 `review -> alerts -> labels` 和 `review -> detections -> labels` 中的目标，就会创建一个核查条目。你可能希望配置为仅当目标进入关注区域时才创建核查条目，[详见区域文档](./zones.md#restricting-alerts-and-detections-to-specific-zones)

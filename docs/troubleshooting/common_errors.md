@@ -52,13 +52,15 @@ FFmpeg 解码器消息，表示接收到的视频比特流不完整或损坏。�
 
 ### No new recording segments were created for &lt;camera&gt; in the last 120s {#no-new-recording-segments}
 
-Frigate 的录制看门狗正在重启录制 FFmpeg 进程，因为没有有效分段到达缓存。这意味着录制流未连接或分段被拒绝（见下文的音频编解码器条目）。
+Frigate 的录制看门狗正在重启录制 FFmpeg 进程，因为摄像头停止产生可用的录制。消息措辞区分了不同情况：`No new recording segments` 表示没有新的分段文件到达缓存，说明 ffmpeg 无法从录制流中获取视频；两种 `valid` 变体表示录制正在到达但持续无法通过验证。无论哪种情况，问题都出在摄像头或网络侧，重启是 Frigate 尝试恢复的行为。
 
-参见[录制：录制流未连接](/troubleshooting/recordings#录制流未连接)。
+参见[录制：未创建新的录制分段](/troubleshooting/recordings#no-new-recording-segments-were-created)。
 
 ### Invalid or missing video stream in segment. Discarding. {#invalid-or-missing-video-stream-in-segment}
 
-缓存的录制分段验证失败（无可读视频流）并被删除。最常见的原因是分段因录制 FFmpeg 进程在写入过程中被杀死而被截断，因此这通常与上述录制流重启同时出现，并作为其结果。仅包含音频的分段也会触发此消息。
+缓存的录制分段验证失败并被删除，原因是没有可读的视频流或时长不合理。这几乎总是意味着摄像头在分段写入中途停止发送可用的视频：摄像头重启、断开连接、并发连接数耗尽，或链路不稳定（如 WiFi 或故障的交换机端口）。摄像头时间戳损坏（"智能编码" / H.264+ 模式）会导致损坏分段变体。相同的流故障会触发录制看门狗，因此上述重启通常与这些消息同时出现。
+
+参见[录制：分段中视频流无效或缺失](/troubleshooting/recordings#invalid-or-missing-video-stream-in-segment)。
 
 ### 录制静默失败无法保存（不兼容的音频编解码器） {#incompatible-audio-codec}
 

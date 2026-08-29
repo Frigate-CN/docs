@@ -58,7 +58,9 @@ go2rtc:
 
 :::warning
 
-`#` 修饰符（`#video=`、`#audio=`、`#hardware`、`#backchannel=0`、…）**仅对带有 `ffmpeg:` 前缀的源生效**。将它们添加到裸 `rtsp://…#audio=opus` 源上无效——go2rtc 会忽略它们。同样，当源通过名称引用另一个流时（如 `ffmpeg:back#audio=aac`），名称必须与流键**完全**匹配（区分大小写），否则转码将静默地不会生成。这是最常见的配置错误。在 Frigate 界面中，**使用兼容模式 (ffmpeg)** 开关会为你添加 `ffmpeg:` 前缀。
+转码修饰符（`#video=`、`#audio=`、`#hardware`、…）**仅对带有 `ffmpeg:` 前缀的源生效**。将它们添加到裸 `rtsp://…#audio=opus` 源上无效——go2rtc 会忽略它们。同样，当源通过名称引用另一个流时（如 `ffmpeg:back#audio=aac`），名称必须与流键**完全**匹配（区分大小写），否则转码将静默地不会生成。这是最常见的配置错误。在 Frigate 界面中，**使用兼容模式 (ffmpeg)** 开关会为你添加 `ffmpeg:` 前缀。
+
+裸 `rtsp://` 源读取的是一组不同的修饰符：`#backchannel=`、`#media=`、`#timeout=` 和 `#transport=`。这些在 `ffmpeg:` 源上无效。在裸 `rtsp://` 源上添加**任何**修饰符还会禁用摄像头的反向通道，除非 URL 中明确包含 `#backchannel=1`，因此专用于双向语音的流不应携带任何修饰符。
 
 :::
 
@@ -119,7 +121,7 @@ WebRTC 仅在 MSE 失败或使用摄像头双向通话功能时才会尝试；"�
 
 - **编解码器不匹配**——WebRTC 无法传输 H.265 或 AAC。支持 WebRTC 视图的流必须提供 Opus（或 PCMA/PCMU）音频和 H.264 视频。如上所示添加 `ffmpeg:back#audio=opus` 源。
 - **端口 `8555` 不可达或未设置候选项**——WebRTC 需要端口 `8555`（TCP 和 UDP）开放并广播可达的候选项。在自定义/overlay 网络上运行的 Docker 安装中，go2rtc 可能会将不可达的容器 IP 广播为 ICE 候选项；设置 `webrtc.filters.candidates: []` 并仅提供主机局域网 IP 可解决此问题。参见 [WebRTC 额外配置](/configuration/live#webrtc-extra-configuration)。
-- **双向通话**还需要安全上下文（HTTPS 或认证端口 `8971`，因为浏览器在纯 HTTP 上阻止麦克风访问）。摄像头的 RTSP 反向通道也必须正确处理——go2rtc 默认抢占反向通道，这会阻止其他消费者的双向音频并可能注入噪声。在主流上使用 `#backchannel=0` 禁用它，并使用单独的专用流进行通话，如[防止 go2rtc 阻止双向音频](/configuration/restream#two-way-talk-restream)中所述。
+- **双向通话**还需要安全上下文（HTTPS 或认证端口 `8971`，因为浏览器在纯 HTTP 上阻止麦克风访问）。摄像头的 RTSP 反向通道也必须正确处理——go2rtc 默认抢占反向通道，这会阻止其他消费者的双向音频并可能注入噪声。在主流上使用 `#backchannel=0` 禁用它，并使用单独的专用流进行通话，该流不携带任何 `#` 修饰符，如[防止 go2rtc 阻止双向音频](/configuration/restream#two-way-talk-restream)中所述。
 
 ## 高 CPU 占用 {#high-cpu-usage}
 

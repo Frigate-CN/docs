@@ -91,6 +91,46 @@ Frigate 直接复制 `record` 流而不重新编码，因此回放取决于你�
 
 如果录制流使用"Smart Codec"/H.264+ 模式或在流传输中途更改编码参数，损坏的时间戳会导致片段被过于频繁地分割并填满缓存。这会产生"Too many unprocessed recording segments"警告。参见[下方问题](#i-see-the-message-warning--too-many-unprocessed-recording-segments-in-cache-for-camera-this-likely-indicates-an-issue-with-the-detect-stream)了解完整诊断。
 
+#### 我看到消息：WARNING : Invalid or missing video stream in segment ... Discarding. {#invalid-or-missing-video-stream-in-segment}
+
+每个录制片段在离开缓存前都会经过验证。Frigate 会探测 `/tmp/cache` 中每个完成的 `.mp4` 文件，并要求有可读的视频流和有效的时长才会移动到存储。验证失败的片段会被删除，因此大约 10 秒的画面会丢失。此检查会产生三种消息：
+
+- `Invalid or missing video stream in segment <path>. Discarding.` 片段中没有视频，或根本无法读取。
+- `Failed to probe corrupt segment <path>` 后面跟 `Discarding a corrupt recording segment: <path>`。片段已读取，但无法确定其时长。
+- 单独的 `Discarding a corrupt recording segment: <path>`。片段的时长不合理（为空，或超过十分钟），这指向来自摄像头的损坏时间戳。
+
+对于每一种情况，摄像头看门狗还会记录 `Invalid recording segment detected for <camera> at <timestamp>`。
+
+:::warning
+
+这几乎总是**摄像头或网络问题**，而非 Frigate 问题。片段只有在 ffmpeg 写完后才算完整，因此任何在写入过程中中断流的行为都会留下无法保存的文件。Frigate 是在报告中断，而不是导致中断。
+
+:::
+
+##### 先从摄像头和网络入手
+
+- **摄像头断开了连接。** 摄像头会重启、切换到夜间模式时重新初始化流，以及在过载或并发连接数耗尽时切断客户端。统计同时从摄像头拉流的数量：Frigate 的检测和录制流、go2rtc、手机应用以及任何其他 NVR 各占一个。将所有角色路由到单个[RTSP 重组流](/configuration/restream#reduce-connections-to-camera)，让摄像头只看到一个连接，通常就能解决此问题。
+- **到摄像头的链路不稳定。** WiFi 摄像头、电力线适配器、饱和的上行链路、故障的交换机端口或劣质线缆都会产生此模式，而且通常一次只影响一个摄像头。不推荐使用 WiFi 摄像头。
+- **摄像头无法可靠地发送被要求的内容。** 高码率 4K 流可能超出摄像头自身硬件在负载下的编码和推送能力。降低码率，或录制较低分辨率档位。
+- **摄像头使用"Smart Codec"、H.264+ 或 H.265+ 模式。** 这些模式会在流传输中途更改编码参数，产生损坏的片段变体背后的时间戳问题。关闭该模式并将摄像头的关键帧间隔设置为与帧率相同。参见[片段仅约 1 秒长](#segments-are-only-1-second-long)。
+
+阅读首次出现消息时 Frigate 和/或 go2rtc 日志的其余部分。当摄像头或网络有问题时，会出现其他消息，例如 `No frames received from <camera> in 20 seconds`、`Non-monotonic DTS`、`RTP: PT=xx: bad cseq`、`error while decoding MB` 或连接超时。每条消息都在[常见错误消息](/troubleshooting/common_errors)中解释。要确认摄像头是根源，请在端口 `1984` 的[go2rtc Web 界面](/troubleshooting/go2rtc)中打开其流，或在 VLC 中播放相同的 URL，并让它运行足够长的时间让故障再次发生。
+
+##### 如果摄像头和网络正常
+
+- **录制无法存储的音频。** 某些摄像头发送 G.711 音频，无法保存在 MP4 中，会阻止片段完成。参见[不兼容的音频编解码器](#incompatible-audio-codec-recordings-silently-fail-to-save)。
+- **Frigate 本身被停止或重启。** 重启时每个摄像头出现一条警告是正常的，无需处理。
+- **系统空间或内存不足。** `/tmp/cache` 已满，或宿主机因 Frigate 使用过多内存而将其杀死，会切断正在写入的片段。两者都会在日志中与此消息一起留下其他错误。参见[设备空间不足](#errno-28-no-space-left-on-device)。
+
+#### 我看到消息：ERROR : No new recording segments were created for &lt;camera&gt; in the last 120s. Restarting the ffmpeg record process... {#no-new-recording-segments-were-created}
+
+当摄像头在两分钟内停止产生可用的录制时，Frigate 会重启该摄像头的录制进程以尝试恢复。消息措辞告诉你录制进展到了哪一步：
+
+- **`No new recording segments were created`**：缓存中根本没有出现新的分段文件，说明 ffmpeg 无法从录制流中获取视频。摄像头不可达或拒绝连接、流 URL/路径/凭据错误，或摄像头接受了连接但没有发送任何内容。参见[录制流无法连接](#the-record-stream-isnt-connecting)。
+- **`No new valid recording segments were created`** 和 **`No valid segments created since last invalid segment`**：录制正在到达，但持续无法通过验证，因此摄像头发送的视频无法保存。参见上文[分段中视频流无效或缺失](#invalid-or-missing-video-stream-in-segment)。
+
+重启是 Frigate 从问题中恢复的行为，而非造成问题的行为。摄像头重启或短暂网络中断后出现一次此类消息是正常的。每几分钟重复出现则意味着摄像头或网络仍在失败，重启会延长损害，因为每次重启都会切断正在写入的分段。应从该摄像头日志中最早出现的故障入手排查，而不是从重启入手。
+
 ### 存储和挂载问题 {#storage-and-mounting-issues}
 
 #### 存储卷未正确挂载 {#the-storage-volume-isnt-mounted-correctly}
