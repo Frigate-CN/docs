@@ -19,12 +19,32 @@ title: 摄像头品牌特定配置
 
 部分摄像头虽然支持 H.265 编码，但可能采用不同的封装格式。需注意 Safari 浏览器仅支持 annexb 格式的 H.265 流。当使用 H.265 摄像头进行录像且需要兼容 Safari 浏览器设备时，应当启用`apple_compatibility`配置选项。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的**视频流（FFmpeg）**部分开启 **Apple 兼容性**，让录制出的流可以在 macOS / iPhone 上正常播放。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  section="ffmpeg"
+  focus="apple_compatibility"
+  :values="{ apple_compatibility: true }"
+  hint="启用 Apple 兼容性，让 H.265 流以 Safari 支持的 annexb 格式输出，从而在 Mac 和 iPhone 上正常播放。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 cameras:
   h265_cam: # <------ 这里是你摄像头的名称
     ffmpeg: # [!code highlight]
       apple_compatibility: true # <- 启用MacOS和iPhone设备兼容模式 [!code ++]
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ## MJPEG 摄像头 {#mjpeg-cameras}
 
@@ -50,9 +70,29 @@ cameras:
 
 使用实时变化 JPEG 图像的摄像头需要如下输入参数
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的**视频流（FFmpeg）**部分，把 **输入参数** 设置为 `preset-http-jpeg-generic`。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  section="ffmpeg"
+  focus="input_args"
+  :values="{ input_args: 'preset-http-jpeg-generic' }"
+  hint="JPEG 流需要专门的输入参数预设，设置为 preset-http-jpeg-generic 即可。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 input_args: preset-http-jpeg-generic
 ```
+
+</TabItem>
+</ConfigTabs>
 
 流输出参数和注意事项与[MJPEG 摄像头](#mjpeg-cameras)相同
 
@@ -60,19 +100,59 @@ input_args: preset-http-jpeg-generic
 
 RTMP 摄像头需要调整输入参数
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的**视频流（FFmpeg）**部分，把 **输入参数** 设置为 `preset-rtmp-generic`。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  section="ffmpeg"
+  focus="input_args"
+  :values="{ input_args: 'preset-rtmp-generic' }"
+  hint="RTMP 摄像头需要通用的 RTMP 输入参数预设，设置为 preset-rtmp-generic。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 ffmpeg:
   input_args: preset-rtmp-generic
 ```
 
+</TabItem>
+</ConfigTabs>
+
 ## 仅支持 UDP 的摄像头 {#udp-only-cameras}
 
 如果你的摄像头不支持 RTSP 的 TCP 连接，可以使用 UDP。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的**视频流（FFmpeg）**部分，把 **输入参数** 设置为 `preset-rtsp-udp`。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  section="ffmpeg"
+  focus="input_args"
+  :values="{ input_args: 'preset-rtsp-udp' }"
+  hint="当摄像头仅支持 UDP 传输时，使用 preset-rtsp-udp 输入参数预设。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 ffmpeg:
   input_args: preset-rtsp-udp
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ## 品牌/型号特定设置 {#modelvendor-specific-setup}
 
@@ -90,6 +170,24 @@ rtsp://用户名:密码@摄像头IP/cam/realmonitor?channel=1&subtype=3 # 新款
 ### Annke C800
 
 此摄像头仅支持 H.265。要在某些设备(如 MacOS 或 iPhone)上播放片段，需要使用`apple_compatibility`配置调整 H.265 流。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的**视频流（FFmpeg）**部分开启 **Apple 兼容性**，并为**录制输出参数**选择音频预设。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  section="ffmpeg"
+  :targets="[
+    { field: 'apple_compatibility', hint: 'Annke C800 仅支持 H.265，开启 Apple 兼容性以保证 Mac / iPhone 播放。' },
+    { field: 'input_args', hint: '为录制输出参数选择 preset-record-generic-audio-aac。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 cameras:
@@ -109,14 +207,37 @@ cameras:
       height: # <- 可选，默认Frigate会尝试自动检测分辨率
 ```
 
+</TabItem>
+</ConfigTabs>
+
 ### Blue Iris RTSP 摄像头 {#blue-iris-rtsp-cameras}
 
 Blue Iris RTSP 摄像头需要移除`nobuffer`标志
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的**视频流（FFmpeg）**部分，把 **输入参数** 设置为 `preset-rtsp-blue-iris`。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  section="ffmpeg"
+  focus="input_args"
+  :values="{ input_args: 'preset-rtsp-blue-iris' }"
+  hint="Blue Iris 的 RTSP 流需要移除 nobuffer 标志，使用 preset-rtsp-blue-iris 输入参数预设。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 ffmpeg:
   input_args: preset-rtsp-blue-iris
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ### Hikvision 摄像头（海康威视） {#hikvision-cameras}
 

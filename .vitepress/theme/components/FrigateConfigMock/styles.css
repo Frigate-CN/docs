@@ -1,21 +1,52 @@
+/*
+ * Frigate Config Mock — styles
+ * All colors/sizes mirror the real Frigate UI (frigate/web, dark theme):
+ *   themes/theme-default.css (.dark), tailwind defaults, and the
+ *   shadcn components under src/components/ui.
+ *
+ * Key mappings:
+ *   background        #000     (hsl 0 0% 0%)
+ *   background-alt    #171717  (hsl 0 0% 9%)
+ *   card              #1f1f1f  (hsl 0 0% 12%)
+ *   border            #575757  (hsl 0 0% 32% / .7 over #000)
+ *   input             #171717  (dark:input → background_alt)
+ *   muted-foreground  #6b6b6b  (hsl 0 0% 42%)
+ *   primary-variant   #a3a3a3  (hsl 0 0% 64%)
+ *   secondary-fg      #6b6b6b  (hsl 0 0% 42%)
+ *   selected          #4d6ef5  (hsl 228 89% 63%)
+ *   popover           #262626  (hsl 0 0% 15%)
+ *   accent            #303030  (hsl 0 0% 19%)
+ *
+ * Tailwind font scale: text-sm = 14px/20px, text-xs = 12px/16px.
+ * Radius: rounded-md = 6px, rounded-lg = 8px.
+ */
+
 .mock {
   --mock-background: #000;
-  --mock-card: #090909;
-  --mock-border: #525252;
-  --mock-border-soft: #343434;
-  --mock-input: #191919;
+  --mock-background-alt: #171717;
+  --mock-card: #1f1f1f;
+  --mock-popover: #262626;
+  --mock-accent: #303030;
+  --mock-secondary-highlight: #404040;
+  --mock-border: #6f6f6f;
+  --mock-border-soft: #575757;
+  --mock-input: #171717;
   --mock-muted: #6b6b6b;
   --mock-primary-variant: #a3a3a3;
   --mock-foreground: #fff;
-  --mock-selected: #526ff5;
+  --mock-selected: #4d6ef5;
+  --mock-font: Inter, ui-sans-serif, system-ui, sans-serif;
   overflow-x: auto;
   color: var(--mock-foreground);
   background: var(--mock-background);
   border: 1px solid var(--mock-border-soft);
-  border-radius: 6px;
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  border-radius: 8px;
+  font-family: var(--mock-font);
   font-size: 14px;
+  line-height: 20px;
 }
+
+/* ---------- guide player (docs chrome, not part of the UI mock) ---------- */
 
 .stepBar,
 .rangeControl,
@@ -173,6 +204,8 @@
   border-color: var(--mock-border-soft);
 }
 
+/* ---------- app frame ---------- */
+
 .viewport {
   position: relative;
   overflow: hidden;
@@ -215,18 +248,63 @@
   animation: camera-reframe-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.appHeader {
+/* App.tsx desktop layout: full-height 52px rail on the far left
+   (absolute inset-y-0 left-0), the settings page fills the rest
+   (content root: absolute left-[52px] top-0). */
+
+.appBody {
   position: relative;
   display: grid;
-  height: 58px;
-  grid-template-columns: 48px 220px minmax(0, 1fr);
+  height: 100%;
+  overflow: hidden;
+  grid-template-columns: 52px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+/* full-height rail column: stretch to the frame, keep bottom buttons pinned */
+.appBody > .iconRail {
+  height: 100%;
+  min-height: 0;
+}
+
+/* the settings page (Settings.tsx desktop): its own title bar + nav/content */
+.settingsPage {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: var(--mock-background);
+}
+
+.settingsPageBody {
+  display: grid;
+  min-height: 0;
+  overflow: hidden;
+  grid-template-columns: 256px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+/* settings page title bar (Settings.tsx desktop): h-16 border-b,
+   Heading h3 设置 on the left, camera switcher on the right */
+
+.appHeader {
+  position: relative;
+  display: flex;
+  height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px 0 16px;
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
+.settingsTitle {
+  color: var(--mock-foreground);
+  font-size: 18px;
+  font-weight: 500;
+}
+
 .cameraSwitcher {
-  position: absolute;
-  right: 14px;
-  top: 50%;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -238,7 +316,6 @@
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
-  transform: translateY(-50%);
   cursor: pointer;
   transition: box-shadow 240ms ease;
 }
@@ -250,51 +327,25 @@
 }
 
 .cameraSwitcherTarget {
-  box-shadow: 0 0 0 2px var(--mock-selected), 0 0 0 5px rgb(82 111 245 / 18%);
+  box-shadow: 0 0 0 2px var(--mock-selected), 0 0 0 5px rgb(77 110 245 / 18%);
   animation: focus-breathe 2s ease-in-out infinite;
 }
 
-.logoCell {
-  display: grid;
-  place-items: center;
-  background: #1b1b1b;
-  border-right: 1px solid var(--mock-border-soft);
-}
-
-.logoCell img {
-  width: 28px;
-  height: 28px;
-}
-
-.settingsTitle {
-  display: flex;
-  grid-column: 2 / -1;
-  align-items: center;
-  padding: 0 14px;
-  color: var(--mock-foreground);
-  font-size: 21px;
-  font-weight: 600;
-}
-
-.appBody {
-  position: relative;
-  display: grid;
-  height: 520px;
-  grid-template-columns: 48px 220px minmax(0, 1fr);
-}
+/* system dropdown menu (GeneralSettings → dropdown-menu.tsx):
+   bg-popover #262626, rounded-md, items px-2 py-1.5 text-sm */
 
 .systemMenu {
   position: absolute;
   z-index: 20;
-  top: 5px;
-  bottom: 43px;
-  left: 5px;
+  bottom: 12px;
+  left: 56px;
   overflow: hidden;
   width: 288px;
+  max-height: calc(100% - 60px);
   color: #ededed;
-  background: #242424;
-  border: 1px solid #454545;
-  border-radius: 5px;
+  background: var(--mock-popover);
+  border: 1px solid var(--mock-secondary-highlight);
+  border-radius: 6px;
   box-shadow: 0 12px 30px rgb(0 0 0 / 55%);
   opacity: 0;
   transform: translateY(14px) scale(0.98);
@@ -319,21 +370,22 @@
   display: block;
   padding: 5px 11px 7px;
   border-bottom: 1px solid #303030;
+  color: var(--mock-muted);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .systemMenuItem,
 .restartItem {
   display: grid;
-  min-height: 29px;
+  min-height: 32px;
   grid-template-columns: 18px minmax(0, 1fr) 16px;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   margin: 1px 5px;
-  padding: 0 7px;
+  padding: 0 8px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .systemMenuItem > span,
@@ -348,7 +400,7 @@
 
 .systemMenuItem b,
 .restartItem b {
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .systemMenuItem i {
@@ -362,7 +414,7 @@
 
 .systemMenuTarget {
   color: white;
-  background: #303030;
+  background: var(--mock-accent);
   outline: 2px solid var(--mock-selected);
   outline-offset: -1px;
   animation: focus-breathe 2s ease-in-out infinite;
@@ -372,62 +424,151 @@
   min-height: 36px;
   margin: 3px 0 0;
   padding: 0 12px;
-  border-top: 1px solid #343434;
+  border-top: 1px solid var(--mock-secondary-highlight);
   border-radius: 0;
 }
+
+/* icon rail (navigation/Sidebar.tsx: w-[52px] bg-background_alt py-4,
+   NavItem rounded-lg p-[6px] mx-[10px] mb-4, icon size-5;
+   inactive: text-secondary-foreground bg-secondary #262626,
+   active: text-white bg-selected; bottom GeneralSettings/AccountSettings
+   rounded-lg bg-secondary, container flex-col gap-4 mb-8) */
 
 .iconRail {
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 12px;
-  padding-top: 12px;
-  background: #1b1b1b;
-  border-right: 1px solid var(--mock-border-soft);
+  padding: 16px 0;
+  background: var(--mock-background-alt);
+  border-right: 1px solid var(--mock-secondary-highlight);
+}
+
+.iconRail .railLogo {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 24px;
+  color: var(--mock-foreground);
+  place-items: center;
+}
+
+.railLogoSvg {
+  width: 32px;
+  height: 32px;
 }
 
 .railSpacer {
   flex: 1;
 }
 
-.settingsIcon {
-  margin-bottom: 12px;
-}
-
+/* NavItem: 32x32 box, 6px padding, mx-10px mb-16px, rounded-lg */
 .railIcon {
   display: grid;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
+  margin: 0 10px 16px;
   place-items: center;
-  color: #868686;
-  background: #2c2c2c;
-  border-radius: 7px;
-  font-size: 15px;
+  color: var(--mock-muted);
+  background: var(--mock-popover);
+  border-radius: 8px;
 }
 
 .railIcon svg {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
 }
 
+.railIconActive {
+  color: #fff;
+  background: var(--mock-selected);
+}
+
+/* live page: active Live item keeps mb-2 (8px) because the camera-group
+   cluster follows it, exactly like Sidebar.tsx `showCameraGroups` branch */
+.railClusterGap {
+  margin-bottom: 8px;
+}
+
+/* CameraGroupSelector cluster: smaller size-sm buttons (24x24, gap 12px),
+   所有摄像头 / user groups / 编辑铅笔; mb-4 (16px) after the cluster */
+.railSubItem {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  margin-bottom: 12px;
+  place-items: center;
+  color: var(--mock-muted);
+  background: var(--mock-popover);
+  border-radius: 6px;
+}
+
+.railSubItem svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* the pencil (last cluster item) keeps 16px below like NavItem mb-4 */
+.railClusterLast {
+  margin-bottom: 16px;
+  color: var(--mock-primary-variant);
+}
+
+/* bottom actions: GeneralSettings + AccountSettings
+   (mb-8 flex flex-col items-center gap-4 wrappers, buttons rounded-lg
+   bg-secondary text-secondary-foreground, icon m-[6px] size-5) */
+.railActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.railButton {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  color: var(--mock-muted);
+  background: var(--mock-popover);
+  border-radius: 8px;
+}
+
+.railButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* settings sidebar (ui/sidebar.tsx: width 16rem = 256px, bg-background,
+   group label: h-8 px-2 text-xs font-medium text-sidebar-foreground/70,
+   sub menu: mx-3.5 border-l border-sidebar-border px-2.5,
+   sub button: min-h-7 text-sm px-2 rounded-md,
+   active bg-background-alt + accent-foreground(primary #e8e8e8)) */
+
 .settingsNav {
-  overflow: hidden;
-  padding: 10px 9px 20px 10px;
+  overflow: hidden auto;
+  padding: 8px 10px 20px;
   color: var(--mock-muted);
   background: var(--mock-background);
-  border-right: 1px solid var(--mock-border-soft);
+  border-right: 1px solid var(--mock-secondary-highlight);
+  scrollbar-width: thin;
 }
 
 .singleMenuItem,
 .menuGroupLabel,
 .menuItem {
+  display: flex;
   min-height: 32px;
+  align-items: center;
   padding: 0 8px;
-  line-height: 1.2;
+  line-height: 20px;
 }
 
 .singleMenuItem {
-  margin-bottom: 3px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  color: var(--mock-muted);
+  font-size: 14px;
 }
 
 .menuGroup {
@@ -436,35 +577,43 @@
 
 .menuGroupLabel {
   justify-content: space-between;
+  min-height: 32px;
   gap: 8px;
+  color: var(--mock-muted);
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .menuGroupLabelActive {
-  color: var(--mock-foreground);
-  font-weight: 600;
+  color: var(--mock-primary-variant);
 }
 
 .cameraName {
-  padding: 0 8px 5px;
-  color: var(--mock-primary-variant);
+  padding: 0 8px 6px;
+  color: var(--mock-muted);
   font-size: 12px;
 }
 
+/* sub menu indented with a left border, like SidebarMenuSub */
 .menuItems {
+  margin-left: 12px;
   padding-left: 8px;
+  border-left: 1px solid var(--mock-secondary-highlight);
 }
 
 .menuItem {
   position: relative;
   justify-content: space-between;
+  min-height: 28px;
   margin: 1px 0;
-  border-radius: 5px;
-  font-size: 13px;
+  color: var(--mock-muted);
+  border-radius: 6px;
+  font-size: 14px;
 }
 
 .menuItemActive {
   color: var(--mock-foreground);
-  background: #1b1b1b;
+  background: var(--mock-background-alt);
   font-weight: 500;
 }
 
@@ -479,16 +628,830 @@
 .navigationTarget {
   outline: 2px solid var(--mock-selected);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgb(82 111 245 / 14%);
+  box-shadow: 0 0 0 4px rgb(77 110 245 / 14%);
   animation: focus-breathe 2s ease-in-out infinite;
 }
 
+/* content viewport */
+
 .contentViewport {
-  overflow-y: hidden;
+  overflow-y: auto;
   min-width: 0;
   background: var(--mock-background);
   scroll-behavior: smooth;
+  scrollbar-width: thin;
 }
+
+.scene {
+  width: 100%;
+  padding: 16px 16px 28px;
+}
+
+.sectionHeader {
+  margin-bottom: 20px;
+}
+
+.sectionHeader h3 {
+  margin: 0;
+  color: var(--mock-foreground);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px;
+  letter-spacing: 0;
+}
+
+.sectionHeader p {
+  margin: 4px 0 0;
+  color: var(--mock-muted);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.docsLink {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--mock-primary-variant);
+  font-size: 12px;
+}
+
+.docsLink span {
+  margin-left: 3px;
+  font-size: 10px;
+}
+
+.docsLink svg {
+  display: inline;
+  width: 12px;
+  height: 12px;
+  margin-left: 3px;
+  vertical-align: -2px;
+}
+
+/* group cards — card/SettingsGroupCard.tsx:
+   space-y-4 rounded-lg border border-border/70 bg-card/30 p-4,
+   title row: border-b border-border/60 pb-4 font-semibold text-primary-variant */
+
+.panels {
+  display: grid;
+  gap: 16px;
+}
+
+.group {
+  margin: 0;
+  padding: 16px;
+  background: rgb(31 31 31 / 30%); /* bg-card/30 over #000 */
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 8px;
+}
+
+.groupHeader {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--mock-border-soft);
+}
+
+.groupTitle {
+  color: var(--mock-primary-variant);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.mock .group .groupDesc {
+  margin: 4px 0 0;
+  color: var(--mock-muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.fields {
+  display: grid;
+  gap: 24px;
+  padding-top: 16px;
+}
+
+/* sub-group inside a group card */
+
+.subGroup {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  background: rgb(31 31 31 / 30%);
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 6px;
+}
+
+.collapsibleSubGroup.collapsed .subGroupFields {
+  display: none;
+}
+
+.subGroupHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subGroupHeader.clickable {
+  cursor: default;
+}
+
+.subGroupHeader.clickable svg {
+  color: var(--mock-muted);
+  flex-shrink: 0;
+}
+
+.subGroupLabel {
+  color: var(--mock-primary-variant);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.mock .subGroup .subGroupDesc {
+  margin: 0;
+  color: var(--mock-muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.subGroupFields {
+  display: grid;
+  gap: 24px;
+  padding-top: 4px;
+}
+
+/* nested sub-group */
+
+.nestedSubGroup {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  background: rgb(31 31 31 / 30%);
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 6px;
+}
+
+.nestedSubGroupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  color: var(--mock-primary-variant);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.nestedSubGroupHeader svg {
+  color: var(--mock-muted);
+  flex-shrink: 0;
+}
+
+.collapsibleNested.collapsed .nestedSubGroupFields {
+  display: none;
+}
+
+.nestedSubGroupHeader.clickable {
+  cursor: default;
+}
+
+.nestedSubGroup .nestedSubGroupDesc {
+  margin: 0;
+  color: var(--mock-muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.nestedSubGroupFields {
+  display: grid;
+  gap: 24px;
+  padding-top: 4px;
+}
+
+/* field row — FieldTemplate.tsx split layout via SPLIT_ROW_CLASS_NAME:
+   grid-cols-[minmax(14rem,24rem)_minmax(0,1fr)] gap-x-6,
+   label text-sm font-medium, description text-xs text-muted-foreground */
+
+.field {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(14rem, 24rem) minmax(0, 1fr);
+  align-items: start;
+  column-gap: 24px;
+}
+
+.fieldCopy {
+  min-width: 0;
+}
+
+.fieldCopy strong {
+  display: block;
+  color: var(--mock-foreground);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.fieldCopy p {
+  margin: 4px 0 0;
+  color: var(--mock-muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+/* switch — ui/switch.tsx: h-6 w-11 rounded-full border-2 border-transparent,
+   unchecked bg-input, checked bg-selected; thumb size-5 rounded-full
+   bg-muted-foreground, checked dark: bg-primary (#e8e8e8) */
+
+.switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex: none;
+  background: var(--mock-input);
+  border: 2px solid transparent;
+  border-radius: 999px;
+}
+
+.switch span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background: var(--mock-muted);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 45%);
+  transition: transform 220ms ease;
+}
+
+.switchOn {
+  background: var(--mock-selected);
+}
+
+.switchOn span {
+  background: #e8e8e8;
+  transform: translateX(20px);
+}
+
+/* range */
+
+.rangeControl {
+  width: 100%;
+  max-width: 42rem;
+  gap: 14px;
+  padding-top: 8px;
+}
+
+.rangeTrack {
+  position: relative;
+  height: 8px;
+  flex: 1;
+  overflow: visible;
+  background: #292929;
+  border-radius: 999px;
+}
+
+.rangeTrack span {
+  display: block;
+  height: 100%;
+  background: #e8e8e8;
+  border-radius: inherit;
+}
+
+.rangeTrack i {
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background: #e8e8e8;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.rangeValue {
+  width: 36px;
+  flex: none;
+  color: var(--mock-muted);
+  font-size: 14px;
+  text-align: right;
+}
+
+/* input / select — ui/input.tsx & ui/select.tsx:
+   h-10 rounded-md border border-input px-3 py-2 text-sm,
+   dark:bg-background_alt (#171717) */
+
+.input {
+  display: inline-flex;
+  width: 100%;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 8px 12px;
+  color: var(--mock-foreground);
+  background: var(--mock-input);
+  border: 1px solid var(--mock-border);
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.chevron {
+  display: flex;
+  flex: none;
+  align-items: center;
+  color: var(--mock-muted);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tags span {
+  padding: 5px 8px;
+  color: var(--mock-foreground);
+  background: var(--mock-input);
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.advancedCollapsed {
+  padding: 10px 4px;
+  color: var(--mock-muted);
+  border-top: 1px solid var(--mock-border-soft);
+  font-size: 12px;
+}
+
+.standaloneField {
+  padding: 0 16px;
+}
+
+/* object field cards */
+
+.objectField {
+  position: relative;
+  overflow: visible;
+  background: rgb(31 31 31 / 30%);
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 8px;
+}
+
+.objectFieldHeader {
+  display: flex;
+  min-height: 70px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+}
+
+.objectFieldHeader > svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--mock-foreground);
+}
+
+.objectFieldContent {
+  display: grid;
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.objectEntry {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 6px;
+}
+
+.objectEntryHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 8px;
+}
+
+.objectValues {
+  display: grid;
+  gap: 8px;
+  margin-left: 5px;
+  padding-left: 12px;
+  border-left: 2px solid #3a3a3a;
+}
+
+.objectInput {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  padding: 8px 12px;
+  overflow: hidden;
+  color: var(--mock-foreground);
+  background: var(--mock-input);
+  border: 1px solid var(--mock-border);
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.objectDelete {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: #848484;
+}
+
+.objectDelete svg {
+  width: 15px;
+  height: 15px;
+}
+
+.objectAdd {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 32px;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  color: var(--mock-foreground);
+  background: transparent;
+  border: 1px solid var(--mock-border);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.objectAdd svg {
+  width: 15px;
+  height: 15px;
+}
+
+.rulesContent {
+  display: grid;
+  gap: 10px;
+  padding: 0 16px 16px;
+}
+
+.rulesHeader,
+.ruleRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 28px;
+  gap: 8px;
+}
+
+.rulesHeader {
+  color: var(--mock-muted);
+  font-size: 12px;
+}
+
+.rulesHeader span:last-child {
+  grid-column: 2;
+}
+
+.rulesRows {
+  display: grid;
+  gap: 8px;
+}
+
+.ruleRow {
+  align-items: center;
+}
+
+.trackField,
+.labelSwitchesField {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+
+.trackSummary {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--mock-muted);
+  font-size: 12px;
+}
+
+.trackSummary svg {
+  width: 14px;
+  height: 14px;
+}
+
+.trackSelector {
+  overflow: hidden;
+  width: min(448px, 100%);
+  padding: 8px 6px 5px;
+  background: var(--mock-popover);
+  border: 1px solid var(--mock-border);
+  border-radius: 8px;
+}
+
+.trackSearch {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  margin: 0 2px 7px;
+  padding: 8px 12px;
+  color: var(--mock-muted);
+  background: var(--mock-input);
+  border: 1px solid var(--mock-border);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.trackOptions {
+  display: grid;
+  max-height: 206px;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.trackOption {
+  display: flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 8px;
+  color: var(--mock-foreground);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.trackDescription {
+  margin: 0;
+  color: var(--mock-muted);
+  font-size: 12px;
+}
+
+.labelSelector {
+  display: grid;
+  overflow: hidden;
+  width: min(448px, 100%);
+  gap: 8px;
+  padding: 8px 6px;
+  background: var(--mock-popover);
+  border: 1px solid var(--mock-border);
+  border-radius: 8px;
+}
+
+.customLabelInput {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  padding: 8px 12px;
+  color: var(--mock-muted);
+  background: var(--mock-input);
+  border: 1px solid var(--mock-border);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.filtersContent {
+  display: grid;
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.filterCard {
+  overflow: hidden;
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 6px;
+}
+
+.filterCardHeader {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+}
+
+.filterCardHeader strong {
+  color: var(--mock-foreground);
+  font-size: 14px;
+}
+
+.filterCardHeader svg {
+  width: 15px;
+  height: 15px;
+}
+
+.filterSettings {
+  display: grid;
+  gap: 16px;
+  padding: 4px 14px 16px;
+}
+
+.filterSetting {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(130px, 46%);
+  align-items: center;
+  gap: 18px;
+  color: var(--mock-foreground);
+  font-size: 14px;
+}
+
+/* focus highlight */
+
+.focused::after {
+  position: absolute;
+  z-index: 2;
+  inset: -9px;
+  border: 2px solid var(--mock-selected);
+  border-radius: 6px;
+  box-shadow: 0 0 0 2px rgb(77 110 245 / 16%);
+  content: "";
+  pointer-events: none;
+  animation: focus-breathe 2s ease-in-out infinite;
+}
+
+/* hint bubble — docs chrome, keep the blue "guide" look */
+
+.fieldHint {
+  position: absolute;
+  z-index: 7;
+  top: calc(100% + 16px);
+  right: 0;
+  display: flex;
+  width: min(410px, 86%);
+  gap: 9px;
+  padding: 10px 12px;
+  color: #e8ebf8;
+  background: #171a25;
+  border: 1px solid var(--mock-selected);
+  border-radius: 6px;
+  box-shadow: 0 10px 26px rgb(0 0 0 / 45%);
+  pointer-events: auto;
+}
+
+.fieldHint > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.fieldHint p {
+  margin: 4px 0 0;
+  word-break: normal;
+}
+
+.fieldHint::before {
+  position: absolute;
+  top: -6px;
+  right: 28px;
+  width: 10px;
+  height: 10px;
+  background: #171a25;
+  border-top: 1px solid var(--mock-selected);
+  border-left: 1px solid var(--mock-selected);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.fieldHintAbove {
+  top: auto;
+  bottom: calc(100% + 16px);
+}
+
+.fieldHintAbove::before {
+  top: auto;
+  bottom: -6px;
+  border-top: 0;
+  border-right: 1px solid var(--mock-selected);
+  border-bottom: 1px solid var(--mock-selected);
+  border-left: 0;
+}
+
+.fieldHintOverlay {
+  top: 14px;
+  right: 14px;
+  bottom: auto;
+  width: min(360px, calc(100% - 28px));
+}
+
+.fieldHintOverlay::before {
+  display: none;
+}
+
+.navigationHint {
+  z-index: 30;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  width: min(330px, calc(100% - 300px));
+}
+
+.navigationHint::before {
+  top: calc(50% - 5px);
+  right: auto;
+  left: -6px;
+  display: block;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 1px solid var(--mock-selected);
+  border-left: 1px solid var(--mock-selected);
+}
+
+.navigationHintFlipped::before {
+  right: -6px;
+  left: auto;
+  border-top: 1px solid var(--mock-selected);
+  border-right: 1px solid var(--mock-selected);
+  border-bottom: 0;
+  border-left: 0;
+}
+
+.navigationHintReady {
+  animation: hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fieldHintMeasuring {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.fieldHintReady {
+  animation: hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fieldHintIcon {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  place-items: center;
+  color: #8ea2ff;
+  font-size: 16px;
+}
+
+.fieldHint strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fieldHint p {
+  margin: 3px 0 0;
+  color: #aeb5c8;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.fieldHint p strong {
+  display: inline;
+}
+
+.fieldHintNavigation {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 9px;
+  padding-top: 8px;
+  color: #c9cede;
+  border-top: 1px solid rgb(142 162 255 / 20%);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.fieldHintNavigation button {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: #e8ebf8;
+  background: #222735;
+  border: 1px solid #424b68;
+  border-radius: 4px;
+  cursor: pointer;
+  place-items: center;
+}
+
+.fieldHintNavigation button:hover:not(:disabled) {
+  background: #2b3245;
+  border-color: #7185e9;
+}
+
+.fieldHintNavigation button:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.fieldHintNavigation button svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* masks & zones layout */
 
 .masksZonesLayout {
   position: relative;
@@ -515,9 +1478,9 @@
 .polygonSidebar {
   overflow: hidden auto;
   min-width: 0;
-  background: #101010;
+  background: var(--mock-background-alt);
   border: 1px solid var(--mock-border-soft);
-  border-radius: 6px;
+  border-radius: 8px;
   scrollbar-width: thin;
 }
 
@@ -531,7 +1494,8 @@
 .polygonEditorHeader {
   padding: 12px;
   border-bottom: 1px solid var(--mock-border-soft);
-  font-size: 13px;
+  color: var(--mock-foreground);
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -542,13 +1506,19 @@
 
 .polygonEditorHeader small {
   color: var(--mock-muted);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 400;
 }
 
 .maskZoneTarget {
   position: relative;
   min-width: 0;
+}
+
+.masksZonesLayout > .maskZoneTarget {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
 }
 
 .maskZoneListSection {
@@ -563,7 +1533,7 @@
   justify-content: space-between;
   gap: 8px;
   color: var(--mock-foreground);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .polygonAdd {
@@ -590,9 +1560,9 @@
   margin-top: 5px;
   padding: 6px 7px;
   color: var(--mock-foreground);
-  background: #202020;
-  border: 1px solid #3f3f3f;
-  border-radius: 5px;
+  background: var(--mock-accent);
+  border: 1px solid var(--mock-border);
+  border-radius: 6px;
 }
 
 .polygonListItem > svg {
@@ -614,13 +1584,13 @@
 }
 
 .polygonListItem b {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
 }
 
 .polygonListItem small {
   color: var(--mock-muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .polygonListItem .switch {
@@ -651,26 +1621,26 @@
 .polygonFormField strong,
 .polygonToggleRow strong {
   color: var(--mock-foreground);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
 }
 
 .polygonFormField small {
   color: var(--mock-muted);
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.35;
 }
 
 .polygonInput {
   display: flex;
-  min-height: 30px;
+  min-height: 36px;
   align-items: center;
-  padding: 5px 8px;
+  padding: 6px 10px;
   color: var(--mock-foreground);
-  background: #1a1a1a;
-  border: 1px solid #484848;
-  border-radius: 5px;
-  font-size: 10px;
+  background: var(--mock-input);
+  border: 1px solid var(--mock-border);
+  border-radius: 6px;
+  font-size: 13px;
 }
 
 .polygonToggleRow {
@@ -691,26 +1661,20 @@
   gap: 6px;
   padding: 10px 12px;
   border-top: 1px solid var(--mock-border-soft);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .polygonActions span,
 .polygonActions b {
   padding: 6px 10px;
   border: 1px solid var(--mock-border);
-  border-radius: 4px;
+  border-radius: 6px;
   font-weight: 500;
 }
 
 .polygonActions b {
   background: var(--mock-selected);
   border-color: var(--mock-selected);
-}
-
-.masksZonesLayout > .maskZoneTarget {
-  display: grid;
-  min-width: 0;
-  min-height: 0;
 }
 
 .polygonCanvas {
@@ -720,7 +1684,7 @@
   min-height: 0;
   background: #111;
   border: 1px solid var(--mock-border-soft);
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .polygonCanvas img,
@@ -773,7 +1737,7 @@
   background: rgb(0 0 0 / 72%);
   border: 1px solid rgb(255 255 255 / 22%);
   border-radius: 4px;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .canvasBadge {
@@ -790,55 +1754,7 @@
   padding: 6px 8px;
 }
 
-.scene {
-  width: 100%;
-  padding: 14px 16px 28px;
-}
-
-.sectionHeader {
-  margin-bottom: 22px;
-}
-
-.sectionHeader h3 {
-  margin: 0;
-  color: var(--mock-foreground);
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: 0;
-}
-
-.sectionHeader p {
-  margin: 5px 0 0;
-  color: var(--mock-muted);
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-.docsLink {
-  display: inline-block;
-  margin-top: 4px;
-  color: var(--mock-primary-variant);
-  font-size: 12px;
-}
-
-.docsLink span {
-  margin-left: 3px;
-  font-size: 10px;
-}
-
-.docsLink svg {
-  display: inline;
-  width: 11px;
-  height: 11px;
-  margin-left: 3px;
-  vertical-align: -1px;
-}
-
-.panels {
-  display: grid;
-  gap: 20px;
-}
+/* review settings layout */
 
 .reviewLayout {
   display: grid;
@@ -864,7 +1780,7 @@
 .reviewClassification > p {
   margin: 0;
   color: var(--mock-muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.45;
 }
 
@@ -876,7 +1792,7 @@
 
 .reviewToggle strong {
   color: var(--mock-foreground);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -898,19 +1814,19 @@
 
 .reviewClassificationGrid strong {
   color: var(--mock-foreground);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .reviewClassificationGrid small {
   color: var(--mock-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .reviewZones {
   display: grid;
   gap: 8px;
   padding: 12px;
-  background: #242424;
+  background: var(--mock-accent);
   border-radius: 6px;
 }
 
@@ -919,7 +1835,7 @@
   align-items: center;
   gap: 8px;
   color: var(--mock-foreground);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .reviewZones i {
@@ -949,10 +1865,10 @@
 }
 
 .reviewConfigCard {
-  padding: 14px;
-  background: #202020;
-  border: 1px solid #4a4a4a;
-  border-radius: 7px;
+  padding: 16px;
+  background: rgb(31 31 31 / 30%);
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 8px;
 }
 
 .reviewConfigHeader {
@@ -961,7 +1877,7 @@
   justify-content: space-between;
   gap: 14px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #414141;
+  border-bottom: 1px solid var(--mock-border-soft);
 }
 
 .reviewConfigHeader > div {
@@ -971,23 +1887,25 @@
 
 .reviewConfigHeader strong {
   color: var(--mock-foreground);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .reviewConfigHeader small {
   color: var(--mock-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .reviewConfigHeader svg {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   flex: none;
 }
 
 .reviewConfigCard .fields {
-  padding-top: 15px;
+  padding-top: 16px;
 }
+
+/* detector & model layout */
 
 .detectorModelLayout {
   display: grid;
@@ -996,10 +1914,10 @@
 
 .detectorHardwareCard {
   position: relative;
-  padding: 14px;
-  background: #202020;
-  border: 1px solid #4a4a4a;
-  border-radius: 7px;
+  padding: 16px;
+  background: rgb(31 31 31 / 30%);
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 8px;
 }
 
 .detectorCardHeader {
@@ -1008,7 +1926,7 @@
   justify-content: space-between;
   gap: 14px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #414141;
+  border-bottom: 1px solid var(--mock-border-soft);
 }
 
 .detectorCardHeader > div {
@@ -1018,30 +1936,30 @@
 
 .detectorCardHeader strong {
   color: var(--mock-foreground);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .detectorCardHeader small {
   color: var(--mock-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .detectorCardHeader svg {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
 }
 
 .detectorInstances {
   display: grid;
   gap: 12px;
-  padding-top: 14px;
+  padding-top: 16px;
 }
 
 .detectorInstance {
   display: grid;
   gap: 10px;
   padding: 12px;
-  border: 1px solid #4a4a4a;
+  border: 1px solid var(--mock-border-soft);
   border-radius: 6px;
 }
 
@@ -1051,12 +1969,12 @@
   align-items: start;
   gap: 9px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #414141;
+  border-bottom: 1px solid var(--mock-border-soft);
 }
 
 .detectorInstanceHeader > svg {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   color: var(--mock-muted);
 }
 
@@ -1070,13 +1988,13 @@
 
 .detectorInstanceHeader strong {
   color: var(--mock-foreground);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .detectorInstanceHeader span,
 .detectorInstanceHeader small {
   color: var(--mock-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .detectorInstanceHeader small {
@@ -1094,7 +2012,7 @@
   display: grid;
   gap: 6px;
   color: var(--mock-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .detectorSpecificFields {
@@ -1116,12 +2034,12 @@
 
 .detectorSpecificField strong {
   color: var(--mock-foreground);
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .detectorSpecificField small {
   color: var(--mock-muted);
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.35;
 }
 
@@ -1131,10 +2049,10 @@
   gap: 9px;
   padding: 12px;
   color: var(--mock-muted);
-  background: #202020;
-  border: 1px solid #4a4a4a;
+  background: var(--mock-accent);
+  border: 1px solid var(--mock-border);
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .detectorAddPanel > div {
@@ -1148,8 +2066,8 @@
   gap: 18px;
   padding: 13px 0 4px;
   color: var(--mock-muted);
-  border-bottom: 1px solid #414141;
-  font-size: 11px;
+  border-bottom: 1px solid var(--mock-border-soft);
+  font-size: 12px;
 }
 
 .detectorModelTabs strong {
@@ -1160,7 +2078,7 @@
 }
 
 .detectorHardwareCard > .fields {
-  padding-top: 15px;
+  padding-top: 16px;
 }
 
 .detectorAdvancedHeader {
@@ -1170,8 +2088,8 @@
   margin-top: 15px;
   padding: 10px 2px;
   color: var(--mock-muted);
-  border-top: 1px solid #414141;
-  font-size: 11px;
+  border-top: 1px solid var(--mock-border-soft);
+  font-size: 12px;
 }
 
 .detectorAdvancedHeader svg {
@@ -1183,744 +2101,577 @@
   display: grid;
   gap: 20px;
   padding: 15px;
-  background: #171717;
-  border: 1px solid #454545;
+  background: var(--mock-background-alt);
+  border: 1px solid var(--mock-border-soft);
   border-radius: 6px;
 }
 
-.standaloneField {
-  padding: 0 14px;
+/* multi-instance section (genai providers) */
+
+.instanceCard {
+  overflow: hidden;
+  background: rgb(31 31 31 / 30%);
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 8px;
 }
 
-.group {
-  margin: 0;
-  padding: 14px;
-  background: color-mix(in srgb, var(--mock-card) 30%, transparent);
-  border: 1px solid var(--mock-border);
-  border-radius: 7px;
-}
-
-.groupHeader {
-  padding-bottom: 13px;
+.instanceKeyRow {
+  display: grid;
+  grid-template-columns: minmax(14rem, 24rem) minmax(0, 1fr);
+  align-items: center;
+  padding: 16px;
+  gap: 24px;
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.groupTitle {
-  color: var(--mock-primary-variant);
+.instanceKeyLabel strong {
+  display: block;
+  color: var(--mock-foreground);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
+  line-height: 20px;
 }
 
-/* Use higher-specificity selectors to override .vp-doc p default margin */
-.mock .group .groupDesc {
+.mock .instanceKeyLabel p {
   margin: 4px 0 0;
   color: var(--mock-muted);
-  font-size: 13px;
-}
-
-.fields {
-  display: grid;
-  gap: 22px;
-  padding-top: 17px;
-}
-
-/* Sub-group (e.g. 持续保留, 警报保留 inside 全局保留/全局事件) */
-.subGroup {
-  display: grid;
-  gap: 8px;
-  padding: 14px 16px;
-  background: color-mix(in srgb, var(--mock-card) 15%, transparent);
-  border: 1px solid var(--mock-border-soft);
-  border-radius: 6px;
-}
-
-/* Collapsible sub-group: always show header, collapse body when not focused */
-.collapsibleSubGroup.collapsed .subGroupFields {
-  display: none;
-}
-
-.subGroupHeader {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.subGroupHeader.clickable {
-  cursor: default;
-}
-
-.subGroupHeader.clickable svg {
-  color: var(--mock-muted);
-  flex-shrink: 0;
-}
-
-.subGroupLabel {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--mock-primary-variant);
-}
-
-.subGroup .subGroupDesc {
-  margin: 0;
-  padding: 0 2px;
-  font-size: 11.5px;
-  line-height: 1.5;
-  color: var(--mock-muted);
-}
-
-.subGroupFields {
-  display: grid;
-  gap: 16px;
-  padding-top: 2px;
-}
-
-/* Nested sub-group (e.g. 事件保留 inside 警报保留) */
-.nestedSubGroup {
-  display: grid;
-  gap: 6px;
-  padding: 12px 14px;
-  background: color-mix(in srgb, var(--mock-card) 20%, transparent);
-  border: 1px solid var(--mock-border-soft);
-  border-radius: 5px;
-}
-
-.nestedSubGroupHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--mock-text);
-}
-
-.nestedSubGroupHeader svg {
-  color: var(--mock-muted);
-  flex-shrink: 0;
-}
-
-/* Collapsible nested: hide fields when collapsed */
-.collapsibleNested.collapsed .nestedSubGroupFields {
-  display: none;
-}
-
-.nestedSubGroupHeader.clickable {
-  cursor: default;
-}
-
-.nestedSubGroup .nestedSubGroupDesc {
-  margin: 0;
-  padding: 0 2px;
-  font-size: 11px;
-  line-height: 1.5;
-  color: var(--mock-muted);
-}
-
-.nestedSubGroupFields {
-  display: grid;
-  gap: 16px;
-  padding-top: 2px;
-}
-
-.field {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(12rem, 19rem) minmax(0, 1fr);
-  align-items: start;
-  column-gap: 20px;
-}
-
-.objectField {
-  position: relative;
-  overflow: visible;
-  background: #202020;
-  border: 1px solid #4a4a4a;
-  border-radius: 7px;
-}
-
-.objectFieldHeader {
-  display: flex;
-  min-height: 70px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 13px 15px;
-}
-
-.objectFieldHeader > svg {
-  width: 16px;
-  height: 16px;
-  flex: none;
-  color: var(--mock-foreground);
-}
-
-.objectFieldContent {
-  display: grid;
-  gap: 12px;
-  padding: 0 15px 15px;
-}
-
-.objectEntry {
-  display: grid;
-  gap: 8px;
-  padding: 11px;
-  border: 1px solid #4a4a4a;
-  border-radius: 6px;
-}
-
-.objectEntryHeader {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 28px;
-  align-items: center;
-  gap: 8px;
-}
-
-.objectValues {
-  display: grid;
-  gap: 8px;
-  margin-left: 5px;
-  padding-left: 11px;
-  border-left: 2px solid #3a3a3a;
-}
-
-.objectInput {
-  display: flex;
-  min-height: 36px;
-  align-items: center;
-  padding: 7px 10px;
-  overflow: hidden;
-  color: var(--mock-foreground);
-  background: #171717;
-  border: 1px solid #454545;
-  border-radius: 5px;
   font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 16px;
 }
 
-.objectDelete {
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  color: #848484;
-}
-
-.objectDelete svg {
-  width: 15px;
-  height: 15px;
-}
-
-.objectAdd {
-  display: inline-flex;
-  width: fit-content;
-  min-height: 32px;
+.instanceKeyInputWrap {
+  display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 5px 10px;
-  color: var(--mock-foreground);
-  background: #090909;
-  border: 1px solid #555;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.objectAdd svg {
-  width: 15px;
-  height: 15px;
-}
-
-.rulesContent {
-  display: grid;
-  gap: 10px;
-  padding: 0 15px 15px;
-}
-
-.rulesHeader,
-.ruleRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 28px;
   gap: 8px;
 }
 
-.rulesHeader {
-  color: var(--mock-muted);
-  font-size: 11px;
-}
-
-.rulesHeader span:last-child {
-  grid-column: 2;
-}
-
-.rulesRows {
-  display: grid;
-  gap: 8px;
-}
-
-.ruleRow {
-  align-items: center;
-}
-
-.trackField,
-.labelSwitchesField {
-  position: relative;
-  display: grid;
-  gap: 8px;
-}
-
-.trackSummary {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--mock-muted);
-  font-size: 12px;
-}
-
-.trackSummary svg {
-  width: 14px;
-  height: 14px;
-}
-
-.trackSelector {
-  overflow: hidden;
-  width: min(448px, 100%);
-  padding: 8px 6px 5px;
-  background: #242424;
-  border: 1px solid #4b4b4b;
-  border-radius: 7px;
-}
-
-.trackSearch {
-  display: flex;
-  min-height: 38px;
-  align-items: center;
-  margin: 0 2px 7px;
-  padding: 8px 10px;
-  color: #858b96;
-  background: #181818;
-  border: 1px solid #484848;
-  border-radius: 5px;
-  font-size: 12px;
-}
-
-.trackOptions {
-  display: grid;
-  max-height: 206px;
-  gap: 2px;
-  overflow: hidden;
-}
-
-.trackOption {
-  display: flex;
-  min-height: 30px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 2px 8px;
-  color: var(--mock-foreground);
-  font-size: 12px;
-}
-
-.trackDescription {
-  margin: 0;
-  color: var(--mock-muted);
-  font-size: 11px;
-}
-
-.labelSelector {
-  display: grid;
-  overflow: hidden;
-  width: min(448px, 100%);
-  gap: 8px;
-  padding: 8px 6px;
-  background: #242424;
-  border: 1px solid #4b4b4b;
-  border-radius: 7px;
-}
-
-.customLabelInput {
-  display: flex;
-  min-height: 38px;
-  align-items: center;
-  padding: 8px 10px;
-  color: #858b96;
-  background: #181818;
-  border: 1px solid #484848;
-  border-radius: 5px;
-  font-size: 12px;
-}
-
-.filtersContent {
-  display: grid;
-  gap: 12px;
-  padding: 0 15px 15px;
-}
-
-.filterCard {
-  overflow: hidden;
-  border: 1px solid #4a4a4a;
-  border-radius: 6px;
-}
-
-.filterCardHeader {
-  display: flex;
-  min-height: 48px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 13px;
-}
-
-.filterCardHeader strong {
-  color: var(--mock-foreground);
-  font-size: 12px;
-}
-
-.filterCardHeader svg {
-  width: 15px;
-  height: 15px;
-}
-
-.filterSettings {
-  display: grid;
-  gap: 13px;
-  padding: 4px 13px 14px;
-}
-
-.filterSetting {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(130px, 46%);
-  align-items: center;
-  gap: 18px;
-  color: var(--mock-foreground);
-  font-size: 12px;
-}
-
-.focused::after {
-  position: absolute;
-  z-index: 2;
-  inset: -9px;
-  border: 2px solid var(--mock-selected);
-  border-radius: 6px;
-  box-shadow: 0 0 0 2px rgb(82 111 245 / 16%);
-  content: "";
-  pointer-events: none;
-  animation: focus-breathe 2s ease-in-out infinite;
-}
-
-.fieldHint {
-  position: absolute;
-  z-index: 7;
-  top: calc(100% + 16px);
-  right: 0;
-  display: flex;
-  width: min(410px, 86%);
-  gap: 9px;
-  padding: 10px 12px;
-  color: #e8ebf8;
-  background: #171a25;
-  border: 1px solid #526ff5;
-  border-radius: 6px;
-  box-shadow: 0 10px 26px rgb(0 0 0 / 45%);
-  pointer-events: auto;
-}
-
-.fieldHint > div {
-  flex: 1;
-  min-width: 0;
-}
-
-.fieldHint p {
-  margin: 4px 0 0;
-  word-break: normal;
-}
-
-.fieldHint::before {
-  position: absolute;
-  top: -6px;
-  right: 28px;
-  width: 10px;
-  height: 10px;
-  background: #171a25;
-  border-top: 1px solid #526ff5;
-  border-left: 1px solid #526ff5;
-  content: "";
-  transform: rotate(45deg);
-}
-
-.fieldHintAbove {
-  top: auto;
-  bottom: calc(100% + 16px);
-}
-
-.fieldHintAbove::before {
-  top: auto;
-  bottom: -6px;
-  border-top: 0;
-  border-right: 1px solid #526ff5;
-  border-bottom: 1px solid #526ff5;
-  border-left: 0;
-}
-
-.fieldHintOverlay {
-  top: 14px;
-  right: 14px;
-  bottom: auto;
-  width: min(360px, calc(100% - 28px));
-}
-
-.fieldHintOverlay::before {
-  display: none;
-}
-
-.navigationHint {
-  z-index: 30;
-  top: 0;
-  right: auto;
-  bottom: auto;
-  width: min(330px, calc(100% - 300px));
-}
-
-.navigationHint::before {
-  top: calc(50% - 5px);
-  right: auto;
-  left: -6px;
-  display: block;
-  border-top: 0;
-  border-right: 0;
-  border-bottom: 1px solid #526ff5;
-  border-left: 1px solid #526ff5;
-}
-
-.navigationHintFlipped::before {
-  right: -6px;
-  left: auto;
-  border-top: 1px solid #526ff5;
-  border-right: 1px solid #526ff5;
-  border-bottom: 0;
-  border-left: 0;
-}
-
-.navigationHintReady {
-  animation: hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.fieldHintMeasuring {
-  visibility: hidden;
-  opacity: 0;
-}
-
-.fieldHintReady {
-  animation: hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.fieldHintIcon {
-  display: grid;
-  width: 18px;
-  height: 18px;
-  flex: none;
-  place-items: center;
-  color: #8ea2ff;
-  font-size: 16px;
-}
-
-.fieldHint > div {
-  min-width: 0;
+.instanceKeyInputWrap .input {
   flex: 1;
 }
 
-.fieldHint strong {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.fieldHint p {
-  margin: 3px 0 0;
-  color: #aeb5c8;
-  font-size: 11px;
-  line-height: 1.4;
-}
-
-.fieldHint p strong {
-  display: inline;
-}
-
-.fieldHintNavigation {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 9px;
-  padding-top: 8px;
-  color: #c9cede;
-  border-top: 1px solid rgb(142 162 255 / 20%);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-
-.fieldHintNavigation button {
+.removeButton {
   display: grid;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   padding: 0;
-  color: #e8ebf8;
-  background: #222735;
-  border: 1px solid #424b68;
-  border-radius: 4px;
+  color: #848484;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
   place-items: center;
 }
 
-.fieldHintNavigation button:hover:not(:disabled) {
-  background: #2b3245;
-  border-color: #7185e9;
+.removeButton:hover {
+  color: #ef4444;
+  background: var(--mock-accent);
 }
 
-.fieldHintNavigation button:disabled {
-  cursor: default;
-  opacity: 0.35;
+.instanceCard .fields {
+  padding: 16px;
 }
 
-.fieldHintNavigation button svg {
-  width: 15px;
-  height: 15px;
+/* password / yaml widgets */
+
+.passwordValue {
+  flex: 1;
 }
 
-.fieldCopy {
+.passwordIcon {
+  margin-left: 8px;
+  opacity: 0.6;
+}
+
+.yamlField {
+  display: block;
+  width: 100%;
+  min-height: 90px;
+  padding: 8px 12px;
+  color: var(--mock-foreground);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  background: var(--mock-input);
+  border: 1px solid var(--mock-border);
+  border-radius: 6px;
+  resize: none;
+  white-space: pre;
+  overflow: auto;
+}
+
+.yamlField::placeholder {
+  color: var(--mock-muted);
+  opacity: 0.7;
+}
+
+/* ---------- radio group (ui/radio-group.tsx):
+   item h-4 w-4 rounded-full border border-primary, indicator fill-current;
+   FfmpegArgsWidget selected item gets bg-selected */
+
+.radioGroup {
+  display: grid;
+  gap: 12px;
+}
+
+.radioGroup.horizontal {
+  grid-auto-flow: column;
+  justify-content: start;
+  gap: 24px;
+}
+
+.radioRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio {
+  position: relative;
+  display: grid;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--mock-muted);
+  background: var(--mock-background-alt);
+  border: 1px solid var(--mock-primary-variant);
+  border-radius: 50%;
+  place-items: center;
+}
+
+.radio i {
+  display: none;
+  width: 10px;
+  height: 10px;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.radioOn {
+  color: var(--mock-selected);
+  border-color: var(--mock-selected);
+}
+
+.radioOn i {
+  display: block;
+}
+
+.radioLabel {
+  color: var(--mock-foreground);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* ---------- FfmpegArgsWidget ----------
+   radio rows stacked (gap-3 = 12px), select w-full md:max-w-md below */
+
+.ffmpegArgs {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 28rem;
+}
+
+.ffmpegArgs .selectInput {
+  max-width: 28rem;
+}
+
+/* ---------- CameraInputsField ----------
+   The real CameraInputsField renders full width below the field label
+   (space-y-3, Card w-full): label copy on top, one card per input. */
+
+.cameraInputsField {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+
+.cameraInputsField > .fieldCopy {
+  display: block;
+}
+
+.cameraInputsList {
+  display: grid;
+  gap: 12px;
+  max-width: 42rem;
+}
+
+.cameraInputCard {
+  overflow: hidden;
+  background: rgb(31 31 31 / 30%);
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 8px;
+}
+
+.cameraInputHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--mock-border-soft);
+}
+
+.cameraInputHeader > div {
+  display: grid;
+  gap: 2px;
   min-width: 0;
 }
 
-.fieldCopy strong {
-  display: block;
+.cameraInputTitle {
   color: var(--mock-foreground);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 20px;
 }
 
-.fieldCopy p {
-  margin: 4px 0 0;
+.cameraInputPath {
+  overflow: hidden;
   color: var(--mock-muted);
-  font-size: 11px;
-  line-height: 1.4;
+  font-size: 12px;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.switch {
-  position: relative;
-  width: 44px;
-  height: 24px;
-  flex: none;
-  background: #404040;
-  border: 2px solid transparent;
-  border-radius: 12px;
+.cameraInputBody {
+  display: grid;
+  gap: 16px;
+  padding: 16px 16px 16px;
 }
 
-.switch span {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 20px;
-  height: 20px;
-  background: var(--mock-primary-variant);
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 45%);
-  transition: transform 220ms ease;
+.cameraInputField {
+  display: grid;
+  gap: 8px;
 }
 
-.switchOn {
-  background: var(--mock-selected);
+/* StreamSourceSelector combobox: Button variant outline sm:max-w-xs (20rem) */
+.go2rtcSelect {
+  max-width: 20rem;
 }
 
-.switchOn span {
-  background: #e8e8e8;
-  transform: translateX(20px);
+.cameraInputLabel {
+  color: var(--mock-foreground);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
 }
 
-.rangeControl {
-  width: 100%;
-  max-width: 42rem;
-  gap: 14px;
-  padding-top: 3px;
+.cameraInputLabel.strong {
+  font-weight: 500;
 }
 
-.rangeTrack {
-  position: relative;
-  height: 8px;
-  flex: 1;
-  overflow: visible;
-  background: #292929;
-  border-radius: 999px;
-}
-
-.rangeTrack span {
-  display: block;
-  height: 100%;
-  background: #e8e8e8;
-  border-radius: inherit;
-}
-
-.rangeTrack i {
-  position: absolute;
-  top: 50%;
-  width: 20px;
-  height: 20px;
-  background: #e8e8e8;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.rangeValue {
-  width: 36px;
-  flex: none;
+.cameraInputDesc {
+  margin: 0;
   color: var(--mock-muted);
-  font-size: 13px;
-  text-align: right;
+  font-size: 12px;
+  line-height: 16px;
 }
 
-.input {
+.cameraInputPathField {
+  max-width: 28rem;
+}
+
+/* FieldTemplate split value row:
+   md:grid-cols-[minmax(14rem,24rem)_minmax(0,1fr)] md:gap-x-6 */
+.splitFieldRow {
+  display: grid;
+  align-items: start;
+  gap: 12px 24px;
+}
+
+@media (min-width: 640px) {
+  .splitFieldRow {
+    grid-template-columns: minmax(14rem, 24rem) minmax(0, 1fr);
+    gap: 0 24px;
+  }
+}
+
+.splitFieldCopy {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+}
+
+.docsLinkInline {
   display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--mock-muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.splitFieldControl {
   width: 100%;
-  min-height: 38px;
+  min-width: 0;
+}
+
+/* role switches inside a dark inset card, like the real input roles block
+   (InputRolesWidget: rounded-lg border bg-background_alt p-2 pr-0 md:max-w-md,
+   rows px-3, full-size switch h-6 w-11) */
+.roleSwitches {
+  display: grid;
+  gap: 8px;
+  max-width: 28rem;
+  padding: 8px 0 8px 8px;
+  background: var(--mock-background-alt);
+  border: 1px solid var(--mock-border-soft);
+  border-radius: 8px;
+}
+
+.roleSwitchRow {
+  display: flex;
+  min-height: 32px;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 8px 11px;
+  gap: 12px;
+  padding: 0 8px 0 12px;
+  color: var(--mock-foreground);
+  font-size: 14px;
+}
+
+.roleSwitchesDesc {
+  margin: 0;
+  color: var(--mock-muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.cameraInputFooter {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* small switch variant inside role rows uses the base .switch sizes */
+
+/* ---------- camera groups modal (live page) ----------
+   CameraGroupSelector.tsx: Dialog centered, w-6/12, bg-background p-6,
+   title text-lg font-semibold, CameraGroupEdit form space-y-6 */
+
+.liveGroupsFrame {
+  position: absolute;
+  inset: 0;
+}
+
+/* live page scene: shared IconRail column + camera grid backdrop,
+   dialog absolutely centered over the whole scene */
+.liveGroupsScene {
+  position: relative;
+  display: grid;
+  height: 100%;
+  grid-template-columns: 52px minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.liveGroupsScene > .iconRail {
+  height: 100%;
+}
+
+.liveBackdrop {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  background: #050505;
+}
+
+.liveThumb {
+  background:
+    linear-gradient(160deg, #17202b 0%, #0d141b 55%, #101820 100%);
+  border-radius: 6px;
+}
+
+.liveThumb::after {
+  display: block;
+  width: 100%;
+  height: 220px;
+  background:
+    radial-gradient(circle at 30% 40%, rgb(255 255 255 / 6%), transparent 45%),
+    radial-gradient(circle at 70% 65%, rgb(255 255 255 / 4%), transparent 40%);
+  content: "";
+}
+
+.liveGroupsScene .groupDialog {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: calc(50% + 26px);
+  width: min(560px, calc(100% - 80px));
+  max-height: calc(100% - 48px);
+  overflow: hidden auto;
+  background: var(--mock-background);
+  border: 1px solid var(--mock-secondary-highlight);
+  border-radius: 8px;
+  box-shadow: 0 18px 50px rgb(0 0 0 / 65%);
+  transform: translate(-50%, -50%);
+  scrollbar-width: thin;
+}
+
+.groupDialogNarrow {
+  width: min(420px, calc(100% - 80px));
+}
+
+.groupDialogHeader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 24px 8px;
+}
+
+.groupDialogHeader.form {
+  justify-content: flex-start;
+  padding-top: 16px;
+}
+
+.groupDialogHeader h3 {
+  margin: 0;
+  color: var(--mock-foreground);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.groupDialogAdd {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  color: #080808;
+  background: var(--mock-primary-variant);
+  border-radius: 6px;
+  place-items: center;
+}
+
+.groupDialogList {
+  display: grid;
+  gap: 4px;
+  padding: 12px 24px 24px;
+}
+
+.groupDialogRow {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.groupDialogRow > span:first-child {
+  color: var(--mock-foreground);
+  font-size: 14px;
+}
+
+.groupDialogRowActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--mock-muted);
+}
+
+.groupDialogForm {
+  display: grid;
+  gap: 16px;
+  padding: 8px 24px 20px;
+}
+
+.groupFormField {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+
+.groupFormLabel {
+  color: var(--mock-foreground);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.groupFormDesc {
+  margin: 0;
+  color: var(--mock-muted);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.groupFormSeparator {
+  height: 1px;
+  background: var(--mock-secondary-highlight);
+}
+
+.groupCameraRows {
+  display: grid;
+  max-height: 180px;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.groupCameraRow {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.groupCameraName {
+  color: var(--mock-foreground);
+  font-size: 14px;
+}
+
+.iconPickerButton {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
   color: var(--mock-foreground);
   background: var(--mock-input);
   border: 1px solid var(--mock-border);
   border-radius: 6px;
-  font-size: 12px;
 }
 
-.chevron {
+.groupDialogFooter {
   display: flex;
-  flex: none;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.groupDialogButton {
+  display: inline-flex;
+  min-height: 40px;
   align-items: center;
-  color: var(--mock-muted);
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tags span {
-  padding: 5px 8px;
+  padding: 8px 16px;
   color: var(--mock-foreground);
-  background: var(--mock-input);
-  border: 1px solid var(--mock-border-soft);
-  border-radius: 4px;
-  font-size: 11px;
+  background: var(--mock-secondary-highlight);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.advancedCollapsed {
-  padding: 10px 4px;
-  color: var(--mock-muted);
-  border-top: 1px solid var(--mock-border-soft);
-  font-size: 12px;
+.groupDialogButton.primary {
+  background: var(--mock-selected);
+}
+
+.groupDialogHint.fieldHint {
+  position: absolute;
+  z-index: 20;
+  top: auto;
+  right: 16px;
+  bottom: 16px;
+  width: min(320px, calc(100% - 32px));
+}
+
+.groupDialogHint.fieldHint::before {
+  display: none;
 }
 
 @keyframes camera-reframe-out {
@@ -1954,12 +2705,12 @@
 @keyframes focus-breathe {
   0%,
   100% {
-    box-shadow: 0 0 0 2px rgb(82 111 245 / 12%);
+    box-shadow: 0 0 0 2px rgb(77 110 245 / 12%);
   }
   50% {
     box-shadow:
-      0 0 0 5px rgb(82 111 245 / 20%),
-      0 0 18px 3px rgb(82 111 245 / 42%);
+      0 0 0 5px rgb(77 110 245 / 20%),
+      0 0 18px 3px rgb(77 110 245 / 42%);
   }
 }
 
@@ -1978,99 +2729,6 @@
   .mock {
     border-radius: 4px;
   }
-}
-
-/* Multi-instance section (e.g. genai Provider name) */
-.instanceCard {
-  border: 1px solid var(--mock-border-soft);
-  border-radius: 8px;
-  background: var(--mock-card-bg);
-  overflow: hidden;
-}
-
-.instanceKeyRow {
-  display: grid;
-  grid-template-columns: 200px minmax(0, 1fr);
-  align-items: center;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--mock-border-soft);
-  gap: 16px;
-}
-
-.instanceKeyLabel strong {
-  display: block;
-  font-size: 14px;
-  color: var(--mock-primary-variant);
-  font-weight: 600;
-}
-
-.instanceKeyLabel p {
-  margin: 4px 0 0;
-  color: var(--mock-muted);
-  font-size: 12px;
-}
-
-.instanceKeyInputWrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.instanceKeyInputWrap .input {
-  flex: 1;
-  padding: 8px 12px;
-  color: var(--mock-primary);
-  font-size: 13px;
-}
-
-.removeButton {
-  background: transparent;
-  border: none;
-  color: var(--mock-muted);
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 4px;
-}
-
-.removeButton:hover {
-  color: var(--mock-danger);
-  background: var(--mock-danger-bg);
-}
-
-.instanceCard .fields {
-  padding: 10px 18px 18px;
-}
-
-/* Password widget */
-.passwordValue {
-  flex: 1;
-}
-
-.passwordIcon {
-  margin-left: 8px;
-  opacity: 0.6;
-}
-
-.yamlField {
-  display: block;
-  width: 100%;
-  min-height: 90px;
-  padding: 8px 11px;
-  color: var(--mock-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 13px;
-  line-height: 1.5;
-  background: var(--mock-input);
-  border: 1px solid var(--mock-border);
-  border-radius: 6px;
-  resize: none;
-  white-space: pre;
-  overflow: auto;
-}
-
-.yamlField::placeholder {
-  color: var(--mock-muted);
-  opacity: 0.7;
 }
 
 @media (prefers-reduced-motion: reduce) {

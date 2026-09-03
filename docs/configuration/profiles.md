@@ -26,6 +26,24 @@ title: 配置模板
 
 首先在 Frigate 配置的顶层定义模板。摄像头引用的每个模板名称必须在此定义。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **配置模板** 部分添加模板，并为每个模板设置名称。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="global"
+  section="profiles"
+  focus="my_provider.friendly_name"
+  :values="{ 'my_provider.friendly_name': 'Home' }"
+  hint="在全局配置中添加配置模板，并为其设置一个便于识别的名称。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 profiles:
   home:
@@ -35,6 +53,9 @@ profiles:
   night:
     friendly_name: Night Mode
 ```
+
+</TabItem>
+</ConfigTabs>
 
 在每个摄像头下添加 `profiles` 部分，为每个模板设置覆盖项。只需包含要更改的设置。
 

@@ -13,6 +13,34 @@ Frigate 自带音频检测功能，该功能直接在 CPU 上运行。相比图�
 
 可以为所有摄像头或仅特定摄像头启用音频事件。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局或摄像头配置的 **音频检测** 部分开启音频检测，并选择要监听的音频类型。
+
+<FrigateConfigMock
+  :auto-play="false"
+  section="audio"
+  :steps="[
+    {
+      level: 'global',
+      focus: 'enabled',
+      values: { enabled: true },
+      hint: '为所有摄像头开启音频检测。',
+    },
+    {
+      level: 'camera',
+      focus: 'enabled',
+      values: { enabled: true },
+      label: '按摄像头开启',
+      hint: '也可以为单个摄像头单独开启音频检测。',
+    },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 audio: # <- 为所有摄像头启用音频事件
   enabled: True
@@ -24,6 +52,9 @@ cameras:
     audio:
       enabled: True # <- 可单独为front_camera启用音频事件
 ```
+
+</TabItem>
+</ConfigTabs>
 
 如果使用多个流，则必须在用于音频检测的流上设置`audio`功能，这可以是任何流，但该流必须包含音频。
 
@@ -51,15 +82,52 @@ cameras:
 
 音频检测器使用音量级别的方式与摄像头画面中的画面变动用于`物体/目标`检测的方式相同。这意味着除非音频音量高于配置的水平，否则 Frigate 不会运行音频检测以减少资源使用。不同摄像头型号的音量水平可能有很大差异，因此进行测试以了解音量水平非常重要。在 Frigate 网页的调试页面中，对于开启了`audio`功能的摄像头，会显示一个**音频**选项卡，其中会以图表形式展示当前音量水平。`min_volume` 参数应设置为运行音频检测所需的最低 `RMS​` 音量。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在音频检测的 **灵敏度** 分组中设置 **最小音量**，以降低资源使用。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="audio"
+  focus="min_volume"
+  :values="{ min_volume: 500 }"
+  hint="只有当音频音量高于最小音量时，Frigate 才运行音频检测，以减少资源占用。可以通过调试页面的音频选项卡观察当前音量。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 :::tip
 
 音频被视为**画面变动**录制（`motion`），这意味着当`record -> retain -> mode`设置为`motion`时，任何声音音量小于最小音量（`min_volume`）的时候，该摄像头的录制片段都将被保留。
 
 :::
 
+</TabItem>
+</ConfigTabs>
+
 ### 配置音频事件 {#configuring-audio-events}
 
 内置音频模型可以检测[500 多种不同类型](https://github.com/blakeblackshear/frigate/blob/dev/audio-labelmap.txt)的音频，其中许多并不实用。默认情况下会开启`bark`(狗叫)、`fire_alarm`(火警)、`speech`(说话)和`yell`(喊叫)这几种音频事件，当然你也可以根据自己的需求进行调整。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在音频检测的 **全局检测** 分组中，选择要监听的音频类型。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="audio"
+  focus="listen"
+  :values="{ listen: ['bark', 'fire_alarm', 'speech', 'yell'] }"
+  hint="选择要监听的音频事件类型，例如狗叫、火警、说话和喊叫。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 audio:
@@ -70,6 +138,9 @@ audio:
     - speech
     - yell
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ### 常用音频标签 {#common-audio-labels}
 

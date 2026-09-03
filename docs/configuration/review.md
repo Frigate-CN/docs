@@ -40,6 +40,23 @@ objects:
 
 默认情况下，只有当检测到 `person` 或 `car` 时，核查条目才会被标记为警报。配置警报标签以包含任何目标或音频标签。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局或摄像头配置的 **核查** 部分的 **警报配置** 中，选择触发警报的标签。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="review"
+  focus="alerts.labels"
+  :values="{ 'alerts.labels': ['car', 'cat', 'dog', 'person', 'speech'] }"
+  hint="配置警报标签，这些标签到达时会被标记为警报。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 # 可在摄像头级别覆盖
 review:
@@ -52,9 +69,29 @@ review:
       - speech
 ```
 
+</TabItem>
+</ConfigTabs>
+
 ## 限制检测的标签类型 {#restricting-detections-to-specific-labels}
 
 默认情况下，所有不符合警报条件的检测将被归类为检测。但你可以进一步过滤检测，仅包含特定标签或特定区域。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在 **核查** 部分的 **检测配置** 中，选择保留为检测的标签。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="review"
+  focus="detections.labels"
+  :values="{ 'detections.labels': ['bark', 'dog'] }"
+  hint="配置检测标签，未命中警报标签的目标将被归类为检测。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 # 可在摄像头级别覆盖
@@ -64,6 +101,9 @@ review:
       - bark
       - dog
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ## 从警报或检测中排除摄像头 {#excluding-a-camera-from-alerts-or-detections}
 

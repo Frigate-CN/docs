@@ -13,12 +13,33 @@ Frigate 通常运行在负责为多个服务管理 TLS 证书的反向代理之�
 
 ## 禁用TLS {#tls}
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **TLS** 部分关闭 TLS。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="global"
+  section="tls"
+  focus="enabled"
+  :values="{ enabled: false }"
+  hint="当 Frigate 运行在反向代理之后时，通常需要禁用内置 TLS，以避免证书冲突。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 在配置文件中添加以下内容即可禁用TLS：
 
 ```yaml
 tls:
   enabled: False
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ## 证书配置 {#certificates}
 

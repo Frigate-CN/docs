@@ -43,12 +43,36 @@ Frigate 采用 [WebPush 协议](https://web.dev/articles/push-notifications-web-
 
 #### 全局通知 {#global-notifications}
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **通知** 部分开启通知，设置通知邮箱与冷却时间。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="global"
+  section="notifications"
+  :values="{ enabled: true, email: 'johndoe@gmail.com', cooldown: 10 }"
+  :targets="[
+    { field: 'enabled', hint: '开启通知功能。' },
+    { field: 'email', hint: '填写用于接收通知的邮箱。' },
+    { field: 'cooldown', hint: '任意摄像头发送下一条通知前等待的秒数。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 notifications:
   enabled: True
   email: "johndoe@gmail.com"
   cooldown: 10 # 任意摄像头发送下一条通知前等待 10 秒
 ```
+
+</TabItem>
+</ConfigTabs>
 
 #### 按摄像头通知 {#per-camera-notifications}
 

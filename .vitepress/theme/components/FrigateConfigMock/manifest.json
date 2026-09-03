@@ -1,5 +1,74 @@
 {
   "generatedFrom": "script/config-schema.json",
+  "ffmpegPresets": {
+    "hwaccel_args": [
+      "preset-rpi-64-h264",
+      "preset-rpi-64-h265",
+      "preset-jetson-h264",
+      "preset-jetson-h265",
+      "preset-rkmpp",
+      "preset-vaapi"
+    ],
+    "input_args": [
+      "preset-http-jpeg-generic",
+      "preset-http-mjpeg-generic",
+      "preset-http-reolink",
+      "preset-rtmp-generic",
+      "preset-rtsp-generic",
+      "preset-rtsp-restream",
+      "preset-rtsp-restream-low-latency",
+      "preset-rtsp-udp",
+      "preset-rtsp-blue-iris"
+    ],
+    "output_args": {
+      "record": [
+        "preset-record-generic",
+        "preset-record-generic-audio-copy",
+        "preset-record-generic-audio-aac",
+        "preset-record-mjpeg",
+        "preset-record-jpeg",
+        "preset-record-ubiquiti"
+      ],
+      "detect": []
+    }
+  },
+  "ffmpegArgsMeta": {
+    "presetLabels": {
+      "preset-rpi-64-h264": "树莓派（H.264）",
+      "preset-rpi-64-h265": "树莓派（H.265）",
+      "preset-vaapi": "VAAPI (Intel/AMD GPU)",
+      "preset-intel-qsv-h264": "Intel QuickSync (H.264)",
+      "preset-intel-qsv-h265": "Intel QuickSync (H.265)",
+      "preset-nvidia": "NVIDIA GPU",
+      "preset-jetson-h264": "NVIDIA Jetson (H.264)",
+      "preset-jetson-h265": "NVIDIA Jetson (H.265)",
+      "preset-rkmpp": "瑞芯微 RKMPP",
+      "preset-http-jpeg-generic": "HTTP JPEG（通用）",
+      "preset-http-mjpeg-generic": "HTTP MJPEG（通用）",
+      "preset-http-reolink": "HTTP - Reolink 摄像头",
+      "preset-rtmp-generic": "RTMP（通用）",
+      "preset-rtsp-generic": "RTSP（通用）",
+      "preset-rtsp-restream": "RTSP - 从 go2rtc 转流",
+      "preset-rtsp-restream-low-latency": "RTSP - 从 go2rtc 转流（低延迟）",
+      "preset-rtsp-udp": "RTSP - UDP协议",
+      "preset-rtsp-blue-iris": "RTSP - Blue Iris",
+      "preset-record-generic": "录制（通用，无音频）",
+      "preset-record-generic-audio-copy": "录制（通用，不转码音频）",
+      "preset-record-generic-audio-aac": "录制（通用并将音频转码为 AAC）",
+      "preset-record-mjpeg": "录制 - MJPEG 流摄像头",
+      "preset-record-jpeg": "录制 - JPEG 流摄像头",
+      "preset-record-ubiquiti": "录制 - 优必飞摄像头"
+    },
+    "labels": {
+      "inherit": "继承摄像头设置",
+      "preset": "预设",
+      "manual": "手动参数",
+      "none": "无",
+      "useGlobalSetting": "继承全局设置",
+      "selectPreset": "选择预设",
+      "manualPlaceholder": "输入 FFmpeg 参数"
+    }
+  },
   "detectorTypes": {
     "cpu": {
       "label": "CPU",
@@ -316,6 +385,40 @@
   },
   "levels": {
     "global": {
+      "go2rtc_streams": {
+        "label": "go2rtc_streams",
+        "description": "",
+        "order": [
+          "streams.my_stream"
+        ],
+        "groups": [],
+        "docs": "/configuration/restream",
+        "fields": {
+          "streams.my_stream": {
+            "label": "视频流名称",
+            "description": "每个视频流包含一个名称以及一个或多个源地址 URL。",
+            "widget": "go2rtcStreams",
+            "default": null
+          }
+        }
+      },
+      "environment_vars": {
+        "label": "环境变量",
+        "description": "用于在 Home Assistant OS 中为 Frigate 进程设置的环境变量。非 HAOS 用户不能使用该配置项，而必须使用 Docker 的环境变量配置。",
+        "order": [
+          "vars"
+        ],
+        "groups": [],
+        "docs": "/configuration/advanced",
+        "fields": {
+          "vars": {
+            "label": "环境变量",
+            "description": "键值对形式的环境变量列表，将设置到 Frigate 进程上。",
+            "widget": "envVars",
+            "default": null
+          }
+        }
+      },
       "logger": {
         "label": "日志",
         "description": "控制默认日志详细程度，以及各组件的日志级别覆盖。",
@@ -775,18 +878,7 @@
           "default_role",
           "separator"
         ],
-        "groups": [
-          {
-            "key": "header_map",
-            "label": "请求头映射",
-            "fields": [
-              "header_map.user",
-              "header_map.role",
-              "header_map.role_map"
-            ],
-            "description": "将传入的代理请求头映射到 Frigate 用户和权限组字段，用于基于代理的身份验证。"
-          }
-        ],
+        "groups": [],
         "docs": "/configuration/authentication#proxy",
         "fields": {
           "header_map.user": {
@@ -876,19 +968,7 @@
           "stats",
           "version_check"
         ],
-        "groups": [
-          {
-            "key": "stats",
-            "label": "系统统计",
-            "fields": [
-              "stats.amd_gpu_stats",
-              "stats.intel_gpu_stats",
-              "stats.network_bandwidth",
-              "stats.intel_gpu_device"
-            ],
-            "description": "用于启用/禁用各种系统和 GPU 统计信息收集的选项。"
-          }
-        ],
+        "groups": [],
         "docs": "/configuration/advanced/reference",
         "fields": {
           "network_interfaces": {
@@ -1047,9 +1127,9 @@
         "label": "检测器硬件",
         "description": "目标检测器（CPU、GPU、ONNX 后端）的配置以及任何检测器特定的模型设置。",
         "order": [
-          "my_provider.type",
-          "my_provider.model",
-          "my_provider.model_path"
+          "my_provider.my_provider.type",
+          "my_provider.my_provider.model",
+          "my_provider.my_provider.model_path"
         ],
         "groups": [],
         "docs": "/configuration/object_detectors",
@@ -1060,6 +1140,7 @@
             "widget": "text",
             "default": "cpu",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1070,6 +1151,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1080,6 +1162,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1198,7 +1281,7 @@
           },
           "model_type": {
             "label": "目标检测模型类型",
-            "description": "某些检测器用于优化的检测器模型架构类型（ssd、yolox、yolonas）。",
+            "description": "某些检测器用于优化的检测器模型架构类型（ssd、yolox、yolonas、yolo-generic、rfdetr和dfine）。",
             "widget": "select",
             "default": "ssd",
             "enum": [
@@ -1239,12 +1322,44 @@
           "my_provider.base_url",
           "my_provider.model",
           "my_provider.provider_options",
-          "my_provider.runtime_options",
-          "my_provider.roles"
+          "my_provider.runtime_options"
         ],
         "groups": [],
         "docs": "/configuration/genai/genai_config",
         "fields": {
+          "my_provider.api_key": {
+            "label": "API 密钥",
+            "description": "某些提供商要求的 API 密钥（也可以通过环境变量设置）。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "enumLabels": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
+          "my_provider.base_url": {
+            "label": "基础 URL",
+            "description": "自托管或兼容提供商的基础 URL（例如 Ollama 实例）。",
+            "widget": "text",
+            "default": null,
+            "enum": null,
+            "enumLabels": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "my_provider.model": {
+            "label": "模型",
+            "description": "用于生成描述或摘要的提供商模型。",
+            "widget": "text",
+            "default": "",
+            "enum": null,
+            "enumLabels": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": false
+          },
           "my_provider.provider": {
             "label": "提供商",
             "description": "要使用的生成式 AI 提供商（例如：ollama、gemini、openai 等。国产大模型厂商可使用 openai 接口）。",
@@ -1257,56 +1372,7 @@
               "ollama",
               "llamacpp"
             ],
-            "minimum": null,
-            "maximum": null,
-            "advanced": false
-          },
-          "my_provider.api_key": {
-            "label": "API 密钥",
-            "description": "某些提供商要求的 API 密钥（也可以通过环境变量设置）。",
-            "widget": "password",
-            "default": null,
-            "enum": null,
-            "minimum": null,
-            "maximum": null,
-            "advanced": false
-          },
-          "my_provider.base_url": {
-            "label": "基础 URL",
-            "description": "自托管或兼容提供商的基础 URL（例如 Ollama 实例）。",
-            "widget": "text",
-            "default": null,
-            "enum": null,
-            "minimum": null,
-            "maximum": null,
-            "advanced": false
-          },
-          "my_provider.model": {
-            "label": "模型",
-            "description": "用于生成描述或摘要的提供商模型。",
-            "widget": "genaiModel",
-            "default": "",
-            "enum": null,
-            "minimum": null,
-            "maximum": null,
-            "advanced": false
-          },
-          "my_provider.provider_options": {
-            "label": "提供商选项",
-            "description": "要传递给生成式 AI 客户端的、与服务提供商相关的额外配置项。",
-            "widget": "DictAsYamlField",
-            "default": {},
-            "enum": null,
-            "minimum": null,
-            "maximum": null,
-            "advanced": false
-          },
-          "my_provider.runtime_options": {
-            "label": "运行时选项",
-            "description": "每次推理调用时传递给提供商的运行时选项。",
-            "widget": "DictAsYamlField",
-            "default": {},
-            "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1314,12 +1380,35 @@
           "my_provider.roles": {
             "label": "功能",
             "description": "生成式 AI 功能（对话、描述、嵌入）；每个功能单独一个提供商。",
-            "widget": "genaiRoles",
+            "widget": "tags",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
+          },
+          "my_provider.provider_options": {
+            "label": "提供商选项",
+            "description": "要传递给生成式 AI 客户端的、与服务提供商相关的额外配置项。",
+            "widget": "object",
+            "default": {},
+            "enum": null,
+            "enumLabels": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
+          },
+          "my_provider.runtime_options": {
+            "label": "运行时选项",
+            "description": "每次推理调用时传递给提供商的运行时选项。",
+            "widget": "object",
+            "default": {},
+            "enum": null,
+            "enumLabels": null,
+            "minimum": null,
+            "maximum": null,
+            "advanced": true
           }
         },
         "multiInstance": {
@@ -1331,34 +1420,34 @@
         "label": "Cameras",
         "description": "Cameras",
         "order": [
-          "my_provider.name",
-          "my_provider.friendly_name",
-          "my_provider.enabled",
-          "my_provider.audio",
-          "my_provider.audio_transcription",
-          "my_provider.birdseye",
-          "my_provider.detect",
-          "my_provider.face_recognition",
-          "my_provider.ffmpeg",
-          "my_provider.live",
-          "my_provider.lpr",
-          "my_provider.motion",
-          "my_provider.objects",
-          "my_provider.record",
-          "my_provider.review",
-          "my_provider.semantic_search",
-          "my_provider.snapshots",
-          "my_provider.timestamp_style",
-          "my_provider.best_image_timeout",
-          "my_provider.mqtt",
-          "my_provider.notifications",
-          "my_provider.onvif",
-          "my_provider.type",
-          "my_provider.ui",
-          "my_provider.webui_url",
-          "my_provider.profiles",
-          "my_provider.zones",
-          "my_provider.enabled_in_config"
+          "my_provider.my_provider.name",
+          "my_provider.my_provider.friendly_name",
+          "my_provider.my_provider.enabled",
+          "my_provider.my_provider.audio",
+          "my_provider.my_provider.audio_transcription",
+          "my_provider.my_provider.birdseye",
+          "my_provider.my_provider.detect",
+          "my_provider.my_provider.face_recognition",
+          "my_provider.my_provider.ffmpeg",
+          "my_provider.my_provider.live",
+          "my_provider.my_provider.lpr",
+          "my_provider.my_provider.motion",
+          "my_provider.my_provider.objects",
+          "my_provider.my_provider.record",
+          "my_provider.my_provider.review",
+          "my_provider.my_provider.semantic_search",
+          "my_provider.my_provider.snapshots",
+          "my_provider.my_provider.timestamp_style",
+          "my_provider.my_provider.best_image_timeout",
+          "my_provider.my_provider.mqtt",
+          "my_provider.my_provider.notifications",
+          "my_provider.my_provider.onvif",
+          "my_provider.my_provider.type",
+          "my_provider.my_provider.ui",
+          "my_provider.my_provider.webui_url",
+          "my_provider.my_provider.profiles",
+          "my_provider.my_provider.zones",
+          "my_provider.my_provider.enabled_in_config"
         ],
         "groups": [],
         "docs": null,
@@ -1369,6 +1458,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1379,6 +1469,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1389,6 +1480,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1399,6 +1491,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1409,6 +1502,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1419,6 +1513,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1429,6 +1524,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1439,6 +1535,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1449,6 +1546,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1459,6 +1557,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1469,6 +1568,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1479,6 +1579,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1489,6 +1590,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1499,6 +1601,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1509,6 +1612,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1519,6 +1623,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1529,6 +1634,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1539,6 +1645,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1549,6 +1656,7 @@
             "widget": "number",
             "default": 60,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1559,6 +1667,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1569,6 +1678,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1579,6 +1689,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1592,6 +1703,7 @@
               "generic",
               "lpr"
             ],
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1602,6 +1714,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1612,6 +1725,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1622,6 +1736,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1632,6 +1747,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1642,6 +1758,7 @@
             "widget": "switch",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -1770,17 +1887,7 @@
           "inactivity_threshold",
           "idle_heartbeat_fps"
         ],
-        "groups": [
-          {
-            "key": "layout",
-            "label": "布局",
-            "fields": [
-              "layout.scaling_factor",
-              "layout.max_cameras"
-            ],
-            "description": "鸟瞰图合成的布局选项。"
-          }
-        ],
+        "groups": [],
         "docs": "/configuration/birdseye",
         "fields": {
           "enabled": {
@@ -2086,17 +2193,7 @@
           "apple_compatibility",
           "gpu"
         ],
-        "groups": [
-          {
-            "key": "output_args",
-            "label": "输出参数",
-            "fields": [
-              "output_args.detect",
-              "output_args.record"
-            ],
-            "description": "用于不同 FFmpeg 功能（如检测、录制）的默认输出参数。"
-          }
-        ],
+        "groups": [],
         "docs": "/configuration/ffmpeg_presets",
         "fields": {
           "path": {
@@ -2130,7 +2227,7 @@
           "hwaccel_args": {
             "label": "硬件加速参数",
             "description": "用于 FFmpeg 的硬件加速参数。建议使用对应硬件厂商的预设配置。",
-            "widget": "text",
+            "widget": "ffmpegArgs",
             "default": "auto",
             "enum": null,
             "enumLabels": null,
@@ -2141,7 +2238,7 @@
           "input_args": {
             "label": "输入参数",
             "description": "应用于 FFmpeg 输入视频流的输入参数。",
-            "widget": "text",
+            "widget": "ffmpegArgs",
             "default": "preset-rtsp-generic",
             "enum": null,
             "enumLabels": null,
@@ -2170,7 +2267,7 @@
           "output_args.record": {
             "label": "录制输出参数",
             "description": "录制功能视频流的默认输出参数。",
-            "widget": "text",
+            "widget": "ffmpegArgs",
             "default": "preset-record-generic-audio-aac",
             "enum": null,
             "enumLabels": null,
@@ -2543,71 +2640,23 @@
           {
             "key": "retention",
             "label": "全局保留",
-            "fields": [],
-            "subGroups": [
-              {
-                "key": "continuous",
-                "label": "持续保留",
-                "description": "无论是否有追踪目标或画面变动，保留录像的天数。如果只想保留警报和检测的录制，请设置为 0。",
-                "fields": [
-                  "continuous.days"
-                ]
-              },
-              {
-                "key": "motion",
-                "label": "画面变动录制保留",
-                "description": "无论是否有追踪目标，只要画面变动触发保存的录制保留天数。如果只想保留警报和检测的录制，请设置为 0。",
-                "fields": [
-                  "motion.days"
-                ]
-              }
+            "fields": [
+              "continuous.days",
+              "motion.days"
             ]
           },
           {
             "key": "events",
             "label": "全局事件",
-            "fields": [],
-            "subGroups": [
-              {
-                "key": "alerts",
-                "label": "警报保留",
-                "description": "警报事件的录像保留设置，包括前后捕获时长。",
-                "fields": [
-                  "alerts.pre_capture",
-                  "alerts.post_capture"
-                ],
-                "subGroups": [
-                  {
-                    "key": "alerts.retain",
-                    "label": "事件保留",
-                    "description": "检测事件录像的保留设置。",
-                    "fields": [
-                      "alerts.retain.days",
-                      "alerts.retain.mode"
-                    ]
-                  }
-                ]
-              },
-              {
-                "key": "detections",
-                "label": "检测保留",
-                "description": "检测事件的录像保留设置，包括前后捕获时长。",
-                "fields": [
-                  "detections.pre_capture",
-                  "detections.post_capture"
-                ],
-                "subGroups": [
-                  {
-                    "key": "detections.retain",
-                    "label": "事件保留",
-                    "description": "检测事件录像的保留设置。",
-                    "fields": [
-                      "detections.retain.days",
-                      "detections.retain.mode"
-                    ]
-                  }
-                ]
-              }
+            "fields": [
+              "alerts.pre_capture",
+              "alerts.post_capture",
+              "alerts.retain.days",
+              "alerts.retain.mode",
+              "detections.pre_capture",
+              "detections.post_capture",
+              "detections.retain.days",
+              "detections.retain.mode"
             ]
           }
         ],
@@ -2785,7 +2834,7 @@
           },
           "preview.quality": {
             "label": "预览质量",
-            "description": "预览质量级别（very_low、low、medium、high、very_high）。",
+            "description": "预览质量级别（非常低、低、中等、高、非常高）。",
             "widget": "select",
             "default": "medium",
             "enum": [
@@ -2817,45 +2866,7 @@
           "genai",
           "genai.enabled"
         ],
-        "groups": [
-          {
-            "key": "alerts",
-            "label": "警报配置",
-            "fields": [
-              "alerts.enabled",
-              "alerts.labels",
-              "alerts.required_zones",
-              "alerts.cutoff_time"
-            ],
-            "description": "哪些追踪目标生成警报以及如何保留警报的设置。"
-          },
-          {
-            "key": "detections",
-            "label": "检测配置",
-            "fields": [
-              "detections.enabled",
-              "detections.labels",
-              "detections.required_zones",
-              "detections.cutoff_time"
-            ],
-            "description": "用于设置哪些追踪目标会生成检测记录（非警报类），以及检测记录的保留方式。"
-          },
-          {
-            "key": "genai",
-            "label": "生成式 AI 配置",
-            "fields": [
-              "genai.enabled",
-              "genai.alerts",
-              "genai.detections",
-              "genai.image_source",
-              "genai.additional_concerns",
-              "genai.debug_save_thumbnails",
-              "genai.preferred_language",
-              "genai.activity_context_prompt"
-            ],
-            "description": "控制使用生成式 AI 为核查项生成描述和摘要。"
-          }
-        ],
+        "groups": [],
         "docs": "/configuration/review",
         "fields": {
           "alerts.enabled": {
@@ -3169,18 +3180,7 @@
           "thickness",
           "color"
         ],
-        "groups": [
-          {
-            "key": "color",
-            "label": "时间戳颜色",
-            "fields": [
-              "color.red",
-              "color.green",
-              "color.blue"
-            ],
-            "description": "时间戳文本的 RGB 颜色值（所有值 0-255）。"
-          }
-        ],
+        "groups": [],
         "docs": "/configuration/advanced/reference",
         "fields": {
           "position": {
@@ -3739,9 +3739,9 @@
         "label": "摄像头分组",
         "description": "用于在页面中组织摄像头的命名摄像头分组配置。",
         "order": [
-          "my_provider.cameras",
-          "my_provider.icon",
-          "my_provider.order"
+          "my_provider.my_provider.cameras",
+          "my_provider.my_provider.icon",
+          "my_provider.my_provider.order"
         ],
         "groups": [],
         "docs": null,
@@ -3752,6 +3752,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3762,6 +3763,7 @@
             "widget": "text",
             "default": "generic",
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3772,6 +3774,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -3786,7 +3789,7 @@
         "label": "配置模板",
         "description": "带有别名的命名配置模板定义。摄像头配置模板必须引用此处定义的名称。",
         "order": [
-          "my_provider.friendly_name"
+          "my_provider.my_provider.friendly_name"
         ],
         "groups": [],
         "docs": null,
@@ -3797,6 +3800,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -4205,18 +4209,9 @@
             "label": "摄像头特定的 FFmpeg 参数",
             "fields": [
               "input_args",
-              "hwaccel_args"
-            ],
-            "subGroups": [
-              {
-                "key": "output_args",
-                "label": "输出参数",
-                "description": "用于不同 FFmpeg 功能（如检测、录制）的默认输出参数。",
-                "fields": [
-                  "output_args.detect",
-                  "output_args.record"
-                ]
-              }
+              "hwaccel_args",
+              "output_args.detect",
+              "output_args.record"
             ]
           }
         ],
@@ -4253,7 +4248,7 @@
           "hwaccel_args": {
             "label": "硬件加速参数",
             "description": "用于 FFmpeg 的硬件加速参数。建议使用对应硬件厂商的预设配置。",
-            "widget": "text",
+            "widget": "ffmpegArgs",
             "default": "auto",
             "enum": null,
             "enumLabels": null,
@@ -4264,7 +4259,7 @@
           "input_args": {
             "label": "输入参数",
             "description": "应用于 FFmpeg 输入视频流的输入参数。",
-            "widget": "text",
+            "widget": "ffmpegArgs",
             "default": "preset-rtsp-generic",
             "enum": null,
             "enumLabels": null,
@@ -4293,7 +4288,7 @@
           "output_args.record": {
             "label": "录制输出参数",
             "description": "录制功能视频流的默认输出参数。",
-            "widget": "text",
+            "widget": "ffmpegArgs",
             "default": "preset-record-generic-audio-aac",
             "enum": null,
             "enumLabels": null,
@@ -4326,7 +4321,7 @@
           "inputs": {
             "label": "摄像头输入视频流",
             "description": "该摄像头的所有输入流配置列表（包含路径和功能）。",
-            "widget": "tags",
+            "widget": "cameraInputs",
             "default": null,
             "enum": null,
             "enumLabels": null,
@@ -4746,71 +4741,23 @@
           {
             "key": "retention",
             "label": "保留",
-            "fields": [],
-            "subGroups": [
-              {
-                "key": "continuous",
-                "label": "持续保留",
-                "description": "无论是否有追踪目标或画面变动，保留录像的天数。如果只想保留警报和检测的录制，请设置为 0。",
-                "fields": [
-                  "continuous.days"
-                ]
-              },
-              {
-                "key": "motion",
-                "label": "画面变动录制保留",
-                "description": "无论是否有追踪目标，只要画面变动触发保存的录制保留天数。如果只想保留警报和检测的录制，请设置为 0。",
-                "fields": [
-                  "motion.days"
-                ]
-              }
+            "fields": [
+              "continuous.days",
+              "motion.days"
             ]
           },
           {
             "key": "events",
             "label": "事件",
-            "fields": [],
-            "subGroups": [
-              {
-                "key": "alerts",
-                "label": "警报保留",
-                "description": "警报事件的录像保留设置，包括前后捕获时长。",
-                "fields": [
-                  "alerts.pre_capture",
-                  "alerts.post_capture"
-                ],
-                "subGroups": [
-                  {
-                    "key": "alerts.retain",
-                    "label": "事件保留",
-                    "description": "检测事件录像的保留设置。",
-                    "fields": [
-                      "alerts.retain.days",
-                      "alerts.retain.mode"
-                    ]
-                  }
-                ]
-              },
-              {
-                "key": "detections",
-                "label": "检测保留",
-                "description": "检测事件的录像保留设置，包括前后捕获时长。",
-                "fields": [
-                  "detections.pre_capture",
-                  "detections.post_capture"
-                ],
-                "subGroups": [
-                  {
-                    "key": "detections.retain",
-                    "label": "事件保留",
-                    "description": "检测事件录像的保留设置。",
-                    "fields": [
-                      "detections.retain.days",
-                      "detections.retain.mode"
-                    ]
-                  }
-                ]
-              }
+            "fields": [
+              "alerts.pre_capture",
+              "alerts.post_capture",
+              "alerts.retain.days",
+              "alerts.retain.mode",
+              "detections.pre_capture",
+              "detections.post_capture",
+              "detections.retain.days",
+              "detections.retain.mode"
             ]
           }
         ],
@@ -4977,7 +4924,7 @@
           },
           "preview.quality": {
             "label": "预览质量",
-            "description": "预览质量级别（very_low、low、medium、high、very_high）。",
+            "description": "预览质量级别（非常低、低、中等、高、非常高）。",
             "widget": "select",
             "default": "medium",
             "enum": [
@@ -5009,45 +4956,7 @@
           "genai",
           "genai.enabled"
         ],
-        "groups": [
-          {
-            "key": "alerts",
-            "label": "警报配置",
-            "fields": [
-              "alerts.enabled",
-              "alerts.labels",
-              "alerts.required_zones",
-              "alerts.cutoff_time"
-            ],
-            "description": "哪些追踪目标生成警报以及如何保留警报的设置。"
-          },
-          {
-            "key": "detections",
-            "label": "检测配置",
-            "fields": [
-              "detections.enabled",
-              "detections.labels",
-              "detections.required_zones",
-              "detections.cutoff_time"
-            ],
-            "description": "用于设置哪些追踪目标会生成检测记录（非警报类），以及检测记录的保留方式。"
-          },
-          {
-            "key": "genai",
-            "label": "生成式 AI 配置",
-            "fields": [
-              "genai.enabled",
-              "genai.alerts",
-              "genai.detections",
-              "genai.image_source",
-              "genai.additional_concerns",
-              "genai.debug_save_thumbnails",
-              "genai.preferred_language",
-              "genai.activity_context_prompt"
-            ],
-            "description": "控制使用生成式 AI 为核查项生成描述和摘要。"
-          }
-        ],
+        "groups": [],
         "docs": "/configuration/review",
         "fields": {
           "alerts.enabled": {
@@ -5392,18 +5301,7 @@
           "thickness",
           "color"
         ],
-        "groups": [
-          {
-            "key": "color",
-            "label": "时间戳颜色",
-            "fields": [
-              "color.red",
-              "color.green",
-              "color.blue"
-            ],
-            "description": "时间戳文本的 RGB 颜色值（所有值 0-255）。"
-          }
-        ],
+        "groups": [],
         "docs": "/configuration/advanced/reference",
         "fields": {
           "position": {
@@ -5625,23 +5523,7 @@
           "ignore_time_mismatch",
           "autotracking"
         ],
-        "groups": [
-          {
-            "key": "autotracking",
-            "label": "自动追踪",
-            "fields": [
-              "autotracking.enabled",
-              "autotracking.calibrate_on_startup",
-              "autotracking.zooming",
-              "autotracking.zoom_factor",
-              "autotracking.track",
-              "autotracking.required_zones",
-              "autotracking.return_preset",
-              "autotracking.timeout"
-            ],
-            "description": "使用 PTZ 摄像头移动自动追踪移动目标并使其保持在画面中心。"
-          }
-        ],
+        "groups": [],
         "docs": "/configuration/cameras#setting-up-camera-ptz-controls",
         "fields": {
           "host": {
@@ -5832,8 +5714,8 @@
         "docs": "/configuration/advanced/reference",
         "fields": {
           "dashboard": {
-            "label": "在页面中显示",
-            "description": "切换此摄像头在 Frigate 页面的所有位置是否可见。禁用此项将需要手动编辑配置才能在页面中再次查看此摄像头。",
+            "label": "在实时监控面板中显示",
+            "description": "切换此摄像头是否在默认的“所有摄像头”实时监控仪表盘上可见。该摄像头在页面的其他位置（例如摄像头分组和设置页）仍然可见。",
             "widget": "switch",
             "default": true,
             "enum": null,
@@ -5859,19 +5741,19 @@
         "label": "配置模板",
         "description": "可在运行时切换指定命名的配置模板，支持局部覆盖参数。",
         "order": [
-          "my_provider.enabled",
-          "my_provider.audio",
-          "my_provider.birdseye",
-          "my_provider.detect",
-          "my_provider.face_recognition",
-          "my_provider.lpr",
-          "my_provider.motion",
-          "my_provider.notifications",
-          "my_provider.objects",
-          "my_provider.record",
-          "my_provider.review",
-          "my_provider.snapshots",
-          "my_provider.zones"
+          "my_provider.my_provider.enabled",
+          "my_provider.my_provider.audio",
+          "my_provider.my_provider.birdseye",
+          "my_provider.my_provider.detect",
+          "my_provider.my_provider.face_recognition",
+          "my_provider.my_provider.lpr",
+          "my_provider.my_provider.motion",
+          "my_provider.my_provider.notifications",
+          "my_provider.my_provider.objects",
+          "my_provider.my_provider.record",
+          "my_provider.my_provider.review",
+          "my_provider.my_provider.snapshots",
+          "my_provider.my_provider.zones"
         ],
         "groups": [],
         "docs": null,
@@ -5882,6 +5764,7 @@
             "widget": "switch",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5892,6 +5775,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5902,6 +5786,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5912,6 +5797,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5922,6 +5808,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5932,6 +5819,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5942,6 +5830,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5952,6 +5841,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5962,6 +5852,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5972,6 +5863,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5982,6 +5874,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -5992,6 +5885,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -6002,6 +5896,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -6016,16 +5911,16 @@
         "label": "区域",
         "description": "区域允许您定义帧的特定区域，以便确定目标是否在特定区域内。",
         "order": [
-          "my_provider.friendly_name",
-          "my_provider.enabled",
-          "my_provider.enabled_in_config",
-          "my_provider.filters",
-          "my_provider.coordinates",
-          "my_provider.distances",
-          "my_provider.inertia",
-          "my_provider.loitering_time",
-          "my_provider.speed_threshold",
-          "my_provider.objects"
+          "my_provider.my_provider.friendly_name",
+          "my_provider.my_provider.enabled",
+          "my_provider.my_provider.enabled_in_config",
+          "my_provider.my_provider.filters",
+          "my_provider.my_provider.coordinates",
+          "my_provider.my_provider.distances",
+          "my_provider.my_provider.inertia",
+          "my_provider.my_provider.loitering_time",
+          "my_provider.my_provider.speed_threshold",
+          "my_provider.my_provider.objects"
         ],
         "groups": [],
         "docs": null,
@@ -6036,6 +5931,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -6046,6 +5942,7 @@
             "widget": "switch",
             "default": true,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -6056,6 +5953,7 @@
             "widget": "switch",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -6066,6 +5964,7 @@
             "widget": "object",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -6076,6 +5975,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -6086,6 +5986,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false
@@ -6096,6 +5997,7 @@
             "widget": "number",
             "default": 3,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -6106,6 +6008,7 @@
             "widget": "number",
             "default": 0,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0,
             "maximum": null,
             "advanced": false
@@ -6116,6 +6019,7 @@
             "widget": "number",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": 0.1,
             "maximum": null,
             "advanced": false
@@ -6126,6 +6030,7 @@
             "widget": "text",
             "default": null,
             "enum": null,
+            "enumLabels": null,
             "minimum": null,
             "maximum": null,
             "advanced": false

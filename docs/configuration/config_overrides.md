@@ -111,6 +111,16 @@ cameras:
 
 拥有自己值的摄像头部分会显示 **已覆盖** 徽章。要移除覆盖并恢复继承，使用部分底部的 **重置为全局** 按钮。
 
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="camera"
+  section="snapshots"
+  focus="enabled"
+  :values="{ enabled: true }"
+  hint="该摄像头的快照显示为已覆盖。点击下方的 重置为全局 按钮，即可移除覆盖并重新继承全局快照设置。"
+/>
+
 </TabItem>
 <TabItem value="YAML配置文件">
 

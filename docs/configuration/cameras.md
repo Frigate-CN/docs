@@ -85,6 +85,37 @@ title: 摄像头配置
 | `record` | 根据配置设置保存视频片段。[文档](record.md)         |
 | `audio`  | 用于基于音频的检测。[文档](audio_detectors.md)      |
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的 **视频流（FFmpeg）** 部分添加输入源，并为每个输入源分配功能。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  section="ffmpeg"
+  focus="inputs"
+  camera-name="back"
+  :values="{
+    inputs: [
+      {
+        title: '视频流 1',
+        path: 'rtsp://127.0.0.1:8554/back',
+        mode: 'restream',
+        stream: 'back',
+        roles: ['detect'],
+        inputArgMode: 'preset',
+        inputArgPreset: 'preset-rtsp-restream',
+        hwaccelMode: 'inherit',
+      },
+    ],
+  }"
+  hint="添加摄像头 RTSP 流地址，并为该输入源分配功能（例如 detect 用于目标检测）。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 mqtt:
   host: mqtt.server.com
@@ -108,6 +139,9 @@ cameras: # [!code highlight]
       width: 1280 # <- 可选，默认Frigate会尝试自动检测分辨率 [!code highlight]
       height: 720 # <- 可选，默认Frigate会尝试自动检测分辨率 [!code highlight]
 ```
+
+</TabItem>
+</ConfigTabs>
 
 :::tip
 
@@ -250,6 +284,37 @@ cameras:
 <TabItem value="图形化配置">
 
 在实时监控面板上，按下主导航中的**铅笔图标**添加新的摄像头分组。配置分组名称、选择要包含的摄像头、选择图标并设置显示顺序。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="camera_groups"
+  :values="{
+    name: 'front',
+    cameras: [
+      { name: 'driveway_cam', enabled: true },
+      { name: 'garage_cam', enabled: true },
+      { name: 'back_yard', enabled: false },
+    ],
+  }"
+  :steps="[
+    {
+      focus: '',
+      label: '点击铅笔图标',
+      hint: '在实时监控面板左侧的主导航中，点击铅笔图标打开摄像头组弹窗。',
+    },
+    {
+      focus: 'name',
+      label: '查找名称',
+      hint: '为分组设置一个名称（例如 front）。',
+    },
+    {
+      focus: 'cameras',
+      label: '查找摄像头',
+      hint: '打开要加入该分组的摄像头开关。',
+    },
+  ]"
+/>
 
 </TabItem>
 <TabItem value="YAML配置文件">

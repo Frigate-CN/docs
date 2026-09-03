@@ -9,6 +9,34 @@ Frigate 提供了多种物体/目标过滤器来降低误报率。
 
 在配置中设置物体/目标过滤器时，任何低于`min_score`（最低分数）的检测结果都会被忽略为误报。`threshold`（阈值）基于被追踪目标分数历史记录的中位数计算(补零至 3 个值)。假设`min_score`设为 0.6，`threshold`设为 0.85，以下是各帧的检测情况：
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局或摄像头配置的 **目标** 部分，为每种目标类型配置 **目标过滤器**，调整最低分数与阈值。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="objects"
+  focus="filters"
+  :values="{ filters: { person: { min_score: 0.6, threshold: 0.85 } } }"
+  hint="为 person 目标配置最低分数与阈值，低于 min_score 的检测会被视为误报，计算分数超过 threshold 才会被标记为真实检测。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+objects:
+  filters:
+    person:
+      min_score: 0.6
+      threshold: 0.85
+```
+
+</TabItem>
+</ConfigTabs>
+
 | 帧数 | 当前分数 | 分数历史记录                      | 计算分数 | 是否检测到目标 |
 | ---- | -------- | --------------------------------- | -------- | -------------- |
 | 1    | 0.7      | 0.0, 0, 0.7                       | 0.0      | 否             |

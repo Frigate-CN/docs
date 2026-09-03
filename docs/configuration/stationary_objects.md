@@ -13,12 +13,35 @@ title: 静止目标
 
 配置 Frigate 如何处理静止目标。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局检测的 **静态目标** 分组中设置静止间隔与阈值。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="global"
+  section="detect"
+  :values="{ 'stationary.interval': 50, 'stationary.threshold': 50 }"
+  :targets="[
+    { field: 'stationary.interval', hint: '目标变为静止后，每隔多少帧运行一次检测以确认其仍然存在。' },
+    { field: 'stationary.threshold', hint: '目标保持相对静止的帧数，达到该帧数后判定为静止。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 detect:
   stationary:
     interval: 50
     threshold: 50
 ```
+
+</TabItem>
+</ConfigTabs>
 
 - `interval`：对静止目标运行检测的频率（默认：50）。一旦变为静止，检测每隔第 n 帧运行一次以验证目标是否仍然存在。无法通过此值禁用静止目标追踪。
 - `threshold`：目标保持相对静止的帧数才能被判定为静止（默认：50）

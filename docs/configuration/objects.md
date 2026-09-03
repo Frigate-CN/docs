@@ -30,6 +30,34 @@ Frigate 包含以下来自 Google Coral 测试数据的目标标签。
 
 默认情况下，Frigate 仅追踪人（`person`）。要追踪其他目标类型，请将其添加到追踪目标列表中。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局或摄像头配置的 **目标** 部分的 **要追踪的目标** 中勾选需要追踪的目标。
+
+<FrigateConfigMock
+  :auto-play="false"
+  section="objects"
+  :steps="[
+    {
+      level: 'global',
+      focus: 'track',
+      values: { track: ['person', 'car', 'cat', 'dog'] },
+      hint: '在全局勾选要追踪的目标，所有摄像头都会追踪这些目标。',
+    },
+    {
+      level: 'camera',
+      focus: 'track',
+      values: { track: ['person', 'car'] },
+      label: '在摄像头上覆盖',
+      hint: '也可以为单个摄像头覆盖要追踪的目标列表。',
+    },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 objects:
   # 可选：从labelmap.txt中要追踪的对象列表（默认值：如下所示）
@@ -51,6 +79,9 @@ cameras:
         - person
         - car
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ## 过滤目标 {#filtering-objects}
 

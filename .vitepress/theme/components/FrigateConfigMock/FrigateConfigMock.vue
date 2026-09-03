@@ -15,6 +15,7 @@ const props = defineProps({
     hint: { type: String, default: "" },
     label: { type: String, default: "" },
     cameraImage: { type: String, default: "/img/frigate-autotracking-example.gif" },
+    cameraName: { type: String, default: "" },
     targets: { type: Array, default: null },
     steps: { type: Array, default: null },
 });
@@ -29,6 +30,7 @@ const resolvedSteps = computed(() => {
         hint: props.hint,
         label: props.label,
         cameraImage: props.cameraImage,
+        cameraName: props.cameraName,
     };
     if (props.targets?.length) {
         return props.targets.map((target) =>
@@ -72,6 +74,46 @@ const guideSteps = computed(() =>
         const samePage =
             previous?.section === step.section && previous?.level === step.level;
         const stages = [];
+
+        // camera_groups live on the LIVE page: pencil icon in the main rail
+        // opens the group dialog (list → edit form), not the settings page.
+        if (step.section === "camera_groups") {
+            const groupFieldLabel =
+                step.label ||
+                (step.focus ? humanizeKey(step.focus.split(".").at(-1)) : undefined);
+            if (!step.focus) {
+                // No field focus: highlight the pencil trigger in the rail
+                // while the group list dialog is open.
+                stages.push({
+                    ...step,
+                    guidePhase: "group-trigger",
+                    guideLabel: step.label || "点击铅笔图标",
+                });
+                return stages;
+            }
+            if (!samePage && props.showNavigationSteps) {
+                stages.push({
+                    ...step,
+                    guidePhase: "group-trigger",
+                    guideLabel: "点击铅笔图标",
+                });
+            }
+            if (groupFieldLabel) {
+                stages.push({
+                    ...step,
+                    guidePhase: "field",
+                    guideLabel: step.label || `查找${groupFieldLabel}`,
+                });
+            } else {
+                stages.push({
+                    ...step,
+                    guidePhase: "group-list",
+                    guideLabel: "打开摄像头组",
+                });
+            }
+            return stages;
+        }
+
         if (!samePage && props.showNavigationSteps) {
             if (index === 0) {
                 stages.push({

@@ -83,6 +83,24 @@ Frigate 的默认仪表板（所有摄像头）在播放摄像头实时流时将
 
 使用 Frigate 内置的 go2rtc 是使用此功能的必要条件。不能在`live > streams`配置中指定视频流地址，只能指定 go2rtc 流名称。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的 **实时监控观看** 部分，为 `streams` 添加要显示在实时页面下拉菜单中的视频流。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="camera"
+  section="live"
+  focus="streams"
+  :values="{ streams: { 主流: 'test_cam', 子流: 'test_cam_sub' } }"
+  hint="为实时页面添加可切换的视频流，例如主流与子流。流名称必须是 go2rtc 流名称。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 go2rtc:
   streams:
@@ -114,6 +132,9 @@ cameras:
         子流: test_cam_sub
         特殊流: test_cam_another_sub
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ### WebRTC 额外配置 {#webrtc-extra-configuration}
 

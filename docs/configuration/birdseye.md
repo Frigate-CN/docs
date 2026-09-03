@@ -27,6 +27,36 @@ title: 鸟瞰视图
 - **motion(运动模式)**：仅显示最近30秒内检测到运动的摄像头  
 - **objects(目标模式)**：仅显示最近30秒内有活动目标被追踪的摄像头
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **鸟瞰图** 部分开启鸟瞰图，并选择追踪模式。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="global"
+  section="birdseye"
+  :values="{ enabled: true, mode: 'continuous' }"
+  :targets="[
+    { field: 'enabled', hint: '开启鸟瞰图。' },
+    { field: 'mode', hint: '选择显示模式，例如持续、运动或目标模式。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+# 默认所有摄像头都显示在鸟瞰视图中
+birdseye:
+  enabled: True
+  mode: continuous
+```
+
+</TabItem>
+</ConfigTabs>
+
 ### 自定义图标 {#custom-birdseye-icon}
 
 你可以在Frigate的`media`文件夹中添加名为`custom.png`的180x180图片来自定义鸟瞰视图背景图标。图片必须是透明背景的PNG格式，所有非透明像素在鸟瞰视图中将显示为白色。

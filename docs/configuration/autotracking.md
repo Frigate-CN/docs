@@ -39,6 +39,32 @@ Frigate 自动追踪功能需要 PTZ 摄像头支持视野内相对移动(符合
 
 注意`autotracking`默认禁用，可通过配置文件或 MQTT 启用。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的 **ONVIF** 部分，**自动追踪** 分组中开启自动追踪，并配置追踪目标、必需区域与返回预设。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  section="onvif"
+  :values="{
+    'autotracking.enabled': true,
+    'autotracking.track': ['person'],
+    'autotracking.required_zones': ['zone_name'],
+    'autotracking.return_preset': 'home',
+  }"
+  :targets="[
+    { field: 'autotracking.enabled', hint: '开启自动追踪，让 PTZ 摄像头跟随移动目标。' },
+    { field: 'autotracking.track', hint: '选择要追踪的目标类型（例如 person）。' },
+    { field: 'autotracking.required_zones', hint: '目标进入这些区域时开始自动追踪。' },
+    { field: 'autotracking.return_preset', hint: '追踪结束后返回的 ONVIF 预设位置名称。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 cameras:
   ptzcamera:
@@ -91,6 +117,9 @@ cameras:
         # 可选: 摄像头校准自动生成的值，请勿手动修改(默认如下)
         movement_weights: [] 
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ## 校准流程 {#calibration}
 

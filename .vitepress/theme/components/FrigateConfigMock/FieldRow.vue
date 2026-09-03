@@ -8,6 +8,8 @@ import TrackFieldRow from "./TrackFieldRow.vue";
 import LabelSwitchesFieldRow from "./LabelSwitchesFieldRow.vue";
 import FiltersFieldRow from "./FiltersFieldRow.vue";
 import GenaiRolesFieldRow from "./GenaiRolesFieldRow.vue";
+import FfmpegArgsFieldRow from "./FfmpegArgsFieldRow.vue";
+import CameraInputsField from "./CameraInputsField.vue";
 import { humanizeKey } from "./helpers.js";
 
 const props = defineProps({
@@ -52,7 +54,13 @@ const isObjectArray = computed(
 
 const isObject = computed(() => props.field.widget === "object");
 
-const isGenaiRoles = computed(() => props.field.widget === "genaiRoles");
+const isGenaiRoles = computed(() => props.field?.widget === "genaiRoles");
+
+const isFfmpegArgs = computed(() => props.field?.widget === "ffmpegArgs");
+
+const isCameraInputs = computed(() => props.field?.widget === "cameraInputs");
+
+const isText = computed(() => props.field?.widget === "text");
 </script>
 
 <template>
@@ -73,6 +81,16 @@ const isGenaiRoles = computed(() => props.field.widget === "genaiRoles");
 
     <GenaiRolesFieldRow v-else-if="isGenaiRoles" :field="field" :field-key="fieldKey" :step="step" :navigation="navigation"
         :focus-ref="focusRef" />
+
+    <FfmpegArgsFieldRow v-else-if="isFfmpegArgs" :field="field" :field-key="fieldKey" :step="step"
+        :navigation="navigation" :focus-ref="focusRef" />
+
+    <CameraInputsField v-else-if="isCameraInputs" :field="field" :field-key="fieldKey" :step="step"
+        :navigation="navigation" :focus-ref="focusRef" />
+
+    <!-- Unknown field (e.g. group key without manifest entry): render nothing
+         instead of crashing on field.widget below. -->
+    <div v-else-if="!field" class="field" />
 
     <div v-else class="field" :class="{ focused: focused }"
         :ref="(el) => { if (focused && focusRef) focusRef.current = el }">

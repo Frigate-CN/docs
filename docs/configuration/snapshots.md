@@ -9,6 +9,36 @@ Frigate 可以为每个检测到的对象保存快照图片到`/media/frigate/cl
 
 启用快照后，Frigate 会为每个追踪目标保存一张图像到 `/media/frigate/clips`，命名为 `<camera>-<id>-clean.webp`。干净图像始终无任何标注（无时间戳、边界框或裁剪）地存储，因此你拥有原始帧的未修改副本。边界框和时间戳等标注在通过 [HTTP API](/integrations/api/event-snapshot-events-event-id-snapshot-jpg-get.api.mdx) 请求快照时按需应用——参见下文[渲染](#rendering)。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局或摄像头配置的 **快照** 部分开启快照，并设置是否叠加时间戳、边界框或裁剪。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="snapshots"
+  focus="enabled"
+  :values="{ enabled: true }"
+  hint="开启快照功能，Frigate 会为每个检测到的目标保存一张代表性图像。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+snapshots:
+  enabled: true
+  timestamp: true
+  bounding_box: true
+  crop: false
+  retain:
+    default: 10
+```
+
+</TabItem>
+</ConfigTabs>
+
 几点需要注意：
 
 - 快照按追踪目标保存，因此即使启用了录制，未检测到目标的摄像头也不会产生快照。

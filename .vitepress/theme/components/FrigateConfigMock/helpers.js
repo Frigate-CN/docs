@@ -79,6 +79,7 @@ function normalizeStep(base, step) {
     hint: step.hint ?? base.hint,
     label: step.label ?? base.label,
     cameraImage: step.cameraImage ?? base.cameraImage,
+    cameraName: step.cameraName ?? base.cameraName,
     title: step.title,
   };
 }

@@ -114,7 +114,7 @@ onUnmounted(() => window.clearTimeout(timer));
                     v-if="group.key === activeGroup?.key && isExpanded && step.level === 'camera'"
                     class="cameraName"
                 >
-                    前门
+                    {{ step.cameraName ?? "前门" }}
                 </div>
                 <div v-if="group.key === activeGroup?.key && isExpanded" class="menuItems">
                     <div

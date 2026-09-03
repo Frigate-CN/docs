@@ -178,6 +178,23 @@ services:
 
 </DetailsCollapse>
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **FFmpeg** 部分，把 **硬件加速参数** 设置为适用于你硬件的预设（例如 Intel 核显为 `preset-vaapi`）。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="global"
+  section="ffmpeg"
+  focus="hwaccel_args"
+  :values="{ hwaccel_args: 'preset-vaapi' }"
+  hint="为所有摄像头设置全局硬件加速参数，以降低解码视频流所需的 CPU。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 `config.yml`
 
 ```yaml [config.yml]
@@ -194,6 +211,9 @@ cameras:
     detect: ... # 省略号为文档省略部分，不代表后面没内容
 ```
 
+</TabItem>
+</ConfigTabs>
+
 :::tip
 
 如果你是 7 代以上的 Intel 处理器，更推荐使用`qsv`进行硬件加速。更多详细信息请见[qsv 配置文档](../configuration/hardware_acceleration_video.md#via-quicksync)。
@@ -205,6 +225,36 @@ cameras:
 默认情况下，Frigate 将使用单个 CPU 检测器。
 
 一般来说，核显即可满足绝大部分用户的需求。Intel 核显用户可以参考以下配置。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **检测器和模型** 部分添加 OpenVino 检测器，再在 **检测模型** 部分配置对应的模型参数。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="global"
+  section="model"
+  focus="detectors"
+  :values="{
+    detectors: {
+      ov: {
+        type: 'openvino',
+        device: 'GPU',
+      },
+    },
+    path: '/openvino-model/ssdlite_mobilenet_v2.xml',
+    labelmap_path: '/openvino-model/coco_91cl_bkgr.txt',
+    width: 300,
+    height: 300,
+    input_tensor: 'nhwc',
+    input_pixel_format: 'bgr',
+  }"
+  hint="添加 OpenVino 检测器，并为检测器配置对应的模型。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 <DetailsCollapse title="Intel 核显配置目标检测">
 
@@ -237,6 +287,9 @@ cameras:
 ```
 
 </DetailsCollapse>
+
+</TabItem>
+</ConfigTabs>
 
 如果你有 USB Coral，你需要在配置中添加检测器部分。
 
@@ -280,11 +333,23 @@ cameras:
 
 现在你已经优化了解码视频流的配置，你需要检查在哪里实现画面变动遮罩。你可以直接在设置页面的`遮罩/ 区域`选项卡中来设置遮罩。更多关于遮罩的信息可以在[这里](../configuration/masks.md)找到。
 
-:::warning
+<ConfigTabs>
+<TabItem value="图形化配置">
 
-注意，画面变动遮罩**不应用于**标记你不想检测物品/目标的区域或减少误报。它们不会改变发送到物体/目标检测的画面，所以你仍然可以在有画面变动遮罩的区域检测到追踪目标、触发警报和检测。这些只是**防止这些区域的画面变动**触发物体/目标检测。
+在摄像头配置的**遮罩/ 区域**选项卡中，为 **画面变动遮罩** 添加遮罩区域。
 
-:::
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  section="masksAndZones"
+  :targets="[
+    { field: 'motionMask.add', hint: '点击画面变动遮罩旁的加号来新建遮罩。' },
+    { field: 'motionMask.canvas', hint: '在摄像头画面上点击选点，然后闭合多边形以完成遮罩。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 你的配置现在应该看起来类似这样。
 
@@ -309,11 +374,48 @@ cameras:
         - 0,461,3,0,1919,0,1919,843,1699,492,1344,458,1346,336,973,317,869,375,866,432 # [!code ++] [!code focus]
 ```
 
+</TabItem>
+</ConfigTabs>
+
+:::warning
+
+注意，画面变动遮罩**不应用于**标记你不想检测物品/目标的区域或减少误报。它们不会改变发送到物体/目标检测的画面，所以你仍然可以在有画面变动遮罩的区域检测到追踪目标、触发警报和检测。这些只是**防止这些区域的画面变动**触发物体/目标检测。
+
+:::
+
 ### 步骤 6：启用录制 {#step-6-enable-recordings}
 
 为了在 Frigate 页面中查看事件和回放，需要启用录制。
 
 要启用视频录制，向流添加`record`功能并在配置中启用它。如果在配置中禁用了录制，就无法在页面中启用它。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的**视频流（FFmpeg）**部分，为用于录制的流添加 `record` 角色，再在**录制**部分开启录制。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  :steps="[
+    {
+      section: 'ffmpeg',
+      focus: 'output_args.record',
+      values: { 'output_args.record': 'preset-record-generic-audio-aac' },
+      hint: '为录制输出参数选择合适的预设。',
+    },
+    {
+      section: 'record',
+      focus: 'enabled',
+      values: { enabled: true },
+      label: '开启录制',
+      hint: '在录制部分开启开关，摄像头才会保存视频片段。',
+    },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 mqtt: ... # 省略号为文档省略部分，不代表后面没内容
@@ -335,6 +437,9 @@ cameras:
       enabled: True # [!code ++] <----- 必须启用录制功能才能录制
     motion: ... # 省略号为文档省略部分，不代表后面没内容
 ```
+
+</TabItem>
+</ConfigTabs>
 
 如果你的检测和录制没有单独的流，你只需要在第一个输入的功能列表中添加 `record` 功能：
 

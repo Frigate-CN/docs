@@ -50,10 +50,31 @@ Frigate 支持两种人脸识别模型类型：
 
 人脸识别默认禁用，必须在 UI 界面或配置文件中启用后才能使用。人脸识别是全局配置设置。
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **人脸识别** 部分开启人脸识别。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="global"
+  section="face_recognition"
+  focus="enabled"
+  :values="{ enabled: true }"
+  hint="人脸识别默认禁用，必须先在全局配置中开启。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 ```yaml
 face_recognition:
   enabled: true
 ```
+
+</TabItem>
+</ConfigTabs>
 
 与 Frigate 的其他实时处理器一样，人脸识别功能依赖于配置文件中`detect`功能定义的摄像头视频流。为确保最佳性能，请根据实际监控场景和需求，在摄像头固件中为此视频流设置合适的分辨率。
 
