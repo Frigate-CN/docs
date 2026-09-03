@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import LcIcon from "./LcIcon.vue";
 import FieldHint from "./FieldHint.vue";
 
@@ -41,15 +41,32 @@ const phase = computed(() => props.step.guidePhase);
 const showRailTarget = computed(() => phase.value === "group-trigger");
 const showEditField = computed(() => phase.value === "field");
 
-const focused = computed(
-    () => showEditField.value && props.step.focus === "name",
+// The edit-form field currently focused by the guide (name or cameras).
+const focusedField = computed(() =>
+    showEditField.value && ["name", "cameras"].includes(props.step.focus)
+        ? props.step.focus
+        : null,
+);
+const hintTitle = computed(() =>
+    focusedField.value === "cameras" ? "摄像头" : "名称",
+);
+
+// Replay the dialog pop-in animation whenever the guide moves between steps
+// (pencil click → group list → edit form) so each transition is visible.
+const dialogReplay = ref(0);
+watch(
+    () => [props.step.guidePhase, props.step.focus],
+    () => {
+        dialogReplay.value += 1;
+    },
 );
 </script>
 
 <template>
     <!-- centered dialog (the live page icon rail is rendered by the shared
          IconRail in FocusedSettings so every mock looks alike) -->
-    <div class="groupDialog" :class="{ groupDialogNarrow: !showEditField }">
+    <div :key="dialogReplay" class="groupDialog groupDialogReplay"
+        :class="{ groupDialogNarrow: !showEditField }">
         <template v-if="!showEditField">
             <!-- group list state -->
             <header class="groupDialogHeader">
@@ -67,7 +84,9 @@ const focused = computed(
                     </span>
                 </div>
             </div>
-            <FieldHint v-if="phase === 'group-list'" class="groupDialogHint"
+            <FieldHint v-if="phase === 'group-list'"
+                :key="`list-${navigation.current}`"
+                class="groupDialogHint"
                 :navigation="navigation" :text="step.hint ?? step.guideLabel"
                 title="摄像头组" />
         </template>
@@ -79,15 +98,16 @@ const focused = computed(
             </header>
 
             <div class="groupDialogForm">
-                <div class="groupFormField" :class="{ focused: focused }"
-                    :ref="(el) => { if (focused && focusRef) focusRef.current = el }">
+                <div class="groupFormField" :class="{ focused: focusedField === 'name' }"
+                    :ref="(el) => { if (focusedField === 'name' && focusRef) focusRef.current = el }">
                     <span class="groupFormLabel">名称</span>
                     <span class="input">{{ groupName || "请输入名称…" }}</span>
                 </div>
 
                 <div class="groupFormSeparator" />
 
-                <div class="groupFormField">
+                <div class="groupFormField" :class="{ focused: focusedField === 'cameras' }"
+                    :ref="(el) => { if (focusedField === 'cameras' && focusRef) focusRef.current = el }">
                     <span class="groupFormLabel">摄像头</span>
                     <p class="groupFormDesc">选择添加至该组的摄像头。</p>
                     <div class="groupCameraRows">
@@ -121,8 +141,9 @@ const focused = computed(
                 </div>
             </div>
 
-            <FieldHint v-if="focused" class="groupDialogHint" :navigation="navigation"
-                :text="step.hint ?? step.guideLabel" title="名称" />
+            <FieldHint v-if="focusedField" :key="`field-${navigation.current}`"
+                class="groupDialogHint" :navigation="navigation"
+                :text="step.hint ?? step.guideLabel" :title="hintTitle" />
         </template>
     </div>
 </template>

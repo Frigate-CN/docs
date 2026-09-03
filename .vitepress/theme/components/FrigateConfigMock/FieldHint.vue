@@ -33,7 +33,13 @@ const measure = () => {
     const hint = hintRef.value;
     const target = hint?.parentElement;
     const viewport = target?.closest(".contentViewport");
-    if (!hint || !target || !viewport) return;
+    // Dialog scenes (e.g. the camera-group modal) have no .contentViewport:
+    // their hint is absolutely positioned via CSS, so just reveal it.
+    if (!hint || !target) return;
+    if (!viewport) {
+        placement.value = "overlay";
+        return;
+    }
 
     const targetRect = target.getBoundingClientRect();
     const viewportRect = viewport.getBoundingClientRect();

@@ -2506,6 +2506,22 @@
   scrollbar-width: thin;
 }
 
+/* dialog pops in when the phase changes (pencil click → list → edit form) */
+.groupDialogReplay {
+  animation: group-dialog-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes group-dialog-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
 .groupDialogNarrow {
   width: min(420px, calc(100% - 80px));
 }
@@ -2596,6 +2612,7 @@
   color: var(--mock-muted);
   font-size: 14px;
   line-height: 20px;
+  margin: 0px !important;
 }
 
 .groupFormSeparator {
@@ -2612,7 +2629,7 @@
 
 .groupCameraRow {
   display: flex;
-  min-height: 36px;
+  min-height: 28px;
   align-items: center;
   justify-content: space-between;
   gap: 8px;

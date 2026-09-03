@@ -23,6 +23,10 @@ const section = computed(
 );
 
 const text = computed(() => {
+    // docs pages may pass a per-step hint; it wins over the generic copy
+    if (props.step.hint) {
+        return props.step.hint;
+    }
     if (props.step.guidePhase === "settings") {
         return "打开系统菜单并选择设置。";
     }
@@ -46,6 +50,10 @@ const measure = () => {
     if (props.step.guidePhase === "camera-switch") {
         selector = ".cameraSwitcherTarget";
         targetContainer = hint.closest(".appFrame");
+    } else if (props.step.guidePhase === "group-trigger") {
+        // camera-group flow: point at the rail pencil inside the live scene
+        selector = ".navigationTarget";
+        targetContainer = hint.closest(".liveGroupsScene");
     } else {
         const container = hint.closest(".appBody");
         if (!container) return;

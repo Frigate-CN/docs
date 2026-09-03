@@ -57,6 +57,8 @@ watch(
                 <div class="liveThumb" />
             </div>
             <CameraGroupsModal :step="step" :navigation="navigation" :focus-ref="focusRef" />
+            <!-- pencil-trigger hint: positioned next to the rail highlight -->
+            <NavigationHint v-if="step.guidePhase === 'group-trigger'" :navigation="navigation" :step="step" />
         </div>
     </div>
     <div v-else class="appFrame" :class="cameraClass">
