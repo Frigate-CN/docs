@@ -356,7 +356,7 @@ record:
 POST /export/custom/{camera_name}/start/{start_time}/end/{end_time}
 ```
 
-请求体接受 `ffmpeg_input_args` 和 `ffmpeg_output_args`，用于控制编码、帧率、滤镜和其他 FFmpeg 选项。如果两者均未提供，Frigate 默认使用延时输出设置（25 倍速，30 FPS）。
+发送请求时，可在请求正文（request body，随请求上传的 JSON 数据）中提供 `ffmpeg_input_args` 与 `ffmpeg_output_args` 两个参数，分别用于传入 **FFmpeg 输入参数**与**输出参数**，从而控制编码方式、帧率、滤镜等各类 FFmpeg 选项。若两者均未提供，Frigate 会按延时导出的默认参数执行（25 倍速、30 FPS），并自动移除音频（`-an` 表示不处理音频）。若你自行提供了 `ffmpeg_input_args`，又希望导出的视频不含声音，则需要在该参数中加入 `-an`。
 
 以下示例以 60 倍速、25 FPS 导出延时视频：
 
