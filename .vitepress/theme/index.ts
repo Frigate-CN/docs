@@ -7,7 +7,7 @@ import ResponsiveGrid from "./ResponsiveGrid.vue";
 import StreamAI from "./StreamAI.vue";
 import Question from "./Question.vue";
 import ShmCalculator from "./ShmCalculator.vue";
-import DockerComposeGenerator from "./DockerComposeGenerator.vue";
+import DockerComposeGenerator from "./DockerComposeGenerator/index.vue";
 import CollapseContainer from "./CollapseContainer.vue";
 import DetailsCollapse from "./DetailsCollapse.vue";
 import InfoIcon from "./InfoIcon.vue";

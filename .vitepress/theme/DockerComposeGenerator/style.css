@@ -1,0 +1,408 @@
+/* ===================================================================
+   Docker Compose 配置生成器 —— 样式
+   使用 VitePress CSS 变量以适配浅色 / 深色主题
+   =================================================================== */
+
+.dcg {
+  margin: 2rem 0;
+}
+
+.dcg-card {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-border);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--vp-shadow-1);
+}
+
+.dcg-header {
+  margin-bottom: 1.5rem;
+}
+
+.dcg-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.4rem;
+  color: var(--vp-c-text-1);
+}
+
+.dcg-description {
+  margin: 0;
+  color: var(--vp-c-text-2);
+  font-size: 0.9rem;
+}
+
+/* --- 表单区块 --- */
+
+.dcg-section {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--vp-c-border);
+}
+
+.dcg-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.dcg .dcg-section > h4,
+.dcg .dcg-result-header h4 {
+  margin: 0 0 1rem 0;
+  border-top: none;
+  padding-top: 0;
+  font-size: 1.1rem;
+  color: var(--vp-c-text-1);
+}
+
+.dcg .dcg-result-header h4 {
+  margin: 0;
+}
+
+/* --- 表单控件 --- */
+
+.dcg-form-group {
+  margin-bottom: 1rem;
+}
+
+.dcg-form-group:last-child {
+  margin-bottom: 0;
+}
+
+.dcg-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--vp-c-text-1);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.dcg-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 6px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  font-size: 0.95rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.dcg-input:focus {
+  outline: none;
+  border-color: var(--vp-c-brand-1);
+  box-shadow: 0 0 0 3px var(--vp-c-brand-soft);
+}
+
+.dcg-input--error {
+  border-color: #e74c3c;
+  animation: dcg-shake 0.3s ease-in-out;
+}
+
+@keyframes dcg-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.dcg-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 12px 12px;
+  padding-right: 2rem;
+}
+
+.dcg-help-text {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  color: var(--vp-c-text-2);
+  line-height: 1.5;
+}
+
+.dcg-help-text a {
+  color: var(--vp-c-brand-1);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.dcg-help-text code {
+  font-size: 0.85em;
+}
+
+/* --- 设备网格 --- */
+
+.dcg-device-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.dcg-device-card {
+  padding: 0.75rem;
+  border: 2px solid var(--vp-c-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  background: var(--vp-c-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dcg-device-card:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-bg-soft);
+  transform: translateY(-2px);
+}
+
+.dcg-device-card--active {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+}
+
+.dcg-device-icon {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+  height: 40px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dcg-device-icon--svg {
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.dcg-device-icon--svg svg {
+  width: var(--svg-width, 100%);
+  height: var(--svg-height, 100%);
+  fill: var(--svg-fill, currentColor);
+  transform: var(--svg-transform, none);
+}
+
+.dcg-device-icon--image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* 深浅色图标切换：同时渲染两者，用 CSS 控制显隐，避免水合不一致 */
+html.dark .dcg-only-light {
+  display: none !important;
+}
+
+html:not(.dark) .dcg-only-dark {
+  display: none !important;
+}
+
+.dcg-device-name {
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  margin-bottom: 0.15rem;
+  font-size: 0.9rem;
+}
+
+.dcg-device-desc {
+  font-size: 0.75rem;
+  color: var(--vp-c-text-2);
+  line-height: 1.3;
+}
+
+/* --- 硬件 / 端口复选框 --- */
+
+.dcg-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+@media (max-width: 576px) {
+  .dcg-checkbox-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dcg-checkbox-grid--disabled {
+  opacity: 0.5;
+}
+
+.dcg-checkbox-item {
+  margin-bottom: 0;
+}
+
+.dcg-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+}
+
+.dcg-checkbox-label:hover {
+  background: var(--vp-c-bg);
+}
+
+.dcg-checkbox-label input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.dcg-checkbox-label span {
+  color: var(--vp-c-text-1);
+}
+
+.dcg-checkbox-label--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dcg-checkbox-label--disabled:hover {
+  background: transparent;
+}
+
+.dcg-checkbox-label--disabled input[type="checkbox"] {
+  cursor: not-allowed;
+}
+
+.dcg-checkbox-desc {
+  margin: 0.15rem 0 0.4rem 1.6rem;
+  font-size: 0.8rem;
+  color: var(--vp-c-text-2);
+  line-height: 1.5;
+}
+
+.dcg-checkbox-desc a {
+  color: var(--vp-c-brand-1);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.dcg-port-badge {
+  margin-left: auto;
+  color: #e67e22;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.dcg-danger-confirm {
+  margin: 0.5rem 0 0.5rem 1.6rem;
+}
+
+/* --- 两列表单 --- */
+
+.dcg-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 576px) {
+  .dcg-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dcg-form-grid .dcg-form-group {
+  margin-bottom: 0;
+}
+
+.dcg-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+}
+
+.dcg-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+}
+
+.dcg-radio-label:hover {
+  background: var(--vp-c-bg);
+}
+
+.dcg-radio-label input[type="radio"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.dcg-radio-label span {
+  color: var(--vp-c-text-1);
+}
+
+/* --- NVIDIA 配置 --- */
+
+.dcg-nvidia {
+  margin: 1.25rem 0;
+  padding: 1rem;
+  background: var(--vp-c-bg);
+  border-radius: 8px;
+  border-left: 3px solid var(--vp-c-brand-1);
+}
+
+/* --- 输出结果 --- */
+
+.dcg-result {
+  margin-top: 2rem;
+}
+
+.dcg-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dcg-copy-btn {
+  padding: 0.45rem 1rem;
+  background: var(--vp-c-brand-1);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.dcg-copy-btn:hover {
+  background: var(--vp-c-brand-2);
+}
+
+/* 让 Shiki 高亮的代码块继承主题样式 */
+.dcg-result .shiki {
+  background: transparent !important;
+}
+
+.dcg-result .shiki > code {
+  background: transparent !important;
+}

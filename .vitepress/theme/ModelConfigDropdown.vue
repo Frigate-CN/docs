@@ -62,7 +62,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside);
 });
 
-// ========== Shiki 高亮器（与 VitePress / DockerComposeGenerator.vue 使用相同配置） ==========
+// ========== Shiki 高亮器（与 VitePress / DockerComposeGenerator 使用相同配置） ==========
 // 关键：使用双主题 themes: { light, dark }，生成 CSS 变量 --shiki-light / --shiki-dark，
 // 由 VitePress 主题样式根据 .dark 类自动切换，无需监听主题变化。
 let highlighter: any = null;
