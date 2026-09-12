@@ -48,23 +48,23 @@
 
 /* ---------- guide player (docs chrome, not part of the UI mock) ---------- */
 
-.stepBar,
-.rangeControl,
-.stepActions,
-.menuGroupLabel,
-.menuItem,
-.singleMenuItem {
+.mock .stepBar,
+.mock .rangeControl,
+.mock .stepActions,
+.mock .menuGroupLabel,
+.mock .menuItem,
+.mock .singleMenuItem {
   display: flex;
   align-items: center;
 }
 
-.guidePlayer {
+.mock .guidePlayer {
   min-width: 0;
   background: #101010;
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.guideSteps {
+.mock .guideSteps {
   display: flex;
   overflow-x: auto;
   gap: 14px;
@@ -73,7 +73,7 @@
   scrollbar-width: thin;
 }
 
-.guideStep {
+.mock .guideStep {
   position: relative;
   display: grid;
   flex: 0 0 auto;
@@ -88,7 +88,7 @@
   text-align: left;
 }
 
-.guideStep::after {
+.mock .guideStep::after {
   position: absolute;
   z-index: 0;
   top: 11px;
@@ -99,11 +99,11 @@
   content: "";
 }
 
-.guideStep:last-child::after {
+.mock .guideStep:last-child::after {
   display: none;
 }
 
-.guideStep span {
+.mock .guideStep span {
   z-index: 1;
   display: grid;
   width: 22px;
@@ -116,7 +116,7 @@
   font-size: 11px;
 }
 
-.guideStep small {
+.mock .guideStep small {
   z-index: 1;
   overflow: visible;
   padding-right: 0;
@@ -126,22 +126,22 @@
   white-space: nowrap;
 }
 
-.guideStepActive {
+.mock .guideStepActive {
   color: var(--mock-foreground);
 }
 
-.guideStepActive span {
+.mock .guideStepActive span {
   color: white;
   background: var(--mock-selected);
   border-color: var(--mock-selected);
 }
 
-.guideStepComplete span {
+.mock .guideStepComplete span {
   color: #dbe2ff;
   border-color: var(--mock-selected);
 }
 
-.stepBar {
+.mock .stepBar {
   min-width: 0;
   min-height: 42px;
   justify-content: space-between;
@@ -152,7 +152,7 @@
   font-weight: 500;
 }
 
-.currentInstruction {
+.mock .currentInstruction {
   display: flex;
   min-width: 0;
   align-items: baseline;
@@ -160,13 +160,13 @@
   overflow: hidden;
 }
 
-.currentInstruction > span,
-.currentInstruction small {
+.mock .currentInstruction > span,
+.mock .currentInstruction small {
   color: var(--mock-muted);
   font-size: 11px;
 }
 
-.currentInstruction strong {
+.mock .currentInstruction strong {
   overflow: hidden;
   color: var(--mock-foreground);
   font-size: 12px;
@@ -175,11 +175,11 @@
   white-space: nowrap;
 }
 
-.stepActions {
+.mock .stepActions {
   gap: 6px;
 }
 
-.stepActions button {
+.mock .stepActions button {
   display: grid;
   width: 28px;
   height: 28px;
@@ -194,19 +194,19 @@
   flex-shrink: 0;
 }
 
-.stepActions button svg {
+.mock .stepActions button svg {
   width: 15px;
   height: 15px;
 }
 
-.stepActions button:disabled {
+.mock .stepActions button:disabled {
   color: var(--mock-muted);
   border-color: var(--mock-border-soft);
 }
 
 /* ---------- app frame ---------- */
 
-.viewport {
+.mock .viewport {
   position: relative;
   overflow: hidden;
   height: 578px;
@@ -214,7 +214,7 @@
   background: #080808;
 }
 
-.appFrame {
+.mock .appFrame {
   position: absolute;
   inset: 0;
   min-width: 0;
@@ -227,32 +227,32 @@
   will-change: transform, scale;
 }
 
-.cameraOverview {
+.mock .cameraOverview {
   scale: 0.92;
 }
 
-.cameraSettings {
+.mock .cameraSettings {
   scale: 1;
   transform: translate(3px, -3px);
 }
 
-.cameraMenu {
+.mock .cameraMenu {
   scale: 1;
   transform: translate(-5px, 0);
-  animation: camera-reframe-out 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: mock-camera-reframe-out 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.cameraField {
+.mock .cameraField {
   scale: 1;
   transform: translate(-14px, 0);
-  animation: camera-reframe-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: mock-camera-reframe-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* App.tsx desktop layout: full-height 52px rail on the far left
    (absolute inset-y-0 left-0), the settings page fills the rest
    (content root: absolute left-[52px] top-0). */
 
-.appBody {
+.mock .appBody {
   position: relative;
   display: grid;
   height: 100%;
@@ -262,13 +262,13 @@
 }
 
 /* full-height rail column: stretch to the frame, keep bottom buttons pinned */
-.appBody > .iconRail {
+.mock .appBody > .iconRail {
   height: 100%;
   min-height: 0;
 }
 
 /* the settings page (Settings.tsx desktop): its own title bar + nav/content */
-.settingsPage {
+.mock .settingsPage {
   display: grid;
   min-width: 0;
   min-height: 0;
@@ -277,7 +277,7 @@
   background: var(--mock-background);
 }
 
-.settingsPageBody {
+.mock .settingsPageBody {
   display: grid;
   min-height: 0;
   overflow: hidden;
@@ -288,7 +288,7 @@
 /* settings page title bar (Settings.tsx desktop): h-16 border-b,
    Heading h3 设置 on the left, camera switcher on the right */
 
-.appHeader {
+.mock .appHeader {
   position: relative;
   display: flex;
   height: 56px;
@@ -298,13 +298,13 @@
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.settingsTitle {
+.mock .settingsTitle {
   color: var(--mock-foreground);
   font-size: 18px;
   font-weight: 500;
 }
 
-.cameraSwitcher {
+.mock .cameraSwitcher {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -320,21 +320,21 @@
   transition: box-shadow 240ms ease;
 }
 
-.cameraSwitcher svg {
+.mock .cameraSwitcher svg {
   flex: none;
   width: 20px;
   height: 20px;
 }
 
-.cameraSwitcherTarget {
+.mock .cameraSwitcherTarget {
   box-shadow: 0 0 0 2px var(--mock-selected), 0 0 0 5px rgb(77 110 245 / 18%);
-  animation: focus-breathe 2s ease-in-out infinite;
+  animation: mock-focus-breathe 2s ease-in-out infinite;
 }
 
 /* system dropdown menu (GeneralSettings → dropdown-menu.tsx):
    bg-popover #262626, rounded-md, items px-2 py-1.5 text-sm */
 
-.systemMenu {
+.mock .systemMenu {
   position: absolute;
   z-index: 20;
   bottom: 12px;
@@ -356,17 +356,17 @@
   pointer-events: none;
 }
 
-.systemMenuVisible {
+.mock .systemMenuVisible {
   opacity: 1;
   transform: translateY(0) scale(1);
   transition-delay: 0ms;
 }
 
-.systemMenuGroup {
+.mock .systemMenuGroup {
   padding: 5px 0 3px;
 }
 
-.systemMenuGroup strong {
+.mock .systemMenuGroup strong {
   display: block;
   padding: 5px 11px 7px;
   border-bottom: 1px solid #303030;
@@ -375,8 +375,8 @@
   font-weight: 500;
 }
 
-.systemMenuItem,
-.restartItem {
+.mock .systemMenuItem,
+.mock .restartItem {
   display: grid;
   min-height: 32px;
   grid-template-columns: 18px minmax(0, 1fr) 16px;
@@ -388,8 +388,8 @@
   font-size: 14px;
 }
 
-.systemMenuItem > span,
-.restartItem > span {
+.mock .systemMenuItem > span,
+.mock .restartItem > span {
   display: grid;
   width: 16px;
   height: 16px;
@@ -398,12 +398,12 @@
   font-size: 15px;
 }
 
-.systemMenuItem b,
-.restartItem b {
+.mock .systemMenuItem b,
+.mock .restartItem b {
   font-weight: 400;
 }
 
-.systemMenuItem i {
+.mock .systemMenuItem i {
   display: grid;
   place-items: center;
   color: #d8d8d8;
@@ -412,15 +412,15 @@
   text-align: right;
 }
 
-.systemMenuTarget {
+.mock .systemMenuTarget {
   color: white;
   background: var(--mock-accent);
   outline: 2px solid var(--mock-selected);
   outline-offset: -1px;
-  animation: focus-breathe 2s ease-in-out infinite;
+  animation: mock-focus-breathe 2s ease-in-out infinite;
 }
 
-.restartItem {
+.mock .restartItem {
   min-height: 36px;
   margin: 3px 0 0;
   padding: 0 12px;
@@ -434,7 +434,7 @@
    active: text-white bg-selected; bottom GeneralSettings/AccountSettings
    rounded-lg bg-secondary, container flex-col gap-4 mb-8) */
 
-.iconRail {
+.mock .iconRail {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -443,7 +443,7 @@
   border-right: 1px solid var(--mock-secondary-highlight);
 }
 
-.iconRail .railLogo {
+.mock .iconRail .railLogo {
   display: grid;
   width: 32px;
   height: 32px;
@@ -452,17 +452,17 @@
   place-items: center;
 }
 
-.railLogoSvg {
+.mock .railLogoSvg {
   width: 32px;
   height: 32px;
 }
 
-.railSpacer {
+.mock .railSpacer {
   flex: 1;
 }
 
 /* NavItem: 32x32 box, 6px padding, mx-10px mb-16px, rounded-lg */
-.railIcon {
+.mock .railIcon {
   display: grid;
   width: 32px;
   height: 32px;
@@ -473,25 +473,25 @@
   border-radius: 8px;
 }
 
-.railIcon svg {
+.mock .railIcon svg {
   width: 20px;
   height: 20px;
 }
 
-.railIconActive {
+.mock .railIconActive {
   color: #fff;
   background: var(--mock-selected);
 }
 
 /* live page: active Live item keeps mb-2 (8px) because the camera-group
    cluster follows it, exactly like Sidebar.tsx `showCameraGroups` branch */
-.railClusterGap {
+.mock .railClusterGap {
   margin-bottom: 8px;
 }
 
 /* CameraGroupSelector cluster: smaller size-sm buttons (24x24, gap 12px),
    所有摄像头 / user groups / 编辑铅笔; mb-4 (16px) after the cluster */
-.railSubItem {
+.mock .railSubItem {
   display: grid;
   width: 24px;
   height: 24px;
@@ -502,13 +502,13 @@
   border-radius: 6px;
 }
 
-.railSubItem svg {
+.mock .railSubItem svg {
   width: 16px;
   height: 16px;
 }
 
 /* the pencil (last cluster item) keeps 16px below like NavItem mb-4 */
-.railClusterLast {
+.mock .railClusterLast {
   margin-bottom: 16px;
   color: var(--mock-primary-variant);
 }
@@ -516,7 +516,7 @@
 /* bottom actions: GeneralSettings + AccountSettings
    (mb-8 flex flex-col items-center gap-4 wrappers, buttons rounded-lg
    bg-secondary text-secondary-foreground, icon m-[6px] size-5) */
-.railActions {
+.mock .railActions {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -524,7 +524,7 @@
   margin-bottom: 32px;
 }
 
-.railButton {
+.mock .railButton {
   display: grid;
   width: 32px;
   height: 32px;
@@ -534,7 +534,7 @@
   border-radius: 8px;
 }
 
-.railButton svg {
+.mock .railButton svg {
   width: 20px;
   height: 20px;
 }
@@ -545,7 +545,7 @@
    sub button: min-h-7 text-sm px-2 rounded-md,
    active bg-background-alt + accent-foreground(primary #e8e8e8)) */
 
-.settingsNav {
+.mock .settingsNav {
   overflow: hidden auto;
   padding: 8px 10px 20px;
   color: var(--mock-muted);
@@ -554,9 +554,9 @@
   scrollbar-width: thin;
 }
 
-.singleMenuItem,
-.menuGroupLabel,
-.menuItem {
+.mock .singleMenuItem,
+.mock .menuGroupLabel,
+.mock .menuItem {
   display: flex;
   min-height: 32px;
   align-items: center;
@@ -564,18 +564,18 @@
   line-height: 20px;
 }
 
-.singleMenuItem {
+.mock .singleMenuItem {
   margin-bottom: 4px;
   border-radius: 6px;
   color: var(--mock-muted);
   font-size: 14px;
 }
 
-.menuGroup {
+.mock .menuGroup {
   margin-bottom: 4px;
 }
 
-.menuGroupLabel {
+.mock .menuGroupLabel {
   justify-content: space-between;
   min-height: 32px;
   gap: 8px;
@@ -584,24 +584,24 @@
   font-weight: 500;
 }
 
-.menuGroupLabelActive {
+.mock .menuGroupLabelActive {
   color: var(--mock-primary-variant);
 }
 
-.cameraName {
+.mock .cameraName {
   padding: 0 8px 6px;
   color: var(--mock-muted);
   font-size: 12px;
 }
 
 /* sub menu indented with a left border, like SidebarMenuSub */
-.menuItems {
+.mock .menuItems {
   margin-left: 12px;
   padding-left: 8px;
   border-left: 1px solid var(--mock-secondary-highlight);
 }
 
-.menuItem {
+.mock .menuItem {
   position: relative;
   justify-content: space-between;
   min-height: 28px;
@@ -611,13 +611,13 @@
   font-size: 14px;
 }
 
-.menuItemActive {
+.mock .menuItemActive {
   color: var(--mock-foreground);
   background: var(--mock-background-alt);
   font-weight: 500;
 }
 
-.menuItem i {
+.mock .menuItem i {
   width: 7px;
   height: 7px;
   flex: none;
@@ -625,16 +625,16 @@
   border-radius: 50%;
 }
 
-.navigationTarget {
+.mock .navigationTarget {
   outline: 2px solid var(--mock-selected);
   outline-offset: 2px;
   box-shadow: 0 0 0 4px rgb(77 110 245 / 14%);
-  animation: focus-breathe 2s ease-in-out infinite;
+  animation: mock-focus-breathe 2s ease-in-out infinite;
 }
 
 /* content viewport */
 
-.contentViewport {
+.mock .contentViewport {
   overflow-y: auto;
   min-width: 0;
   background: var(--mock-background);
@@ -642,16 +642,16 @@
   scrollbar-width: thin;
 }
 
-.scene {
+.mock .scene {
   width: 100%;
   padding: 16px 16px 28px;
 }
 
-.sectionHeader {
+.mock .sectionHeader {
   margin-bottom: 20px;
 }
 
-.sectionHeader h3 {
+.mock .sectionHeader h3 {
   margin: 0;
   color: var(--mock-foreground);
   font-size: 20px;
@@ -660,26 +660,26 @@
   letter-spacing: 0;
 }
 
-.sectionHeader p {
+.mock .sectionHeader p {
   margin: 4px 0 0;
   color: var(--mock-muted);
   font-size: 14px;
   line-height: 20px;
 }
 
-.docsLink {
+.mock .docsLink {
   display: inline-block;
   margin-top: 4px;
   color: var(--mock-primary-variant);
   font-size: 12px;
 }
 
-.docsLink span {
+.mock .docsLink span {
   margin-left: 3px;
   font-size: 10px;
 }
 
-.docsLink svg {
+.mock .docsLink svg {
   display: inline;
   width: 12px;
   height: 12px;
@@ -691,12 +691,12 @@
    space-y-4 rounded-lg border border-border/70 bg-card/30 p-4,
    title row: border-b border-border/60 pb-4 font-semibold text-primary-variant */
 
-.panels {
+.mock .panels {
   display: grid;
   gap: 16px;
 }
 
-.group {
+.mock .group {
   margin: 0;
   padding: 16px;
   background: rgb(31 31 31 / 30%); /* bg-card/30 over #000 */
@@ -704,12 +704,12 @@
   border-radius: 8px;
 }
 
-.groupHeader {
+.mock .groupHeader {
   padding-bottom: 16px;
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.groupTitle {
+.mock .groupTitle {
   color: var(--mock-primary-variant);
   font-size: 14px;
   font-weight: 600;
@@ -723,7 +723,7 @@
   line-height: 16px;
 }
 
-.fields {
+.mock .fields {
   display: grid;
   gap: 24px;
   padding-top: 16px;
@@ -731,7 +731,7 @@
 
 /* sub-group inside a group card */
 
-.subGroup {
+.mock .subGroup {
   display: grid;
   gap: 8px;
   padding: 16px;
@@ -740,26 +740,26 @@
   border-radius: 6px;
 }
 
-.collapsibleSubGroup.collapsed .subGroupFields {
+.mock .collapsibleSubGroup.collapsed .subGroupFields {
   display: none;
 }
 
-.subGroupHeader {
+.mock .subGroupHeader {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.subGroupHeader.clickable {
+.mock .subGroupHeader.clickable {
   cursor: default;
 }
 
-.subGroupHeader.clickable svg {
+.mock .subGroupHeader.clickable svg {
   color: var(--mock-muted);
   flex-shrink: 0;
 }
 
-.subGroupLabel {
+.mock .subGroupLabel {
   color: var(--mock-primary-variant);
   font-size: 14px;
   font-weight: 600;
@@ -773,7 +773,7 @@
   line-height: 16px;
 }
 
-.subGroupFields {
+.mock .subGroupFields {
   display: grid;
   gap: 24px;
   padding-top: 4px;
@@ -781,7 +781,7 @@
 
 /* nested sub-group */
 
-.nestedSubGroup {
+.mock .nestedSubGroup {
   display: grid;
   gap: 8px;
   padding: 14px;
@@ -790,7 +790,7 @@
   border-radius: 6px;
 }
 
-.nestedSubGroupHeader {
+.mock .nestedSubGroupHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -801,27 +801,27 @@
   line-height: 20px;
 }
 
-.nestedSubGroupHeader svg {
+.mock .nestedSubGroupHeader svg {
   color: var(--mock-muted);
   flex-shrink: 0;
 }
 
-.collapsibleNested.collapsed .nestedSubGroupFields {
+.mock .collapsibleNested.collapsed .nestedSubGroupFields {
   display: none;
 }
 
-.nestedSubGroupHeader.clickable {
+.mock .nestedSubGroupHeader.clickable {
   cursor: default;
 }
 
-.nestedSubGroup .nestedSubGroupDesc {
+.mock .nestedSubGroup .nestedSubGroupDesc {
   margin: 0;
   color: var(--mock-muted);
   font-size: 12px;
   line-height: 16px;
 }
 
-.nestedSubGroupFields {
+.mock .nestedSubGroupFields {
   display: grid;
   gap: 24px;
   padding-top: 4px;
@@ -831,7 +831,7 @@
    grid-cols-[minmax(14rem,24rem)_minmax(0,1fr)] gap-x-6,
    label text-sm font-medium, description text-xs text-muted-foreground */
 
-.field {
+.mock .field {
   position: relative;
   display: grid;
   grid-template-columns: minmax(14rem, 24rem) minmax(0, 1fr);
@@ -839,11 +839,11 @@
   column-gap: 24px;
 }
 
-.fieldCopy {
+.mock .fieldCopy {
   min-width: 0;
 }
 
-.fieldCopy strong {
+.mock .fieldCopy strong {
   display: block;
   color: var(--mock-foreground);
   font-size: 14px;
@@ -851,7 +851,7 @@
   line-height: 20px;
 }
 
-.fieldCopy p {
+.mock .fieldCopy p {
   margin: 4px 0 0;
   color: var(--mock-muted);
   font-size: 12px;
@@ -862,7 +862,7 @@
    unchecked bg-input, checked bg-selected; thumb size-5 rounded-full
    bg-muted-foreground, checked dark: bg-primary (#e8e8e8) */
 
-.switch {
+.mock .switch {
   position: relative;
   width: 44px;
   height: 24px;
@@ -872,7 +872,7 @@
   border-radius: 999px;
 }
 
-.switch span {
+.mock .switch span {
   position: absolute;
   top: 0;
   left: 0;
@@ -884,25 +884,25 @@
   transition: transform 220ms ease;
 }
 
-.switchOn {
+.mock .switchOn {
   background: var(--mock-selected);
 }
 
-.switchOn span {
+.mock .switchOn span {
   background: #e8e8e8;
   transform: translateX(20px);
 }
 
 /* range */
 
-.rangeControl {
+.mock .rangeControl {
   width: 100%;
   max-width: 42rem;
   gap: 14px;
   padding-top: 8px;
 }
 
-.rangeTrack {
+.mock .rangeTrack {
   position: relative;
   height: 8px;
   flex: 1;
@@ -911,14 +911,14 @@
   border-radius: 999px;
 }
 
-.rangeTrack span {
+.mock .rangeTrack span {
   display: block;
   height: 100%;
   background: #e8e8e8;
   border-radius: inherit;
 }
 
-.rangeTrack i {
+.mock .rangeTrack i {
   position: absolute;
   top: 50%;
   width: 20px;
@@ -928,7 +928,7 @@
   transform: translate(-50%, -50%);
 }
 
-.rangeValue {
+.mock .rangeValue {
   width: 36px;
   flex: none;
   color: var(--mock-muted);
@@ -940,7 +940,7 @@
    h-10 rounded-md border border-input px-3 py-2 text-sm,
    dark:bg-background_alt (#171717) */
 
-.input {
+.mock .input {
   display: inline-flex;
   width: 100%;
   min-height: 40px;
@@ -956,20 +956,20 @@
   line-height: 20px;
 }
 
-.chevron {
+.mock .chevron {
   display: flex;
   flex: none;
   align-items: center;
   color: var(--mock-muted);
 }
 
-.tags {
+.mock .tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.tags span {
+.mock .tags span {
   padding: 5px 8px;
   color: var(--mock-foreground);
   background: var(--mock-input);
@@ -979,20 +979,20 @@
   line-height: 16px;
 }
 
-.advancedCollapsed {
+.mock .advancedCollapsed {
   padding: 10px 4px;
   color: var(--mock-muted);
   border-top: 1px solid var(--mock-border-soft);
   font-size: 12px;
 }
 
-.standaloneField {
+.mock .standaloneField {
   padding: 0 16px;
 }
 
 /* object field cards */
 
-.objectField {
+.mock .objectField {
   position: relative;
   overflow: visible;
   background: rgb(31 31 31 / 30%);
@@ -1000,7 +1000,7 @@
   border-radius: 8px;
 }
 
-.objectFieldHeader {
+.mock .objectFieldHeader {
   display: flex;
   min-height: 70px;
   align-items: center;
@@ -1009,20 +1009,20 @@
   padding: 16px;
 }
 
-.objectFieldHeader > svg {
+.mock .objectFieldHeader > svg {
   width: 16px;
   height: 16px;
   flex: none;
   color: var(--mock-foreground);
 }
 
-.objectFieldContent {
+.mock .objectFieldContent {
   display: grid;
   gap: 12px;
   padding: 0 16px 16px;
 }
 
-.objectEntry {
+.mock .objectEntry {
   display: grid;
   gap: 8px;
   padding: 12px;
@@ -1030,14 +1030,14 @@
   border-radius: 6px;
 }
 
-.objectEntryHeader {
+.mock .objectEntryHeader {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 28px;
   align-items: center;
   gap: 8px;
 }
 
-.objectValues {
+.mock .objectValues {
   display: grid;
   gap: 8px;
   margin-left: 5px;
@@ -1045,7 +1045,7 @@
   border-left: 2px solid #3a3a3a;
 }
 
-.objectInput {
+.mock .objectInput {
   display: flex;
   min-height: 40px;
   align-items: center;
@@ -1061,7 +1061,7 @@
   white-space: nowrap;
 }
 
-.objectDelete {
+.mock .objectDelete {
   display: grid;
   width: 28px;
   height: 28px;
@@ -1069,12 +1069,12 @@
   color: #848484;
 }
 
-.objectDelete svg {
+.mock .objectDelete svg {
   width: 15px;
   height: 15px;
 }
 
-.objectAdd {
+.mock .objectAdd {
   display: inline-flex;
   width: fit-content;
   min-height: 32px;
@@ -1089,50 +1089,50 @@
   font-weight: 500;
 }
 
-.objectAdd svg {
+.mock .objectAdd svg {
   width: 15px;
   height: 15px;
 }
 
-.rulesContent {
+.mock .rulesContent {
   display: grid;
   gap: 10px;
   padding: 0 16px 16px;
 }
 
-.rulesHeader,
-.ruleRow {
+.mock .rulesHeader,
+.mock .ruleRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 28px;
   gap: 8px;
 }
 
-.rulesHeader {
+.mock .rulesHeader {
   color: var(--mock-muted);
   font-size: 12px;
 }
 
-.rulesHeader span:last-child {
+.mock .rulesHeader span:last-child {
   grid-column: 2;
 }
 
-.rulesRows {
+.mock .rulesRows {
   display: grid;
   gap: 8px;
 }
 
-.ruleRow {
+.mock .ruleRow {
   align-items: center;
 }
 
-.trackField,
-.labelSwitchesField {
+.mock .trackField,
+.mock .labelSwitchesField {
   position: relative;
   display: grid;
   gap: 8px;
 }
 
-.trackSummary {
+.mock .trackSummary {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -1140,12 +1140,12 @@
   font-size: 12px;
 }
 
-.trackSummary svg {
+.mock .trackSummary svg {
   width: 14px;
   height: 14px;
 }
 
-.trackSelector {
+.mock .trackSelector {
   overflow: hidden;
   width: min(448px, 100%);
   padding: 8px 6px 5px;
@@ -1154,7 +1154,7 @@
   border-radius: 8px;
 }
 
-.trackSearch {
+.mock .trackSearch {
   display: flex;
   min-height: 40px;
   align-items: center;
@@ -1167,14 +1167,14 @@
   font-size: 14px;
 }
 
-.trackOptions {
+.mock .trackOptions {
   display: grid;
   max-height: 206px;
   gap: 2px;
   overflow: hidden;
 }
 
-.trackOption {
+.mock .trackOption {
   display: flex;
   min-height: 32px;
   align-items: center;
@@ -1186,13 +1186,13 @@
   font-size: 14px;
 }
 
-.trackDescription {
+.mock .trackDescription {
   margin: 0;
   color: var(--mock-muted);
   font-size: 12px;
 }
 
-.labelSelector {
+.mock .labelSelector {
   display: grid;
   overflow: hidden;
   width: min(448px, 100%);
@@ -1203,7 +1203,7 @@
   border-radius: 8px;
 }
 
-.customLabelInput {
+.mock .customLabelInput {
   display: flex;
   min-height: 40px;
   align-items: center;
@@ -1215,19 +1215,19 @@
   font-size: 14px;
 }
 
-.filtersContent {
+.mock .filtersContent {
   display: grid;
   gap: 12px;
   padding: 0 16px 16px;
 }
 
-.filterCard {
+.mock .filterCard {
   overflow: hidden;
   border: 1px solid var(--mock-border-soft);
   border-radius: 6px;
 }
 
-.filterCardHeader {
+.mock .filterCardHeader {
   display: flex;
   min-height: 48px;
   align-items: center;
@@ -1236,23 +1236,23 @@
   padding: 10px 14px;
 }
 
-.filterCardHeader strong {
+.mock .filterCardHeader strong {
   color: var(--mock-foreground);
   font-size: 14px;
 }
 
-.filterCardHeader svg {
+.mock .filterCardHeader svg {
   width: 15px;
   height: 15px;
 }
 
-.filterSettings {
+.mock .filterSettings {
   display: grid;
   gap: 16px;
   padding: 4px 14px 16px;
 }
 
-.filterSetting {
+.mock .filterSetting {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(130px, 46%);
   align-items: center;
@@ -1263,7 +1263,7 @@
 
 /* focus highlight */
 
-.focused::after {
+.mock .focused::after {
   position: absolute;
   z-index: 2;
   inset: -9px;
@@ -1272,12 +1272,12 @@
   box-shadow: 0 0 0 2px rgb(77 110 245 / 16%);
   content: "";
   pointer-events: none;
-  animation: focus-breathe 2s ease-in-out infinite;
+  animation: mock-focus-breathe 2s ease-in-out infinite;
 }
 
 /* hint bubble — docs chrome, keep the blue "guide" look */
 
-.fieldHint {
+.mock .fieldHint {
   position: absolute;
   z-index: 7;
   top: calc(100% + 16px);
@@ -1294,17 +1294,17 @@
   pointer-events: auto;
 }
 
-.fieldHint > div {
+.mock .fieldHint > div {
   flex: 1;
   min-width: 0;
 }
 
-.fieldHint p {
+.mock .fieldHint p {
   margin: 4px 0 0;
   word-break: normal;
 }
 
-.fieldHint::before {
+.mock .fieldHint::before {
   position: absolute;
   top: -6px;
   right: 28px;
@@ -1317,12 +1317,12 @@
   transform: rotate(45deg);
 }
 
-.fieldHintAbove {
+.mock .fieldHintAbove {
   top: auto;
   bottom: calc(100% + 16px);
 }
 
-.fieldHintAbove::before {
+.mock .fieldHintAbove::before {
   top: auto;
   bottom: -6px;
   border-top: 0;
@@ -1331,18 +1331,18 @@
   border-left: 0;
 }
 
-.fieldHintOverlay {
+.mock .fieldHintOverlay {
   top: 14px;
   right: 14px;
   bottom: auto;
   width: min(360px, calc(100% - 28px));
 }
 
-.fieldHintOverlay::before {
+.mock .fieldHintOverlay::before {
   display: none;
 }
 
-.navigationHint {
+.mock .navigationHint {
   z-index: 30;
   top: 0;
   right: auto;
@@ -1350,7 +1350,7 @@
   width: min(330px, calc(100% - 300px));
 }
 
-.navigationHint::before {
+.mock .navigationHint::before {
   top: calc(50% - 5px);
   right: auto;
   left: -6px;
@@ -1361,7 +1361,7 @@
   border-left: 1px solid var(--mock-selected);
 }
 
-.navigationHintFlipped::before {
+.mock .navigationHintFlipped::before {
   right: -6px;
   left: auto;
   border-top: 1px solid var(--mock-selected);
@@ -1370,20 +1370,20 @@
   border-left: 0;
 }
 
-.navigationHintReady {
-  animation: hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.mock .navigationHintReady {
+  animation: mock-hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.fieldHintMeasuring {
+.mock .fieldHintMeasuring {
   visibility: hidden;
   opacity: 0;
 }
 
-.fieldHintReady {
-  animation: hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.mock .fieldHintReady {
+  animation: mock-hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.fieldHintIcon {
+.mock .fieldHintIcon {
   display: grid;
   width: 18px;
   height: 18px;
@@ -1393,24 +1393,24 @@
   font-size: 16px;
 }
 
-.fieldHint strong {
+.mock .fieldHint strong {
   display: block;
   font-size: 12px;
   font-weight: 600;
 }
 
-.fieldHint p {
+.mock .fieldHint p {
   margin: 3px 0 0;
   color: #aeb5c8;
   font-size: 12px;
   line-height: 16px;
 }
 
-.fieldHint p strong {
+.mock .fieldHint p strong {
   display: inline;
 }
 
-.fieldHintNavigation {
+.mock .fieldHintNavigation {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -1423,7 +1423,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-.fieldHintNavigation button {
+.mock .fieldHintNavigation button {
   display: grid;
   width: 24px;
   height: 24px;
@@ -1436,24 +1436,24 @@
   place-items: center;
 }
 
-.fieldHintNavigation button:hover:not(:disabled) {
+.mock .fieldHintNavigation button:hover:not(:disabled) {
   background: #2b3245;
   border-color: #7185e9;
 }
 
-.fieldHintNavigation button:disabled {
+.mock .fieldHintNavigation button:disabled {
   cursor: default;
   opacity: 0.35;
 }
 
-.fieldHintNavigation button svg {
+.mock .fieldHintNavigation button svg {
   width: 15px;
   height: 15px;
 }
 
 /* masks & zones layout */
 
-.masksZonesLayout {
+.mock .masksZonesLayout {
   position: relative;
   display: grid;
   height: 100%;
@@ -1462,20 +1462,20 @@
   padding: 10px;
 }
 
-.fieldHint.maskZoneHint {
+.mock .fieldHint.maskZoneHint {
   z-index: 12;
   top: 16px;
   right: 16px;
   bottom: auto;
   width: min(330px, calc(68% - 32px));
-  animation: hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: mock-hint-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.fieldHint.maskZoneHint::before {
+.mock .fieldHint.maskZoneHint::before {
   display: none;
 }
 
-.polygonSidebar {
+.mock .polygonSidebar {
   overflow: hidden auto;
   min-width: 0;
   background: var(--mock-background-alt);
@@ -1484,14 +1484,14 @@
   scrollbar-width: thin;
 }
 
-.polygonLists,
-.polygonEditor {
+.mock .polygonLists,
+.mock .polygonEditor {
   display: grid;
   align-content: start;
 }
 
-.polygonPageTitle,
-.polygonEditorHeader {
+.mock .polygonPageTitle,
+.mock .polygonEditorHeader {
   padding: 12px;
   border-bottom: 1px solid var(--mock-border-soft);
   color: var(--mock-foreground);
@@ -1499,34 +1499,34 @@
   font-weight: 600;
 }
 
-.polygonEditorHeader {
+.mock .polygonEditorHeader {
   display: grid;
   gap: 3px;
 }
 
-.polygonEditorHeader small {
+.mock .polygonEditorHeader small {
   color: var(--mock-muted);
   font-size: 11px;
   font-weight: 400;
 }
 
-.maskZoneTarget {
+.mock .maskZoneTarget {
   position: relative;
   min-width: 0;
 }
 
-.masksZonesLayout > .maskZoneTarget {
+.mock .masksZonesLayout > .maskZoneTarget {
   display: grid;
   min-width: 0;
   min-height: 0;
 }
 
-.maskZoneListSection {
+.mock .maskZoneListSection {
   padding: 10px;
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.maskZoneListSection > header {
+.mock .maskZoneListSection > header {
   display: flex;
   min-height: 28px;
   align-items: center;
@@ -1536,7 +1536,7 @@
   font-size: 12px;
 }
 
-.polygonAdd {
+.mock .polygonAdd {
   display: grid;
   width: 22px;
   height: 22px;
@@ -1546,12 +1546,12 @@
   place-items: center;
 }
 
-.polygonAdd svg {
+.mock .polygonAdd svg {
   width: 15px;
   height: 15px;
 }
 
-.polygonListItem {
+.mock .polygonListItem {
   display: grid;
   min-height: 42px;
   grid-template-columns: 18px minmax(0, 1fr) auto;
@@ -1565,73 +1565,73 @@
   border-radius: 6px;
 }
 
-.polygonListItem > svg {
+.mock .polygonListItem > svg {
   width: 15px;
   height: 15px;
   color: var(--mock-primary-variant);
 }
 
-.polygonListItem > span:nth-child(2) {
+.mock .polygonListItem > span:nth-child(2) {
   display: grid;
   min-width: 0;
 }
 
-.polygonListItem b,
-.polygonListItem small {
+.mock .polygonListItem b,
+.mock .polygonListItem small {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.polygonListItem b {
+.mock .polygonListItem b {
   font-size: 12px;
   font-weight: 500;
 }
 
-.polygonListItem small {
+.mock .polygonListItem small {
   color: var(--mock-muted);
   font-size: 11px;
 }
 
-.polygonListItem .switch {
+.mock .polygonListItem .switch {
   width: 28px;
   height: 16px;
 }
 
-.polygonListItem .switch span {
+.mock .polygonListItem .switch span {
   width: 12px;
   height: 12px;
 }
 
-.polygonListItem .switchOn span {
+.mock .polygonListItem .switchOn span {
   transform: translateX(12px);
 }
 
-.polygonForm {
+.mock .polygonForm {
   display: grid;
   gap: 12px;
   padding: 12px;
 }
 
-.polygonFormField {
+.mock .polygonFormField {
   display: grid;
   gap: 5px;
 }
 
-.polygonFormField strong,
-.polygonToggleRow strong {
+.mock .polygonFormField strong,
+.mock .polygonToggleRow strong {
   color: var(--mock-foreground);
   font-size: 12px;
   font-weight: 500;
 }
 
-.polygonFormField small {
+.mock .polygonFormField small {
   color: var(--mock-muted);
   font-size: 11px;
   line-height: 1.35;
 }
 
-.polygonInput {
+.mock .polygonInput {
   display: flex;
   min-height: 36px;
   align-items: center;
@@ -1643,19 +1643,19 @@
   font-size: 13px;
 }
 
-.polygonToggleRow {
+.mock .polygonToggleRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.distanceGrid {
+.mock .distanceGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 5px;
 }
 
-.polygonActions {
+.mock .polygonActions {
   display: flex;
   justify-content: flex-end;
   gap: 6px;
@@ -1664,20 +1664,20 @@
   font-size: 12px;
 }
 
-.polygonActions span,
-.polygonActions b {
+.mock .polygonActions span,
+.mock .polygonActions b {
   padding: 6px 10px;
   border: 1px solid var(--mock-border);
   border-radius: 6px;
   font-weight: 500;
 }
 
-.polygonActions b {
+.mock .polygonActions b {
   background: var(--mock-selected);
   border-color: var(--mock-selected);
 }
 
-.polygonCanvas {
+.mock .polygonCanvas {
   position: relative;
   overflow: hidden;
   min-width: 0;
@@ -1687,51 +1687,51 @@
   border-radius: 8px;
 }
 
-.polygonCanvas img,
-.polygonCanvas svg {
+.mock .polygonCanvas img,
+.mock .polygonCanvas svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.polygonCanvas img {
+.mock .polygonCanvas img {
   object-fit: cover;
 }
 
-.polygonCanvas svg {
+.mock .polygonCanvas svg {
   overflow: visible;
 }
 
-.polygonCanvas polygon {
+.mock .polygonCanvas polygon {
   vector-effect: non-scaling-stroke;
   stroke-width: 3px;
 }
 
-.polygonCanvas circle {
+.mock .polygonCanvas circle {
   fill: white;
   stroke: var(--mock-selected);
   stroke-width: 3px;
   vector-effect: non-scaling-stroke;
 }
 
-.zonePolygon {
+.mock .zonePolygon {
   fill: rgb(212 182 52 / 24%);
   stroke: #e0c139;
 }
 
-.motionMaskPolygon {
+.mock .motionMaskPolygon {
   fill: rgb(53 105 255 / 34%);
   stroke: #4774ff;
 }
 
-.objectMaskPolygon {
+.mock .objectMaskPolygon {
   fill: rgb(205 205 205 / 28%);
   stroke: #d7d7d7;
 }
 
-.canvasBadge,
-.canvasTools {
+.mock .canvasBadge,
+.mock .canvasTools {
   position: absolute;
   color: white;
   background: rgb(0 0 0 / 72%);
@@ -1740,13 +1740,13 @@
   font-size: 12px;
 }
 
-.canvasBadge {
+.mock .canvasBadge {
   top: 9px;
   left: 9px;
   padding: 5px 8px;
 }
 
-.canvasTools {
+.mock .canvasTools {
   right: 9px;
   bottom: 9px;
   display: flex;
@@ -1756,73 +1756,73 @@
 
 /* review settings layout */
 
-.reviewLayout {
+.mock .reviewLayout {
   display: grid;
   gap: 18px;
 }
 
-.reviewRuntimeSection,
-.reviewClassification {
+.mock .reviewRuntimeSection,
+.mock .reviewClassification {
   display: grid;
   gap: 10px;
   padding: 0 0 18px;
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.reviewRuntimeSection h4,
-.reviewClassification h4 {
+.mock .reviewRuntimeSection h4,
+.mock .reviewClassification h4 {
   margin: 0 0 4px;
   color: var(--mock-foreground);
   font-size: 17px;
 }
 
-.reviewRuntimeSection p,
-.reviewClassification > p {
+.mock .reviewRuntimeSection p,
+.mock .reviewClassification > p {
   margin: 0;
   color: var(--mock-muted);
   font-size: 12px;
   line-height: 1.45;
 }
 
-.reviewToggle {
+.mock .reviewToggle {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.reviewToggle strong {
+.mock .reviewToggle strong {
   color: var(--mock-foreground);
   font-size: 14px;
   font-weight: 500;
 }
 
-.reviewClassificationGrid {
+.mock .reviewClassificationGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   margin-top: 7px;
 }
 
-.reviewClassificationGrid > div {
+.mock .reviewClassificationGrid > div {
   display: grid;
   gap: 5px;
 }
 
-.reviewZoneColumn {
+.mock .reviewZoneColumn {
   position: relative;
 }
 
-.reviewClassificationGrid strong {
+.mock .reviewClassificationGrid strong {
   color: var(--mock-foreground);
   font-size: 14px;
 }
 
-.reviewClassificationGrid small {
+.mock .reviewClassificationGrid small {
   color: var(--mock-muted);
   font-size: 12px;
 }
 
-.reviewZones {
+.mock .reviewZones {
   display: grid;
   gap: 8px;
   padding: 12px;
@@ -1830,7 +1830,7 @@
   border-radius: 6px;
 }
 
-.reviewZones span {
+.mock .reviewZones span {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1838,7 +1838,7 @@
   font-size: 12px;
 }
 
-.reviewZones i {
+.mock .reviewZones i {
   position: relative;
   display: block;
   width: 16px;
@@ -1847,12 +1847,12 @@
   border-radius: 2px;
 }
 
-.reviewZones .reviewCheckboxChecked {
+.mock .reviewZones .reviewCheckboxChecked {
   background: var(--mock-selected);
   border-color: #8ea2ff;
 }
 
-.reviewZones .reviewCheckboxChecked::after {
+.mock .reviewZones .reviewCheckboxChecked::after {
   position: absolute;
   top: 1px;
   left: 4px;
@@ -1864,14 +1864,14 @@
   transform: rotate(45deg);
 }
 
-.reviewConfigCard {
+.mock .reviewConfigCard {
   padding: 16px;
   background: rgb(31 31 31 / 30%);
   border: 1px solid var(--mock-border-soft);
   border-radius: 8px;
 }
 
-.reviewConfigHeader {
+.mock .reviewConfigHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1880,39 +1880,39 @@
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.reviewConfigHeader > div {
+.mock .reviewConfigHeader > div {
   display: grid;
   gap: 4px;
 }
 
-.reviewConfigHeader strong {
+.mock .reviewConfigHeader strong {
   color: var(--mock-foreground);
   font-size: 14px;
 }
 
-.reviewConfigHeader small {
+.mock .reviewConfigHeader small {
   color: var(--mock-muted);
   font-size: 12px;
 }
 
-.reviewConfigHeader svg {
+.mock .reviewConfigHeader svg {
   width: 16px;
   height: 16px;
   flex: none;
 }
 
-.reviewConfigCard .fields {
+.mock .reviewConfigCard .fields {
   padding-top: 16px;
 }
 
 /* detector & model layout */
 
-.detectorModelLayout {
+.mock .detectorModelLayout {
   display: grid;
   gap: 18px;
 }
 
-.detectorHardwareCard {
+.mock .detectorHardwareCard {
   position: relative;
   padding: 16px;
   background: rgb(31 31 31 / 30%);
@@ -1920,7 +1920,7 @@
   border-radius: 8px;
 }
 
-.detectorCardHeader {
+.mock .detectorCardHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1929,33 +1929,33 @@
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.detectorCardHeader > div {
+.mock .detectorCardHeader > div {
   display: grid;
   gap: 4px;
 }
 
-.detectorCardHeader strong {
+.mock .detectorCardHeader strong {
   color: var(--mock-foreground);
   font-size: 14px;
 }
 
-.detectorCardHeader small {
+.mock .detectorCardHeader small {
   color: var(--mock-muted);
   font-size: 12px;
 }
 
-.detectorCardHeader svg {
+.mock .detectorCardHeader svg {
   width: 16px;
   height: 16px;
 }
 
-.detectorInstances {
+.mock .detectorInstances {
   display: grid;
   gap: 12px;
   padding-top: 16px;
 }
 
-.detectorInstance {
+.mock .detectorInstance {
   display: grid;
   gap: 10px;
   padding: 12px;
@@ -1963,7 +1963,7 @@
   border-radius: 6px;
 }
 
-.detectorInstanceHeader {
+.mock .detectorInstanceHeader {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr) 18px;
   align-items: start;
@@ -1972,13 +1972,13 @@
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.detectorInstanceHeader > svg {
+.mock .detectorInstanceHeader > svg {
   width: 16px;
   height: 16px;
   color: var(--mock-muted);
 }
 
-.detectorInstanceHeader > div {
+.mock .detectorInstanceHeader > div {
   display: flex;
   min-width: 0;
   flex-wrap: wrap;
@@ -1986,64 +1986,64 @@
   gap: 5px 8px;
 }
 
-.detectorInstanceHeader strong {
+.mock .detectorInstanceHeader strong {
   color: var(--mock-foreground);
   font-size: 14px;
 }
 
-.detectorInstanceHeader span,
-.detectorInstanceHeader small {
+.mock .detectorInstanceHeader span,
+.mock .detectorInstanceHeader small {
   color: var(--mock-muted);
   font-size: 12px;
 }
 
-.detectorInstanceHeader small {
+.mock .detectorInstanceHeader small {
   width: 100%;
   line-height: 1.35;
 }
 
-.detectorFields {
+.mock .detectorFields {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
-.detectorFields > div {
+.mock .detectorFields > div {
   display: grid;
   gap: 6px;
   color: var(--mock-muted);
   font-size: 12px;
 }
 
-.detectorSpecificFields {
+.mock .detectorSpecificFields {
   display: grid;
   gap: 14px;
 }
 
-.detectorSpecificField {
+.mock .detectorSpecificField {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(150px, 48%);
   align-items: center;
   gap: 18px;
 }
 
-.detectorSpecificField > div {
+.mock .detectorSpecificField > div {
   display: grid;
   gap: 4px;
 }
 
-.detectorSpecificField strong {
+.mock .detectorSpecificField strong {
   color: var(--mock-foreground);
   font-size: 14px;
 }
 
-.detectorSpecificField small {
+.mock .detectorSpecificField small {
   color: var(--mock-muted);
   font-size: 12px;
   line-height: 1.35;
 }
 
-.detectorAddPanel {
+.mock .detectorAddPanel {
   display: grid;
   width: min(280px, 100%);
   gap: 9px;
@@ -2055,13 +2055,13 @@
   font-size: 12px;
 }
 
-.detectorAddPanel > div {
+.mock .detectorAddPanel > div {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
 }
 
-.detectorModelTabs {
+.mock .detectorModelTabs {
   display: flex;
   gap: 18px;
   padding: 13px 0 4px;
@@ -2070,18 +2070,18 @@
   font-size: 12px;
 }
 
-.detectorModelTabs strong {
+.mock .detectorModelTabs strong {
   padding-bottom: 8px;
   color: var(--mock-foreground);
   border-bottom: 2px solid var(--mock-selected);
   font-weight: 500;
 }
 
-.detectorHardwareCard > .fields {
+.mock .detectorHardwareCard > .fields {
   padding-top: 16px;
 }
 
-.detectorAdvancedHeader {
+.mock .detectorAdvancedHeader {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2092,12 +2092,12 @@
   font-size: 12px;
 }
 
-.detectorAdvancedHeader svg {
+.mock .detectorAdvancedHeader svg {
   width: 14px;
   height: 14px;
 }
 
-.detectorAdvancedFields {
+.mock .detectorAdvancedFields {
   display: grid;
   gap: 20px;
   padding: 15px;
@@ -2108,14 +2108,14 @@
 
 /* multi-instance section (genai providers) */
 
-.instanceCard {
+.mock .instanceCard {
   overflow: hidden;
   background: rgb(31 31 31 / 30%);
   border: 1px solid var(--mock-border-soft);
   border-radius: 8px;
 }
 
-.instanceKeyRow {
+.mock .instanceKeyRow {
   display: grid;
   grid-template-columns: minmax(14rem, 24rem) minmax(0, 1fr);
   align-items: center;
@@ -2124,7 +2124,7 @@
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.instanceKeyLabel strong {
+.mock .instanceKeyLabel strong {
   display: block;
   color: var(--mock-foreground);
   font-size: 14px;
@@ -2139,17 +2139,17 @@
   line-height: 16px;
 }
 
-.instanceKeyInputWrap {
+.mock .instanceKeyInputWrap {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.instanceKeyInputWrap .input {
+.mock .instanceKeyInputWrap .input {
   flex: 1;
 }
 
-.removeButton {
+.mock .removeButton {
   display: grid;
   width: 32px;
   height: 32px;
@@ -2162,27 +2162,27 @@
   place-items: center;
 }
 
-.removeButton:hover {
+.mock .removeButton:hover {
   color: #ef4444;
   background: var(--mock-accent);
 }
 
-.instanceCard .fields {
+.mock .instanceCard .fields {
   padding: 16px;
 }
 
 /* password / yaml widgets */
 
-.passwordValue {
+.mock .passwordValue {
   flex: 1;
 }
 
-.passwordIcon {
+.mock .passwordIcon {
   margin-left: 8px;
   opacity: 0.6;
 }
 
-.yamlField {
+.mock .yamlField {
   display: block;
   width: 100%;
   min-height: 90px;
@@ -2199,7 +2199,7 @@
   overflow: auto;
 }
 
-.yamlField::placeholder {
+.mock .yamlField::placeholder {
   color: var(--mock-muted);
   opacity: 0.7;
 }
@@ -2208,24 +2208,24 @@
    item h-4 w-4 rounded-full border border-primary, indicator fill-current;
    FfmpegArgsWidget selected item gets bg-selected */
 
-.radioGroup {
+.mock .radioGroup {
   display: grid;
   gap: 12px;
 }
 
-.radioGroup.horizontal {
+.mock .radioGroup.horizontal {
   grid-auto-flow: column;
   justify-content: start;
   gap: 24px;
 }
 
-.radioRow {
+.mock .radioRow {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.radio {
+.mock .radio {
   position: relative;
   display: grid;
   width: 16px;
@@ -2238,7 +2238,7 @@
   place-items: center;
 }
 
-.radio i {
+.mock .radio i {
   display: none;
   width: 10px;
   height: 10px;
@@ -2246,16 +2246,16 @@
   border-radius: 50%;
 }
 
-.radioOn {
+.mock .radioOn {
   color: var(--mock-selected);
   border-color: var(--mock-selected);
 }
 
-.radioOn i {
+.mock .radioOn i {
   display: block;
 }
 
-.radioLabel {
+.mock .radioLabel {
   color: var(--mock-foreground);
   font-size: 14px;
   line-height: 20px;
@@ -2264,14 +2264,14 @@
 /* ---------- FfmpegArgsWidget ----------
    radio rows stacked (gap-3 = 12px), select w-full md:max-w-md below */
 
-.ffmpegArgs {
+.mock .ffmpegArgs {
   display: grid;
   gap: 12px;
   width: 100%;
   max-width: 28rem;
 }
 
-.ffmpegArgs .selectInput {
+.mock .ffmpegArgs .selectInput {
   max-width: 28rem;
 }
 
@@ -2279,30 +2279,30 @@
    The real CameraInputsField renders full width below the field label
    (space-y-3, Card w-full): label copy on top, one card per input. */
 
-.cameraInputsField {
+.mock .cameraInputsField {
   position: relative;
   display: grid;
   gap: 8px;
 }
 
-.cameraInputsField > .fieldCopy {
+.mock .cameraInputsField > .fieldCopy {
   display: block;
 }
 
-.cameraInputsList {
+.mock .cameraInputsList {
   display: grid;
   gap: 12px;
   max-width: 42rem;
 }
 
-.cameraInputCard {
+.mock .cameraInputCard {
   overflow: hidden;
   background: rgb(31 31 31 / 30%);
   border: 1px solid var(--mock-border-soft);
   border-radius: 8px;
 }
 
-.cameraInputHeader {
+.mock .cameraInputHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2311,20 +2311,20 @@
   border-bottom: 1px solid var(--mock-border-soft);
 }
 
-.cameraInputHeader > div {
+.mock .cameraInputHeader > div {
   display: grid;
   gap: 2px;
   min-width: 0;
 }
 
-.cameraInputTitle {
+.mock .cameraInputTitle {
   color: var(--mock-foreground);
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
 }
 
-.cameraInputPath {
+.mock .cameraInputPath {
   overflow: hidden;
   color: var(--mock-muted);
   font-size: 12px;
@@ -2333,66 +2333,66 @@
   white-space: nowrap;
 }
 
-.cameraInputBody {
+.mock .cameraInputBody {
   display: grid;
   gap: 16px;
   padding: 16px 16px 16px;
 }
 
-.cameraInputField {
+.mock .cameraInputField {
   display: grid;
   gap: 8px;
 }
 
 /* StreamSourceSelector combobox: Button variant outline sm:max-w-xs (20rem) */
-.go2rtcSelect {
+.mock .go2rtcSelect {
   max-width: 20rem;
 }
 
-.cameraInputLabel {
+.mock .cameraInputLabel {
   color: var(--mock-foreground);
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
 }
 
-.cameraInputLabel.strong {
+.mock .cameraInputLabel.strong {
   font-weight: 500;
 }
 
-.cameraInputDesc {
+.mock .cameraInputDesc {
   margin: 0;
   color: var(--mock-muted);
   font-size: 12px;
   line-height: 16px;
 }
 
-.cameraInputPathField {
+.mock .cameraInputPathField {
   max-width: 28rem;
 }
 
 /* FieldTemplate split value row:
    md:grid-cols-[minmax(14rem,24rem)_minmax(0,1fr)] md:gap-x-6 */
-.splitFieldRow {
+.mock .splitFieldRow {
   display: grid;
   align-items: start;
   gap: 12px 24px;
 }
 
 @media (min-width: 640px) {
-  .splitFieldRow {
+  .mock .splitFieldRow {
     grid-template-columns: minmax(14rem, 24rem) minmax(0, 1fr);
     gap: 0 24px;
   }
 }
 
-.splitFieldCopy {
+.mock .splitFieldCopy {
   display: grid;
   gap: 4px;
   align-content: start;
 }
 
-.docsLinkInline {
+.mock .docsLinkInline {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -2401,7 +2401,7 @@
   line-height: 16px;
 }
 
-.splitFieldControl {
+.mock .splitFieldControl {
   width: 100%;
   min-width: 0;
 }
@@ -2409,7 +2409,7 @@
 /* role switches inside a dark inset card, like the real input roles block
    (InputRolesWidget: rounded-lg border bg-background_alt p-2 pr-0 md:max-w-md,
    rows px-3, full-size switch h-6 w-11) */
-.roleSwitches {
+.mock .roleSwitches {
   display: grid;
   gap: 8px;
   max-width: 28rem;
@@ -2419,7 +2419,7 @@
   border-radius: 8px;
 }
 
-.roleSwitchRow {
+.mock .roleSwitchRow {
   display: flex;
   min-height: 32px;
   align-items: center;
@@ -2430,14 +2430,14 @@
   font-size: 14px;
 }
 
-.roleSwitchesDesc {
+.mock .roleSwitchesDesc {
   margin: 0;
   color: var(--mock-muted);
   font-size: 12px;
   line-height: 16px;
 }
 
-.cameraInputFooter {
+.mock .cameraInputFooter {
   display: flex;
   justify-content: flex-end;
 }
@@ -2448,14 +2448,14 @@
    CameraGroupSelector.tsx: Dialog centered, w-6/12, bg-background p-6,
    title text-lg font-semibold, CameraGroupEdit form space-y-6 */
 
-.liveGroupsFrame {
+.mock .liveGroupsFrame {
   position: absolute;
   inset: 0;
 }
 
 /* live page scene: shared IconRail column + camera grid backdrop,
    dialog absolutely centered over the whole scene */
-.liveGroupsScene {
+.mock .liveGroupsScene {
   position: relative;
   display: grid;
   height: 100%;
@@ -2463,24 +2463,24 @@
   overflow: hidden;
 }
 
-.liveGroupsScene > .iconRail {
+.mock .liveGroupsScene > .iconRail {
   height: 100%;
 }
 
-.liveBackdrop {
+.mock .liveBackdrop {
   display: grid;
   gap: 8px;
   padding: 8px;
   background: #050505;
 }
 
-.liveThumb {
+.mock .liveThumb {
   background:
     linear-gradient(160deg, #17202b 0%, #0d141b 55%, #101820 100%);
   border-radius: 6px;
 }
 
-.liveThumb::after {
+.mock .liveThumb::after {
   display: block;
   width: 100%;
   height: 220px;
@@ -2490,7 +2490,7 @@
   content: "";
 }
 
-.liveGroupsScene .groupDialog {
+.mock .liveGroupsScene .groupDialog {
   position: absolute;
   z-index: 10;
   top: 50%;
@@ -2507,11 +2507,11 @@
 }
 
 /* dialog pops in when the phase changes (pencil click → list → edit form) */
-.groupDialogReplay {
-  animation: group-dialog-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.mock .groupDialogReplay {
+  animation: mock-group-dialog-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes group-dialog-in {
+@keyframes mock-group-dialog-in {
   from {
     opacity: 0;
     transform: translate(-50%, -46%) scale(0.97);
@@ -2522,11 +2522,11 @@
   }
 }
 
-.groupDialogNarrow {
+.mock .groupDialogNarrow {
   width: min(420px, calc(100% - 80px));
 }
 
-.groupDialogHeader {
+.mock .groupDialogHeader {
   position: relative;
   display: flex;
   align-items: center;
@@ -2534,12 +2534,12 @@
   padding: 20px 24px 8px;
 }
 
-.groupDialogHeader.form {
+.mock .groupDialogHeader.form {
   justify-content: flex-start;
   padding-top: 16px;
 }
 
-.groupDialogHeader h3 {
+.mock .groupDialogHeader h3 {
   margin: 0;
   color: var(--mock-foreground);
   font-size: 18px;
@@ -2547,7 +2547,7 @@
   line-height: 28px;
 }
 
-.groupDialogAdd {
+.mock .groupDialogAdd {
   position: absolute;
   top: 22px;
   right: 24px;
@@ -2560,13 +2560,13 @@
   place-items: center;
 }
 
-.groupDialogList {
+.mock .groupDialogList {
   display: grid;
   gap: 4px;
   padding: 12px 24px 24px;
 }
 
-.groupDialogRow {
+.mock .groupDialogRow {
   display: flex;
   min-height: 36px;
   align-items: center;
@@ -2576,38 +2576,38 @@
   border-radius: 8px;
 }
 
-.groupDialogRow > span:first-child {
+.mock .groupDialogRow > span:first-child {
   color: var(--mock-foreground);
   font-size: 14px;
 }
 
-.groupDialogRowActions {
+.mock .groupDialogRowActions {
   display: flex;
   align-items: center;
   gap: 10px;
   color: var(--mock-muted);
 }
 
-.groupDialogForm {
+.mock .groupDialogForm {
   display: grid;
   gap: 16px;
   padding: 8px 24px 20px;
 }
 
-.groupFormField {
+.mock .groupFormField {
   position: relative;
   display: grid;
   gap: 8px;
 }
 
-.groupFormLabel {
+.mock .groupFormLabel {
   color: var(--mock-foreground);
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
 }
 
-.groupFormDesc {
+.mock .groupFormDesc {
   margin: 0;
   color: var(--mock-muted);
   font-size: 14px;
@@ -2615,19 +2615,19 @@
   margin: 0px !important;
 }
 
-.groupFormSeparator {
+.mock .groupFormSeparator {
   height: 1px;
   background: var(--mock-secondary-highlight);
 }
 
-.groupCameraRows {
+.mock .groupCameraRows {
   display: grid;
   max-height: 180px;
   gap: 2px;
   overflow: hidden;
 }
 
-.groupCameraRow {
+.mock .groupCameraRow {
   display: flex;
   min-height: 28px;
   align-items: center;
@@ -2636,12 +2636,12 @@
   padding: 0 4px;
 }
 
-.groupCameraName {
+.mock .groupCameraName {
   color: var(--mock-foreground);
   font-size: 14px;
 }
 
-.iconPickerButton {
+.mock .iconPickerButton {
   display: inline-flex;
   width: fit-content;
   min-height: 40px;
@@ -2655,14 +2655,14 @@
   border-radius: 6px;
 }
 
-.groupDialogFooter {
+.mock .groupDialogFooter {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   padding-top: 4px;
 }
 
-.groupDialogButton {
+.mock .groupDialogButton {
   display: inline-flex;
   min-height: 40px;
   align-items: center;
@@ -2674,11 +2674,11 @@
   font-weight: 500;
 }
 
-.groupDialogButton.primary {
+.mock .groupDialogButton.primary {
   background: var(--mock-selected);
 }
 
-.groupDialogHint.fieldHint {
+.mock .groupDialogHint.fieldHint {
   position: absolute;
   z-index: 20;
   top: auto;
@@ -2687,11 +2687,11 @@
   width: min(320px, calc(100% - 32px));
 }
 
-.groupDialogHint.fieldHint::before {
+.mock .groupDialogHint.fieldHint::before {
   display: none;
 }
 
-@keyframes camera-reframe-out {
+@keyframes mock-camera-reframe-out {
   0% {
     scale: 1;
     transform: translate(3px, -3px);
@@ -2705,7 +2705,7 @@
   }
 }
 
-@keyframes camera-reframe-in {
+@keyframes mock-camera-reframe-in {
   0% {
     scale: 1;
     transform: translate(-5px, 0);
@@ -2719,7 +2719,7 @@
   }
 }
 
-@keyframes focus-breathe {
+@keyframes mock-focus-breathe {
   0%,
   100% {
     box-shadow: 0 0 0 2px rgb(77 110 245 / 12%);
@@ -2731,7 +2731,7 @@
   }
 }
 
-@keyframes hint-in {
+@keyframes mock-hint-in {
   from {
     opacity: 0;
     transform: translateY(-7px) scale(0.98);
@@ -2749,16 +2749,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .appFrame,
-  .systemMenu,
-  .cameraMenu,
-  .cameraField,
-  .focused::after,
-  .navigationTarget,
-  .systemMenuTarget,
-  .cameraSwitcherTarget,
-  .fieldHint,
-  .switch span {
+  .mock .appFrame,
+  .mock .systemMenu,
+  .mock .cameraMenu,
+  .mock .cameraField,
+  .mock .focused::after,
+  .mock .navigationTarget,
+  .mock .systemMenuTarget,
+  .mock .cameraSwitcherTarget,
+  .mock .fieldHint,
+  .mock .switch span {
     animation: none;
     transition: none;
   }
