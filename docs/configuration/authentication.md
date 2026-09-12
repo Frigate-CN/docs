@@ -48,7 +48,7 @@ auth:
   reset_admin_password: true
 ```
 
-## 密码说明
+## 密码说明 {#password-guidance}
 
 设置并妥善管理高强度密码非常重要。Frigate 要求密码长度**至少 12 位字符**。
 有关密码标准的说明，请参考 [NIST SP 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html)。
@@ -159,7 +159,7 @@ proxy:
   default_role: viewer
 ```
 
-## 权限组映射
+## 权限组映射 {#role-mapping}
 
 在某些环境中，上游身份提供者（如 OIDC、SAML、LDAP 等）并不会直接传递与 Frigate 兼容的权限组，而是传递一个或多个组声明（group claims）。为了处理这种情况，Frigate 支持通过`role_map`将上游的组名映射为 Frigate 的内部权限组（`admin`、`viewer`以及自定义权限组）。
 
@@ -189,6 +189,19 @@ proxy:
 
 **关于权限匹配规则的说明：**
 管理员权限优先：如果 `admin` 权限规则匹配成功，Frigate 会直接将会话判定为 `admin` 身份，避免用户同时属于多个用户组（例如同时属于 `admin` 和 `viewer` 组）时出现权限意外降级的情况。
+
+:::note
+
+如果用户没有被分配到你预期的权限，可以启用调试日志，查看 Frigate 从代理接收到的确切头部信息：
+
+```yaml
+logger:
+  default: info
+  logs:
+    frigate.api.auth: debug
+```
+
+:::
 
 ### 端口注意事项 {#port-considerations}
 
@@ -246,12 +259,12 @@ Frigate 支持用户权限组来控制对网页和 API 中某些功能的访问�
 - **viewer**：对网页和 API 的只读访问，包括查看摄像头、核查和回放。网页中的配置编辑器和设置不可访问。
 - **自定义权限组**：任意权限组名称（支持字母数字、点号/下划线），并可配置特定的摄像头权限。这些权限组可扩展系统功能，实现细粒度的访问控制（例如，为特定摄像头设置名为 “operator” 的权限）。
 
-### 自定义权限组与摄像头访问权限
+### 自定义权限组与摄像头访问权限 {#custom-roles-and-camera-access}
 
 成员（`viewer`）权限组在网页和 API 中会提供对所有摄像头的只读访问权限。而**自定义权限组**允许管理员将只读访问权限限制到指定的摄像头。每个权限组需指定一个允许访问的摄像头名称列表。当用户被分配了自定义权限组时，其账户权限与成员（`viewer`）类似，但只能查看指定摄像头的实时监控、回放/历史、浏览与导出功能。
 后端 API 会在服务器端强制执行此限制（例如，对未授权的摄像头返回 403），前端网页也会相应过滤内容（例如，摄像头下拉菜单仅显示被允许的摄像头）。
 
-### 权限组配置示例
+### 权限组配置示例 {#role-configuration-example}
 
 ```yaml
 cameras:
@@ -274,7 +287,7 @@ auth:
 
 如果希望某个用户能访问所有摄像头，只需为其分配成员（`viewer`）权限组即可。
 
-### 管理用户权限组
+### 管理用户权限组 {#managing-user-roles}
 
 1. 通过**admin** 用户在端口`8971`登录（推荐），或通过端口 5000 以未认证方式登录。
 2. 进入设置页面。
@@ -294,19 +307,19 @@ auth:
 - 通过端口 `8971` 登录时，你的**用户名和权限组**显示在**账户菜单**（底角）中。
 - 使用端口 `5000` 时，UI 将始终显示用户名为"anonymous"，权限组为"admin"。
 
-### 管理用户权限组 {#managing-user-roles}
+### 管理用户权限组 {#managing-user-roles-1}
 
 1. 通过端口 `8971` 以**管理员**用户身份登录。
 2. 导航到**设置 > 用户**。
 3. 通过选择**admin**或**viewer**编辑用户的权限组。
 
-## API 鉴权指南
+## API 鉴权指南 {#api-authentication-guide}
 
-### 获取 Bearer Token
+### 获取 Bearer Token {#getting-a-bearer-token}
 
 要使用 Frigate API，需要先完成鉴权。按照以下步骤获取 Bearer Token：
 
-#### 1. 登录
+#### 1. 登录 {#1-login}
 
 向`/login`发送 POST​ 请求，并提供你的凭证：
 
@@ -324,7 +337,7 @@ curl -i -X POST https://frigate_ip:8971/api/login \
 
 响应中会包含一个带有 JWT Token 的 Cookie。
 
-#### 2. 使用 Bearer Token
+#### 2. 使用 Bearer Token {#2-using-the-bearer-token}
 
 获取到 Token 后，在后续请求的 Authorization​ 头部中加入该 Token：
 
@@ -332,7 +345,7 @@ curl -i -X POST https://frigate_ip:8971/api/login \
 curl -H "Authorization: Bearer <your_token>" https://frigate_ip:8971/api/profile
 ```
 
-#### 3. Token 生命周期
+#### 3. Token 生命周期 {#3-token-lifecycle}
 
 - Token 在配置的会话时长内有效
 - 访问 /auth 端点时，Token 会自动刷新

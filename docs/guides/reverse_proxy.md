@@ -12,11 +12,12 @@ title: 设置反向代理
 |-|-|
 |TLS|请参阅 `tls` [配置选项](../configuration/tls.md)|
 |身份验证|请参阅[身份验证](../configuration/authentication.md)文档|
-|IPv6|[启用 IPv6](../configuration/advanced.md#启用ipv6)|
+|IPv6|[启用 IPv6](../configuration/advanced/system.md#启用ipv6)|
 
-**关于 TLS 的说明**  
-使用反向代理时，TLS 会话通常在代理处终止，通过普通 HTTP 发送内部请求。如果这是所需的行为，必须首先在 Frigate 中禁用 TLS，否则你将遇到 HTTP 400 错误："The plain HTTP request was sent to HTTPS port."（普通 HTTP 请求被发送到 HTTPS 端口）。  
+**关于 TLS 的说明**
+使用反向代理时，TLS 会话通常在代理处终止，通过普通 HTTP 发送内部请求。如果这是所需的行为，必须首先在 Frigate 中禁用 TLS，否则你将遇到 HTTP 400 错误："The plain HTTP request was sent to HTTPS port."（普通 HTTP 请求被发送到 HTTPS 端口）。
 要禁用 TLS，在你的 Frigate 配置中设置以下内容：
+
 ```yml
 tls:
   enabled: false
@@ -24,20 +25,28 @@ tls:
 
 :::warning
 反向代理可用于保护对内部 web 服务器的访问，但用户将完全依赖于他们采取的步骤。你必须确保遵循安全最佳实践。
-本页面不试图概述保护内部网站所需的具体步骤。  
+本页面不试图概述保护内部网站所需的具体步骤。
 请使用你自己的知识来评估和审查反向代理软件，然后再在你的系统上安装任何东西。
 :::
 
-## 代理
+## WebSocket 支持 {#websocket-support}
+
+Frigate 依赖 WebSocket 进行浏览器与后端之间的实时通信。如果 WebSocket 连接未被代理，摄像头控制（启用/禁用摄像头、音频、检测、录制和其他开关）、实时流播放以及界面中其他实时更新的部分将无法正常工作。
+
+你的反向代理必须配置转发 `Upgrade` 和 `Connection` 头，以便建立 WebSocket 连接。下面的每个代理示例都已包含所需的指令，但如果你在自定义配置中自行适配，请确保传递这些头。
+
+请注意，某些代理默认禁用 WebSocket 支持——例如 Nginx Proxy Manager 有一个 "Websockets Support" 开关需要手动启用。
+
+## 代理 {#proxies}
 
 有许多可用的解决方案来实现反向代理，我们欢迎社区通过对本页面的贡献来帮助记录其他方案。
 
-* [Apache2](#apache2-反向代理)
-* [Nginx](#nginx-反向代理)
-* [Traefik](#traefik-反向代理)
-* [Caddy](#caddy-reverse-proxy)
+- [Apache2](#apache2-reverse-proxy)
+- [Nginx](#nginx-reverse-proxy)
+- [Traefik](#traefik-reverse-proxy)
+- [Caddy](#caddy-reverse-proxy)
 
-## Caddy 反向代理
+## Caddy 反向代理 {#caddy-reverse-proxy}
 
 本示例展示了Frigate在子域名环境下运行的配置方案，其中日志记录和TLS证书（本案例使用独立于Caddy获取的泛域名证书）均通过导入方式实现管理。
 
@@ -60,7 +69,7 @@ tls:
 }
 
 frigate.YOUR_DOMAIN.TLD {
-        reverse_proxy http://localhost:8971 
+        reverse_proxy http://localhost:8971
         import tls
         import logging frigate.YOUR_DOMAIN.TLD
 }
@@ -68,12 +77,12 @@ frigate.YOUR_DOMAIN.TLD {
 ```
 
 
-## Apache2 反向代理
+## Apache2 反向代理 {#apache2-reverse-proxy}
 
 在下面的配置示例中，仅包含与上述反向代理方法相关的指令。
 在 Debian Apache2 上，配置文件将命名为类似 `/etc/apache2/sites-available/cctv.conf` 的形式。
 
-### 步骤1：配置 Apache2 反向代理
+### 步骤1：配置 Apache2 反向代理 {#step-1-configure-the-apache2-reverse-proxy}
 
 通过将 Frigate 界面作为 DNS 子域名而不是主域名的子文件夹来呈现，可以让你的生活更轻松。
 在这里，我们通过 https://cctv.mydomain.co.uk 访问 Frigate
@@ -100,7 +109,7 @@ frigate.YOUR_DOMAIN.TLD {
 </VirtualHost>
 ```
 
-### 步骤2：使用 SSL 加密访问你的 Frigate 实例
+### 步骤2：使用 SSL 加密访问你的 Frigate 实例 {#step-2-use-ssl-to-encrypt-access-to-your-frigate-instance}
 
 虽然这本身不会阻止对你的 Frigate web 服务器的访问，但它会加密所有内容（如登录凭据）。
 安装 SSL 超出了本文档的范围，但[Let's Encrypt](https://letsencrypt.org/)是一种广泛使用的方法。
@@ -115,7 +124,7 @@ RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
 </VirtualHost>
 ```
 
-### 步骤3：在代理处验证用户
+### 步骤3：在代理处验证用户 {#step-3-authenticate-users-at-the-proxy}
 
 有许多方法可以验证网站，但一种简单的方法是使用 [Apache2 密码文件](https://httpd.apache.org/docs/2.4/howto/auth.html)。
 
@@ -130,11 +139,11 @@ RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
 </VirtualHost>
 ```
 
-## Nginx 反向代理
+## Nginx 反向代理 {#nginx-reverse-proxy}
 
 此方法展示了启用 SSL 的子域名类型反向代理的工作示例。
 
-### 设置要反向代理的服务器和端口
+### 设置要反向代理的服务器和端口 {#setup-server-and-port-to-reverse-proxy}
 
 这在 `$server` 和 `$port` 中设置，应该与你暴露给 docker 容器的端口匹配。可选地，你可以监听端口 `443` 并启用 `SSL`
 
@@ -156,7 +165,7 @@ server {
 }
 ```
 
-### 设置 SSL（可选）
+### 设置 SSL（可选） {#setup-ssl-optional}
 
 此部分指向你的 SSL 文件，下面的示例显示了默认 Let's Encrypt SSL 证书的位置。
 
@@ -168,7 +177,7 @@ server {
   ssl_certificate_key /etc/letsencrypt/live/npm-1/privkey.pem;
 ```
 
-### 设置反向代理设置
+### 设置反向代理设置 {#setup-reverse-proxy-settings}
 
 下面的设置启用了连接升级，设置日志记录（可选），并将所有来自 `/` 上下文的内容代理到之前在配置中指定的 docker 主机和端口
 
@@ -188,9 +197,9 @@ server {
 
 ```
 
-## Traefik 反向代理
+## Traefik 反向代理 {#traefik-reverse-proxy}
 
-此示例展示了如何向 Frigate Docker compose 文件添加 `label`，使 Traefik 能够自动发现你的 Frigate 实例。  
+此示例展示了如何向 Frigate Docker compose 文件添加 `label`，使 Traefik 能够自动发现你的 Frigate 实例。
 在使用下面的示例之前，你必须首先使用 [Docker provider](https://doc.traefik.io/traefik/providers/docker/) 设置 Traefik
 
 ```yml

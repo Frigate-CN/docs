@@ -1,53 +1,64 @@
 ---
 id: review
-title: 视频回放
+title: 核查
 ---
 
-Frigate 网页中的 核查 页面用于快速查看摄像头录制到的历史感兴趣片段。**回放条目**在垂直时间轴上显示，并以预览网格形式呈现 - 这些是经过带宽优化的低帧率、低分辨率视频。将鼠标悬停或滑动预览会播放视频并将其标记为已查看。如果需要更深入的分析，可以点击预览，将显示全帧率、全分辨率的完整录像。
+Frigate 界面中的核查页面用于快速查看摄像头录制到的历史感兴趣片段。_核查条目_ 在垂直时间轴上显示，并以预览网格形式呈现——这些是经过带宽优化的低帧率、低分辨率视频。将鼠标悬停或滑动预览会播放视频并将其标记为已核查。如果需要更深入的分析，可以点击预览，将显示全帧率、全分辨率的完整录像。
 
-回放条目可按 日期、物体或目标的类型 以及 摄像头 进行筛选。
+核查条目可按日期、目标类型和摄像头进行筛选。
 
-### 回放条目 vs 检测物体/目标（原"事件"）
+### 核查条目 vs 被追踪目标（原"事件"） {#review-items-vs-tracked-objects-formerly-events}
 
-在 Frigate 0.13 及更早版本中，网页显示的是"事件"。一个事件等同于一个被检测或检测到的`物体/目标`。在 Frigate 0.14 及更高版本中，回放条目是一个时间段，其中可能有任意数量的检测`物体/目标`处于活动状态。
+在 Frigate 0.13 及更早版本中，界面显示的是"事件"。一个事件等同于一个被追踪或检测到的目标。在 Frigate 0.14 及更高版本中，核查条目是一个时间段，其中可能有任意数量的被追踪目标处于活动状态。
 
 举例来说，假设有两个人从你家门前走过，其中一人牵着一条狗。与此同时，一辆汽车从他们身后的街道驶过。
 
-在此场景下，Frigate 0.13 及更早版本会在界面中显示 4 个"事件" - 每个人一个，狗一个，汽车一个。即使这些事件在时间上重叠，你也需要分别观看 4 段视频。
+在此场景下，Frigate 0.13 及更早版本会在界面中显示 4 个"事件"——每个人一个，狗一个，汽车一个。即使这些事件在时间上重叠，你也需要分别观看 4 段视频。
 
-在 0.14 及更高版本中，所有这些活动都被合并成一个单独的回放条目，其开始和结束时间涵盖了所有这些活动。同一摄像头的回放条目不会重叠。一旦你观看了该摄像头的那段时间录像，它就会被标记为已查看。
+在 0.14 及更高版本中，所有这些活动都被合并成一个单独的核查条目，其开始和结束时间涵盖了所有这些活动。同一摄像头的核查条目不会重叠。一旦你观看了该摄像头的那段时间录像，它就会被标记为已核查。
 
-## 警报与检测 <Badge type="tip" text="0.14.0 和 以上版本" />
+## 警报与检测 <Badge type="tip" text="0.14.0 和 以上版本" /> {#alerts-and-detections}
 
-Frigate 录制的每段视频对你的重要程度可能有所不同。比如，“在你家房门附近徘徊的人”的视频可能比“在过道上行走的人”更重要。
-
-因此，在 Frigate 0.14 后，将回放条目分类为**警报**和**检测**。默认配置下，所有人员（`person`）和汽车（`car`）都被视为警报。你可以配置区域检测的目标以及对不同区域配置核查分类。
+Frigate 录制的每段视频对你的重要程度可能有所不同。比如，进入你私人领地的人可能比在人行道上走过的人更值得关注。因此，Frigate 将核查条目分类为 _警报_ 和 _检测_。默认配置下，所有 `person` 和 `car` 都被视为警报。你可以通过配置所需区域来细化核查条目的分类。
 
 :::note
 
-警报和检测功能会对核查项目中的检测的目标进行分类，但 Frigate 必须首先通过你配置的检测器（比如 Coral、OpenVINO 等）识别出这些物体或目标才能进行分类。
-
-需要注意，检测器在默认配置下仅会检测人员（`person`）类别。而如果你只在警报（`alerts`）和检测（`detections`）配置中设置分类的目标`labels`参数，并不能够检测到除了人员（`person`）以外的`物体/目标`。你还需要在配置文件最顶层中添加以下内容，让检测器能够检测到其他类型的目标：
+警报和检测会对核查条目中被追踪的目标进行分类，但 Frigate 必须首先通过你配置的检测器（如 Coral、OpenVINO 等）检测到这些目标才能进行分类。默认情况下，目标跟踪器仅检测 `person`。设置 `alerts` 和 `detections` 的 `labels` 不会自动启用新目标的检测。要检测更多目标，你应在全局或摄像头配置中添加更多标签：
 
 ```yaml
 objects:
   track:
     - person
     - car
-    - ... # 添加其他你想要检测的物体/目标的英文名称
+    - ...
 ```
 
-一句话概括就是，你必须要先配置让 Frigate 能够检测哪些类型的物体或目标，才能给核查的`警报`与`检测`分别设置归类哪些物体或目标。
-
-关于 Frigate 默认模型可检测哪些物体/目标列表，请参阅[物体/目标检测](objects.md)文档。
+关于 Frigate 默认模型可追踪的目标列表，请参阅[目标文档](objects.md)。
 :::
 
-## 限制警报的标签类型
+## 限制警报的标签类型 {#restricting-alerts-to-specific-labels}
 
-默认情况下，只有当检测到人员（`person`）或汽车（`car`）时，回放条目才会被标记为**警报**。可以通过以下配置将其设置为包含任何`物体/目标`或音频标签：
+默认情况下，只有当检测到 `person` 或 `car` 时，核查条目才会被标记为警报。配置警报标签以包含任何目标或音频标签。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局或摄像头配置的 **核查** 部分的 **警报配置** 中，选择触发警报的标签。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="review"
+  focus="alerts.labels"
+  :values="{ 'alerts.labels': ['car', 'cat', 'dog', 'person', 'speech'] }"
+  hint="配置警报标签，这些标签到达时会被标记为警报。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
-# 可给摄像头单独设置此设置
+# 可在摄像头级别覆盖
 review:
   alerts:
     labels:
@@ -58,12 +69,32 @@ review:
       - speech
 ```
 
-## 限制检测的标签类型
+</TabItem>
+</ConfigTabs>
 
-一般来说，如果不符合警报条件的话应该归类为检测。但是，你也可以进一步过滤检测，使`检测`类别中仅包含某些标签或某些区域。
+## 限制检测的标签类型 {#restricting-detections-to-specific-labels}
+
+默认情况下，所有不符合警报条件的检测将被归类为检测。但你可以进一步过滤检测，仅包含特定标签或特定区域。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在 **核查** 部分的 **检测配置** 中，选择保留为检测的标签。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="review"
+  focus="detections.labels"
+  :values="{ 'detections.labels': ['bark', 'dog'] }"
+  hint="配置检测标签，未命中警报标签的目标将被归类为检测。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
-# 可给摄像头单独设置此设置
+# 可在摄像头级别覆盖
 review:
   detections:
     labels:
@@ -71,26 +102,58 @@ review:
       - dog
 ```
 
-## 从警报或检测中排除摄像头
+</TabItem>
+</ConfigTabs>
 
-要从警报或检测中排除特定摄像头，只需**在摄像头下**的`alerts`或`detections`字段提供一个空列表。
+## 从警报或检测中排除摄像头 {#excluding-a-camera-from-alerts-or-detections}
 
-例如，要想摄像头**gatecamera**不保留检测的所有`物体/目标`信息，你可以参考下面的配置
+要从警报或检测中排除特定摄像头，在摄像头级别的警报或检测标签字段提供一个空列表。
+
+例如，要排除摄像头 _gatecamera_ 的所有检测：
 
 ```yaml
 cameras:
-  gatecamera: # <- 假设摄像头名字叫gatecamera
-    review: # [!code ++]
-      detections: # [!code ++]
-        labels: [] # <- labels提供一个空数组即可 [!code ++]
+  gatecamera:
+    review:
+      detections:
+        labels: []
 ```
 
-## 将回放条目限制在特定区域
+## 手动事件分类 {#categorizing-manual-events}
 
-默认情况下，如果在摄像头画面的任何位置检测到任何`review -> alerts -> labels`和`review -> detections -> labels`中的物体/目标，就会创建一个回放条目。如果你想仅在`物体/目标`进入指定区域时才创建，可以参考区域文档配置[限定警报和检测在特定区内](./zones.md#限定警报和检测在特定区内)
+通过[创建手动事件 API](../integrations/api/create-event-events-camera-name-label-create-post.api.mdx)创建的事件使用相同的标签列表进行分类，并使用请求路径中的标签：
 
-:::tip
+1. 如果启用了警报且标签在 `review -> alerts -> labels` 中，则核查条目为警报。
+2. 否则，如果启用了检测且标签在 `review -> detections -> labels` 中，则核查条目为检测。
+3. 如果标签不在任一列表中，则核查条目为警报；如果警报被禁用，则不创建核查条目。
 
-由于声音是无法确认从什么区域内产生的，在开启音频检测后，音频类的标签始终会被标记为检测。
+这意味着手动事件默认为警报，除非你明确将其标签列为检测标签。例如，要让 PIR 传感器创建检测而不是警报，请向 `/api/events/front_door/pir_sensor/create` 发起请求，并配置如下：
+
+```yaml {5-7}
+cameras:
+  front_door:
+    review:
+      detections:
+        labels:
+          - pir_sensor
+```
+
+:::note
+
+必需区域不适用于手动事件，因为手动事件是通过 API 创建的，而非由目标跟踪器创建。将 `review -> alerts -> labels` 设置为空列表也不会阻止手动事件成为警报，因为标签不在任一列表中时仍会回退为警报。
 
 :::
+
+## 将核查条目限制在特定区域 {#restricting-review-items-to-specific-zones}
+
+默认情况下，如果在摄像头画面的任何位置检测到 `review -> alerts -> labels` 和 `review -> detections -> labels` 中的目标，就会创建一个核查条目。你可能希望配置为仅当目标进入关注区域时才创建核查条目，[详见区域文档](./zones.md#restricting-alerts-and-detections-to-specific-zones)
+
+:::info
+
+由于区域不适用于音频，音频标签默认始终标记为检测。
+
+:::
+
+## 核查画面变动 {#reviewing-motion}
+
+核查页面还可以显示未产生追踪目标的画面变动时段，并允许你在绘制的区域内搜索过去录像中的画面变动。有关如何使用**画面变动预览**和**画面变动搜索**，请参阅使用文档中的[核查画面变动](/usage/review#reviewing-motion)；有关底层画面变动检测器的配置，请参阅[调整画面变动检测](motion_detection.md)。

@@ -5,13 +5,41 @@ title: 音频检测器
 
 Frigate 自带音频检测功能，该功能直接在 CPU 上运行。相比图像物体/目标检测，音频检测的计算量要小得多，因此完全可以在 CPU 上高效运行。
 
-## 配置
+## 配置 {#configuration}
 
 音频事件通过检测特定类型的音频并创建事件来工作，当该类型音频在配置的时间内未被检测到时，则结束该事件。音频事件会在事件开始时保存快照，并在整个事件过程中保存录音。录音使用配置的录制保留设置进行保留。
 
-### 启用音频事件
+### 启用音频事件 {#enabling-audio-events}
 
 可以为所有摄像头或仅特定摄像头启用音频事件。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局或摄像头配置的 **音频检测** 部分开启音频检测，并选择要监听的音频类型。
+
+<FrigateConfigMock
+  :auto-play="false"
+  section="audio"
+  :steps="[
+    {
+      level: 'global',
+      focus: 'enabled',
+      values: { enabled: true },
+      hint: '为所有摄像头开启音频检测。',
+    },
+    {
+      level: 'camera',
+      focus: 'enabled',
+      values: { enabled: true },
+      label: '按摄像头开启',
+      hint: '也可以为单个摄像头单独开启音频检测。',
+    },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 audio: # <- 为所有摄像头启用音频事件
@@ -24,6 +52,9 @@ cameras:
     audio:
       enabled: True # <- 可单独为front_camera启用音频事件
 ```
+
+</TabItem>
+</ConfigTabs>
 
 如果使用多个流，则必须在用于音频检测的流上设置`audio`功能，这可以是任何流，但该流必须包含音频。
 
@@ -47,9 +78,26 @@ cameras:
             - detect
 ```
 
-### 配置最小音量
+### 配置最小音量 {#configuring-minimum-volume}
 
-音频检测器使用音量级别的方式与摄像头画面中的运动用于`物体/目标`检测的方式相同。这意味着除非音频音量高于配置的水平，否则 Frigate 不会运行音频检测以减少资源使用。不同摄像头型号的音量水平可能有很大差异，因此进行测试以了解音量水平非常重要。在 Frigate 网页的调试页面中，对于开启了`audio`功能的摄像头，会显示一个**音频**选项卡，其中会以图表形式展示当前音量水平。`min_volume` 参数应设置为运行音频检测所需的最低 `RMS​` 音量。
+音频检测器使用音量级别的方式与摄像头画面中的画面变动用于`物体/目标`检测的方式相同。这意味着除非音频音量高于配置的水平，否则 Frigate 不会运行音频检测以减少资源使用。不同摄像头型号的音量水平可能有很大差异，因此进行测试以了解音量水平非常重要。在 Frigate 网页的调试页面中，对于开启了`audio`功能的摄像头，会显示一个**音频**选项卡，其中会以图表形式展示当前音量水平。`min_volume` 参数应设置为运行音频检测所需的最低 `RMS​` 音量。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在音频检测的 **灵敏度** 分组中设置 **最小音量**，以降低资源使用。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="audio"
+  focus="min_volume"
+  :values="{ min_volume: 500 }"
+  hint="只有当音频音量高于最小音量时，Frigate 才运行音频检测，以减少资源占用。可以通过调试页面的音频选项卡观察当前音量。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 :::tip
 
@@ -57,9 +105,29 @@ cameras:
 
 :::
 
-### 配置音频事件
+</TabItem>
+</ConfigTabs>
 
-内置音频模型可以检测[500 多种不同类型](https://github.com/blakeblackshear/frigate/blob/dev/audio-labelmap.txt)的音频，其中许多并不实用。默认情况下会开启`bark`(狗叫)、`fire_alarm`(火警)、`scream`(尖叫)、`speech`(说话)和`yell`(喊叫)这几种音频事件，当然你也可以根据自己的需求进行调整。
+### 配置音频事件 {#configuring-audio-events}
+
+内置音频模型可以检测[500 多种不同类型](https://github.com/blakeblackshear/frigate/blob/dev/audio-labelmap.txt)的音频，其中许多并不实用。默认情况下会开启`bark`(狗叫)、`fire_alarm`(火警)、`speech`(说话)和`yell`(喊叫)这几种音频事件，当然你也可以根据自己的需求进行调整。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在音频检测的 **全局检测** 分组中，选择要监听的音频类型。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  section="audio"
+  focus="listen"
+  :values="{ listen: ['bark', 'fire_alarm', 'speech', 'yell'] }"
+  hint="选择要监听的音频事件类型，例如狗叫、火警、说话和喊叫。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 audio:
@@ -67,19 +135,85 @@ audio:
   listen:
     - bark
     - fire_alarm
-    - scream
     - speech
     - yell
 ```
 
-## 音频转录
+</TabItem>
+</ConfigTabs>
+
+### 常用音频标签 {#common-audio-labels}
+
+标签映射表包含数百种声音类型。以下标签是大多数用户可能觉得实用的，按典型用途分组。请在 `listen` 配置中使用左列的确切标签字符串，或直接在 Frigate 界面中搜索标签。
+
+某些标签涵盖多种相关声音：`yell` 由喊叫、大叫、儿童叫喊和尖叫触发；`crying` 涵盖婴儿哭声、抽泣和呜咽；`speech` 涵盖普通交谈和对话。
+
+**安全与安防**
+
+| 标签             | 检测内容                 |
+| ---------------- | ------------------------ |
+| `yell`           | 喊叫、大叫、尖叫         |
+| `fire_alarm`     | 火灾和烟雾警报器         |
+| `smoke_detector` | 烟雾探测器蜂鸣声         |
+| `alarm`          | 通用警报声               |
+| `car_alarm`      | 汽车警报                 |
+| `siren`          | 紧急车辆和民用警报器     |
+| `glass`          | 玻璃碰撞声               |
+| `shatter`        | 玻璃破碎声               |
+| `breaking`       | 物品破裂声               |
+| `gunshot`        | 枪声                     |
+| `explosion`      | 爆炸声                   |
+
+**人与活动**
+
+| 标签         | 检测内容           |
+| ------------ | ------------------ |
+| `speech`     | 交谈和对话         |
+| `laughter`   | 笑声               |
+| `crying`     | 婴儿哭泣和抽泣     |
+| `cough`      | 咳嗽               |
+| `footsteps`  | 脚步声和行走       |
+| `knock`      | 敲门声             |
+| `doorbell`   | 门铃               |
+| `ding-dong`  | 门铃音乐           |
+
+**宠物与动物**
+
+| 标签        | 检测内容       |
+| ----------- | -------------- |
+| `bark`      | 狗叫           |
+| `dog`       | 其他狗声       |
+| `howl`      | 嚎叫           |
+| `growling`  | 咆哮           |
+| `meow`      | 猫叫           |
+| `cat`       | 其他猫声       |
+| `hiss`      | 嘶嘶声         |
+
+**车辆与车道**
+
+| 标签               | 检测内容           |
+| ------------------ | ------------------ |
+| `car`              | 经过的汽车         |
+| `honk`             | 汽车喇叭           |
+| `truck`            | 卡车               |
+| `reversing_beeps`  | 车辆倒车蜂鸣声     |
+| `motorcycle`       | 摩托车             |
+| `engine_starting`  | 引擎启动           |
+
+:::tip
+
+像 `speech` 这样经常听到的标签会生成大量事件，每个事件都可能根据你的配置保存快照和录像，因此建议从一个精简的集合开始——默认值（`bark`、`fire_alarm`、`speech`、`yell`）加上上面的一些安全标签即可满足大多数需求——然后逐步扩展。有关所有可用类型，请参阅[完整的音频标签映射表](https://github.com/blakeblackshear/frigate/blob/dev/audio-labelmap.txt)或 Frigate 界面。
+
+:::
+
+## 音频转录 {#audio-transcription}
 
 Frigate 支持完全本地化的音频转录，可使用 **`sherpa-onnx`** 或通过 **`faster-whisper`** 调用 OpenAI 的开源 Whisper 模型。该功能的目标是支持对**谈话**的音频事件进行**语义搜索**。  
 Frigate 并非设计成为持续、全自动的语音转录功能，因为自动转录所有语音（或将大量音频事件排入队列等待转录）会消耗大量 CPU（或 GPU）资源，在大多数系统上并不现实。因此，事件的转录需由用户在页面或 API 中**手动触发**，而非在后台持续运行。
 
 转录的准确性在很大程度上取决于摄像头麦克风的质量与录音环境。许多摄像头使用廉价麦克风，而且说话者距离、音频比特率过低或背景噪声都会显著降低转录质量。如果需要更高的准确率、更稳健的长队列支持或大规模自动转录，建议使用 HTTP API 配合自动化平台以及云端转录服务。
 
-### 配置
+### 配置 {#configuration-1}
 
 要启用转录功能，需在配置中开启。注意：必须同时按上述说明启用**音频检测**，才能使用音频转录功能。
 
@@ -130,9 +264,9 @@ cameras:
 
 摄像头级别唯一有效的字段是 `enabled`。
 
-### 实时转录
+### 实时转录 {#live-transcription}
 
-Frigate 网页的单摄像头实时预览页面支持对定义了 `audio` 功能的视频流进行实时音频转录。使用 **启用/禁用实时音频转录** 按钮或开关来切换转录处理。当检测到语音时，网页会在摄像头画面上覆盖一个黑色文本框并显示文字。  
+Frigate 网页的单摄像头实时预览页面支持对定义了 `audio` 功能的视频流进行实时音频转录。使用 **启用/禁用实时音频转录** 按钮或开关来切换转录处理，也可以在界面之外通过 [`frigate/<camera_name>/audio_transcription/set`](/integrations/mqtt#frigatecamera_nameaudio_transcriptionset) MQTT 主题或 HTTP API 来切换。当检测到语音时，网页会在摄像头画面上覆盖一个黑色文本框并显示文字。  
 MQTT 主题 `frigate/<camera_name>/audio/transcription` 也会实时更新转录文本。
 
 结果可能因以下因素出现误差：
@@ -146,9 +280,9 @@ MQTT 主题 `frigate/<camera_name>/audio/transcription` 也会实时更新转录
 如果声源离摄像头较近且背景噪声很小，可使用 `small` 模型。  
 若有 CUDA 硬件，可尝试在 GPU 上运行 `large` 的 `whisper` 模型。虽然性能不及 `sherpa-onnx` 的 `small` 模型快，但实时转录准确度要高得多。在 CPU 上运行 `large` 模型可能会太慢，无法满足实时需求。
 
-### 谈话音频事件的转录与翻译
+### 谈话音频事件的转录与翻译 {#transcription-and-translation-of-speech-audio-events}
 
-在浏览中的任何**谈话**事件，可通过**目标追踪详情**面板的**转录** 按钮进行转录或翻译。
+在浏览中的任何**谈话**事件，可通过**目标追踪详情**面板的**转录**按钮（麦克风图标）进行转录或翻译。
 
 要对历史事件使用转录与翻译功能，必须启用音频检测，并在配置中将**谈话**定义为要监听的音频类型。要将**谈话**事件翻译成所选语言，请在配置中设置 `language` 参数并使用正确的 https://github.com/openai/whisper/blob/main/whisper/tokenizer.py#L10。
 
@@ -160,14 +294,14 @@ MQTT 主题 `frigate/<camera_name>/audio/transcription` 也会实时更新转录
 
 已录制的**谈话**事件始终使用 `whisper` 模型，不受 `model_size` 配置影响。在没有支持的 Nvidia GPU 的情况下，生成长**谈话**事件的转录可能需要较长时间，请耐心等待。
 
-### 常见问题
+### 常见问题 {#faq}
 
 1. 为什么 Frigate 不自动转录所有**谈话**事件？  
    Frigate 并未实现语音转录的队列机制，且添加该功能并不简单。一个合适的队列需要实现背压、优先级、内存/磁盘缓冲、重试逻辑、崩溃恢复，以及防止事件处理速度跟不上时无限增长的防护措施。这对大多数实际环境来说会带来巨大复杂性，而收益却很低，因为大部分事件只是低价值的噪声。
 
    由于转录是**串行执行（一次一个事件）**，而语音事件的产生速度可能远快于处理速度，开启自动转录会迅速形成不断增长的积压，并拖慢核心功能。考虑到涉及的工程量与风险，这对多数部署（通常在低功耗边缘硬件上）**实用价值非常有限**。
 
-   如果你听到重要且值得保存/索引的语音，只需在浏览中对该**谈话**事件按下转录按钮。这样既明确、可靠，又完全在你的控制之下。
+   如果你听到重要且值得保存/索引的语音，只需在浏览中对该**谈话**事件按下**转录按钮（麦克风图标）**。这样既明确、可靠，又完全在你的控制之下。
 
    未来版本正考虑支持外部 `whisper` Docker 容器的转录选项，这样单一转录服务可被 Frigate 与其他应用（如 Home Assistant Voice）共享，并在有更强机器时运行。
 

@@ -1,0 +1,239 @@
+---
+id: profiles
+title: 配置模板
+---
+
+配置模板允许你定义命名的摄像头配置覆盖集合，可以在运行时激活和停用，无需重启 Frigate。这对于在"在家"和"外出"模式之间切换、白天和夜间配置或任何需要快速更改多个摄像头行为的场景非常有用。
+
+## 配置模板的工作原理 {#how-profiles-work}
+
+配置模板作为两级系统运行：
+
+1. **模板定义**在配置的顶层 `profiles` 下声明。每个定义有一个机器名称（键）和一个用于界面显示的 `friendly_name`。
+2. **摄像头模板覆盖**在每个摄像头的 `profiles` 部分下声明，以模板名称为键。只需指定要更改的设置，其他设置继承摄像头的基础配置。
+
+当激活模板时，Frigate 将每个摄像头的模板覆盖合并到其基础配置之上。当停用模板时，所有摄像头恢复到原始设置。同一时间只能激活一个模板。
+
+:::info
+
+模板变更在内存中应用并立即生效——无需重启。活动模板会在 Frigate 重启后保持（存储在 `/config/.profiles` 文件中）。
+
+:::
+
+## 配置 {#configuration}
+
+### 创建和管理模板 {#creating-and-managing-profiles}
+
+首先在 Frigate 配置的顶层定义模板。摄像头引用的每个模板名称必须在此定义。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **配置模板** 部分添加模板，并为每个模板设置名称。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="global"
+  section="profiles"
+  focus="my_provider.friendly_name"
+  :values="{ 'my_provider.friendly_name': 'Home' }"
+  hint="在全局配置中添加配置模板，并为其设置一个便于识别的名称。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+profiles:
+  home:
+    friendly_name: Home
+  away:
+    friendly_name: Away
+  night:
+    friendly_name: Night Mode
+```
+
+</TabItem>
+</ConfigTabs>
+
+在每个摄像头下添加 `profiles` 部分，为每个模板设置覆盖项。只需包含要更改的设置。
+
+```yaml
+cameras:
+  front_door:
+    ffmpeg:
+      inputs:
+        - path: rtsp://camera:554/stream
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+    record:
+      enabled: true
+    profiles:
+      away:
+        detect:
+          enabled: true
+        notifications:
+          enabled: true
+        objects:
+          track:
+            - person
+            - car
+            - package
+        review:
+          alerts:
+            labels:
+              - person
+              - car
+              - package
+      home:
+        detect:
+          enabled: true
+        notifications:
+          enabled: false
+        objects:
+          track:
+            - person
+```
+
+### 支持覆盖的配置项 {#supported-override-sections}
+
+以下摄像头配置部分可以在模板中覆盖：
+
+| 配置项             | 描述                                 |
+| ------------------ | ------------------------------------ |
+| `enabled`          | 完全启用或禁用摄像头                 |
+| `audio`            | 音频检测设置                         |
+| `birdseye`         | 鸟瞰图设置                           |
+| `detect`           | 目标检测设置                         |
+| `face_recognition` | 人脸识别设置                         |
+| `lpr`              | 车牌识别设置                         |
+| `motion`           | 画面变动检测设置                     |
+| `notifications`    | 通知设置                             |
+| `objects`          | 目标追踪和过滤设置                   |
+| `record`           | 录制设置                             |
+| `review`           | 核查警报和检测设置                   |
+| `snapshots`        | 快照设置                             |
+| `zones`            | 区域定义（与基础区域合并）           |
+
+:::note
+
+只有你在模板覆盖中明确设置的字段才会被应用，其他字段保留基础配置值。对于遮罩和区域，模板区域**覆盖**摄像头的基础遮罩和区域。如果通过 YAML 配置模板，不应在模板中定义基础配置中未定义的遮罩或区域。
+
+:::
+
+## 激活模板 {#activating-profiles}
+
+可以从 Frigate 界面、[MQTT](/integrations/mqtt#frigateprofileset)、[HTTP API](../integrations/api/camera-set-camera-camera-name-set-feature-sub-command-put.api.mdx) 或 Home Assistant 集成激活和停用模板。
+
+在 Frigate 界面中，打开设置齿轮，从子菜单中选择**配置模板**查看所有已定义的模板。你可以激活任何模板或停用当前模板。活动模板会在界面中显示，让你始终知道当前生效的是哪个模板。
+
+激活或停用模板会清除任何[运行时开关覆盖](/configuration/live#runtime-toggle-persistence)，以避免切换前的过时开关静默撤销模板的设置。
+
+## 示例：在家 / 外出设置 {#example-home--away-setup}
+
+常见的用例是根据你在家还是外出设置不同的检测和通知配置。以下示例适用于具有两个摄像头 `front_door` 和 `indoor_cam` 的系统。
+
+```yaml
+profiles:
+  home:
+    friendly_name: Home
+  away:
+    friendly_name: Away
+
+cameras:
+  front_door:
+    ffmpeg:
+      inputs:
+        - path: rtsp://camera:554/stream
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+    record:
+      enabled: true
+    notifications:
+      enabled: false
+    profiles:
+      away:
+        notifications:
+          enabled: true
+        review:
+          alerts:
+            labels:
+              - person
+              - car
+      home:
+        notifications:
+          enabled: false
+
+  indoor_cam:
+    ffmpeg:
+      inputs:
+        - path: rtsp://camera:554/indoor
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: false
+    record:
+      enabled: false
+    profiles:
+      away:
+        enabled: true
+        detect:
+          enabled: true
+        record:
+          enabled: true
+      home:
+        enabled: false
+```
+
+在此示例中：
+
+- **外出模板**：前门摄像头启用通知并追踪特定警报标签。室内摄像头完全启用检测和录制。
+- **在家模板**：前门摄像头禁用通知。室内摄像头为保护隐私完全禁用。
+- **无活动模板**：所有摄像头使用其基础配置值。
+
+## 常见问题 {#faq}
+
+### 我可以在模板中定义区域或遮罩而不在基础配置中定义吗？ {#can-i-define-a-zone-or-mask-in-a-profile-but-not-have-it-in-the-base-config}
+
+不可以。模板是纯覆盖。模板下定义的每个区域和遮罩必须引用基础摄像头配置中已存在的条目。在启动时会拒绝引入仅模板区域或遮罩的配置。
+
+如果你希望某个区域或遮罩仅在特定模板下激活，请在基础配置中定义它并设置 `enabled: false`，然后在该模板的覆盖中启用它。
+
+### 如何将模板区域或遮罩覆盖恢复为基础配置？ {#how-do-i-revert-a-profile-zone-or-mask-override-back-to-the-base-configuration}
+
+删除覆盖。在 Frigate 界面中，编辑模板并在区域或遮罩上使用“恢复覆盖”操作（垃圾桶图标）。基础条目保持不变，一旦覆盖被移除，模板将继承该区域或遮罩的基础值。
+
+### 可以同时激活多个模板吗？ {#can-multiple-profiles-be-active-at-the-same-time}
+
+不可以。同一时间只能激活一个模板。激活新模板会自动停用当前模板。
+
+### 如果我从基础配置中删除区域或遮罩，模板覆盖会怎样？ {#what-happens-to-my-profile-overrides-if-i-delete-a-zone-or-mask-from-the-base}
+
+在 Frigate 界面中删除基础区域或遮罩时，该条目的任何模板覆盖都会作为同一操作的一部分自动删除。如果你通过直接编辑配置文件来删除基础条目并留下模板覆盖，配置将在启动时验证失败，直到删除孤立的覆盖。
+
+### 如何让 YAML 模板不追踪任何目标？ {#how-do-i-make-a-yaml-profile-track-no-objects-at-all}
+
+在模板中将追踪对象列表显式设置为空列表：
+
+```yaml
+cameras:
+  front_door:
+    profiles:
+      home:
+        objects:
+          track: []
+```
+
+将 `objects` 部分留空（或省略 `track`）不会清除列表。空部分不设置任何字段，因此模板会从基础配置中继承完整的追踪对象列表，包括全局级别设置的所有内容。这同样适用于其他列表，如 `audio.listen`。
+
+### 为什么配置模板覆盖时某些设置缺失？ {#can-i-schedule-profiles-to-be-enabled-or-disabled-at-certain-times}
+
+需要重启 Frigate 才能生效的字段无法被模板覆盖，因为模板在运行时应用而无需重启。这些字段在编辑模板覆盖时被隐藏，只能在基础配置中更改。

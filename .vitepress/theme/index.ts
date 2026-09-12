@@ -8,9 +8,15 @@ import StreamAI from "./StreamAI.vue";
 import Question from "./Question.vue";
 import ShmCalculator from "./ShmCalculator.vue";
 import DockerComposeGenerator from "./DockerComposeGenerator.vue";
+import CollapseContainer from "./CollapseContainer.vue";
 import DetailsCollapse from "./DetailsCollapse.vue";
 import InfoIcon from "./InfoIcon.vue";
 import LanguageSwitch from "./LanguageSwitch.vue";
+import ModelConfigDropdown from "./ModelConfigDropdown.vue";
+import FrigateConfigMock from "./components/FrigateConfigMock/FrigateConfigMock.vue";
+import ConfigTabs from "./components/ConfigTabs.vue";
+import TabItem from "./components/TabItem.vue";
+import NavPath from "./components/NavPath.vue";
 import { initComponent } from 'vitepress-plugin-legend/component';
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
@@ -31,9 +37,15 @@ export default {
     app.component('Question', Question) // 全局注册组件
     app.component('ShmCalculator', ShmCalculator)
     app.component('DockerComposeGenerator', DockerComposeGenerator)
+    app.component('CollapseContainer', CollapseContainer)
     app.component('DetailsCollapse', DetailsCollapse)
     app.component('InfoIcon', InfoIcon)
     app.component('LanguageSwitch', LanguageSwitch)
+    app.component('ModelConfigDropdown', ModelConfigDropdown)
+    app.component('FrigateConfigMock', FrigateConfigMock)
+    app.component('ConfigTabs', ConfigTabs)
+    app.component('TabItem', TabItem)
+    app.component('NavPath', NavPath)
   },
   extends: Teek,
   Layout: CustomLayout,

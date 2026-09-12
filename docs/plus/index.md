@@ -21,7 +21,7 @@ title: 模型
 
 集成Frigate+的方法请参阅[集成文档](/integrations/plus.md)。
 
-## 可用模型类型
+## 可用模型类型 {#available-model-types}
 
 Frigate+提供三种模型类型：`mobiledet`、`yolonas`和`yolov9`。所有都是目标检测模型，能检测[下方列出的相同标签](#available-label-types)。
 
@@ -41,11 +41,11 @@ YOLOv9 模型提供 `s`、`t` 以及 `edgetpu` 尺寸规格。当你申请 `yolo
 切换到 YOLOv9 时，你可能需要针对某些目标调整检测阈值。
 :::
 
-#### Hailo 支持
+#### Hailo 支持 {#hailo-support}
 
 如果你使用的是Hailo设备，在提交模型请求时需要明确说明你的具体硬件型号，因为Hailo的不同硬件之间并不兼容。建议你先使用现有的基础模型进行测试，然后再提交模型训练请求。
 
-#### Rockchip (RKNN) 支持
+#### Rockchip (RKNN) 支持 {#rockchip-rknn-support}
 
 在 0.17 版本，Rockchip 能够自动转换模型。而在 0.16 版本中，YOLOv9 的 ONNX 模型需要手动转换。首先，你需要配置 Frigate 使用该 YOLOv9 ONNX 模型的模型 ID，以便将模型下载到你的 model_cache目录。然后，你可以按照[相关文档](../configuration/object_detectors.md#converting-your-own-onnx-model-to-rknn-format)进行转换。
 
@@ -89,7 +89,7 @@ Frigate+模型支持更适合安防摄像头的对象集。当前支持以下对
 
 Frigate默认模型中的其他对象类型暂不支持。未来版本将增加更多对象类型。
 
-### 候选标签
+### 候选标签 {#candidate-labels}
 
 候选标签也可用于标注。这些标签目前没有足够的数据纳入模型，但使用它们将有助于更快地提供支持。你可以通过编辑相机设置来启用这些标签。
 在可能的情况下，这些标签在训练期间会映射到现有标签。例如，在添加对新标签的支持之前，任何 “婴儿”（`baby`） 标签都会映射到 “人”（`person`）。

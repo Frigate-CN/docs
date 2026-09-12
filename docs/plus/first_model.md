@@ -3,7 +3,7 @@ id: first_model
 title: 请求你的第一个模型
 ---
 
-## 步骤1：上传并标注你的图片
+## 步骤1：上传并标注你的图片 {#step-1-upload-and-annotate-your-images}
 
 在请求你的第一个模型之前，你需要向Frigate+上传并验证至少10张图片。上传、标注和验证的图片越多，结果就会越好。大多数用户在每个摄像头至少有100张已验证的图片后就开始看到非常好的结果。请记住要包含各种不同的条件。你需要在阴天、晴天、黎明、黄昏和夜间的图片。有关如何直接从Frigate轻松提交图片到Frigate+的说明，请参阅[集成文档](/integrations/plus.md#generate-an-api-key)。
 
@@ -11,7 +11,7 @@ title: 请求你的第一个模型
 
 有关更详细的建议，你可以参考[标注你的图像](./annotating.md)的文档。
 
-## 步骤2：提交模型请求
+## 步骤2：提交模型请求 {#step-2-submit-a-model-request}
 
 一旦你有了初始的已验证图片集，你就可以在模型页面上请求一个模型。关于选择模型类型的指导，请参考[文档的这一部分](./index.md#available-model-types)。每个模型请求需要使用年度订阅中包含的12次训练中的1次。这个模型将支持所有[可用的标签类型](./index.md#available-label-types)，即使你没有为这些标签提交任何示例。模型创建可能需要长达36小时。
 ![Plus模型页面](/img/plus/plus-models.jpg)
@@ -40,7 +40,7 @@ model:
 
 :::
 
-## 步骤4：调整你的物体/目标过滤器以获得更高的分数
+## 步骤4：调整你的物体/目标过滤器以获得更高的分数 {#step-4-adjust-your-object-filters-for-higher-scores}
 
 Frigate+模型通常比Frigate提供的默认模型有更高的分数。你可能需要增加你的`threshold`和`min_score`值。以下是如何优化这些值的示例，但你应该预期这些值会随着模型的改进而演变。有关`threshold`和`min_score`如何相关的更多信息，请参见[物体/目标过滤器](../configuration/object_filters.md#object-scores)文档。
 

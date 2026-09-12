@@ -7,7 +7,7 @@ title: 功能增强
 
 Frigate 的一些功能增强可以使用**独立显卡**或**核显**进行加速。
 
-## 要求
+## 要求 {#requirements}
 
 物体/目标检测和功能增强（如语义搜索、人脸识别和车牌识别）是独立的功能。要使用 GPU 或 NPU 进行物体/目标检测，请参阅[物体/目标检测器](/configuration/object_detectors.md)文档。如果你想将 GPU 用于任何支持的功能增强，你必须为你的 GPU 或 NPU 选择适当的 Frigate Docker 镜像，并根据其具体文档配置功能增强。
 

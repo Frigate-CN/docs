@@ -7,13 +7,19 @@ title: 鸟瞰视图
 
 除了Frigate的实时摄像头仪表板外，鸟瞰视图提供了一个便携的全局视角，让你无需逐个查看可能没有活动的摄像头，就能掌握整个监控区域的动态。鸟瞰视图提供多种智能显示模式，可根据你关注的场景自动调整显示内容。
 
-你可以通过在Web界面中将"Birdseye"摄像头添加到摄像头组来查看鸟瞰视图。在实时页面点击"+"图标创建摄像头组，并选择"Birdseye"作为其中一个摄像头。
+你可以通过在Web界面中将"Birdseye"摄像头添加到摄像头组来查看鸟瞰视图。在实时页面侧边栏中点击铅笔图标创建摄像头组，并选择"Birdseye"作为其中一个摄像头。
 
 鸟瞰视图也可用于Home Assistant仪表板、投屏到媒体设备等场景。
 
-## 鸟瞰视图行为模式
+:::note
 
-### 显示模式
+鸟瞰视图中的每个摄像头图块由分配了 `detect` 功能的视频流的帧组成，因此摄像头在鸟瞰视图中的图像质量与其检测流分辨率一致，而非更高分辨率的录制流。如果摄像头在鸟瞰视图中看起来画质低，增加检测宽度和高度（或将 `detect` 功能分配给更高分辨率的流）才是有效的方法。有关功能分配方式，请参阅[设置摄像头输入源](./cameras.md#setting-up-camera-inputs)。
+
+:::
+
+## 鸟瞰视图行为模式 {#birdseye-behavior}
+
+### 显示模式 {#birdseye-modes}
 
 鸟瞰视图提供多种模式来自定义不同情况下显示的摄像头：
 
@@ -21,11 +27,41 @@ title: 鸟瞰视图
 - **motion(运动模式)**：仅显示最近30秒内检测到运动的摄像头  
 - **objects(目标模式)**：仅显示最近30秒内有活动目标被追踪的摄像头
 
-### 自定义图标
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **鸟瞰图** 部分开启鸟瞰图，并选择追踪模式。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="global"
+  section="birdseye"
+  :values="{ enabled: true, mode: 'continuous' }"
+  :targets="[
+    { field: 'enabled', hint: '开启鸟瞰图。' },
+    { field: 'mode', hint: '选择显示模式，例如持续、运动或目标模式。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
+```yaml
+# 默认所有摄像头都显示在鸟瞰视图中
+birdseye:
+  enabled: True
+  mode: continuous
+```
+
+</TabItem>
+</ConfigTabs>
+
+### 自定义图标 {#custom-birdseye-icon}
 
 你可以在Frigate的`media`文件夹中添加名为`custom.png`的180x180图片来自定义鸟瞰视图背景图标。图片必须是透明背景的PNG格式，所有非透明像素在鸟瞰视图中将显示为白色。
 
-### 摄像头级别覆盖设置
+### 摄像头级别覆盖设置 {#birdseye-view-override-at-camera-level}
 
 如果希望特定摄像头只在特定情况下显示在鸟瞰视图中，或者完全不显示，可以在摄像头级别进行配置：
 
@@ -46,7 +82,7 @@ cameras:
       enabled: False
 ```
 
-### 非活动时间阈值
+### 非活动时间阈值 {#birdseye-inactivity}
 
 默认情况下，鸟瞰视图会显示过去30秒内有配置活动的摄像头，此时间可调整：
 
@@ -56,9 +92,9 @@ birdseye:
   inactivity_threshold: 15  # 改为15秒
 ```
 
-## 鸟瞰视图布局
+## 鸟瞰视图布局 {#birdseye-layout}
 
-### 分辨率设置
+### 分辨率设置 {#birdseye-dimensions}
 
 可以配置鸟瞰视图的分辨率和宽高比。分辨率影响画质但不影响布局，而宽高比会影响摄像头的排列方式。
 
@@ -69,7 +105,7 @@ birdseye:
   height: 720  # 高度
 ```
 
-### 摄像头排序
+### 摄像头排序 {#sorting-cameras-in-the-birdseye-view}
 
 可以覆盖鸟瞰视图中摄像头的显示顺序。需要在摄像头级别设置排序值。
 
@@ -89,7 +125,7 @@ cameras:
 
 _注意_：默认情况下摄像头按名称排序以确保鸟瞰视图布局稳定。
 
-### 最大摄像头数限制
+### 最大摄像头数限制 {#birdseye-cameras}
 
 可以限制鸟瞰视图一次显示的摄像头数量。启用此功能后，鸟瞰视图将显示最近活动的摄像头。设有冷却时间以防止摄像头切换过于频繁。
 
@@ -102,7 +138,7 @@ birdseye:
     max_cameras: 1  # 最多显示1个摄像头
 ```
 
-### 缩放系数
+### 缩放系数 {#birdseye-scaling}
 
 默认情况下，鸟瞰视图尝试每行排列2个摄像头，然后按倍数缩放直到找到合适的布局。缩放系数可在1.0到5.0之间调整。
 

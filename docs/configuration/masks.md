@@ -21,21 +21,40 @@ title: 遮罩功能
 
 ## 使用遮罩创建工具 {#using-the-mask-creator}
 
-创建多边形遮罩的步骤：
+<ConfigTabs>
+<TabItem value="图形化配置">
 
-1. 访问 Web 界面
-2. 点击齿轮图标打开"设置"
-3. 选择"遮罩/区域编辑器"
-4. 在右上角选择要创建遮罩或区域的摄像头
-5. 点击要创建的遮罩或区域类型下的加号图标
-6. 在摄像头最新画面上点击创建遮罩区域的多边形顶点。点击第一个顶点闭合多边形。
-7. 完成遮罩创建后，点击保存
+<FrigateConfigMock
+  level="camera"
+  section="masksAndZones"
+  :steps="[
+    { focus: 'motionMasks', label: '画面变动遮罩', hint: '画面变动遮罩用于阻止不需要的画面变动触发检测。请谨慎使用，以免影响目标追踪。' },
+    { focus: 'motionMask.add', label: '新建画面变动遮罩', hint: '点击画面变动遮罩旁边的加号按钮创建遮罩。' },
+    { focus: 'motionMask.canvas', label: '绘制画面变动遮罩', hint: '在摄像头画面上点击创建多边形顶点，然后点击第一个点闭合多边形。' },
+    { focus: 'motionMask.options', label: '画面变动遮罩选项', hint: '为遮罩设置友好名称，并选择是否启用。' },
+    { focus: 'objectMasks', label: '物体遮罩', hint: '物体遮罩根据物体边界框的底部中心点过滤误报。' },
+    { focus: 'objectMask.add', label: '新建物体遮罩', hint: '点击物体遮罩旁边的加号按钮创建物体过滤遮罩。' },
+    { focus: 'objectMask.canvas', label: '绘制物体遮罩', hint: '在产生误报的固定位置上绘制精确的多边形。' },
+    { focus: 'objectMask.options', label: '物体遮罩选项', hint: '为遮罩命名，选择适用的物体类型，然后保存。' }
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 配置文件将更新为遮罩/区域的相对坐标：
 
 ```yaml
 motion:
-  mask: "0.000,0.427,0.002,0.000,0.999,0.000,0.999,0.781,0.885,0.456,0.700,0.424,0.701,0.311,0.507,0.294,0.453,0.347,0.451,0.400"
+  mask:
+    # 遮罩名称（必填）
+    mask1:
+      # 可选：遮罩的友好名称
+      friendly_name: '时间戳区域'
+      # 可选：是否启用此遮罩（默认：true）
+      enabled: true
+      # 必填：遮罩的坐标多边形
+      coordinates: '0.000,0.427,0.002,0.000,0.999,0.000,0.999,0.781,0.885,0.456,0.700,0.424,0.701,0.311,0.507,0.294,0.453,0.347,0.451,0.400'
 ```
 
 配置中可以列出多个遮罩：
@@ -43,9 +62,37 @@ motion:
 ```yaml
 motion:
   mask:
-    - 0.239,1.246,0.175,0.901,0.165,0.805,0.195,0.802
-    - 0.000,0.427,0.002,0.000,0.999,0.000,0.999,0.781,0.885,0.456
+    mask1:
+      friendly_name: '时间戳区域'
+      enabled: true
+      coordinates: '0.239,1.246,0.175,0.901,0.165,0.805,0.195,0.802'
+    mask2:
+      friendly_name: '树木区域'
+      enabled: true
+      coordinates: '0.000,0.427,0.002,0.000,0.999,0.000,0.999,0.781,0.885,0.456'
 ```
+
+物体过滤遮罩在每种物体类型的过滤器下配置：
+
+```yaml
+objects:
+  filters:
+    person:
+      mask:
+        person_filter1:
+          friendly_name: '屋顶区域'
+          enabled: true
+          coordinates: '0.000,0.000,1.000,0.000,1.000,0.400,0.000,0.400'
+    car:
+      mask:
+        car_filter1:
+          friendly_name: '人行道区域'
+          enabled: true
+          coordinates: '0.000,0.700,1.000,0.700,1.000,1.000,0.000,1.000'
+```
+
+</TabItem>
+</ConfigTabs>
 
 ### 进一步说明 {#further-clarification}
 

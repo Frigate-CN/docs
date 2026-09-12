@@ -3,15 +3,15 @@ id: hardware
 title: 推荐硬件
 ---
 
-## 摄像头
+## 摄像头 {#cameras}
 
-若摄像头可输出 H.264 编码的视频与 AAC 音频，便能最大限度兼容 Frigate 和 Home Assistant 的全部功能特性。要是摄像头还支持多子码流设置就更完美了，这样可以给物体检测、实时监控、录像存储分别设置不同的清晰度，避免因为格式转换影响设备性能。
+若摄像头可输出 H.264 编码的视频与 AAC 音频，便能最大限度兼容 Frigate 和 Home Assistant 的全部功能特性。要是摄像头还支持多子码流设置就更完美了，这样可以给目标检测、实时监控、录像存储分别设置不同的清晰度，避免因为格式转换影响设备性能。
 
 建议使用支持 RTSP 流和 ONVIF 功能的摄像头，例如海康威视、TP-Link 等。**不建议**选择萤石等**家用摄像头**，他们对于 RTSP 的支持并不完善；尤其是不要选择 360 老款等不支持获取 RTSP 流的摄像头，它们无法接入到 Frigate 中。
 
 :::tip
 
-小米摄像头可以使用第三方应用 [micam](https://github.com/miiot/micam) 或者 [使用自定义的 v1.9.14 以上版本的 `go2rtc`](/configuration/advanced.md#custom-go2rtc-version) 将 RTSP 流转发出来给 Frigate 接入。本文不提供相关工具的使用教程。
+小米摄像头可以使用第三方应用 [micam](https://github.com/miiot/micam) 或者 [使用自定义的 v1.9.14 以上版本的 `go2rtc`](/configuration/advanced/system.md#custom-go2rtc-version) 将 RTSP 流转发出来给 Frigate 接入。本文不提供相关工具的使用教程。
 
 :::
 
@@ -21,7 +21,7 @@ title: 推荐硬件
 
 以及，如果你所在的地方 WiFi 干扰严重（即有非常多 2.4G 的 WiFi，信道干扰严重），也会导致连接不稳定而**出现断流**，强烈建议你选择有线摄像头，或选择能够稳定通讯的 5Ghz WiFi 摄像头。
 
-## 服务器
+## 服务器 {#server}
 
 考虑到家用环境，建议使用 N100 等低功耗 CPU 的主机，否则你的电费可能会比以往高很多。这些在淘宝或者闲鱼上都能够找到不错的选择。但需要注意选择带有 AVX + AVX2 指令集的 Intel CPU（大多数 2011 年后的 CPU 都支持 AVX 和 AVX2，但低功耗或入门级处理器通常缺失，特别是 2020 年 Tiger Lake 世代之前的 Intel Celeron 和 Pentium 型号通常不支持 AVX。较老的 Intel Xeon 可能有 AVX 但可能缺少 AVX2）。同时注意关注是否有额外的 M.2 或者 PCIe 接口，因为可以选配 Hailo8 或者 Google Coral 这种 AI 加速器，能够极大的提升检测效率，并且耗电量相比独立显卡要低很多。当然，如果你需要监控的摄像头数量并不多（1-3 路），只使用核显也能够满足需求。但请优先选择 Intel 的产品，根据社区反馈，AMD 核显的配置较为繁琐。
 
@@ -29,9 +29,9 @@ title: 推荐硬件
 
 需要注意的是，很多 N100 之类的低功耗迷你主机默认预装的是 Windows 系统，你可以参考 [入门指南](../guides/getting_started.md)，将系统换为 Linux。
 
-## 检测器
+## 检测器 {#detectors}
 
-检测器是专为高效运行物体识别推理而优化的硬件设备。使用推荐检测器可显著降低检测延迟，并大幅提升每秒检测次数。Frigate 的设计理念正是基于检测器硬件实现超低推理延迟：将 TensorFlow 任务卸载到专用检测器上，其速度可提升一个数量级，同时能极大降低 CPU 负载。
+检测器是专为高效运行目标识别推理而优化的硬件设备。使用推荐检测器可显著降低检测延迟，并大幅提升每秒检测次数。Frigate 的设计理念正是基于检测器硬件实现超低推理延迟：将 TensorFlow 任务卸载到专用检测器上，其速度可提升一个数量级，同时能极大降低 CPU 负载。
 
 :::info
 
@@ -52,57 +52,57 @@ Frigate 支持多种硬件平台的检测器方案：
 
 **AMD**
 
-- [ROCm](#rocm-amd-gpu): ROCm 能够在 AMD 显卡上运行，提供高效的检测功能
-  - [支持一部分模型](/configuration/object_detectors#rocm-supported-models)
+- [ROCm](#rocm---amd-gpu): ROCm 能够在 AMD 独立显卡上运行，提供高效的检测功能
+  - [支持一部分模型](/configuration/object_detectors#amdrocm-gpu-detector)
   - 最好运行在 AMD 独显上
 
 **Apple Silicon**
 
 - [Apple Silicon](#apple-silicon): Apple Silicon 可在所有 M1 及更新的 Apple Silicon 设备上使用，提供高效快速的目标检测
-  - [主要支持 ssdlite 和 mobilenet 模型架构](/configuration/object_detectors#apple-silicon-supported-models)
+  - [主要支持 ssdlite 和 mobilenet 模型架构](/configuration/object_detectors#apple-silicon-detector)
   - 能够流畅运行包括 large 在内各尺寸模型
   - 通过 ZMQ 代理运行会带来一定延迟，仅推荐用于本地连接
 
 **Intel**
 
-- [OpenVino](#openvino-intel): OpenVino 可以运行在 Intel Arc 独立显卡、Intel 核显以及 Intel 的 CPU
-  - [支持大部分主流模型](/configuration/object_detectors#openvino-supported-models)
+- [OpenVINO](#openvino---intel): OpenVINO 可以运行在 Intel Arc 独立显卡、Intel 核显以及 Intel NPU 上
+  - [支持大部分主流模型](/configuration/object_detectors#openvino-detector)
   - 推荐使用 tiny/small/medium 尺寸的模型
 
 **NVIDIA**
 
-- [NVIDIA GPU](#nvidia-gpus): TensorRT 可以运行在 Nvidia 显卡和 Jetson 开发板上
-  - [通过 ONNX 支持主流模型](/configuration/object_detectors#onnx-supported-models)
+- [NVIDIA GPU](#nvidia-gpus): NVIDIA GPU 可以提供高效的目标检测
+  - [通过 ONNX 支持主流模型](/configuration/object_detectors#onnx)
   - 可流畅运行包括 large 在内各尺寸模型
 
-- <Badge text="社区支持" type="warning" />[Jetson](#nvidia-jetson): 在运行 Jetpack 6 的情况下，Jetson 设备可通过 TensorRT 或 ONNX 检测器获得支持。
+- <Badge text="社区支持" type="warning" /> [Jetson](#nvidia-jetson): 在运行 Jetpack 6 的情况下，Jetson 设备可通过 TensorRT 或 ONNX 检测器获得支持。
 
-**Rockchip**<Badge text="社区支持" type="warning" />
+**Rockchip** <Badge text="社区支持" type="warning" />
 
-- [RKNN](#rockchip-平台): 需搭载 NPU 的瑞芯微芯片
+- [RKNN](#rockchip-platform): 需搭载 NPU 的瑞芯微芯片
   - [支持少量模型](/configuration/object_detectors#rockchip-supported-models)
   - 专为低功耗设备优化，适合 tiny/small 模型
 
-**Synaptics**<Badge text="社区支持" type="warning" />
+**Synaptics** <Badge text="社区支持" type="warning" />
 
 - [Synaptics](#synaptics): synap 模型可以在 Synaptics 设备（例如 Astra Machina）上运行，这些设备配备 NPU 以提供高效的目标检测。
 
-**AXERA**<Badge text="社区支持" type="warning" />
+**AXERA** <Badge text="社区支持" type="warning" />
 
 - [AXEngine](#axera): axera 模型可以通过 AXEngine 在 AXERA NPU 上运行，从而实现高效的目标检测。
 
 :::
 
-### Hailo-8
+### Hailo-8 {#hailo-8}
 
-Frigate 可以使用 Hailo-8 或 Hailo-8L AI 加速器，包括集成了 Hailo 模块的树莓派 5。Frigate 会自动识别你的 Hailo 类型，并且能够在你没设置型号的情况下自动选择并选择模型。
+Frigate 可以使用 Hailo-8 或 Hailo-8L AI 加速器，包括集成了 Hailo 模块的树莓派 5。Frigate 会自动识别你的 Hailo 类型，并且能够在你没设置型号的情况下自动选择模型。
 
 **默认模型配置：**
 
-- **Hailo-8L:** 默认模型为 **YOLOv6n**.
-- **Hailo-8:** 默认模型为 **YOLOv6n**.
+- **Hailo-8L:** 默认模型为 **YOLOv6n**。
+- **Hailo-8:** 默认模型为 **YOLOv6n**。
 
-在实际环境中，即使你有多路摄像头，Frigate 也能够表现出一致的性能。与树莓派相比，在 x86 平台上，Frigate 能够获得更高的帧率、吞吐量和更低的延迟。
+在实际环境中，即使你有多路摄像头，Frigate 也能够表现出一致的性能。与树莓派相比，在 x86 平台上使用双 PCIe 通道，Frigate 能够获得更高的帧率、吞吐量和更低的延迟。
 
 | 模型名称         | Hailo‑8 推理时间 | Hailo‑8L 推理时间 |
 | ---------------- | ---------------- | ----------------- |
@@ -110,40 +110,32 @@ Frigate 可以使用 Hailo-8 或 Hailo-8L AI 加速器，包括集成了 Hailo �
 | yolov9-tiny      |                  | 320: 18ms         |
 | yolov6n          | ~ 7 ms           | ~ 11 ms           |
 
-### Google Coral TPU
+### Google Coral TPU {#google-coral-tpu}
 
 :::warning
 
-如果你是新安装 Frigate，我们不再推荐使用 Coral 设备，除非你对功耗有特别严苛的要求，或者你的硬件无法使用其他可用于目标检测的 AI 加速器。我们建议你改用其他众多受支持的目标检测器之一。
-
-Frigate 仍将为 Coral TPU 提供支持，因为它仍然是执行目标检测模型时能效最高的设备之一。
+如果你是新安装 Frigate，我们不再推荐使用 Coral 设备，除非你对功耗有特别严苛的要求，或者你的硬件无法使用其他可用于目标检测的 AI 加速器。我们建议你改用其他众多受支持的目标检测器之一。Frigate 仍将为 Coral TPU 提供支持，因为它仍然是执行目标检测模型时能效最高的设备之一。
 
 :::
 
 Frigate 同时支持 USB 和 M.2 两种版本的 Google Coral 加速模块：
 
 - USB 版兼容性最佳，无需安装额外驱动，但缺少自动温控节流功能（长时间高负载可能降频）
-- PCIe 和 M.2 需要安装对应的驱动才能运行，参考：https://github.com/jnicolson/gasket-builder 应该有用
+- PCIe 和 M.2 需要安装对应的驱动才能运行，参考：https://github.com/jnicolson/gasket-builder
 
 单个 Coral 使用默认模型即可处理多路摄像头，能满足大多数用户需求。你可以根据 Frigate 报告的推理速度计算 Coral 的最大性能：
 
-当推理速度为 10ms 时，你的 Coral 最高可处理 1000/10=100，即每秒 100 帧。如果你的检测帧率经常接近这个值，你可以调整动态检测遮罩降低检测区域，或考虑增加第二个 Coral 设备。
+当推理速度为 10ms 时，你的 Coral 最高可处理 1000/10=100，即每秒 100 帧。如果你的检测帧率经常接近这个值，你可以调整画面变动遮罩降低检测区域，或考虑增加第二个 Coral 设备。
 
-### OpenVINO - Intel
+### OpenVINO - Intel {#openvino---intel}
 
 OpenVINO 检测器类型支持在以下硬件平台上运行：
 
 - 第六代 Intel 平台及更新版本（配备核显 iGPU）
-- 搭载 Intel Arc 显卡的 x86 架构主机
+- 搭载 Intel Arc 显卡（包括 A 系列和 B 系列 Battlemage）的 x86 架构主机
 - Intel NPU
 - 大多数现代 AMD 处理器（虽然 Intel 官方没提供支持）
 - 通过 CPU 运行的 x86 和 Arm64 架构主机（通常不建议此方式）
-
-:::note
-
-Frigate 0.17 还暂未官方支持 Intel B-series (Battlemage) 显卡，不过已有用户提供了为该系列显卡 [重新编译 Frigate 镜像（英文）](https://github.com/blakeblackshear/frigate/discussions/21257) 的操作步骤。
-
-:::
 
 更多详细信息请参阅 [检测器文档](/configuration/object_detectors#openvino-detector)
 
@@ -174,7 +166,7 @@ Frigate 能够使用支持 12.x 系列 CUDA 库的 NVIDIA GPU。
 
 请确保你的主机系统已安装 [nvidia-container-runtime](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu)，这样才能将 GPU 设备传递给容器；同时主机上还需为当前 GPU 安装**兼容的驱动程序**。
 
-#### 兼容性参考资料
+#### 兼容性参考资料 {#compatibility-references}
 
 [NVIDIA TensorRT 支持矩阵](https://docs.nvidia.com/deeplearning/tensorrt-rtx/latest/getting-started/support-matrix.html)
 
@@ -183,20 +175,21 @@ Frigate 能够使用支持 12.x 系列 CUDA 库的 NVIDIA GPU。
 [NVIDIA GPU 计算能力](https://developer.nvidia.com/cuda-gpus)
 
 推理使用 `onnx` 检测器类型完成。速度会因显卡型号和所用模型的不同而有很大差异。
-`tiny (t)`的模型比其他大小的模型更快，以下是一些已知示例：
+`tiny (t)` 的模型比等效的非 tiny 模型更快，以下是一些已知示例：
 
 ✅ - 使用 CUDA Graphs 加速
 ❌ - 未使用 CUDA Graphs 加速
 
-| 名称      | ✅ YOLOv9 推理时间               | ✅ RF-DETR 推理时间      | ❌ YOLO-NAS 推理时间       |
-| --------- | -------------------------------- | ----------------------- | -------------------------- |
-| GTX 1070  | s-320: 16 ms                     |                         | 320: 14 ms                 |
-| RTX 3050  | t-320: 8 ms s-320: 10 ms s-640: 28 ms | Nano-320: ~ 12 ms  | 320: ~ 10 ms 640: ~ 16 ms  |
-| RTX 3070  | t-320: 6 ms s-320: 8 ms s-640: 25 ms | Nano-320: ~ 9 ms   | 320: ~ 8 ms 640: ~ 14 ms   |
-| RTX A4000 |                                  |                         | 320: ~ 15 ms               |
-| Tesla P40 |                                  |                         | 320: ~ 105 ms              |
+| 名称        | ✅ YOLOv9 推理时间                       | ✅ RF-DETR 推理时间      | ❌ YOLO-NAS 推理时间       |
+| ----------- | ---------------------------------------- | ----------------------- | -------------------------- |
+| GTX 1070    | s-320: 16 ms                             |                         | 320: 14 ms                 |
+| RTX 3050    | t-320: 8 ms s-320: 10 ms s-640: 28 ms   | Nano-320: ~ 12 ms       | 320: ~ 10 ms 640: ~ 16 ms  |
+| RTX 3070    | t-320: 6 ms s-320: 8 ms s-640: 25 ms    | Nano-320: ~ 9 ms        | 320: ~ 8 ms 640: ~ 14 ms   |
+| RTX 5060 Ti | t-320: 5 ms s-320: 7 ms s-640: 22 ms    | Nano-320: ~ 4 ms        |                            |
+| RTX A4000   |                                          |                         | 320: ~ 15 ms               |
+| Tesla P40   |                                          |                         | 320: ~ 105 ms              |
 
-### Apple Silicon
+### Apple Silicon {#apple-silicon}
 
 通过 [Apple Silicon](../configuration/object_detectors.md#apple-silicon-detector) 检测器，Frigate 可以利用 M1 及更新的 Apple Silicon 设备中的 NPU。
 
@@ -212,18 +205,19 @@ Apple Silicon 无法在容器内运行，因此使用 ZMQ 代理与运行在主�
 | M3 Pro | t-320: 6 ms s-320: 8 ms s-640: 20 ms |
 | M1     | s-320: 9ms                           |
 
-### ROCm - AMD GPU
+### ROCm - AMD GPU {#rocm---amd-gpu}
 
-通过使用 [rocm](../configuration/object_detectors.md#amdrocm-gpu-detector) 检测器，Frigate 可以工作在大部分 AMD 的显卡上。
+通过 [ROCm](../configuration/object_detectors.md#amdrocm-gpu-detector) 检测器，Frigate 可以利用许多 AMD 独立显卡。
 
-| 型号      | YOLOv9 推理时间                | YOLO-NAS 推理时间         |
-| --------- | ------------------------------ | ------------------------- |
-| AMD 780M  | t-320: ~ 14 ms s-320: 20 ms    | 320: ~ 25 ms 640: ~ 50 ms |
-| AMD 8700G |                                | 320: ~ 20 ms 640: ~ 40 ms |
+| 名称           | YOLOv9 推理时间                | YOLO-NAS 推理时间         | RF-DETR 推理时间       |
+| -------------- | ------------------------------ | ------------------------- | ---------------------- |
+| AMD 780M       | t-320: ~ 14 ms s-320: 20 ms    | 320: ~ 25 ms 640: ~ 50 ms |                        |
+| AMD 8700G      |                                | 320: ~ 20 ms 640: ~ 40 ms |                        |
+| AMD 9060XT 16G | t-320: ~ 4 ms s-320: 5 ms     | 320: ~ 6 ms               | Nano-320: ~ 90 ms      |
 
-## 社区支持的检测器
+## 社区支持的检测器 {#community-supported-detectors}
 
-### MemryX MX3
+### MemryX MX3 {#memryx-mx3}
 
 Frigate 支持在兼容的硬件平台上使用 MemryX MX3 M.2 AI 加速模块，包括 x86（Intel/AMD）和 ARM 单板计算机（如树莓派 5）。
 
@@ -248,14 +242,13 @@ MX3 采用流水线架构，支持的最大帧率（以及支持摄像头数量�
 
 推理速度可能因主机平台而异。以上数据是在 **Intel 13700 CPU** 上测量的。树莓派、香橙派和其他 ARM 单板计算机具有不同级别的处理能力，可能会限制总帧率。
 
-### Nvidia Jetson
+### NVIDIA Jetson {#nvidia-jetson}
 
-Frigate 支持所有的 Jetson 开发板，从经济实惠的 Jetson Nano 到性能强劲的 Jetson Orin AGX 都有覆盖。能够通过专门的 [编解码预设参数](../configuration/ffmpeg_presets.md#hwaccel-presets) 来 [调用 Jetson 视频硬解码功能](/configuration/hardware_acceleration_video#nvidia-jetson 系列）进行加速。如果还配置了 [TensorRT 检测器](/configuration/object_detectors#nvidia-tensorrt 检测器）则会利用 Jetson 的 GPU 和 DLA（深度学习加速器)执行目标检测任务。
+在运行 Jetpack 6 的情况下，Jetson 设备可通过 TensorRT 或 ONNX 检测器获得支持。配合[适当的预设](/configuration/ffmpeg_presets#hwaccel-presets)，将[调用 Jetson 的硬件媒体引擎](/configuration/hardware_acceleration_video#nvidia-jetson)进行加速。如果还配置了 [TensorRT 检测器](/configuration/object_detectors#nvidia-tensorrt-detector)则会利用 Jetson 的 GPU 和 DLA 执行目标检测任务。
 
-推理速度会因 YOLO 模型、Jetson 平台型号及 NVPMode（GPU/DLA/EMC 时钟频率）配置而异。大多数模型的典型推理时间为 20-40 毫秒。
-DLA（深度学习加速器）相比 GPU 能效更高但速度略慢，因此启用 DLA 会降低功耗，但会轻微增加推理耗时。
+推理速度会因 YOLO 模型、Jetson 平台型号及 nvpmodel（GPU/DLA/EMC 时钟频率）配置而异。大多数模型的典型推理时间为 20-40 毫秒。DLA 相比 GPU 能效更高但速度略慢，因此启用 DLA 会降低功耗，但会轻微增加推理耗时。
 
-### Rockchip 平台
+### Rockchip 平台 {#rockchip-platform}
 
 Frigate 支持所有 Rockchip 开发板的硬件视频加速功能，但硬件目标检测仅限以下型号支持：
 
@@ -272,7 +265,7 @@ Frigate 支持所有 Rockchip 开发板的硬件视频加速功能，但硬件�
 
 启用全部 3 个核心的 RK3588 芯片运行 YOLO-NAS S 模型时，典型推理时间为 25-30 毫秒。
 
-### Synaptics
+### Synaptics {#synaptics}
 
 - **Synaptics** 的默认模型为 **mobilenet**
 
@@ -281,7 +274,7 @@ Frigate 支持所有 Rockchip 开发板的硬件视频加速功能，但硬件�
 | ssd mobilenet | ~ 25 ms                   |
 | yolov5m       | ~ 118 ms                  |
 
-### AXERA
+### AXERA {#axera}
 
 - **AXEngine** 默认模型为 **yolov9**
 
@@ -289,7 +282,7 @@ Frigate 支持所有 Rockchip 开发板的硬件视频加速功能，但硬件�
 | ----------- | ----------------------------- |
 | yolov9-tiny | ~ 4 ms                        |
 
-## Frigate 如何分配 CPU 和检测器的工作？（通俗说法）
+## Frigate 如何分配 CPU 和检测器的工作？（通俗说法） {#what-does-frigate-use-the-cpu-for-and-what-does-it-use-a-detector-for-eli5-version}
 
 就好比家里的监控要盯着院子，别让野猫进来捣乱。负责处理信息的小 C（也就是 CPU）和专门认东西的小识（也就是那个检测器），俩得搭伙干活。
 
@@ -305,10 +298,10 @@ Frigate 支持所有 Rockchip 开发板的硬件视频加速功能，但硬件�
 
 其实这就跟调高监控分辨率一个道理，分辨率一高，小 C 要处理的东西就多了去了，累得不行。小识虽说厉害，可精力也有限，尤其家里摄像头多的时候，根本顾不过来。
 
-所以 Frigate 就想了个办法，让小 C 先当 “哨兵”，就盯着有没有动静，只有发现有东西在动，再把画面给小识去仔细辨认。这样一来，就算家里装了好几个摄像头，也能盯得过来，俩也不至于被累垮。
+所以 Frigate 就想了个办法，让小 C 先当 "哨兵"，就盯着有没有动静，只有发现有东西在动，再把画面给小识去仔细辨认。这样一来，就算家里装了好几个摄像头，也能盯得过来，俩也不至于被累垮。
 
-## 使用 Coral 加速器时，硬件加速参数（hwaccel args）还有用吗？
+## 使用 Coral 加速器时，硬件加速参数（hwaccel args）还有用吗？ {#do-hwaccel-args-help-if-i-am-using-a-coral}
 
 当然有用！因为 Coral 并不能进行视频编解码工作。
 
-解压视频流会消耗大量 CPU 资源。视频压缩使用关键帧（I 帧）传输完整画面，后续帧只记录差异，CPU 需要将差异帧与关键帧合并还原每一帧（[更多细节可参阅本文（英文）](https://blog.video.ibm.com/streaming-video-tips/keyframes-interframe-video-compression/)）。 更高分辨率和帧率意味着需要更多算力来解码视频流，因此建议直接在摄像头端设置合适参数以避免不必要的解码负担。
+解压视频流会消耗大量 CPU 资源。视频压缩使用关键帧（I 帧）传输完整画面，后续帧只记录差异，CPU 需要将差异帧与关键帧合并还原每一帧（[更多细节可参阅本文（英文）](https://support.video.ibm.com/hc/en-us/articles/18106203580316-Keyframes-InterFrame-Video-Compression)）。更高分辨率和帧率意味着需要更多算力来解码视频流，因此建议直接在摄像头端设置合适参数以避免不必要的解码负担。

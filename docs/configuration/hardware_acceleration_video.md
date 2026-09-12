@@ -201,7 +201,7 @@ ffmpeg: # [!code highlight]
 
 ## NVIDIA GPU {#nvidia-gpus}
 
-虽然旧的 GPU 可能也能工作，但建议使用现代的、受支持的 GPU。NVIDIA 提供了[支持的 GPU 和功能矩阵](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new)。如果你的显卡在列表中并支持 CUVID/NVDEC，它很可能可以用于 Frigate 的解码。但是，你必须使用[与 FFmpeg 兼容的驱动版本](https://github.com/FFmpeg/nv-codec-headers/blob/master/README)。旧的驱动版本可能缺少符号而无法工作，而旧的显卡不受新驱动版本支持。解决这个问题的唯一方法是[提供你自己的 FFmpeg](/configuration/advanced#custom-ffmpeg-build)，使其能与你的驱动版本一起工作，但这是不受支持的，可能效果不佳甚至完全无法工作。
+虽然旧的 GPU 可能也能工作，但建议使用现代的、受支持的 GPU。NVIDIA 提供了[支持的 GPU 和功能矩阵](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new)。如果你的显卡在列表中并支持 CUVID/NVDEC，它很可能可以用于 Frigate 的解码。但是，你必须使用[与 FFmpeg 兼容的驱动版本](https://github.com/FFmpeg/nv-codec-headers/blob/master/README)。旧的驱动版本可能缺少符号而无法工作，而旧的显卡不受新驱动版本支持。解决这个问题的唯一方法是[提供你自己的 FFmpeg](/configuration/advanced/system#custom-ffmpeg-build)，使其能与你的驱动版本一起工作，但这是不受支持的，可能效果不佳甚至完全无法工作。
 
 更完整的显卡和兼容驱动列表可在[驱动发布说明](https://download.nvidia.com/XFree86/Linux-x86_64/525.85.05/README/supportedchips.html)中找到。
 
@@ -340,7 +340,7 @@ done
 
 # 社区支持 {#community-supported}
 
-## NVIDIA Jetson <Badge text="社区支持" type="warning" />
+## NVIDIA Jetson <Badge text="社区支持" type="warning" /> {#nvidia-jetson}
 
 提供 Jetson 设备专用 Docker 镜像。它们包含使用 Jetson 专用媒体引擎的 `ffmpeg` 构建。如果你的 Jetson 主机运行 Jetpack 6.0+，请使用 `stable-tensorrt-jp6` 标签镜像。注意，Orin Nano 没有视频编码器，因此 frigate 将在此平台上使用软件编码，但该镜像仍然允许硬件解码和 tensorrt 物体/目标检测。
 
@@ -468,11 +468,11 @@ cameras:
 
 Synaptics SL 系列 SoC 支持硬件加速的视频编解码。
 
-### 前提条件
+### 前提条件 {#prerequisites-1}
 
 请确保按照 [Synaptics 安装说明](../frigate/installation.md#synaptics)进行操作。
 
-### 配置
+### 配置 {#configuration-1}
 
 在你的 `config.yml` 中添加以下任意一个 FFmpeg 预设，以启用硬件视频处理：
 

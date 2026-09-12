@@ -11,7 +11,25 @@ Frigate 通常运行在负责为多个服务管理 TLS 证书的反向代理之�
 
 在许多部署场景中，TLS 并非必需。你可以通过以下 YAML 配置在配置文件中禁用 TLS：
 
-## 禁用TLS
+## 禁用TLS {#tls}
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **TLS** 部分关闭 TLS。
+
+<FrigateConfigMock
+  :auto-play="false"
+  :show-navigation-steps="false"
+  level="global"
+  section="tls"
+  focus="enabled"
+  :values="{ enabled: false }"
+  hint="当 Frigate 运行在反向代理之后时，通常需要禁用内置 TLS，以避免证书冲突。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 在配置文件中添加以下内容即可禁用TLS：
 
@@ -19,6 +37,9 @@ Frigate 通常运行在负责为多个服务管理 TLS 证书的反向代理之�
 tls:
   enabled: False
 ```
+
+</TabItem>
+</ConfigTabs>
 
 ## 证书配置 {#certificates}
 
@@ -60,7 +81,7 @@ frigate:
     - "443:8971" # <- 左边为宿主机端口，右边为容器端口。需要注意国内家用宽带无法使用443端口
 ```
 
-## ACME验证支持
+## ACME验证支持 {#acme-challenge}
 
 Frigate支持托管ACME验证文件（HTTP验证方式），需将验证文件挂载到：
 

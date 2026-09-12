@@ -5,19 +5,19 @@ title: Frigate+
 
 关于如何使用Frigate+来改进你的模型的更多信息，请参见[Frigate+文档](/plus/)。
 
-## 设置
+## 设置 {#setup}
 
-### 创建账户
+### 创建账户 {#create-an-account}
 
 可以在[https://plus.frigate.video](https://plus.frigate.video)创建免费账户。
 
-### 生成API密钥
+### 生成API密钥 {#generate-an-api-key}
 
 登录后，你可以在设置中为Frigate生成API密钥。
 
 ![API密钥](/img/plus-api-key-min.png)
 
-### 设置API密钥
+### 设置API密钥 {#set-your-api-key}
 
 在Frigate中，你可以使用名为`PLUS_API_KEY`的环境变量或docker密钥来启用浏览页面上的`Frigate+`按钮。Home Assistant App 用户可以在设置 > Apps > Frigate > 配置 > 选项下设置（确保切换"显示未使用的可选配置选项"开关）。
 
@@ -27,7 +27,7 @@ title: Frigate+
 
 :::
 
-## 提交示例
+## 提交示例 {#submit-examples}
 
 一旦配置了API密钥，你就可以直接从Frigate的浏览页面提交示例。从更多筛选菜单中，选择"Has a Snapshot - Yes"和"Submitted to Frigate+ - No"，然后点击窗格底部的应用。然后，点击缩略图并选择快照标签。
 
@@ -41,13 +41,13 @@ title: Frigate+
 
 ![提交到Plus](/img/plus/submit-to-plus.jpg)
 
-### 标注和验证
+### 标注和验证 {#annotate-and-verify}
 
 你可以在[https://plus.frigate.video](https://plus.frigate.video)查看所有已提交的图像。点击图像可以添加标注。有关标注的更详细信息，请参见[改进你的模型](../plus/improving_model.md)文档。
 
 ![标注](/img/annotate.png)
 
-## 使用模型
+## 使用模型 {#use-models}
 
 一旦你[请求了第一个模型](../plus/first_model.md)并获得了自己的模型ID，就可以使用特殊的模型路径。Frigate+模型不需要配置其他信息，因为它会自动从Frigate+获取剩余的配置。
 

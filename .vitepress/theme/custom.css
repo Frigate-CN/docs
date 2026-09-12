@@ -48,6 +48,65 @@
   vertical-align: sub;
 }
 
+/* ========== 折叠容器 (::: collapse) 样式 ========== */
+/* 外层由 CollapseContainer.vue 渲染，使用 TkTransitionCollapse 动画 */
+.tk-collapse-container {
+  margin: 1rem 0;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--vp-c-bg);
+}
+
+.tk-collapse-container__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+  background-color: var(--vp-c-bg-soft);
+  transition: background-color 0.2s;
+}
+
+.tk-collapse-container__summary:hover {
+  background-color: var(--vp-c-bg-mute);
+}
+
+.tk-collapse-container__title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--vp-c-text-1);
+}
+
+.tk-collapse-container__icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 8px;
+  color: var(--vp-c-text-2);
+  transition: transform 0.3s ease;
+}
+
+.tk-collapse-container__icon--open {
+  transform: rotate(180deg);
+}
+
+.tk-collapse-container__icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tk-collapse-container__content {
+  border-top: 1px solid var(--vp-c-border);
+  overflow: hidden;
+}
+
+.tk-collapse-container__inner {
+  padding: 16px;
+  color: var(--vp-c-text-1);
+}
+
 .dark .tk-footer-info .eo-logo {
   background-image: url(/assets/eo-dark.png);
   background-size: contain;

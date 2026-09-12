@@ -17,7 +17,7 @@ title: 标注你的图像
 
 ![Fedex Logo](/img/plus/fedex-logo.jpg)
 
-## AI 建议的标签
+## AI 建议的标签 {#ai-suggested-labels}
 
 如果你有有效的 Frigate+ 订阅，新上传的内容将被扫描以查找为你的摄像头配置的对象，在 Frigate+ 中进行标注时，你将看到浅蓝色框作为建议标签。这些建议通过队列处理，通常在上传后一分钟内完成，但处理时间可能会更长。
 
@@ -25,7 +25,7 @@ title: 标注你的图像
 
 保存时，建议会转换为标签，因此你应该删除任何错误的建议。已经有一些逻辑设计用于避免重复标签，但你可能仍然偶尔会看到一些重复的建议。你应该保留最准确的边界框并删除任何重复项，以便每个对象只剩下一个标签。
 
-## 误报标签
+## 误报标签 {#false-positive-labels}
 
 误报将以红色框显示，标签将有一个删除线。这些不能调整，但如果你不小心从 Frigate 提交了一个真阳性作为误报，可以删除它们。
 ![false positive](/img/plus/false-positive.jpg)
@@ -34,7 +34,7 @@ title: 标注你的图像
 
 ![add image](/img/plus/false-positive-overlap.jpg)
 
-## 更快工作流程的快捷键
+## 更快工作流程的快捷键 {#shortcuts-for-a-faster-workflow}
 
 | 快捷键           | 描述                       |
 | ----------------- | ----------------------------- |

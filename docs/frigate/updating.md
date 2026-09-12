@@ -5,17 +5,17 @@ title: 更新
 
 # 更新 Frigate
 
-Frigate 的当前稳定版本是 **0.17.0**。此版本的发布说明和任何重大变更可以在 [Frigate 中文社区 B站账号](https://www.bilibili.com/opus/1173951738961461282) 上找到。
+Frigate 的当前稳定版本是 **0.18.0**。此版本的发布说明和任何重大变更可以在 [Frigate 中文社区 B站账号](https://www.bilibili.com/opus/1173951738961461282) 上找到。
 
 保持 Frigate 的更新可确保你能够获得最新功能、性能改进和错误修复。更新过程根据你的安装方法（Docker、Home Assistant App 等）略有不同。以下是最常见设置的说明。
 
-## 开始之前
+## 开始之前 {#before-you-begin}
 
 - **停止 Frigate**：对于大多数方法，你需要在备份和更新之前停止正在运行的 Frigate 实例。
 - **备份你的配置**：在更新之前，始终备份你的 `/config` 目录（例如，`config.yml` 和 `frigate.db`，SQLite 数据库）。这确保如果出现问题，你可以回滚到上一个版本。
 - **查看发布说明**：仔细阅读 [Frigate GitHub 发布页面](https://github.com/blakeblackshear/frigate/releases)，了解可能影响你设置的重大变更或配置更新。
 
-## 使用 Docker 更新
+## 使用 Docker 更新 {#updating-with-docker}
 
 如果你通过 Docker 运行 Frigate（推荐方法），请按照以下步骤操作：
 
@@ -31,21 +31,21 @@ Frigate 的当前稳定版本是 **0.17.0**。此版本的发布说明和任何�
 
 2. **更新并拉取最新镜像**：
    - 如果使用 Docker Compose：
-     - 编辑你的 `docker-compose.yml` 文件以指定所需的版本标签（例如，使用 `0.17.0` 而不是 `0.16.4`）。例如：
+     - 编辑你的 `docker-compose.yml` 文件以指定所需的版本标签（例如，使用 `0.18.0` 而不是 `0.17.1`）。例如：
        ```yaml
        services:
          frigate:
-           image: docker.cnb.cool/frigate-cn/frigate:0.17.0
+           image: docker.cnb.cool/frigate-cn/frigate:0.18.0
        ```
      - 然后拉取镜像：
        ```bash
-       docker pull docker.cnb.cool/frigate-cn/frigate:0.17.0
+       docker pull docker.cnb.cool/frigate-cn/frigate:0.18.0
        ```
      - **`stable` 标签用户注意**：如果你的 `docker-compose.yml` 使用 `stable` 标签（例如，`docker.cnb.cool/frigate-cn/frigate:stable`），你不需要手动更新标签。拉取后，`stable` 标签始终指向最新的稳定版本。
    - 如果使用 `docker run`：
-     - 使用适当的标签拉取镜像（例如，`0.17.0`、`0.17.0-tensorrt` 或 `stable`）：
+     - 使用适当的标签拉取镜像（例如，`0.18.0`、`0.18.0-tensorrt` 或 `stable`）：
        ```bash
-       docker pull docker.cnb.cool/frigate-cn/frigate:0.17.0
+       docker pull docker.cnb.cool/frigate-cn/frigate:0.18.0
        ```
 
 3. **启动容器**：
@@ -62,12 +62,12 @@ Frigate 的当前稳定版本是 **0.17.0**。此版本的发布说明和任何�
      ```
    - 访问 Frigate Web UI（默认：`http://<your-ip>:5000`）以确认新版本正在运行。版本号显示在系统指标页面的顶部。
 
-### 注意事项
+### 注意事项 {#notes}
 
 - 如果你已自定义其他设置（例如，`shm-size`），请确保它们在更新后仍然适用。
 - 只要你拉取了正确的版本，Docker 将在重启容器时自动使用更新后的镜像。
 
-## 更新 Home Assistant App（原插件）
+## 更新 Home Assistant App（原插件） {#updating-the-home-assistant-app-formerly-addon}
 
 对于使用 Home Assistant App 运行 Frigate 的用户：
 
@@ -77,6 +77,7 @@ Frigate 的当前稳定版本是 **0.17.0**。此版本的发布说明和任何�
    - 如果有更新可用，你将看到一个"更新"按钮。
 
 2. **更新 App**：
+   - 对当前版本的 App 进行备份。
    - 点击 Frigate App 旁边的"更新"按钮。
    - 等待过程完成。Home Assistant 将处理下载和安装新版本。
 
@@ -87,24 +88,24 @@ Frigate 的当前稳定版本是 **0.17.0**。此版本的发布说明和任何�
    - 检查 App 日志（在"日志"选项卡下）以确保 Frigate 启动时没有错误。
    - 访问 Frigate Web UI 以确认新版本正在运行。
 
-### 注意事项
+### 注意事项 {#notes-1}
 
 - 通过查看 [发布说明](https://github.com/blakeblackshear/frigate/releases) 确保你的 `/config/frigate.yml` 与新版本兼容。
 - 如果使用自定义硬件（例如，Coral 或 GPU），请验证配置仍然有效，因为 App 更新不会修改你的硬件设置。
 
-## 回滚
+## 回滚 {#rolling-back}
 
 如果更新导致问题：
 
 1. 停止 Frigate。
 2. 恢复你备份的配置文件和数据库。
 3. 恢复到之前的镜像版本：
-   - 对于 Docker：在你的 `docker run` 命令中指定较旧的标签（例如，`docker.cnb.cool/frigate-cn/frigate:0.16.4`）。
+   - 对于 Docker：在你的 `docker run` 命令中指定较旧的标签（例如，`docker.cnb.cool/frigate-cn/frigate:0.17.1`）。
    - 对于 Docker Compose：编辑你的 `docker-compose.yml`，指定较旧的版本标签（例如，`docker.cnb.cool/frigate-cn/frigate:0.16.4`），并重新运行 `docker compose up -d`。
    - 对于 Home Assistant：从更新前创建的 App/插件备份中恢复。
 4. 验证旧版本是否再次运行。
 
-## 故障排除
+## 故障排除 {#troubleshooting}
 
 - **容器无法启动**：检查日志（`docker logs frigate`）中的错误。
 - **网页无法加载**：确保端口（例如，5000、8971）仍然正确映射且服务正在运行。

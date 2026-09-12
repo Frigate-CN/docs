@@ -43,17 +43,17 @@ ffmpeg:
     record: preset-record-generic-audio-aac # [!code ++]
 ```
 
-### 为什么实时监控中没有声音？
+### 为什么实时监控中没有声音？ {#how-can-i-get-sound-in-live-view}
 
 仅当配置了go2rtc时实时监控才能有声音，详见[实时监控文档](../configuration/live.md)。
 
-### 无法在Web界面查看录像
+### 无法在Web界面查看录像 {#i-cant-view-recordings-in-the-web-ui}
 
 请确保摄像头发送的是h264编码视频，或[进行转码](/configuration/restream.md)。
 
 可在Chrome浏览器打开`chrome://media-internals/`页面尝试播放，该页面会显示播放失败的具体原因。
 
-### 摄像头子码流质量不佳怎么办？
+### 摄像头子码流质量不佳怎么办？ {#what-do-i-do-if-my-cameras-sub-stream-is-not-good-enough}
 
 Frigate通常[推荐使用可配置子码流的摄像头](/frigate/hardware.md)。若子码流分辨率不合适，可对主码流进行缩放处理。
 
@@ -64,37 +64,59 @@ Frigate通常[推荐使用可配置子码流的摄像头](/frigate/hardware.md)�
 
 正确配置后，GPU将负责解码和缩放，CPU占用仅小幅增加但效果更佳。
 
-### MJPEG流或快照显示异常绿色画面
+### 如何旋转摄像头的视频画面？ {#how-can-i-rotate-my-cameras-video-feed}
+
+旋转最好在摄像头的固件设置中完成（通常称为 rotate、flip 或 corridor mode），这样视频到达时已经旋转好了，无需额外处理。请先检查摄像头固件。
+
+如果你的摄像头不支持旋转，go2rtc 的 ffmpeg 模块可以通过 `#rotate` 参数旋转流（`90`、`180`、`270` 或 `-90`），但不推荐这样做：旋转需要转码（重新编码）视频，会显著增加 CPU 使用率，尤其是高分辨率流。
+
+```yaml
+go2rtc:
+  streams:
+    my_camera: "ffmpeg:rtsp://user:password@192.168.1.10:554/stream#video=h264#hardware#rotate=90"
+```
+
+将摄像头的输入指向重组流，如[重组文档](/configuration/restream.md)所述，并交换 `detect -> width` 和 `detect -> height` 以匹配旋转后的分辨率。
+
+### MJPEG流或快照显示异常绿色画面 {#my-mjpeg-stream-or-snapshots-look-green-and-crazy}
 
 这通常表示摄像头配置的分辨率(width/height)不正确。请使用VLC等播放器确认实际分辨率，并检查宽高值是否颠倒。
 
 ![分辨率不匹配](/img/mismatched-resolution-min.jpg)
 
-### 日志中出现"[mov,mp4,m4a,3gp,3g2,mj2 @ 0x5639eeb6e140] moov atom not found"
+### 日志中出现"[mov,mp4,m4a,3gp,3g2,mj2 @ 0x5639eeb6e140] moov atom not found" {#movmp4m4a3gp3g2mj2-0x5639eeb6e140-moov-atom-not-found}
 
 某些情况下出现此日志信息是正常的。Frigate会在存储前检查录像文件完整性，偶尔这些缓存文件会无效并自动清理。
 
-### 日志中重复出现"On connect called"
+### 日志中重复出现"On connect called" {#mqtt-connected-repeats-in-the-logs}
 
 若日志频繁出现"On connect called"信息，请检查是否有多个Frigate实例。当多个容器使用相同`client_id`连接MQTT时会出现此情况。
 
-### 错误：Database Is Locked
+### 错误：Database Is Locked {#error-database-is-locked}
 
-SQLite在网络共享存储上运行不佳。若`/media`目录映射到网络共享，请按照[此指南](../configuration/advanced.md#database)将数据库移至内部存储。
+SQLite在网络共享存储上运行不佳。若`/media`目录映射到网络共享，请按照[此指南](../configuration/advanced/system.md#database)将数据库移至内部存储。
 
-### 无法发布到MQTT：客户端未连接
+### 无法发布到MQTT：客户端未连接 {#unable-to-publish-to-mqtt-client-is-not-connected}
 
 在Docker中使用MQTT时，请使用MQTT服务器的实际IP地址，而非`localhost`、`127.0.0.1`或`mosquitto.ix-mosquitto.svc.cluster.local`。
 
 因为Frigate容器不在host网络模式下运行，localhost指向的是容器自身而非宿主机网络。
 
-### 如何判断摄像头是否离线
+### 如何判断摄像头是否离线 {#how-do-i-know-if-my-camera-is-offline}
 
-可通过MQTT或/api/stats接口检测，离线摄像头的camera_fps会显示为0。
+Frigate 将每个角色的健康状态发布到 [`frigate/<camera_name>/status/<role>`](/integrations/mqtt#frigatecamera_namestatusrole)，其中 `<role>` 是摄像头上每个已启用的角色（`detect`、`record` 和 `audio`）。发布的值是以下之一：
 
-此外，当摄像头离线时，Home Assistant会将其标记为不可用状态。
+- `online`：Frigate 对该角色的进程正常运行
+- `offline`：进程已停止，Frigate 正在重启它
+- `disabled`：摄像头已关闭，无论是在运行时还是在配置文件中
 
-### 如何不通过Web界面查看Frigate日志？
+这些状态反映的是 Frigate 对该角色的进程状态，而非摄像头的可达性。因此，一个无法访问的摄像头会在看门狗重启 ffmpeg 时在 `offline` 和 `online` 之间交替。应等待状态稳定（例如使用 Home Assistant 的 `for:`），而不是在收到单条消息时立即处理。
+
+由于状态是按角色区分的，摄像头子码流正常但录制码流失联时，`detect` 会报告 `online`，而 `record` 会报告 `offline`。状态发生变化时会重新发布。
+
+你也可以通过 `/api/stats` 检测离线摄像头，其中 `camera_fps` 将为 0。
+
+### 如何不通过Web界面查看Frigate日志？ {#how-can-i-view-the-frigate-log-files-without-using-the-web-ui}
 
 Frigate既会内部管理日志，也会直接输出到Docker标准输出。通过CLI查看日志的步骤如下：
 
@@ -129,7 +151,7 @@ docker run -d \
   docker.cnb.cool/frigate-cn/frigate:stable
 ```
 
-### RTSP流在VLC中正常播放，但在Frigate配置中使用相同URL却失败，这是bug吗？
+### RTSP流在VLC中正常播放，但在Frigate配置中使用相同URL却失败，这是bug吗？ {#my-rtsp-stream-works-fine-in-vlc-but-it-does-not-work-when-i-put-the-same-url-in-my-frigate-config-is-this-a-bug}
 
 不是。Frigate使用TCP协议连接RTSP流，而VLC会根据网络条件自动切换UDP/TCP协议。VLC能播放而Frigate失败，很可能是因为VLC选择了UDP协议。
 
@@ -138,7 +160,7 @@ TCP能确保数据包有序到达，这对视频录制、解码和流处理至�
 如需使用UDP协议，可通过ffmpeg输入参数或`preset-rtsp-udp`预设配置，详见[ffmpeg预设文档](/configuration/ffmpeg_presets)。
 
 
-### 默认登录密码是什么？/我忘记登录后台密码了怎么办？
+### 默认登录密码是什么？/我忘记登录后台密码了怎么办？ {#frigate-is-slow-to-start-up-with-a-probing-detect-stream-message-in-the-logs}
 在首次安装Frigate的时候，会在日志里生成账号密码，请打开容器日志进行查看。
 
 如果已经重启导致日志丢失的话，有两个方法可以重置密码：
@@ -153,3 +175,35 @@ TCP能确保数据包有序到达，这对视频录制、解码和流处理至�
 如果你的系统已经占用了5000端口（例如群晖的管理页面），你可以将容器的5000端口映射至其他任意空闲端口。
 
 :::
+
+### 我的配置文件中的 `version` 键是什么？ {#what-is-the-version-key-in-my-config-file}
+
+`version` 记录你的配置最后一次迁移到的配置格式。启动时 Frigate 将其与运行版本期望的格式进行比较，如果较旧，则会将你的配置复制到 `/config/backup_config.yaml`，以新格式重写，并在最后一步更新 `version`。没有 `version` 键的配置被认为早于 0.14，并会从该版本开始迁移。
+
+Frigate 会为你管理此键，因此不要设置或编辑它。提高该值会使 Frigate 跳过你的配置仍需要的迁移，降低该值会对已转换的配置重新运行迁移。任何一种都可能导致配置不再通过验证。
+
+### 为什么 Frigate 不断为我的停放汽车创建新的被追踪目标？ {#why-does-frigate-keep-creating-new-tracked-objects-for-my-parked-car}
+
+静止追踪旨在**防止**这种情况：一辆停放的汽车应保持为一个单一的被追踪目标，而不是生成新的目标。如果你不断为同一辆车获得新的被追踪目标，那么 Frigate 很可能丢失了该目标并重新将其检测为新目标。
+
+在浏览 → **追踪详情**中打开其中一个被追踪目标。如果检测分数较低（< 70% 左右），则模型对停放汽车是汽车没有信心。这在免费的 [COCO 训练](https://cocodataset.org/#explore)目标检测模型上很常见，例如陡峭/俯视角度、部分遮挡的汽车、树叶遮挡或低光照画面。当检测结果在太多帧中低于 `min_score` 时，追踪器会丢失目标，下一个有信心帧会创建一个全新的目标。
+
+以下方法应该能改善：
+
+- **改善视角**：即使是一个小的角度变化，让汽车更多的部分可见，也可能将分数提高到足以稳定追踪的水平。
+- **使用更准确的模型**：从 `mobiledet` 切换到 `yolov9`，或升级到更大的变体如 `yolov9-s` 而非 `yolov9-t`。最大的收益通常来自在你自己的摄像头图像上微调模型，使其学习你的特定场景。[Frigate+](https://frigate.video/plus) 是一个付费选项——模型基于安防摄像头画面训练，并可微调为你提交的图像。
+- **不要为 `car` 设置 `detect -> stationary -> max_frames`**：这会人为结束追踪并强制重新检测为新目标。参见[静止目标](../configuration/stationary_objects.md)。
+- **使用 `required_zones` 将警报限制在你关心的区域**。参见[区域](../configuration/zones.md#restricting-alerts-and-detections-to-specific-zones)。
+- **使用[目标过滤遮罩](../configuration/masks.md#object-filter-masks)过滤不可能的位置**，如果汽车在屋顶/树顶等位置被检测到。
+
+参见[目标过滤器](../configuration/object_filters.md)了解更多关于调整 `min_score` 和 `threshold` 的信息。注意将它们提得太高会使这个问题更严重。
+
+### 当 Frigate 将某物检测为错误目标时，如何纠正？ {#how-do-i-correct-frigate-when-it-detects-something-as-the-wrong-object}
+
+Frigate 的目标检测依赖机器学习[模型](../frigate/glossary.md#model)，而随 Frigate 提供的免费 [COCO 训练](https://cocodataset.org/#explore)模型可能在其未训练的场境中误识别目标。有两种处理方法：
+
+**使用你自己的图像训练或微调模型。** 最持久的修复方法是改进模型本身。最大的收益通常来自在你自己的摄像头图像上微调模型，使其学习你的特定场景。[Frigate+](https://frigate.video/plus) 是付费选项。当 Frigate 标记错误时，在浏览中打开被追踪目标，选择**快照**标签页，使用**提交到 Frigate+** 发送带有正确标签的示例（或将其标记为[误报](../frigate/glossary.md#false-positive)）。一旦你提交了示例并[请求了模型](../plus/first_model.md)，重新训练的模型将对你的摄像头更准确。
+
+**使用过滤器抑制误识别。** 你可以使用过滤器阻止特定误报被追踪：调整 `min_score` / `threshold`，或添加 `min_area` / `max_area` / `min_ratio` / `max_ratio` 过滤器。如果误报始终在相同的固定位置（如被识别为人的雕像或邮箱），在该位置添加[目标过滤遮罩](../configuration/masks.md#object-filter-masks)。
+
+过滤器和遮罩只能隐藏不正确的结果——它们不会教会 Frigate 目标实际上是什么。要做到这一点，请微调你自己的模型或使用 Frigate+。

@@ -5,12 +5,12 @@ title: MQTT
 
 这些是 Frigate 生成的 MQTT 消息。默认的 topic_prefix 是 `frigate`，但可以在配置文件中更改。
 
-## 通用 Frigate 主题
+## 通用 Frigate 主题 {#general-frigate-topics}
 
 ### `frigate/available`
 
 设计用于作为 Home Assistant 的可用性主题。可能的消息有：
-"online"：Frigate 运行时发布（启动时）
+"online"：在 Frigate 运行并发布其初始状态后发布。请注意，此消息在每次连接到代理时都会发布，因此如果代理重启或连接断开并恢复，它会重新发布，而 Frigate 本身并不会重启。
 "offline"：Frigate 停止后发布
 
 ### `frigate/restart`
@@ -122,7 +122,7 @@ title: MQTT
 
 为被追踪目标元数据的更新发布的消息，例如：
 
-#### 生成式 AI 描述更新
+#### 生成式 AI 描述更新 {#generative-ai-description-update}
 
 ```json
 {
@@ -132,7 +132,7 @@ title: MQTT
 }
 ```
 
-#### 人脸识别更新
+#### 人脸识别更新 {#face-recognition-update}
 
 ```json
 {
@@ -145,7 +145,7 @@ title: MQTT
 }
 ```
 
-#### 车牌识别更新
+#### 车牌识别更新 {#license-plate-recognition-update}
 
 ```json
 {
@@ -159,7 +159,7 @@ title: MQTT
 }
 ```
 
-#### 目标分类更新
+#### 目标分类更新 {#object-classification-update}
 
 当 [目标分类](/configuration/custom_classification/object_classification) 对分类结果达成共识时发布的消息。
 
@@ -250,7 +250,7 @@ title: MQTT
 
 ### `frigate/triggers`
 
-当摄像机 `semantic_search` 配置中定义的触发器触发时发布的消息。
+当摄像头 `semantic_search` 配置中定义的触发器触发时发布的消息。
 
 ```json
 {
@@ -268,17 +268,19 @@ title: MQTT
 
 ### `frigate/camera_activity`
 
-返回关于每台摄像机、其当前功能以及是否检测到运动、目标等的数据。可以通过发布到 `frigate/onConnect` 来触发
+返回关于每台摄像头、其当前功能以及是否检测到画面变动、目标等的数据。可以通过发布到 `frigate/onConnect` 来触发
 
 ### `frigate/notifications/set`
 
-用于打开和关闭通知的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭所有摄像头通知的主题。期望值为 `ON` 和 `OFF`。
+
+仅在配置中启用通知时可用。不会在 Frigate 重启后保留。
 
 ### `frigate/notifications/state`
 
 包含通知当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
-## Frigate 摄像机主题
+## Frigate 摄像头主题 {#frigate-camera-topics}
 
 ### `frigate/<camera_name>/status/<role>`
 
@@ -286,17 +288,19 @@ title: MQTT
 
 - `online`：流正在运行并被处理
 - `offline`：流处于离线状态并正在重启
-- `disabled`：摄像机当前已禁用
+- `disabled`：摄像头当前已关闭（通过 `enabled/set` 主题在运行时关闭，或通过配置文件永久禁用）。参见[摄像头状态](/configuration/live#camera-state)了解区别。
+
+这些状态反映的是 Frigate 对该角色的进程状态，而非摄像头的可达性。因此，一个无法访问的摄像头会在看门狗重启 ffmpeg 时在 `offline` 和 `online` 之间交替。应等待状态稳定（例如使用 Home Assistant 的 `for:`），而不是在收到单条消息时立即处理。
 
 ### `frigate/<camera_name>/<object_name>`
 
-发布摄像机的目标计数，用作 Home Assistant 中的传感器。
-`all` 可用作 object_name 来统计摄像机的所有目标。
+发布摄像头的目标计数，用作 Home Assistant 中的传感器。
+`all` 可用作 object_name 来统计摄像头的所有目标。
 
 ### `frigate/<camera_name>/<object_name>/active`
 
-发布摄像机的活动目标计数，用作 Home Assistant 中的传感器。
-`all` 可用作 object_name 来统计摄像机的所有活动目标。
+发布摄像头的活动目标计数，用作 Home Assistant 中的传感器。
+`all` 可用作 object_name 来统计摄像头的所有活动目标。
 
 ### `frigate/<zone_name>/<object_name>`
 
@@ -322,112 +326,124 @@ title: MQTT
 
 ### `frigate/<camera_name>/audio/dBFS`
 
-发布在此摄像机上检测到的音频的 dBFS 值。
+发布在此摄像头上检测到的音频的 dBFS 值。
 
 **注意：** 需要启用音频检测
 
 ### `frigate/<camera_name>/audio/rms`
 
-发布在此摄像机上检测到的音频的 rms 值。
+发布在此摄像头上检测到的音频的 rms 值。
 
 **注意：** 需要启用音频检测
 
 ### `frigate/<camera_name>/audio/transcription`
 
-发布在此摄像机上检测到的音频的转录文本。
+发布在此摄像头上检测到的音频的转录文本。
 
 **注意：** 需要启用音频检测和转录
 
 ### `frigate/<camera_name>/classification/<model_name>`
 
-发布状态分类模型为摄像机检测到的当前状态。主题名称包括在分类设置中配置的模型名称。
+发布状态分类模型为摄像头检测到的当前状态。主题名称包括在分类设置中配置的模型名称。
 发布的值是检测到的状态类名称（例如，`open`、`closed`、`on`、`off`）。状态仅在更改时发布，有助于减少不必要的 MQTT 流量。
 
 ### `frigate/<camera_name>/enabled/set`
 
-用于打开和关闭 Frigate 对摄像机的处理的主题。期望值为 `ON` 和 `OFF`。
+用于在运行时打开或关闭 Frigate 对摄像头的处理的主题。期望值为 `ON` 和 `OFF`。更改会在 Frigate 重启后保持（参见[运行时开关持久化](/configuration/live#runtime-toggle-persistence)）。要永久更改配置值，请使用 Frigate 界面的**设置 → 全局配置 → 摄像头管理**。参见[摄像头状态](/configuration/live#camera-state)了解关闭和禁用摄像头的区别。
 
 ### `frigate/<camera_name>/enabled/state`
 
-包含摄像机处理当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头处理当前运行时状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/detect/set`
 
-用于打开和关闭摄像机目标检测的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭摄像头目标检测的主题。期望值为 `ON` 和 `OFF`。更改会在 Frigate 重启后保持（参见[运行时开关持久化](/configuration/live#runtime-toggle-persistence)）。
 
 ### `frigate/<camera_name>/detect/state`
 
-包含摄像机目标检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头目标检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/audio/set`
 
-用于打开和关闭摄像机音频检测的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭摄像头音频检测的主题。期望值为 `ON` 和 `OFF`。更改会在 Frigate 重启后保持（参见[运行时开关持久化](/configuration/live#runtime-toggle-persistence)）。
 
 ### `frigate/<camera_name>/audio/state`
 
-包含摄像机音频检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头音频检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
+
+### `frigate/<camera_name>/audio_transcription/set`
+
+用于打开和关闭摄像头[实时音频转写](/configuration/audio_detectors#live-transcription)的主题。期望值为 `ON` 和 `OFF`。转写文本发布到 `frigate/<camera_name>/audio/transcription`。
+
+`ON` 仅在摄像头的配置中启用了音频转写时生效。与其他摄像头开关不同，此开关不会在 Frigate 重启后保持。
+
+**注意：**需要启用音频检测和转写
+
+### `frigate/<camera_name>/audio_transcription/state`
+
+包含摄像头实时音频转写当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/recordings/set`
 
-用于打开和关闭摄像机录像的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭摄像头录制的主题。期望值为 `ON` 和 `OFF`。更改会在 Frigate 重启后保持（参见[运行时开关持久化](/configuration/live#runtime-toggle-persistence)）。
 
 ### `frigate/<camera_name>/recordings/state`
 
-包含摄像机录像当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头录制当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/snapshots/set`
 
-用于打开和关闭摄像机快照的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭摄像头快照的主题。期望值为 `ON` 和 `OFF`。更改会在 Frigate 重启后保持（参见[运行时开关持久化](/configuration/live#runtime-toggle-persistence)）。
 
 ### `frigate/<camera_name>/snapshots/state`
 
-包含摄像机快照当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头快照当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/motion/set`
 
-用于打开和关闭摄像机运动检测的主题。期望值为 `ON` 和 `OFF`。
-注意：如果未禁用检测，关闭运动检测将失败。
+用于打开和关闭摄像头画面变动检测的主题。期望值为 `ON` 和 `OFF`。
+注意：如果未禁用检测，关闭画面变动检测将失败。
 
 ### `frigate/<camera_name>/motion`
 
-camera_name 当前是否正在检测运动。期望值为 `ON` 和 `OFF`。
-注意：最初检测到运动后，将设置 `ON`，直到 `mqtt_off_delay` 秒（默认为 30 秒）内未检测到运动。
+camera_name 当前是否正在检测画面变动。期望值为 `ON` 和 `OFF`。
+注意：最初检测到画面变动后，将设置 `ON`，直到 `mqtt_off_delay` 秒（默认为 30 秒）内未检测到画面变动。
 
 ### `frigate/<camera_name>/motion/state`
 
-包含摄像机运动检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头画面变动检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/improve_contrast/set`
 
-用于打开和关闭摄像机 improve_contrast 的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭摄像头 improve_contrast 的主题。期望值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/improve_contrast/state`
 
-包含摄像机 improve_contrast 当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头 improve_contrast 当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/motion_threshold/set`
 
-用于调整摄像机运动阈值的主题。期望值为整数。
+用于调整摄像头画面变动阈值的主题。期望值为整数。
 
 ### `frigate/<camera_name>/motion_threshold/state`
 
-包含摄像机当前运动阈值的主题。发布的值为整数。
+包含摄像头当前画面变动阈值的主题。发布的值为整数。
 
 ### `frigate/<camera_name>/motion_contour_area/set`
 
-用于调整摄像机运动轮廓面积的主题。期望值为整数。
+用于调整摄像头画面变动轮廓面积的主题。期望值为整数。
 
 ### `frigate/<camera_name>/motion_contour_area/state`
 
-包含摄像机当前运动轮廓面积的主题。发布的值为整数。
+包含摄像头当前画面变动轮廓面积的主题。发布的值为整数。
 
 ### `frigate/<camera_name>/review_status`
 
-包含摄像机当前活动状态的主题。可能的值为 `NONE`、`DETECTION` 或 `ALERT`。
+包含摄像头当前活动状态的主题。可能的值为 `NONE`、`DETECTION` 或 `ALERT`。
 
 ### `frigate/<camera_name>/ptz`
 
-向摄像机发送 PTZ 命令的主题。
+向摄像头发送 PTZ 命令的主题。
 
 | 命令                  | 说明                                                                              |
 | --------------------- | -------------------------------------------------------------------------------- |
@@ -438,11 +454,11 @@ camera_name 当前是否正在检测运动。期望值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/ptz_autotracker/set`
 
-用于打开和关闭摄像机 PTZ 自动追踪器的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭摄像头 PTZ 自动追踪器的主题。期望值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/ptz_autotracker/state`
 
-包含摄像机 PTZ 自动追踪器当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头 PTZ 自动追踪器当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/ptz_autotracker/active`
 
@@ -450,72 +466,76 @@ camera_name 当前是否正在检测运动。期望值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/review_alerts/set`
 
-用于打开或关闭摄像机核查警报的主题。期望值为 `ON` 和 `OFF`。
+用于打开或关闭摄像头核查警报的主题。期望值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/review_alerts/state`
 
-包含摄像机核查警报当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头核查警报当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/review_detections/set`
 
-用于打开或关闭摄像机核查检测的主题。期望值为 `ON` 和 `OFF`。
+用于打开或关闭摄像头核查检测的主题。期望值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/review_detections/state`
 
-包含摄像机核查检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头核查检测当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/object_descriptions/set`
 
-用于打开或关闭摄像机生成式 AI 目标描述的主题。期望值为 `ON` 和 `OFF`。
+用于打开或关闭摄像头生成式 AI 目标描述的主题。期望值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/object_descriptions/state`
 
-包含摄像机生成式 AI 目标描述当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头生成式 AI 目标描述当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/review_descriptions/set`
 
-用于打开或关闭摄像机生成式 AI 核查总结的主题。期望值为 `ON` 和 `OFF`。
+用于打开或关闭摄像头生成式 AI 核查总结的主题。期望值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/review_descriptions/state`
 
-包含摄像机生成式 AI 核查总结当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头生成式 AI 核查总结当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/birdseye/set`
 
-用于打开和关闭摄像机 Birdseye 的主题。期望值为 `ON` 和 `OFF`。Birdseye 模式必须在配置中启用。
+用于打开和关闭摄像头 Birdseye 的主题。期望值为 `ON` 和 `OFF`。Birdseye 模式必须在配置中启用。
 
 ### `frigate/<camera_name>/birdseye/state`
 
-包含摄像机 Birdseye 当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含摄像头 Birdseye 当前状态的主题。发布的值为 `ON` 和 `OFF`。
 
 ### `frigate/<camera_name>/birdseye_mode/set`
 
-用于设置摄像机 Birdseye 模式的主题。Birdseye 提供不同的模式来自定义摄像机在何种情况下显示。
+用于设置摄像头 Birdseye 模式的主题。Birdseye 提供不同的模式来自定义摄像头在何种情况下显示。
 
-_注意：将值从 `CONTINUOUS` 更改为 `MOTION | OBJECTS` 将需要最多 30 秒才能将摄像机从视图中移除。_
+_注意：将值从 `CONTINUOUS` 更改为 `MOTION | OBJECTS` 将需要最多 30 秒才能将摄像头从视图中移除。_
 
 | 命令        | 说明                                                      |
 | ----------- | --------------------------------------------------------- |
 | `CONTINUOUS` | 始终包含                                                  |
-| `MOTION`    | 当过去 30 秒内检测到运动时显示                            |
+| `MOTION`    | 当过去 30 秒内检测到画面变动时显示                            |
 | `OBJECTS`   | 如果在过去 30 秒内追踪了活动目标则显示                    |
 
 ### `frigate/<camera_name>/birdseye_mode/state`
 
-包含摄像机 Birdseye 模式当前状态的主题。发布的值为 `CONTINUOUS`、`MOTION`、`OBJECTS`。
+包含摄像头 Birdseye 模式当前状态的主题。发布的值为 `CONTINUOUS`、`MOTION`、`OBJECTS`。
 
 ### `frigate/<camera_name>/notifications/set`
 
-用于打开和关闭通知的主题。期望值为 `ON` 和 `OFF`。
+用于打开和关闭某个摄像头通知的主题。期望值为 `ON` 和 `OFF`。
+
+除非摄像头的配置中启用了通知，否则 `ON` 会被忽略。此设置不会在 Frigate 重启后保留。它与界面中标记为 **暂停至重启** 的控制是同一个功能。
 
 ### `frigate/<camera_name>/notifications/state`
 
-包含通知当前状态的主题。发布的值为 `ON` 和 `OFF`。
+包含通知当前状态的主题。发布的值为 `ON` 和 `OFF`。这是判断摄像头是否会发送通知的权威主题。
 
 ### `frigate/<camera_name>/notifications/suspend`
 
-用于暂停通知一定分钟数的主题。期望值为整数。
+用于暂停通知一定分钟数的主题。期望值为整数。与 `notifications/set` 相互独立：它不会改变 `notifications/state`，并且在通知关闭时会被忽略。
 
 ### `frigate/<camera_name>/notifications/suspended`
 
-包含通知暂停到的时间戳的主题。发布的值为 UNIX 时间戳，如果未暂停通知则为 0。
+包含通知暂停到的时间戳的主题。发布的值为 UNIX 时间戳，如果没有定时暂停则为 0。
+
+`0` 不表示通知已启用：`notifications/set` 设为 `OFF` 会清除定时暂停，因此当 `notifications/state` 为 `OFF` 时，此主题会发布 `0`。

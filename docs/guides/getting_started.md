@@ -13,21 +13,21 @@ title: 入门指南
 
 :::
 
-## 硬件设置
+## 硬件设置 {#setting-up-hardware}
 
 本节将指导你如何在服务器上安装 Debian Bookworm 并安装 Docker。
 
-### 安装 Debian 12 (Bookworm)
+### 安装 Debian 12 (Bookworm) {#install-debian-12-bookworm}
 
 关于如何安装 Debian 服务器有很多指南，所以这里只提供简略指南。将临时显示器和键盘连接到你的设备，以便安装一个没有桌面环境的最小化服务器。
 
-#### 准备安装媒介
+#### 准备安装媒介 {#prepare-installation-media}
 
 1. 从[Debian 网站](https://www.debian.org/distrib/netinst)下载小型安装镜像
 1. 将 ISO 写入 USB 设备（推荐使用[balena Etcher](https://etcher.balena.io/)工具）
 1. 从 USB 启动你的设备
 
-#### 安装并设置 Debian 以进行远程访问
+#### 安装并设置 Debian 以进行远程访问 {#install-and-setup-debian-for-remote-access}
 
 1. 确保你的设备已连接到网络，以便可以安装更新和软件
 1. 如果没有连接鼠标，选择非图形化安装选项，但两种安装方式都可以正常工作
@@ -49,7 +49,7 @@ title: 入门指南
 
 此时，你可以将设备安装到永久位置。剩余步骤可以通过 SSH 从另一台设备完成。如果你没有 SSH 客户端，可以安装[Visual Studio Code 文档](https://code.visualstudio.com/docs/remote/troubleshooting#_installing-a-supported-ssh-client)中列出的选项之一。
 
-#### 通过 SSH 完成设置
+#### 通过 SSH 完成设置 {#finish-setup-via-ssh}
 
 1. 通过 SSH 连接并使用安装时创建的非 root 用户登录
 1. 设置无密码 sudo，这样就不用每次执行 sudo 命令时都输入密码（将下面命令中的`blake`改为你的用户名）
@@ -73,7 +73,7 @@ title: 入门指南
 
 现在你有了一个需要很少维护的最小化 Debian 服务器。
 
-### 安装 Docker
+### 安装 Docker {#install-docker}
 
 1. 使用[官方文档](https://docs.docker.com/engine/install/debian/)安装 Docker Engine（不是 Docker Desktop）
    1. 具体来说，按照[使用 apt 仓库安装](https://docs.docker.com/engine/install/debian/#install-using-the-repository)部分的步骤操作
@@ -83,7 +83,7 @@ title: 入门指南
 
 本节展示如何在 Debian 上为 Docker 安装创建最小目录结构。如果你已经通过 Home Assistant App 或其他方式安装了 Frigate，可以继续[配置 Frigate](#configuring-frigate)部分。
 
-### 设置目录
+### 设置目录 {#setup-directories}
 
 如果配置文件在初始启动时不存在，Frigate 将创建一个配置文件。以下目录结构是开始所需的最低要求。一旦 Frigate 运行起来，你可以使用内置的配置编辑器，它支持配置验证。
 
@@ -150,37 +150,17 @@ services:
 
 本节假设你已经按照[安装](/frigate/installation)中的说明设置了环境。你还应该根据[摄像头设置指南](/frigate/camera_setup)配置你的摄像头。特别注意选择检测分辨率的部分。
 
-### 步骤 1：添加检测流
+### 步骤 1：启动 Frigate {#step-1-start-frigate}
 
-首先我们将为摄像头添加检测（`detect`）视频流：
+此时你应该能够启动 Frigate，基本配置将自动创建。
 
-```yaml
-mqtt:
-  enabled: False
+### 步骤 2：添加摄像头 {#step-2-add-a-camera}
 
-cameras: # [!code ++]
-  name_of_your_camera: # <------ 命名你的摄像头 [!code ++]
-    enabled: True # [!code ++]
-    ffmpeg: # [!code ++]
-      inputs: # [!code ++]
-        - path: rtsp://10.0.10.10:554/rtsp # <----- 你想用于检测的视频流地址 [!code ++]
-          roles: # [!code ++] 设置这个流的功能，包含record（录制）、audio（音频）和detect（检测）
-            - detect # [!code ++] 此处只给这个视频流开启检测（detect）功能
-```
+点击 <NavPath path="设置 > 全局配置 > 摄像头管理" /> 中的 **Add Camera** 按钮，使用摄像头设置向导将你的第一个摄像头添加到 Frigate 中。有关每个步骤的详细说明，请参见[使用添加摄像头向导添加摄像头](../configuration/cameras.md#使用添加摄像头向导添加摄像头)。
 
-### 步骤 2：启动 Frigate
-
-此时你应该能够启动 Frigate 并在实时监控页面中看到视频画面。
-
-如果你从摄像头获得错误图像，这意味着 ffmpeg 无法从你的摄像头获取视频流。检查日志中的 ffmpeg 错误消息。默认的 ffmpeg 参数设计用于支持 TCP 连接的 H264 RTSP 摄像头。
-
-其他类型摄像头的 FFmpeg 参数可以在[这里](../configuration/camera_specific.md)找到。
-
-### 步骤 3：配置硬件加速（推荐）
+### 步骤 3：配置硬件加速（推荐） {#step-3-configure-hardware-acceleration-recommended}
 
 现在你已经有了一个工作正常的摄像头配置，你需要设置硬件加速以**减少解码视频流所需的 CPU**。查看[硬件加速](../configuration/hardware_acceleration_video.md)配置参考，了解适用于你的硬件的示例。
-
-这里是一个使用[预设](../configuration/ffmpeg_presets.md)配置硬件加速的示例，适用于大多数带核显的 Intel 处理器：
 
 如果你在使用 Docker Compose 配置生成器的时候勾选了 GPU 加速，则**不需要**参考下方配置添加核显的映射。
 <DetailsCollapse title="添加核显的映射">
@@ -198,6 +178,23 @@ services:
 
 </DetailsCollapse>
 
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **FFmpeg** 部分，把 **硬件加速参数** 设置为适用于你硬件的预设（例如 Intel 核显为 `preset-vaapi`）。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="global"
+  section="ffmpeg"
+  focus="hwaccel_args"
+  :values="{ hwaccel_args: 'preset-vaapi' }"
+  hint="为所有摄像头设置全局硬件加速参数，以降低解码视频流所需的 CPU。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
+
 `config.yml`
 
 ```yaml [config.yml]
@@ -214,17 +211,50 @@ cameras:
     detect: ... # 省略号为文档省略部分，不代表后面没内容
 ```
 
+</TabItem>
+</ConfigTabs>
+
 :::tip
 
 如果你是 7 代以上的 Intel 处理器，更推荐使用`qsv`进行硬件加速。更多详细信息请见[qsv 配置文档](../configuration/hardware_acceleration_video.md#via-quicksync)。
 
 :::
 
-### 步骤 4：配置检测器
+### 步骤 4：配置检测器 {#step-4-configure-detectors}
 
 默认情况下，Frigate 将使用单个 CPU 检测器。
 
 一般来说，核显即可满足绝大部分用户的需求。Intel 核显用户可以参考以下配置。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在全局配置的 **检测器和模型** 部分添加 OpenVino 检测器，再在 **检测模型** 部分配置对应的模型参数。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="global"
+  section="model"
+  focus="detectors"
+  :values="{
+    detectors: {
+      ov: {
+        type: 'openvino',
+        device: 'GPU',
+      },
+    },
+    path: '/openvino-model/ssdlite_mobilenet_v2.xml',
+    labelmap_path: '/openvino-model/coco_91cl_bkgr.txt',
+    width: 300,
+    height: 300,
+    input_tensor: 'nhwc',
+    input_pixel_format: 'bgr',
+  }"
+  hint="添加 OpenVino 检测器，并为检测器配置对应的模型。"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 <DetailsCollapse title="Intel 核显配置目标检测">
 
@@ -257,6 +287,9 @@ cameras:
 ```
 
 </DetailsCollapse>
+
+</TabItem>
+</ConfigTabs>
 
 如果你有 USB Coral，你需要在配置中添加检测器部分。
 
@@ -296,15 +329,27 @@ cameras:
 
 重启 Frigate，你应该就能开始看到人（`person`）的检测结果。如果你想追踪其他目标/物体，可以阅读[检测的目标/物体配置](/configuration/objects)添加其他追踪的目标/物体。
 
-### 步骤 5：设置画面变动遮罩
+### 步骤 5：设置画面变动遮罩 {#step-5-setup-motion-masks}
 
 现在你已经优化了解码视频流的配置，你需要检查在哪里实现画面变动遮罩。你可以直接在设置页面的`遮罩/ 区域`选项卡中来设置遮罩。更多关于遮罩的信息可以在[这里](../configuration/masks.md)找到。
 
-:::warning
+<ConfigTabs>
+<TabItem value="图形化配置">
 
-注意，画面变动遮罩**不应用于**标记你不想检测物品/目标的区域或减少误报。它们不会改变发送到物体/目标检测的画面，所以你仍然可以在有画面变动遮罩的区域检测到追踪目标、触发警报和检测。这些只是**防止这些区域的画面变动**触发物体/目标检测。
+在摄像头配置的**遮罩/ 区域**选项卡中，为 **画面变动遮罩** 添加遮罩区域。
 
-:::
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  section="masksAndZones"
+  :targets="[
+    { field: 'motionMask.add', hint: '点击画面变动遮罩旁的加号来新建遮罩。' },
+    { field: 'motionMask.canvas', hint: '在摄像头画面上点击选点，然后闭合多边形以完成遮罩。' },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 你的配置现在应该看起来类似这样。
 
@@ -329,11 +374,48 @@ cameras:
         - 0,461,3,0,1919,0,1919,843,1699,492,1344,458,1346,336,973,317,869,375,866,432 # [!code ++] [!code focus]
 ```
 
-### 步骤 6：启用录制
+</TabItem>
+</ConfigTabs>
+
+:::warning
+
+注意，画面变动遮罩**不应用于**标记你不想检测物品/目标的区域或减少误报。它们不会改变发送到物体/目标检测的画面，所以你仍然可以在有画面变动遮罩的区域检测到追踪目标、触发警报和检测。这些只是**防止这些区域的画面变动**触发物体/目标检测。
+
+:::
+
+### 步骤 6：启用录制 {#step-6-enable-recordings}
 
 为了在 Frigate 页面中查看事件和回放，需要启用录制。
 
 要启用视频录制，向流添加`record`功能并在配置中启用它。如果在配置中禁用了录制，就无法在页面中启用它。
+
+<ConfigTabs>
+<TabItem value="图形化配置">
+
+在摄像头配置的**视频流（FFmpeg）**部分，为用于录制的流添加 `record` 角色，再在**录制**部分开启录制。
+
+<FrigateConfigMock
+  :auto-play="false"
+  level="camera"
+  :steps="[
+    {
+      section: 'ffmpeg',
+      focus: 'output_args.record',
+      values: { 'output_args.record': 'preset-record-generic-audio-aac' },
+      hint: '为录制输出参数选择合适的预设。',
+    },
+    {
+      section: 'record',
+      focus: 'enabled',
+      values: { enabled: true },
+      label: '开启录制',
+      hint: '在录制部分开启开关，摄像头才会保存视频片段。',
+    },
+  ]"
+/>
+
+</TabItem>
+<TabItem value="YAML配置文件">
 
 ```yaml
 mqtt: ... # 省略号为文档省略部分，不代表后面没内容
@@ -355,6 +437,9 @@ cameras:
       enabled: True # [!code ++] <----- 必须启用录制功能才能录制
     motion: ... # 省略号为文档省略部分，不代表后面没内容
 ```
+
+</TabItem>
+</ConfigTabs>
 
 如果你的检测和录制没有单独的流，你只需要在第一个输入的功能列表中添加 `record` 功能：
 
@@ -379,21 +464,20 @@ cameras:
 
 默认情况下，Frigate 会保留所有追踪目标的视频 10 天。完整的录制选项可以在[这里](/configuration/record)找到。
 
-### 步骤 7：完整配置
+### 步骤 7：完整配置 {#step-7-complete-config}
 
 此时你已经有了一个具有基本功能的完整配置。
 
-- 查看[常见配置示例](../configuration/index.md#common-configuration-examples)获取常见配置示例列表。
-- 查看[完整配置参考](../configuration/reference.md)获取完整的配置选项列表。
+- 查看[常见配置示例](../configuration/config.md#common-configuration-examples)获取常见配置示例列表。
+- 查看[完整配置参考](../configuration/advanced/reference.md)获取完整的配置选项列表。
 
-### 后续步骤
+### 后续步骤 {#follow-up}
 
 现在你已经有了一个可工作的安装，你可以使用以下文档了解其他功能：
 
-1. [配置 go2rtc](configuring_go2rtc.md) - 更流畅的实时监控与 RTSP 中继功能
-2. [区域](../configuration/zones.md) - 按区域控制警报等级
-3. [视频回放](../configuration/review.md)
-4. [遮罩](../configuration/masks.md) - 避免特定场景的误报
-5. [Home Assistant 集成](/integrations/home-assistant.md) - 与 Home Assistant 集成
-6. [人脸识别](../configuration/face_recognition.md) - 识别出家庭成员
-7. [车牌识别](../configuration/license_plate_recognition.md) - 识别出自家车辆
+1. [区域](../configuration/zones.md) - 按区域控制警报等级
+2. [视频回放](../configuration/review.md)
+3. [遮罩](../configuration/masks.md) - 避免特定场景的误报
+4. [Home Assistant 集成](/integrations/home-assistant.md) - 与 Home Assistant 集成
+5. [人脸识别](../configuration/face_recognition.md) - 识别出家庭成员
+6. [车牌识别](../configuration/license_plate_recognition.md) - 识别出自家车辆
