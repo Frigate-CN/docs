@@ -47,6 +47,15 @@ const focusedField = computed(() =>
         ? props.step.focus
         : null,
 );
+// `hint` from the docs page describes the field/option step. The group list
+// is a navigation stage, so it gets its own copy to avoid repeating the
+// field instruction on every step.
+const groupListHint = computed(() =>
+    step.guidePhase === "group-list"
+        ? "选择要编辑的摄像头组，或新建一个组。"
+        : step.hint ?? step.guideLabel,
+);
+
 const hintTitle = computed(() =>
     focusedField.value === "cameras" ? "摄像头" : "名称",
 );
@@ -87,7 +96,7 @@ watch(
             <FieldHint v-if="phase === 'group-list'"
                 :key="`list-${navigation.current}`"
                 class="groupDialogHint"
-                :navigation="navigation" :text="step.hint ?? step.guideLabel"
+                :navigation="navigation" :text="groupListHint"
                 title="摄像头组" />
         </template>
 

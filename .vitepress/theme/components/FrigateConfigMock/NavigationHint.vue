@@ -12,6 +12,12 @@ const hintRef = ref(null);
 const position = ref(null);
 const flipped = ref(false);
 
+// `hint` passed from the docs page describes the *field* step (what value to
+// change and what it does). Navigation stages (settings menu → section →
+// camera switcher) must not reuse it, otherwise every step shows the same
+// sentence. Only the field stage consumes the docs copy.
+const fieldHint = computed(() => (props.step.guidePhase === "field" ? props.step.hint : null));
+
 const styleBinding = computed(() => {
     const p = position.value;
     if (!p) return undefined;
@@ -23,9 +29,10 @@ const section = computed(
 );
 
 const text = computed(() => {
-    // docs pages may pass a per-step hint; it wins over the generic copy
-    if (props.step.hint) {
-        return props.step.hint;
+    // docs pages may pass a per-step hint; it describes the field step and
+    // wins over the generic copy there only.
+    if (fieldHint.value) {
+        return fieldHint.value;
     }
     if (props.step.guidePhase === "settings") {
         return "打开系统菜单并选择设置。";
@@ -34,9 +41,9 @@ const text = computed(() => {
         return "点击摄像头选择器切换至目标摄像头。";
     }
     if (props.step.guidePhase === "menu-collapsed") {
-        return `展开${props.step.guideDetail ?? "摄像头设置"}以查看子菜单。`;
+        return "摄像头设置是分组菜单，先展开它。";
     }
-    return `从${props.step.guideDetail ?? "设置"}中选择${section.value?.label ?? props.step.section}。`;
+    return `在设置菜单中找到并打开「${section.value?.label ?? props.step.section}」。`;
 });
 
 let timer;
@@ -94,7 +101,7 @@ const measure = () => {
 };
 
 watch(
-    () => [props.step.guidePhase, props.step.level, props.step.section],
+    () => [props.step.guidePhase, props.step.level, props.step.section, props.step.hint],
     () => {
         window.clearTimeout(timer);
         timer = window.setTimeout(measure, 240);
