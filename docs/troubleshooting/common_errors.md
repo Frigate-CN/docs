@@ -7,8 +7,8 @@ title: 常见错误消息
 
 在开始之前有两件事需要了解：
 
-- **这些消息中有许多来自 FFmpeg、go2rtc、GPU 驱动或操作系统，而不是 Frigate 本身。**Frigate 捕获并重新记录它们的输出，因此 Frigate 界面中显示的日志级别并不总是反映原始严重程度。
-- **包装错误将真正原因放在下一行。**当 Frigate 记录诸如 `Error occurred when attempting to maintain recording cache` 之类的通用消息时，实际的异常会紧随其后。当摄像头的 FFmpeg 进程退出时，Frigate 会记录 `The following ffmpeg logs include the last 100 lines prior to exit` 并转储该摄像头的 FFmpeg 输出。始终阅读这些行，答案通常就在其中。
+- **这些消息中有许多来自 FFmpeg、go2rtc、GPU 驱动或操作系统，而不是 Frigate 本身。** Frigate 捕获并重新记录它们的输出，因此 Frigate 界面中显示的日志级别并不总是反映原始严重程度。
+- **包装错误将真正原因放在下一行。** 当 Frigate 记录诸如 `Error occurred when attempting to maintain recording cache` 之类的通用消息时，实际的异常会紧随其后。当摄像头的 FFmpeg 进程退出时，Frigate 会记录 `The following ffmpeg logs include the last 100 lines prior to exit` 并转储该摄像头的 FFmpeg 输出。始终阅读这些行，答案通常就在其中。
 
 ## 摄像头连接和流 {#camera-connection-and-streams}
 
