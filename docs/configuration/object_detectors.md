@@ -55,10 +55,6 @@ Frigate 支持多种不同类型的检测器，可在不同硬件上运行：
 
 - [Synaptics](#synaptics): Synap 模型可在配备内置 NPU 的 Synaptics 设备（例如 Astra Machina）上运行。
 
-**AXERA** <Badge text="社区支持" type="warning" />
-
-- [AXEngine](#axera): axmodels 可在 AXERA AI 加速设备上运行。
-
 **测试用途**
 
 - [CPU 检测器(不推荐实际使用)](#cpu-detector-not-recommended)：使用 CPU 运行 tflite 模型，不推荐使用，在大多数情况下使用 OpenVINO CPU 模式可获得更好效果。
