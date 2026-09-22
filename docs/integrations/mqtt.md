@@ -377,7 +377,7 @@ title: MQTT
 
 `ON` 仅在摄像头的配置中启用了音频转写时生效。与其他摄像头开关不同，此开关不会在 Frigate 重启后保持。
 
-**注意：**需要启用音频检测和转写
+**注意：** 需要启用音频检测和转写
 
 ### `frigate/<camera_name>/audio_transcription/state`
 

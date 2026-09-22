@@ -162,7 +162,7 @@ Frigate 能够使用支持 12.x 系列 CUDA 库的 NVIDIA GPU。
 
 #### 最低硬件支持 {#minimum-hardware-support}
 
-本系统使用的是具有**次版本兼容性**的 CUDA 12.x 系列库。主机系统必须安装**最低版本号为 >=545 的驱动程序**，同时你的 GPU 需支持** Compute Capability 5.0 或更高版本**，这通常对应的是 **Maxwell 架构或更新的 GPU**，具体可参考下方链接中的** NVIDIA GPU 计算能力**。
+本系统使用的是具有**次版本兼容性**的 CUDA 12.x 系列库。主机系统必须安装**最低版本号为 >=545 的驱动程序**，同时你的 GPU 需支持 **Compute Capability 5.0 或更高版本**，这通常对应的是 **Maxwell 架构或更新的 GPU**，具体可参考下方链接中的 **NVIDIA GPU 计算能力**。
 
 请确保你的主机系统已安装 [nvidia-container-runtime](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu)，这样才能将 GPU 设备传递给容器；同时主机上还需为当前 GPU 安装**兼容的驱动程序**。
 

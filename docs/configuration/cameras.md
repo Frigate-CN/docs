@@ -12,7 +12,7 @@ title: 摄像头配置
 输入摄像头名称以及主机或 IP 地址和凭证，然后选择向导如何查找摄像头的流：
 
 - **探测摄像头（Probe camera）**通过 ONVIF 查询摄像头（ONVIF 端口通常为 80 或 8080），并获取其流 URL。某些摄像头使用独立的 ONVIF/服务账号而非设备管理员用户，部分还要求启用**使用摘要认证（Use digest authentication）**。
-- **手动选择（Manual selection）**根据你选择的摄像头品牌模板构建流 URL（Dahua/Amcrest/EmpireTech、Hikvision/Uniview/Annke、Ubiquiti、Reolink、Axis、TP-Link 或 Foscam）。选择 **Other** 直接输入自定义 RTSP URL。非 RTSP 流类型必须[手动配置](#setting-up-camera-inputs)。
+- **手动选择（Manual selection）** 根据你选择的摄像头品牌模板构建流 URL（Dahua/Amcrest/EmpireTech、Hikvision/Uniview/Annke、Ubiquiti、Reolink、Axis、TP-Link 或 Foscam）。选择 **Other** 直接输入自定义 RTSP URL。非 RTSP 流类型必须[手动配置](#setting-up-camera-inputs)。
 
 你输入的名称会被转为小写，空格变为下划线。如果结果仍不是有效的配置键，向导会生成一个安全名称，并将你输入的内容保存为 `friendly_name`。
 
@@ -26,9 +26,9 @@ title: 摄像头配置
 
 ### 步骤 3：流配置 {#step-3-stream-configuration}
 
-为流分配[功能角色](#setting-up-camera-inputs)，并使用**添加另一个流（Add Another Stream）**添加摄像头的其他流，例如用于 `detect` 的子流与用于 `record` 的主流。至少有一个流必须具有 `detect` 角色才能继续。
+为流分配[功能角色](#setting-up-camera-inputs)，并使用 **添加另一个流（Add Another Stream）** 添加摄像头的其他流，例如用于 `detect` 的子流与用于 `record` 的主流。至少有一个流必须具有 `detect` 角色才能继续。
 
-**减少摄像头连接（Reduce connections to camera）**通过 go2rtc 转流路由输入，使 Frigate 和实时视图共享一个到摄像头的连接，而不是各自打开独立连接。详见[转流](restream.md)。
+**减少摄像头连接（Reduce connections to camera）** 通过 go2rtc 转流路由输入，使 Frigate 和实时视图共享一个到摄像头的连接，而不是各自打开独立连接。详见[转流](restream.md)。
 
 ### 步骤 4：验证与测试 {#step-4-validation-and-testing}
 
@@ -40,9 +40,9 @@ title: 摄像头配置
 - 对 `record` 角色使用转流输入
 - 品牌特定问题，例如 Reolink 摄像头的 RTSP 流应使用 http-flv，或为 `detect` 选择了 Dahua/Hikvision 的子流
 
-**使用流兼容模式（Use stream compatibility mode）**通过 go2rtc 的 ffmpeg 模块传递流。如果流在多次尝试后仍无法加载，请启用它。注意，这还会阻止该流的[双向通话](/configuration/live#two-way-talk)被检测到。
+**使用流兼容模式（Use stream compatibility mode）** 通过 go2rtc 的 ffmpeg 模块传递流。如果流在多次尝试后仍无法加载，请启用它。注意，这还会阻止该流的[双向通话](/configuration/live#two-way-talk)被检测到。
 
-**保存新摄像头（Save New Camera）**会写入配置并立即启动摄像头，无需重启。
+**保存新摄像头（Save New Camera）** 会写入配置并立即启动摄像头，无需重启。
 
 其他功能（包括[硬件加速](hardware_acceleration_video.md)、[双向通话](/configuration/live#two-way-talk)和音频转码）在摄像头添加后进行配置。有关摄像头型号的特定问题，请参阅[摄像头特定](camera_specific.md)文档。
 

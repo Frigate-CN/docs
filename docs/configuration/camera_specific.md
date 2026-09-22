@@ -22,7 +22,7 @@ title: 摄像头品牌特定配置
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-在摄像头配置的**视频流（FFmpeg）**部分开启 **Apple 兼容性**，让录制出的流可以在 macOS / iPhone 上正常播放。
+在摄像头配置的 **视频流（FFmpeg）** 部分开启 **Apple 兼容性**，让录制出的流可以在 macOS / iPhone 上正常播放。
 
 <FrigateConfigMock
   :auto-play="false"
@@ -73,7 +73,7 @@ cameras:
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-在摄像头配置的**视频流（FFmpeg）**部分，把 **输入参数** 设置为 `preset-http-jpeg-generic`。
+在摄像头配置的 **视频流（FFmpeg）** 部分，把 **输入参数** 设置为 `preset-http-jpeg-generic`。
 
 <FrigateConfigMock
   :auto-play="false"
@@ -103,7 +103,7 @@ RTMP 摄像头需要调整输入参数
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-在摄像头配置的**视频流（FFmpeg）**部分，把 **输入参数** 设置为 `preset-rtmp-generic`。
+在摄像头配置的 **视频流（FFmpeg）** 部分，把 **输入参数** 设置为 `preset-rtmp-generic`。
 
 <FrigateConfigMock
   :auto-play="false"
@@ -132,7 +132,7 @@ ffmpeg:
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-在摄像头配置的**视频流（FFmpeg）**部分，把 **输入参数** 设置为 `preset-rtsp-udp`。
+在摄像头配置的 **视频流（FFmpeg）** 部分，把 **输入参数** 设置为 `preset-rtsp-udp`。
 
 <FrigateConfigMock
   :auto-play="false"
@@ -174,7 +174,7 @@ rtsp://用户名:密码@摄像头IP/cam/realmonitor?channel=1&subtype=3 # 新款
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-在摄像头配置的**视频流（FFmpeg）**部分开启 **Apple 兼容性**，并为**录制输出参数**选择音频预设。
+在摄像头配置的 **视频流（FFmpeg）** 部分开启 **Apple 兼容性**，并为**录制输出参数**选择音频预设。
 
 <FrigateConfigMock
   :auto-play="false"
@@ -217,7 +217,7 @@ Blue Iris RTSP 摄像头需要移除`nobuffer`标志
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-在摄像头配置的**视频流（FFmpeg）**部分，把 **输入参数** 设置为 `preset-rtsp-blue-iris`。
+在摄像头配置的 **视频流（FFmpeg）** 部分，把 **输入参数** 设置为 `preset-rtsp-blue-iris`。
 
 <FrigateConfigMock
   :auto-play="false"
