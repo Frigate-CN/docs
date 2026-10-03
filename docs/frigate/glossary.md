@@ -74,7 +74,7 @@ Frigate 可以在摄像头画面中检测和跟随的某物，由其[标签](#la
 
 ## 待审项目 {#review-item}
 
-一个或多个[追踪目标](#tracked-object-event-in-previous-versions)处于活动状态的时间段，分组以供核查。每个核查项被归类为[警报](#alert)或[检测](#detection)。[详见核查文档](/configuration/review)
+一个或多个[追踪目标](#tracked-object-event-in-previous-versions)处于活动状态的时间段，分组以供核查。每个待审项目被归类为[警报](#alert)或[检测](#detection)。[详见核查文档](/configuration/review)
 
 ## 快照分 {#snapshot-score}
 
