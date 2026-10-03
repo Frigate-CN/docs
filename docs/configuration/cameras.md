@@ -26,7 +26,7 @@ title: 摄像头配置
 
 ### 步骤 3：配置流 {#step-3-stream-configuration}
 
-为每条流选择要启用的[功能](#setting-up-camera-inputs)（界面中显示为**检测**、**音频**、**录制**），并通过**添加另一个流**添加摄像头的其他流，例如用子流做 `detect`、用主流做 `record`。至少有一条流需要启用 `detect` 功能才能继续。
+为每条流选择要启用的[功能](#setting-up-camera-inputs)，并通过**添加另一个流**添加摄像头的其他流，例如用子流做 `detect`、用主流做 `record`。至少有一条流需要启用 `detect` 功能才能继续。
 
 **减少摄像头连接**：让输入经由 go2rtc 转流，使 Frigate 和实时视图共用一条与摄像头的连接，而不是各自建立独立连接。详见[转流](restream.md)。
 
@@ -35,9 +35,9 @@ title: 摄像头配置
 向导会连接每条流，获取实时预览、预估带宽和验证结果。它会检查最常见的配置错误，包括：
 
 - 检测分辨率过高（增加资源消耗），或过低导致无法可靠检测、甚至完全无法探测
-- 标记为 `record`（**录制**）的流，音频编解码器不是 AAC，或者完全没有音频
-- 标记为 `audio`（**音频**）的流不包含音频流
-- 给 `record`（**录制**）功能使用了转流输入
+- 标记为 `record` 的流，音频编解码器不是 AAC，或者完全没有音频
+- 标记为 `audio` 的流不包含音频流
+- 给 `record` 功能使用了转流输入
 - 品牌相关问题，例如 Reolink 摄像头的 RTSP 流应改用 http-flv，或给 `detect` 选了 Dahua/Hikvision 的子流
 
 **使用流兼容模式**：让流经由 go2rtc 的 ffmpeg 模块转发。如果某条流多次尝试后仍无法加载，可以启用它。注意，启用后该流的[双向通话](/configuration/live#two-way-talk)将无法被检测到。
@@ -77,7 +77,7 @@ title: 摄像头配置
 
 摄像头默认启用，可以通过设置 `enabled: False` 禁用。通过配置文件禁用的摄像头不会出现在 Frigate 界面中，也不会消耗系统资源。
 
-同一个功能在每个摄像头中只能分配给一个输入源。可选功能如下（界面中显示为中文名，配置文件里必须填写原文）：
+同一个功能在每个摄像头中只能分配给一个输入源。可选功能如下：
 
 | 配置项   | 界面显示 | 描述                                                |
 | -------- | -------- | --------------------------------------------------- |
@@ -88,7 +88,7 @@ title: 摄像头配置
 <ConfigTabs>
 <TabItem value="图形化配置">
 
-在摄像头配置的**视频流（FFmpeg）**部分添加输入源，并为每个输入源勾选要启用的功能（界面上显示为**检测**、**音频**、**录制**）。
+在摄像头配置的**视频流（FFmpeg）**部分添加输入源，并为每个输入源勾选要启用的功能。
 
 <FrigateConfigMock
   :auto-play="false"
@@ -110,7 +110,7 @@ title: 摄像头配置
       },
     ],
   }"
-  hint="填写摄像头 RTSP 流地址，并为该输入源勾选要启用的功能（界面显示为检测、音频、录制，配置文件里写 detect、audio、record）。"
+  hint="填写摄像头 RTSP 流地址，并为该输入源勾选要启用的功能。"
 />
 
 </TabItem>
@@ -128,13 +128,13 @@ cameras: # [!code highlight]
         # 也可以考虑使用 go2rtc，请参考本文档后面的说明
         - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2 # [!code ++]
           roles: # [!code ++]
-            - detect # <- 用于目标检测（配置文件里必须写原文 detect）[!code ++]
+            - detect # <- 用于目标检测的流[!code ++]
         # 可以为不同功能设置不同的流：上面的子码流带宽占用低，适合做检测，能减轻检测器负担
         # 下面的主码流画面清晰，适合做录制
         # 也可以考虑使用 go2rtc，请参考本文档后面的说明
         - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/live # [!code ++]
           roles: # [!code ++]
-            - record # <- 用于录制的视频流（配置文件里必须写原文 record）[!code ++]
+            - record # <- 用于录制的流[!code ++]
     detect: # [!code highlight]
       width: 1280 # <- 可选，默认 Frigate 会尝试自动检测分辨率 [!code highlight]
       height: 720 # <- 可选，默认 Frigate 会尝试自动检测分辨率 [!code highlight]
